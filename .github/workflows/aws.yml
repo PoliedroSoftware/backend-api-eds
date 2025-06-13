@@ -76,4 +76,19 @@ jobs:
             --cluster poliedro-cluster-serverless \
             --service poliedro-task-backend-api-eds-service-dev \
             --task-definition arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:9)
-          echo $ecs_deploy
+          echo "ECS Deploy Output: $ecs_deploy"
+
+      # Step 12: Verify ECS service status
+      - name: Check ECS Service Status
+        run: |
+          aws ecs describe-services \
+            --cluster poliedro-cluster-serverless \
+            --services poliedro-task-backend-api-eds-service-dev \
+            --query 'services[0].status'
+      
+      # Step 13: Verify ECS Task Definition
+      - name: Check ECS Task Definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:9 \
+            --query 'taskDefinition.containerDefinitions[0].image'
