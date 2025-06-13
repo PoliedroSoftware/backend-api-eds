@@ -7,11 +7,12 @@ on:
   pull_request:
     branches:
       - main
-
+  
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest  # Usamos un runner de Ubuntu
-
+    environment: QA
+    
     steps:
       # Step 1: Checkout the code
       - name: Checkout code
