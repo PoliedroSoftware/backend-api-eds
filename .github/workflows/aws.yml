@@ -40,22 +40,33 @@ jobs:
         run: |
           aws configure set region us-east-2  # Reemplaza con tu región de AWS
 
-      # Step 8: Build Docker image
+      # Step 7: Set up AWS credentials (hardcoded for testing)
+      - name: Set up AWS credentials
+        run: |
+          aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+          aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+          aws configure set region us-east-2
+
+      # Step 8: Log in to Amazon ECR
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Step 9: Build Docker image
       - name: Build Docker image
         run: |
           docker build -t 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest .
 
-      # Step 9: Tag Docker image
+      # Step 10: Tag Docker image
       - name: Tag Docker image
         run: |
           docker tag 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest
 
-      # Step 10: Push Docker image to ECR
+      # Step 11: Push Docker image to ECR
       - name: Push Docker image to ECR
         run: |
           docker push 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest
 
-      # Step 11: Register ECS Task Definition
+      # Step 12: Register ECS Task Definition
       - name: Register ECS Task Definition
         run: |
           ecs_task_definition=$(aws ecs register-task-definition \
@@ -77,7 +88,7 @@ jobs:
             ]")
           echo $ecs_task_definition
 
-      # Step 12: Deploy to Amazon ECS
+      # Step 13: Deploy to Amazon ECS
       - name: Deploy to Amazon ECS
         run: |
           ecs_deploy=$(aws ecs update-service \
