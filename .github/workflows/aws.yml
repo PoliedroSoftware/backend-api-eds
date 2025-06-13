@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+      - 'release/*'          
+      - 'releasecandidate/*'
 
 jobs:
   build_and_deploy:
@@ -37,70 +39,71 @@ jobs:
       - name: Run unit tests
         run: dotnet test --configuration Release --no-build
 
-      # Step 6: Set AWS region
+      # Step 6: Set AWS region from Secrets
       - name: Set AWS region
         run: |
-          aws configure set region us-east-2  # Reemplaza con tu región de AWS
+          aws configure set region ${{ secrets.AWS_REGION }}  # Usar la región configurada en Secrets
           
+      # Step 7: Configure AWS credentials from Secrets
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      # Step 7: Log in to Amazon ECR
+      # Step 8: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Step 8: Build Docker image
+      # Step 9: Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest .
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest .
 
-      # Step 9: Tag Docker image
+      # Step 10: Tag Docker image
       - name: Tag Docker image
         run: |
-          docker tag 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest
+          docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
 
-      # Step 10: Push Docker image to ECR
+      # Step 11: Push Docker image to ECR
       - name: Push Docker image to ECR
         run: |
-          docker push 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
 
-      # Step 11: Deploy to Amazon ECS using existing task definition
+      # Step 12: Deploy to Amazon ECS using existing task definition
       - name: Deploy to Amazon ECS
         run: |
-          # Obtener el ARN de la task definition más reciente
-          ecs_task_definition_arn="arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:10"
+          # Usar el ARN de la task definition desde Secrets
+          ecs_task_definition_arn="${{ secrets.TASK_DEFINITION_ARN }}"
           echo "Usando el ARN de la task definition: $ecs_task_definition_arn"
           
           # Forzar la actualización del servicio con la task definition existente
           ecs_deploy=$(aws ecs update-service \
-            --cluster poliedro-cluster-serverless \
-            --service poliedro-task-backend-api-eds-service-dev \
+            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+            --service ${{ secrets.AWS_ECS_SERVICE }} \
             --task-definition $ecs_task_definition_arn \
             --force-new-deployment)
           
           echo "Resultado del despliegue en ECS: $ecs_deploy"
 
-      # Step 12: Verify ECS service status
+      # Step 13: Verify ECS service status
       - name: Check ECS Service Status
         run: |
           # Verifica el estado del servicio
           service_status=$(aws ecs describe-services \
-            --cluster poliedro-cluster-serverless \
-            --services poliedro-task-backend-api-eds-service-dev \
+            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+            --services ${{ secrets.AWS_ECS_SERVICE }} \
             --query 'services[0].status' --output text)
           
           echo "Estado del servicio: $service_status"
 
-      # Step 13: Verify ECS Task Definition
+      # Step 14: Verify ECS Task Definition
       - name: Check ECS Task Definition
         run: |
           # Verifica la imagen de la task definition
           task_definition_image=$(aws ecs describe-task-definition \
-            --task-definition arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:10 \
+            --task-definition ${{ secrets.TASK_DEFINITION_ARN }} \
             --query 'taskDefinition.containerDefinitions[0].image' --output text)
           
           echo "Imagen de la task definition: $task_definition_image"
