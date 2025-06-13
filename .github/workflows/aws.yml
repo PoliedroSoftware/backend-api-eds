@@ -38,7 +38,7 @@ jobs:
       # Step 6: Configure AWS region
       - name: Set AWS region
         run: |
-          aws configure set region ${{ secrets.AWS_REGION }}  # Configura la región AWS
+          aws configure set region ${{ secrets.AWS_DEFAULT_REGION }}  # Configura la región AWS
 
       # Step 7: Log in to Amazon ECR
       - name: Log in to Amazon ECR
