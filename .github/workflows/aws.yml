@@ -10,7 +10,7 @@ on:
 
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest  # Usamos un runner de Ubuntu
+    runs-on: ubuntu-latest
 
     steps:
       # Step 1: Checkout the code
@@ -21,36 +21,47 @@ jobs:
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '8.0.x'  # Configura la versión de .NET 8
+          dotnet-version: '8.0.x'
 
       # Step 3: Restore dependencies
       - name: Restore dependencies
         run: dotnet restore
 
-      # Step 4: Run unit tests
-      - name: Run unit tests
-        run: dotnet test
+      # Step 4: Build the project
+      - name: Build the project
+        run: dotnet build --configuration Release
 
-      # Step 5: Log in to AWS ECR
+      # Step 5: Run unit tests
+      - name: Run unit tests
+        run: dotnet test --configuration Release --no-build
+
+      # Step 6: Configure AWS region
+      - name: Set AWS region
+        run: |
+          aws configure set region ${{ secrets.AWS_REGION }}  # Configura la región AWS
+
+      # Step 7: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          region: ${{ secrets.AWS_REGION }}  # Región de AWS para ECR
 
-      # Step 6: Build Docker image
+      # Step 8: Build Docker image
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.AWS_ECR_REPOSITORY }} .
 
-      # Step 7: Tag Docker image
+      # Step 9: Tag Docker image
       - name: Tag Docker image
         run: |
           docker tag ${{ secrets.AWS_ECR_REPOSITORY }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY }}:latest
 
-      # Step 8: Push Docker image to ECR
+      # Step 10: Push Docker image to ECR
       - name: Push Docker image to ECR
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY }}:latest
 
-      # Step 9: Register ECS Task Definition
+      # Step 11: Register ECS Task Definition
       - name: Register ECS Task Definition
         run: |
           ecs_task_definition=$(aws ecs register-task-definition \
@@ -72,7 +83,7 @@ jobs:
             ]")
           echo $ecs_task_definition
 
-      # Step 10: Deploy to Amazon ECS
+      # Step 12: Deploy to Amazon ECS
       - name: Deploy to Amazon ECS
         run: |
           ecs_deploy=$(aws ecs update-service \
