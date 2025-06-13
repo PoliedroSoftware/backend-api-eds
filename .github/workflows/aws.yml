@@ -44,22 +44,22 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         with:
-          region: ${{ secrets.AWS_REGION }}  # Región de AWS para ECR
+          region: region us-east-2
 
       # Step 8: Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.AWS_ECR_REPOSITORY }} .
+          docker build -t 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest .
 
       # Step 9: Tag Docker image
       - name: Tag Docker image
         run: |
-          docker tag ${{ secrets.AWS_ECR_REPOSITORY }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+          docker tag 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest.713881784063.dkr.ecr.us-east-2.amazonaws.com/713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:4
 
       # Step 10: Push Docker image to ECR
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+          docker push 713881784063.dkr.ecr.ecr.us-east-2.amazonaws.com/713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest
 
       # Step 11: Register ECS Task Definition
       - name: Register ECS Task Definition
@@ -69,7 +69,7 @@ jobs:
             --container-definitions "[ 
               {
                 \"name\": \"my-container\",
-                \"image\": \"${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY }}:latest\",
+                \"image\": \"713881784063.dkr.ecr.us-east-2.amazonaws.com/713881784063.dkr.ecr.ecr.us-east-2.amazonaws.com/713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest\",
                 \"memory\": 512,
                 \"cpu\": 256,
                 \"essential\": true,
@@ -87,7 +87,7 @@ jobs:
       - name: Deploy to Amazon ECS
         run: |
           ecs_deploy=$(aws ecs update-service \
-            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
-            --service ${{ secrets.AWS_ECS_SERVICE }} \
+            --cluster poliedro-cluster-serverless \
+            --service poliedro-task-backend-api-eds-service-dev \
             --task-definition $(echo $ecs_task_definition | jq -r .taskDefinition.taskDefinitionArn))
           echo $ecs_deploy
