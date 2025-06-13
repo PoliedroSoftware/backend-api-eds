@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Business\Dtos\**" />
+    <Compile Remove="Court\Dtos\**" />
+    <EmbeddedResource Remove="Business\Dtos\**" />
+    <EmbeddedResource Remove="Court\Dtos\**" />
+    <None Remove="Business\Dtos\**" />
+    <None Remove="Court\Dtos\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Inventory\DomainService\" />
+    <Folder Include="Uplou\" />
+  </ItemGroup>
+
+</Project>
