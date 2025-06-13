@@ -72,7 +72,7 @@ jobs:
       - name: Deploy to Amazon ECS
         run: |
           # Usar el ARN de la task definition existente
-          ecs_task_definition_arn="arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:9"
+          ecs_task_definition_arn="arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:10"
           echo "Usando el ARN de la task definition: $ecs_task_definition_arn"
           
           # Actualizamos el servicio ECS con la task definition existente
@@ -99,7 +99,7 @@ jobs:
         run: |
           # Verifica la imagen de la task definition
           task_definition_image=$(aws ecs describe-task-definition \
-            --task-definition arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:9 \
+            --task-definition arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:10 \
             --query 'taskDefinition.containerDefinitions[0].image' --output text)
           
           echo "Imagen de la task definition: $task_definition_image"
