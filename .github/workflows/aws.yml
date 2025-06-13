@@ -10,7 +10,7 @@ on:
 
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Usamos un runner de Ubuntu
 
     steps:
       # Step 1: Checkout the code
@@ -38,13 +38,7 @@ jobs:
       # Step 6: Configure AWS region
       - name: Set AWS region
         run: |
-          aws configure set region us-east-2
-
-      # Step 7: Log in to Amazon ECR
-      - name: Log in to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
-        with:
-          region: region us-east-2
+          aws configure set region us-east-2  # Reemplaza con tu región de AWS
 
       # Step 8: Build Docker image
       - name: Build Docker image
@@ -54,12 +48,12 @@ jobs:
       # Step 9: Tag Docker image
       - name: Tag Docker image
         run: |
-          docker tag 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest.713881784063.dkr.ecr.us-east-2.amazonaws.com/713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:4
+          docker tag 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest
 
       # Step 10: Push Docker image to ECR
       - name: Push Docker image to ECR
         run: |
-          docker push 713881784063.dkr.ecr.ecr.us-east-2.amazonaws.com/713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest
+          docker push 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest
 
       # Step 11: Register ECS Task Definition
       - name: Register ECS Task Definition
@@ -69,7 +63,7 @@ jobs:
             --container-definitions "[ 
               {
                 \"name\": \"my-container\",
-                \"image\": \"713881784063.dkr.ecr.us-east-2.amazonaws.com/713881784063.dkr.ecr.ecr.us-east-2.amazonaws.com/713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest\",
+                \"image\": \"713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest\",
                 \"memory\": 512,
                 \"cpu\": 256,
                 \"essential\": true,
