@@ -71,15 +71,16 @@ jobs:
       # Step 11: Deploy to Amazon ECS using existing task definition
       - name: Deploy to Amazon ECS
         run: |
-          # Usar el ARN de la task definition existente
+          # Obtener el ARN de la task definition más reciente
           ecs_task_definition_arn="arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:10"
           echo "Usando el ARN de la task definition: $ecs_task_definition_arn"
           
-          # Actualizamos el servicio ECS con la task definition existente
+          # Forzar la actualización del servicio con la task definition existente
           ecs_deploy=$(aws ecs update-service \
             --cluster poliedro-cluster-serverless \
             --service poliedro-task-backend-api-eds-service-dev \
-            --task-definition $ecs_task_definition_arn)
+            --task-definition $ecs_task_definition_arn \
+            --force-new-deployment)
           
           echo "Resultado del despliegue en ECS: $ecs_deploy"
 
