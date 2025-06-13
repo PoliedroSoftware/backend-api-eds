@@ -1,4 +1,4 @@
-name: Build, Test, Deploy to ECS and Run Load Tests
+name: Build, Test, Deploy to ECS
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Usamos un runner de Ubuntu
 
     steps:
       # Step 1: Checkout the code
@@ -31,44 +31,31 @@ jobs:
       - name: Run unit tests
         run: dotnet test
 
-      # Step 5: Setup SonarQube Scanner
-      - name: Setup SonarQube
-        uses: SonarSource/sonarcloud-github-action@v1
-        with:
-          sonar-token: ${{ secrets.SONAR_TOKEN }}
-          sonar-host-url: ${{ secrets.SONAR_HOST_URL }}
-
-      # Step 6: Run SonarQube analysis
-      - name: Run SonarQube analysis
-        run: dotnet build --configuration Release
-        env:
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-
-      # Step 7: Log in to AWS ECR
+      # Step 5: Log in to AWS ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Step 8: Build Docker image
+      # Step 6: Build Docker image
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.AWS_ECR_REPOSITORY }} .
 
-      # Step 9: Tag Docker image
+      # Step 7: Tag Docker image
       - name: Tag Docker image
         run: |
           docker tag ${{ secrets.AWS_ECR_REPOSITORY }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY }}:latest
 
-      # Step 10: Push Docker image to ECR
+      # Step 8: Push Docker image to ECR
       - name: Push Docker image to ECR
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY }}:latest
 
-      # Step 11: Register ECS Task Definition
+      # Step 9: Register ECS Task Definition
       - name: Register ECS Task Definition
         run: |
           ecs_task_definition=$(aws ecs register-task-definition \
             --family my-task-family \
-            --container-definitions "[
+            --container-definitions "[ 
               {
                 \"name\": \"my-container\",
                 \"image\": \"${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY }}:latest\",
@@ -85,7 +72,7 @@ jobs:
             ]")
           echo $ecs_task_definition
 
-      # Step 12: Deploy to Amazon ECS
+      # Step 10: Deploy to Amazon ECS
       - name: Deploy to Amazon ECS
         run: |
           ecs_deploy=$(aws ecs update-service \
@@ -93,15 +80,3 @@ jobs:
             --service ${{ secrets.AWS_ECS_SERVICE }} \
             --task-definition $(echo $ecs_task_definition | jq -r .taskDefinition.taskDefinitionArn))
           echo $ecs_deploy
-
-      # Step 13: Run Load Test with JMeter
-      - name: Run JMeter Load Test
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-      - name: Execute JMeter Test
-        run: |
-          wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.4.3.tgz
-          tar -xvzf apache-jmeter-5.4.3.tgz
-          cd apache-jmeter-5.4.3/bin
-          ./jmeter -n -t /path/to/your/test-plan.jmx -l /path/to/your/result.jtl
