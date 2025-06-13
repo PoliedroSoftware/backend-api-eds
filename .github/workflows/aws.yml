@@ -7,12 +7,13 @@ on:
   pull_request:
     branches:
       - main
-  
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest  # Usamos un runner de Ubuntu
-    environment: QA
-    
+
+    environment: QA  # Especifica el entorno QA
+
     steps:
       # Step 1: Checkout the code
       - name: Checkout code
@@ -47,7 +48,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
-          
+
       # Step 7: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
@@ -67,33 +68,12 @@ jobs:
         run: |
           docker push 713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest
 
-      # Step 11: Register ECS Task Definition
-      - name: Register ECS Task Definition
-        run: |
-          ecs_task_definition=$(aws ecs register-task-definition \
-            --family my-task-family \
-            --container-definitions "[ 
-              {
-                \"name\": \"my-container\",
-                \"image\": \"713881784063.dkr.ecr.us-east-2.amazonaws.com/poliedro/api-eds:latest\",
-                \"memory\": 512,
-                \"cpu\": 256,
-                \"essential\": true,
-                \"portMappings\": [
-                  {
-                    \"containerPort\": 80,
-                    \"hostPort\": 80
-                  }
-                ]
-              }
-            ]")
-          echo $ecs_task_definition
-
-      # Step 12: Deploy to Amazon ECS
+      # Step 11: Deploy to Amazon ECS using existing task definition
       - name: Deploy to Amazon ECS
         run: |
+          # Usa el ARN de la task definition existente en lugar de registrar una nueva
           ecs_deploy=$(aws ecs update-service \
             --cluster poliedro-cluster-serverless \
             --service poliedro-task-backend-api-eds-service-dev \
-            --task-definition $(echo $ecs_task_definition | jq -r .taskDefinition.taskDefinitionArn))
+            --task-definition arn:aws:ecs:us-east-2:713881784063:task-definition/poliedro-task-backend-api-eds:9)
           echo $ecs_deploy
