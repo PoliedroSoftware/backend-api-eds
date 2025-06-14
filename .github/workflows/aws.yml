@@ -27,14 +27,15 @@ jobs:
         with:
           dotnet-version: '8.0.x'
           
-      # Step 3.5: SonarQube Scan
-      - name: SonarQube Scan
+      # Step 3.5: SonarCloud Scan
+      - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
-          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=PoliedroSoftware_backend-api-eds
+            -Dsonar.organization=poliedro-software-sonarqube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           
       # Step 3: Restore dependencies
       - name: Restore dependencies
