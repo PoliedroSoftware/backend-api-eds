@@ -48,7 +48,29 @@ jobs:
       # Step 5: Run unit tests
       - name: Run unit tests
         run: dotnet test --configuration Release --no-build
+        
+      # Step X: Install JMeter
+      - name: Install JMeter
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jre-headless
+          wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
+          tar -xzf apache-jmeter-5.6.3.tgz
+          export JMETER_HOME=$PWD/apache-jmeter-5.6.3
+          echo "$JMETER_HOME/bin" >> $GITHUB_PATH
 
+      # Step X+1: Run JMeter test plan and generate report
+      - name: Run JMeter Load Test
+        run: |
+          ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/test.jmx -l LoadTest/results.jtl -e -o LoadTest/report
+          
+      # Step X+2: Upload JMeter report (opcional)
+      - name: Upload JMeter HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-report
+          path: LoadTest/report
+          
       # Step 6: Set AWS region from Secrets
       - name: Set AWS region
         run: |
