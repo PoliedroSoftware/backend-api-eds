@@ -65,11 +65,11 @@ jobs:
           ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report
           
       # Step X+2: Upload JMeter report (opcional)
-      - name: Upload JMeter HTML Report
+      - name: Upload JMeter HTML Reports
         uses: actions/upload-artifact@v4
         with:
-          name: jmeter-report
-          path: LoadTest/report
+          name: jmeter-reports
+          path: LoadTest/*_report
           
       # Step 6: Set AWS region from Secrets
       - name: Set AWS region
