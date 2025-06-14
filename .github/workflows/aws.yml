@@ -62,7 +62,7 @@ jobs:
       # Step X+1: Run JMeter test plan and generate report
       - name: Run JMeter Load Test
         run: |
-          ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/test.jmx -l LoadTest/results.jtl -e -o LoadTest/report
+          ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report
           
       # Step X+2: Upload JMeter report (opcional)
       - name: Upload JMeter HTML Report
