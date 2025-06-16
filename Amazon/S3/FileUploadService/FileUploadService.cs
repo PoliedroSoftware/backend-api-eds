@@ -15,18 +15,13 @@ public class FileUploadService(IConfiguration configuration) : IFileUploadServic
         using var content = new MultipartFormDataContent();
         using var fileStream = file.OpenReadStream();
         var fileContent = new StreamContent(fileStream);
-       
         fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-
         content.Add(fileContent, "files", file.FileName);
-
         var response = await httpClient.PostAsync(_uploadUrl, content);
-
         if (!response.IsSuccessStatusCode)
         {
             throw new HttpRequestException($"Error al subir el archivo: {response.ReasonPhrase}");
         }
-
         return await response.Content.ReadAsStringAsync();
     }
 }
