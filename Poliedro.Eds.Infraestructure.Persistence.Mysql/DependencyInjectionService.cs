@@ -59,6 +59,8 @@ using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 using Poliedro.Eds.Domain.Island.DomainIsland;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.Domainisland.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.DomainIsland.Impl;
+using Poliedro.Eds.Domain.DashboardPowerBI.DomainDashboardPowerBI;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.DomainService.lmpl;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -173,6 +175,7 @@ public static class DependencyInjectionService
         services.AddScoped<ICategoryGetByIdCategory, CategoryGetByIdCategory>();
         services.AddScoped<ICategoryGetAllCategory, CategoryGetAllCategory>();
         services.AddScoped<ICourtUpdateInventoryService, CourtInventoryService>();
+        services.AddScoped<IMasterGetAllService, MasterGetAllService>();
         services.AddSingleton<IRedisService, RedisCacheService>();
         return services;
     }

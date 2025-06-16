@@ -55,3 +55,8 @@ Log Entry :
    at AWS.Logger.Core.AWSLoggerCore.SendMessages(CancellationToken token)
    at AWS.Logger.Core.AWSLoggerCore.Monitor(CancellationToken token)
 -------------------------------
+Log Entry : 
+6/13/2025 11:18:16 AM
+  :
+  :System.TimeoutException: Flush Timeout - ServiceURL=https://logs.us-east-2.amazonaws.com/, StreamName=2025/06/13T11.13.55 - 1d9516a3-914c-4cab-8065-1075df03a74c, PendingMessages=0, CurrentBatch=1
+-------------------------------
