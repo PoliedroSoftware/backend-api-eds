@@ -13,6 +13,8 @@ public class TolgeeHealthCheckService(IHttpClientFactory httpClientFactory, ICon
         {
             var httpClient = httpClientFactory.CreateClient("TranslationCachingService");
             var response = await httpClient.GetAsync("translations?size=1");
+
+
             return response.IsSuccessStatusCode
                 ? HealthCheckResult.Healthy("Tolgee API is healthy.")
                 : HealthCheckResult.Unhealthy("Tolgee API is not healthy.");
