@@ -7,7 +7,7 @@ namespace Amazon.S3.FileUploadService;
 
 public class FileUploadService(IConfiguration configuration) : IFileUploadService
 {
-    private readonly string _uploadUrl = configuration["AWS:UploadEndpoint"];
+    private readonly string _uploadUrl = configuration["AWS:UploadEndpoint"] ?? throw new ArgumentNullException("AWS:UploadEndpoint configuration is missing");
 
     public async Task<string> UploadFileAsync(IFormFile file)
     {
