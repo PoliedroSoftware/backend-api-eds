@@ -33,8 +33,8 @@ public class BusinessGetByIdService(DataBaseContext context,IRedisService redisS
 
     private async Task<bool> EntityExists(int id)
     {
-        return await context.Tank
+        return await context.Business
             .AsNoTracking()
-            .AnyAsync(c => c.IdTank == id);
+            .AnyAsync(c => c.IdBusiness == id);
 }
    }
