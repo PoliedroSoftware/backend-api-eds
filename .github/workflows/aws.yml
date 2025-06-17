@@ -3,7 +3,7 @@ name: Build, Test, Deploy to ECS
 on:
   push:
     branches:
-      - main
+      - feature/test-github-actions
   pull_request:
     types: [closed]
     branches:
