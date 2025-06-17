@@ -15,19 +15,12 @@ public class DashboardPowerBI(IMediator mediator) : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
     {
 
-        var data = await mediator.Send(new GetAllDashboardPowerBIQuery(paginationParams));
+        var data = await mediator.Send(new GetAllDashboardPowerBIQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
 
         if (data is null)
-            return NotFound();
+            return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
 
         return Ok(data);
-
-        //var data = await mediator.Send(new GetAllDashboardPowerBIQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
-        //if (data is null)
-        //{
-        //    return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
-        //}
-        //return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
     }
 }
 
