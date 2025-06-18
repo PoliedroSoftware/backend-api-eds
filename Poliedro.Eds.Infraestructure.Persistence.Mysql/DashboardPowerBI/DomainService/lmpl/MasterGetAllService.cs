@@ -26,14 +26,14 @@ public class MasterGetAllService(
     IInventoryListDomainService inventoryListDomainService,
     ICourtListDomainService courtListDomainService) : IMasterGetAllService
 {
-    public async Task<MasterEntity> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
+    public async Task<IEnumerable<MasterEntity>> GetAllAsync(PaginationParams paginationParams, CancellationToken cancellationToken)
     {
 
         string cacheKey = $"master:{paginationParams.PageNumber}:{paginationParams.PageSize}";
-        var cachedData = await redisService.GetCacheAsync<MasterEntity>(cacheKey);
+        var cachedData = await redisService.GetCacheAsync<IEnumerable<MasterEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
 
-        var masterEntity = new MasterEntity
+        var masterEntity =  new MasterEntity
         {
             Capacities = await capacityGetAllService.GetAllAsync(paginationParams),
             Compartiments = await compartimentGetAllCompartiment.GetAllAsync(paginationParams),
@@ -48,6 +48,6 @@ public class MasterGetAllService(
 
         await redisService.SetCacheAsync(cacheKey, masterEntity, TimeSpan.FromMinutes(1440));
 
-        return masterEntity;
+        return [masterEntity];
     }
 }

@@ -7,4 +7,5 @@ public class BusinessEntity
     [Key]
     public int IdBusiness { get; set; } = default!;
     public string Name { get; set; } = default!;
+    public string Context { get; set; } = default!;
 }
