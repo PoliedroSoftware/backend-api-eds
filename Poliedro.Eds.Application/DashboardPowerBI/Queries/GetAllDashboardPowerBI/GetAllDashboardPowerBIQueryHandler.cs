@@ -7,8 +7,8 @@ namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GetAllDashboardPower
 public class GetAllDashboardPowerBIQueryHandler(
     IMasterGetAllService MasterGetAllService,
     IMapper mapper)
-    : IRequestHandler<GetAllDashboardPowerBIQuery, MasterDto>
+    : IRequestHandler<GetAllDashboardPowerBIQuery, IEnumerable<MasterDto>>
 {
-    public async Task<MasterDto> Handle(GetAllDashboardPowerBIQuery request, CancellationToken cancellationToken)
-        => mapper.Map<MasterDto>(await MasterGetAllService.GetAllAsync(request.PaginationParams, cancellationToken));
+    public async Task<IEnumerable<MasterDto>> Handle(GetAllDashboardPowerBIQuery request, CancellationToken cancellationToken)
+        => mapper.Map<IEnumerable<MasterDto>>(await MasterGetAllService.GetAllAsync(request.PaginationParams, cancellationToken));
 }
