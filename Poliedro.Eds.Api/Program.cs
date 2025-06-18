@@ -70,17 +70,6 @@ builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 });
 
 
-builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
-{
-    var factory = new RabbitMQ.Client.ConnectionFactory()
-    {
-        HostName = builder.Configuration["RabbitMQ:HostName"],
-        UserName = builder.Configuration["RabbitMQ:UserName"],
-        Password = builder.Configuration["RabbitMQ:Password"]
-    };
-    return factory.CreateConnection();
-});
-
 // Configura el JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
