@@ -5,7 +5,7 @@ namespace Poliedro.Eds.Domain.DashboardPowerBI.DomainDashboardPowerBI;
 
 public interface IMasterGetAllService
 {
-    Task<MasterEntity> GetAllAsync(
+    Task<IEnumerable<MasterEntity>> GetAllAsync(
         PaginationParams paginationParams,
         CancellationToken cancellationToken);
 }
