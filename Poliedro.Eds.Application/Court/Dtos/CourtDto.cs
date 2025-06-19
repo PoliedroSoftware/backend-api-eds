@@ -16,5 +16,7 @@
         public IEnumerable<DocumentDto> CourtDocuments{ get; set; }
         public IEnumerable<CourtExpenditureDto> CourtExpenditures { get; set; }
         public IEnumerable<CourtTypeOfCollectionDto> CourtTypeOfCollections { get; set; }
+        public CourtInventoryDto? CourtInventory { get; set; }
+
     }
 }
