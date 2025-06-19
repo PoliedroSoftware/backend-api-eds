@@ -17,7 +17,6 @@ using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos.Court;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
-using Poliedro.Eds.Domain.DashboardPowerBI.Entities.Master;
 
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;
@@ -26,7 +25,7 @@ public class DashboardPowerBIMapper: Profile
 {
     public DashboardPowerBIMapper()
     {
-        CreateMap<MasterEntity, MasterDto>();
+        
 
         CreateMap<CapacityEntity, CapacityDto>()
             .ForMember(dest => dest.IdCapacity, opt => opt.MapFrom(src => src.IdCapacity.ToString()))
