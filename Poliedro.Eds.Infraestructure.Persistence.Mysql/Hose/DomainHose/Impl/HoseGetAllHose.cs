@@ -21,6 +21,8 @@ public class HoseGetAllHose(DataBaseContext context, IRedisService redisService)
                     join dispenser in context.Dispensers on hose.IdDispensers equals dispenser.Id
                     join productType in context.ProductTypes on hose.IdProductType equals productType.IdProductType
                     join eds in context.Eds on dispenser.EdsId equals eds.IdEds
+                    join product in context.Product on hose.IdProductType equals product.IdProductType
+                    
                     select new HoseDto(
                         hose.IdHose,
                         hose.Number,
@@ -28,6 +30,7 @@ public class HoseGetAllHose(DataBaseContext context, IRedisService redisService)
                         hose.AccumulatedGallons,
                         hose.AccumulatedAmount,
                         hose.IdProductType,
+                        product.Price,
                         dispenser,
                         productType,
                         eds
