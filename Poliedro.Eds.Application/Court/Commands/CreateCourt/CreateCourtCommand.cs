@@ -17,6 +17,7 @@ public record CreateCourtCommand(
     IEnumerable<CourtDispenserCommand> CourtDispensers,
     IEnumerable<DocumentCommand> CourtDocuments,
     IEnumerable<CourtExpenditureCommand> CourtExpenditures,
-    IEnumerable<CourtTypeOfCollectionCommand> CourtTypeOfCollections
+    IEnumerable<CourtTypeOfCollectionCommand> CourtTypeOfCollections,
+    CourtInventoryCommand? CourtInventory
     ) : IRequest<Result<VoidResult, Error>>;
 
