@@ -16,4 +16,5 @@ public class CourtEntity
     public IEnumerable<DocumentEntity> CourtDocuments { get; set; }
     public IEnumerable<CourtExpenditureEntity> CourtExpenditures { get; set; }
     public IEnumerable<CourtTypeOfCollectionEntity> CourtTypeOfCollections { get; set; }
+    public CourtInventoryEntity CourtInventory { get; set; }
 }
