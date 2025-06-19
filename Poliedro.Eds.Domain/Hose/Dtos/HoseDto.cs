@@ -11,6 +11,7 @@ public record HoseDto(
     double AccumulatedGallons,
     double AccumulatedAmount,
     int IdProductType,
+    double Price,
     DispensersEntity dispensersEntity,
     ProductTypeEntity productTypeEntity,
     EdsEntity edsEntity
