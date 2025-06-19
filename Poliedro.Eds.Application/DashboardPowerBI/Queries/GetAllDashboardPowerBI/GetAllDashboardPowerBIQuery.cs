@@ -6,5 +6,5 @@ using Poliedro.Eds.Domain.Common.Pagination;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GetAllDashboardPowerBI;
 
-public record GetAllDashboardPowerBIQuery(PaginationParams PaginationParams) : IRequest<MasterDto>;
+public record GetAllDashboardPowerBIQuery(PaginationParams PaginationParams) : IRequest<IEnumerable<MasterDto>>;
 
