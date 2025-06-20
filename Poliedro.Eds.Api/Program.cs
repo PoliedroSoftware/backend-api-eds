@@ -62,13 +62,24 @@ builder.Services.AddHealthChecks()
 
 builder.Services.AddLogging();
 
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Keycloak:KeycloakUri"]);
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 
+
+builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
+{
+    var factory = new RabbitMQ.Client.ConnectionFactory()
+    {
+        HostName = builder.Configuration["RabbitMQ:HostName"],
+        UserName = builder.Configuration["RabbitMQ:UserName"],
+        Password = builder.Configuration["RabbitMQ:Password"]
+    };
+    return factory.CreateConnection();
+});
 
 // Configura el JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

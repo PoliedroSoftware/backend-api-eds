@@ -20,6 +20,10 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
         {
             var islanderEntity = mapper.Map<IslanderEntity>(request.Request);
 
+            var nameClaimToken = request.nameClaimToken;
+
+            Console.WriteLine($"nombre del clain del token: {nameClaimToken}");
+
             var originalPassword = islanderEntity.Password;
 
             islanderEntity.Password = BCrypt.Net.BCrypt.HashPassword(islanderEntity.Password);
@@ -43,7 +47,8 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 islanderEntity.Email,
                 islanderEntity.FirstName,
                 islanderEntity.LastName,
-                Password = originalPassword
+                Password = originalPassword,
+                NameClaimToken = nameClaimToken
             };
   
           
