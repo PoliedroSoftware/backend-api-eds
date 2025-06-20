@@ -3256,7 +3256,11 @@
         </ResultCollector>
         <hashTree/>
       </hashTree>
+<<<<<<< HEAD
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="DispenserType" enabled="false">
+=======
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="DispenserType" enabled="true">
+>>>>>>> 5a468ee4865e3c6075c0f84d4e730c5946a999da
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">30</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -5226,7 +5230,11 @@
         </ResultCollector>
         <hashTree/>
       </hashTree>
+<<<<<<< HEAD
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HoseHistory" enabled="false">
+=======
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="HoseHistory" enabled="true">
+>>>>>>> 5a468ee4865e3c6075c0f84d4e730c5946a999da
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">30</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
