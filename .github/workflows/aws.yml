@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/test-checklist
   pull_request:
     types: [closed]
     branches:
@@ -13,7 +14,7 @@ on:
 
 jobs:
   build_and_deploy:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest  
 
     environment: QA  
@@ -57,7 +58,9 @@ jobs:
 
       - name: Run JMeter Load Test
         run: |
+          # Ejecutar el comando de JMeter en el entorno Ubuntu
           ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report
+          
           
       - name: Upload JMeter HTML Reports
         uses: actions/upload-artifact@v4
