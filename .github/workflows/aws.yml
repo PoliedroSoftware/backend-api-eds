@@ -58,10 +58,12 @@ jobs:
 
       - name: Run JMeter Load Test
         run: |
-          # Ejecutar el comando de JMeter en el entorno Ubuntu
           ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report
-          
-          
+          if [ $? -ne 0 ]; then
+            echo "JMeter test failed. Exiting pipeline."
+            exit 1
+          fi
+
       - name: Upload JMeter HTML Reports
         uses: actions/upload-artifact@v4
         with:
