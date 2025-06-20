@@ -62,7 +62,7 @@ jobs:
           ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
           
           # Mostrar los últimos 10 registros del log de JMeter
-          tail -n 10 jmeter_output.log
+          
           
           # Verificar si hay errores en el archivo de salida
           if grep -q "Err: [1-9]" jmeter_output.log; then
