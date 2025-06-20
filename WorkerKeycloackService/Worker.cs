@@ -51,7 +51,7 @@ namespace WorkerKeycloackService
                     using (var scope = _serviceProvider.CreateScope())
                     {
                         var keycloakUserService = scope.ServiceProvider.GetRequiredService<IKeycloakUserService>();
-                        var resultService = await keycloakUserService.CreateUserAsync(islanderEntity, islanderDto.Password);
+                        var resultService = await keycloakUserService.CreateUserAsync(islanderEntity, islanderDto.Password, islanderDto.NameClaimToken);
 
                         if (resultService.IsSuccess)
                         {
