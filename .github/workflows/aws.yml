@@ -58,25 +58,22 @@ jobs:
 
       - name: Run JMeter Load Test
         run: |
-          # Ejecutar JMeter y capturar la salida
           ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
+
+      - name: Check for errors in JMeter results
+        run: |
+          echo "Checking JMeter results for errors..."
+          # Buscar errores HTTP 500 en los resultados (.jtl)
+          if grep -q "500" LoadTest/results.jtl; then
+            echo "JMeter test failed due to 500 Internal Server Error in results.jtl. Exiting pipeline."
+            exit 1
+          fi
           
-          # Mostrar los últimos 10 registros del log de JMeter
-          
-          
-          # Verificar si hay errores en el archivo de salida
-          if grep -q "Err: [1-9]" jmeter_output.log; then
+          # Verificar en los logs si hay errores (ERROR en jmeter_output.log)
+          if grep -q "ERROR" jmeter_output.log; then
             echo "JMeter test failed due to errors in jmeter_output.log. Exiting pipeline."
             exit 1
           fi
-
-          # Verificar si hubo errores en los resultados .jtl (LoadTest/results.jtl)
-          if grep -q "Err: [1-9]" LoadTest/results.jtl; then
-            echo "JMeter test failed due to errors in results.jtl. Exiting pipeline."
-            exit 1
-          fi
-    
-          echo "JMeter test completed successfully."
 
 
       - name: Upload JMeter HTML Reports
