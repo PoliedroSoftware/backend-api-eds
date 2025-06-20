@@ -63,9 +63,9 @@ jobs:
       - name: Check for errors in JMeter results
         run: |
           echo "Checking JMeter results for errors..."
-          # Buscar errores HTTP 500 en los resultados (.jtl)
-          if grep -q "500" LoadTest/results.jtl; then
-            echo "JMeter test failed due to 500 Internal Server Error in results.jtl. Exiting pipeline."
+          # Buscar cualquier código de error HTTP (4xx, 5xx) en los resultados (.jtl)
+          if grep -q -E "4[0-9]{2}|5[0-9]{2}" LoadTest/results.jtl; then
+            echo "JMeter test failed due to client or server errors in results.jtl. Exiting pipeline."
             exit 1
           fi
           
