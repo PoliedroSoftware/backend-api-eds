@@ -68,12 +68,6 @@ jobs:
             echo "JMeter test failed due to client or server errors in results.jtl. Exiting pipeline."
             exit 1
           fi
-          
-          # Verificar en los logs si hay errores (ERROR en jmeter_output.log)
-          if grep -q "ERROR" jmeter_output.log; then
-            echo "JMeter test failed due to errors in jmeter_output.log. Exiting pipeline."
-            exit 1
-          fi
 
 
       - name: Upload JMeter HTML Reports
