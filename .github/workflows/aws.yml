@@ -20,6 +20,20 @@ jobs:
     environment: QA  
 
     steps:
+      - name: Cancel Running Workflows
+        run: |
+          echo "Cancelando workflows anteriores..."
+          current_run_id=$(echo $GITHUB_RUN_ID)
+          running_workflows=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs?status=in_progress")
+
+          echo "$running_workflows" | jq -r '.workflow_runs[] | select(.status=="in_progress") | select(.id!='$current_run_id') | .id' | while read run_id; do
+            # Cancelamos los workflows anteriores
+            echo "Cancelando el workflow con ID $run_id"
+            curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id/cancel"
+          done
+
       - name: Checkout code
         uses: actions/checkout@v2
 
