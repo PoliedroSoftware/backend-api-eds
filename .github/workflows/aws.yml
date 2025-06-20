@@ -20,7 +20,7 @@ jobs:
     environment: QA  
 
     steps:
-      - name: Cancel Running Workflows
+      - name: Cancel Running Workflows Action
         run: |
           echo "Cancelando workflows anteriores..."
           current_run_id=$(echo $GITHUB_RUN_ID)
