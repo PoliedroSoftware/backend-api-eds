@@ -58,14 +58,26 @@ jobs:
 
       - name: Run JMeter Load Test
         run: |
+          # Ejecutar JMeter y capturar la salida
           ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
+          
+          # Mostrar los últimos 10 registros del log de JMeter
           tail -n 10 jmeter_output.log
-          if [ $? -ne 0 ]; then
-            echo "JMeter test failed. Exiting pipeline."
+          
+          # Verificar si hay errores en el archivo de salida
+          if grep -q "Err: [1-9]" jmeter_output.log; then
+            echo "JMeter test failed due to errors in jmeter_output.log. Exiting pipeline."
             exit 1
-          else
-            echo "JMeter test completed successfully."
           fi
+
+          # Verificar si hubo errores en los resultados .jtl (LoadTest/results.jtl)
+          if grep -q "Err: [1-9]" LoadTest/results.jtl; then
+            echo "JMeter test failed due to errors in results.jtl. Exiting pipeline."
+            exit 1
+          fi
+    
+          echo "JMeter test completed successfully."
+
 
       - name: Upload JMeter HTML Reports
         uses: actions/upload-artifact@v4
