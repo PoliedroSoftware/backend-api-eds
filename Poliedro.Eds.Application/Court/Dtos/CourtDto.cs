@@ -13,8 +13,8 @@
         public string? Descripcion { get; set; }
         public double Distintic { get; set; }
         public IEnumerable<CourtDispenserDto> CourtDispensers { get; set; }
-        public IEnumerable<DocumentDto> CourtDocuments{ get; set; }
-        public IEnumerable<CourtExpenditureDto> CourtExpenditures { get; set; }
+        public IEnumerable<DocumentDto?>? CourtDocuments { get; set; }
+        public IEnumerable<CourtExpenditureDto?>? CourtExpenditures { get; set; }
         public IEnumerable<CourtTypeOfCollectionDto> CourtTypeOfCollections { get; set; }
         public CourtInventoryDto? CourtInventory { get; set; }
 
