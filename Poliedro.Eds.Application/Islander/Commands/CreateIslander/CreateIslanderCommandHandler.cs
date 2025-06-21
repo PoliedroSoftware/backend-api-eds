@@ -14,13 +14,15 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
 {
     public class CreateIslanderCommandHandler(
         IIslanderCreateIslander islanderDomainIslander,
-        IMapper mapper, IConfiguration config) : IRequestHandler<CreateIslanderCommand, Result<VoidResult, Error>>
+        IMapper mapper, IConfiguration config,
+        IConnection rabbitConnection) : IRequestHandler<CreateIslanderCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateIslanderCommand request, CancellationToken cancellationToken)
         {
+
             var islanderEntity = mapper.Map<IslanderEntity>(request.Request);
 
-            var nameClaimToken = request.nameClaimToken;
+            var nameClaimToken = request.NameClaimToken;
 
             Console.WriteLine($"nombre del clain del token: {nameClaimToken}");
 
@@ -32,10 +34,12 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
             if (!dbResult.IsSuccess)
                 return dbResult.Error!;
 
-            var factory = new ConnectionFactory() { HostName = config["RabbitMQ:HostName"], UserName = config["RabbitMQ:UserName"], Password = config["RabbitMQ:Password"] };
-            using var rabbitConnection = factory.CreateConnection();
             using var channel = rabbitConnection.CreateModel();
-  
+
+            //var factory = new ConnectionFactory() { HostName = config["RabbitMQ:HostName"], UserName = config["RabbitMQ:UserName"], Password = config["RabbitMQ:Password"] };
+            //using var rabbitConnection = factory.CreateConnection();
+            //using var channel = rabbitConnection.CreateModel();
+
             channel.ExchangeDeclare(exchange: "keycloak_exchange", type: ExchangeType.Direct);
             channel.QueueDeclare(queue: "keycloak", durable: true, exclusive: false, autoDelete: false, arguments: null);
             channel.QueueBind(queue: "keycloak", exchange: "keycloak_exchange", routingKey: "keycloak");
