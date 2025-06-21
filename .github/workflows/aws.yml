@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/test-checklist
   pull_request:
     types: [closed]
     branches:
@@ -19,6 +20,20 @@ jobs:
     environment: QA  
 
     steps:
+      - name: Cancel Running Workflows
+        run: |
+          echo "Cancelando workflows anteriores..."
+          current_run_id=$(echo $GITHUB_RUN_ID)
+          running_workflows=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs?status=in_progress")
+
+          echo "$running_workflows" | jq -r '.workflow_runs[] | select(.status=="in_progress") | select(.id!='$current_run_id') | .id' | while read run_id; do
+            # Cancelamos los workflows anteriores
+            echo "Cancelando el workflow con ID $run_id"
+            curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id/cancel"
+          done
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -57,13 +72,27 @@ jobs:
 
       - name: Run JMeter Load Test
         run: |
-          ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report
-          
+          ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
+
+      - name: Check for errors in JMeter results
+        run: |
+          echo "Checking JMeter results for errors..."
+          # Buscar errores HTTP 500 en los resultados (.jtl)
+          if grep -q "500" LoadTest/results.jtl; then
+            echo "JMeter test failed due to 500 Internal Server Error in results.jtl. Exiting pipeline."
+            exit 1
+          fi
+
+
       - name: Upload JMeter HTML Reports
         uses: actions/upload-artifact@v4
         with:
           name: jmeter-reports
-          path: LoadTest/*_report
+          path: LoadTest/report/*
+          if-no-files-found: warn
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
           
       - name: Set AWS region
         run: |
