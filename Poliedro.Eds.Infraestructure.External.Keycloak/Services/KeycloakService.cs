@@ -97,62 +97,62 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 
 
 
-                //// Paso 1: obtener subgrupos del grupo padre
-                //var groupId = _configuration["Keycloak:DefaultGroupId"];
-
-                //var subgroupsUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/groups/{groupId}/children";
-                //var groupResponse = await _httpClient.GetAsync(subgroupsUrl);
-
-                //if (!groupResponse.IsSuccessStatusCode)
-                //{
-                //    var errorText = await groupResponse.Content.ReadAsStringAsync();
-                //    return Error.Conflict("Keycloak", $"Error getting subgroups: {errorText}");
-                //}
-
-                //var groupContent = await groupResponse.Content.ReadAsStringAsync();
-                //using var jsonDoc = JsonDocument.Parse(groupContent);
-
-                //// Paso 2: buscar el subgrupo por NameClaimToken
-                //var subGroups = jsonDoc.RootElement.EnumerateArray();
-
-                //string? subGroupId = null;
-
-                //foreach (var subgroup in subGroups)
-                //{
-                //    if (subgroup.GetProperty("name").GetString() == nameClaimToken)
-                //    {
-                //        subGroupId = subgroup.GetProperty("id").GetString();
-                //        break;
-                //    }
-                //}
-
-                //if (subGroupId == null)
-                //{
-                //    return Error.Conflict("Keycloak", $"No se encontró subgrupo con nombre: {nameClaimToken}");
-                //}
-
-                //// Paso 3: asignar el usuario al subgrupo
-                //var assignUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/users/{userId}/groups/{subGroupId}";
-                //var assignResponse = await _httpClient.PutAsync(assignUrl, null);
-
-                //if (!assignResponse.IsSuccessStatusCode)
-                //{
-                //    var errorText = await assignResponse.Content.ReadAsStringAsync();
-                //    return Error.Conflict("Keycloak", $"Error assigning user to sub-group: {errorText}");
-                //}
-
-
+                // Paso 1: obtener subgrupos del grupo padre
                 var groupId = _configuration["Keycloak:DefaultGroupId"];
 
-                var groupUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/users/{userId}/groups/{groupId}";
+                var subgroupsUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/groups/{groupId}/children";
+                var groupResponse = await _httpClient.GetAsync(subgroupsUrl);
 
-                var addGroupResponse = await _httpClient.PutAsync(groupUrl, null);
-
-                if (!addGroupResponse.IsSuccessStatusCode)
+                if (!groupResponse.IsSuccessStatusCode)
                 {
-                    var groupError = await addGroupResponse.Content.ReadAsStringAsync();
-                    return Error.Conflict("Keycloak", $"Error adding user to group: {groupError}");
+                    var errorText = await groupResponse.Content.ReadAsStringAsync();
+                    return Error.Conflict("Keycloak", $"Error getting subgroups: {errorText}");
                 }
+
+                var groupContent = await groupResponse.Content.ReadAsStringAsync();
+                using var jsonDoc = JsonDocument.Parse(groupContent);
+
+                // Paso 2: buscar el subgrupo por NameClaimToken
+                var subGroups = jsonDoc.RootElement.EnumerateArray();
+
+                string? subGroupId = null;
+
+                foreach (var subgroup in subGroups)
+                {
+                    if (subgroup.GetProperty("name").GetString() == nameClaimToken)
+                    {
+                        subGroupId = subgroup.GetProperty("id").GetString();
+                        break;
+                    }
+                }
+
+                if (subGroupId == null)
+                {
+                    return Error.Conflict("Keycloak", $"No se encontró subgrupo con nombre: {nameClaimToken}");
+                }
+
+                // Paso 3: asignar el usuario al subgrupo
+                var assignUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/users/{userId}/groups/{subGroupId}";
+                var assignResponse = await _httpClient.PutAsync(assignUrl, null);
+
+                if (!assignResponse.IsSuccessStatusCode)
+                {
+                    var errorText = await assignResponse.Content.ReadAsStringAsync();
+                    return Error.Conflict("Keycloak", $"Error assigning user to sub-group: {errorText}");
+                }
+
+
+                //var groupId = _configuration["Keycloak:DefaultGroupId"];
+
+                //var groupUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/users/{userId}/groups/{groupId}";
+
+                //var addGroupResponse = await _httpClient.PutAsync(groupUrl, null);
+
+                //if (!addGroupResponse.IsSuccessStatusCode)
+                //{
+                //    var groupError = await addGroupResponse.Content.ReadAsStringAsync();
+                //    return Error.Conflict("Keycloak", $"Error adding user to group: {groupError}");
+                //}
 
 
 
