@@ -26,8 +26,6 @@ namespace WorkerKeycloackService
                 arguments: null);
 
             _logger.LogInformation($"Escuchando la cola '{queueName}' cada 5 segundos...");
-            _logger.LogInformation("🔁 Usando lógica NUEVA para subgrupos dinámicos");
-
 
             while (!stoppingToken.IsCancellationRequested)
             {
