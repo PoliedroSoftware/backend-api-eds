@@ -62,8 +62,7 @@ namespace WorkerKeycloackService
                     else
                     {
                         _logger.LogError($"Error creando usuario: {resultService.Error}");
-                        bool isRetryable = resultService.Error.Code == "SomeTemporaryError";
-                        channel.BasicNack(result.DeliveryTag, false, requeue: isRetryable);
+                        channel.BasicNack(result.DeliveryTag, false, requeue: true);
                     }
                 }
                 else

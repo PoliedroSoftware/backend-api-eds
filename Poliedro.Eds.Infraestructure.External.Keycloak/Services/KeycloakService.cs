@@ -95,8 +95,6 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 
                 }
 
-
-
                 // Paso 1: obtener subgrupos del grupo padre
                 var groupId = _configuration["Keycloak:DefaultGroupId"];
 
@@ -117,9 +115,13 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 
                 string? subGroupId = null;
 
+                string Normalize(string? input) =>
+                    string.Join(" ", (input ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries));
+
+
                 foreach (var subgroup in subGroups)
                 {
-                    if (subgroup.GetProperty("name").GetString() == nameClaimToken)
+                    if (Normalize(subgroup.GetProperty("name").GetString()) == Normalize(nameClaimToken))
                     {
                         subGroupId = subgroup.GetProperty("id").GetString();
                         break;
@@ -128,6 +130,8 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 
                 if (subGroupId == null)
                 {
+                    Console.WriteLine("Keycloak", $"No se encontró subgrupo con nombre: {nameClaimToken}");
+
                     return Error.Conflict("Keycloak", $"No se encontró subgrupo con nombre: {nameClaimToken}");
                 }
 
@@ -138,6 +142,8 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
                 if (!assignResponse.IsSuccessStatusCode)
                 {
                     var errorText = await assignResponse.Content.ReadAsStringAsync();
+                    Console.WriteLine(errorText);
+                    
                     return Error.Conflict("Keycloak", $"Error assigning user to sub-group: {errorText}");
                 }
 
