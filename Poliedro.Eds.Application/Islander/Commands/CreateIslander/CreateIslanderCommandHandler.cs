@@ -7,14 +7,12 @@ using Poliedro.Eds.Domain.Islander.Entities;
 using System.Text;
 using System.Text.Json;
 using RabbitMQ.Client;
-using System.Threading.Channels;
-using Microsoft.Extensions.Configuration;
 
 namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
 {
     public class CreateIslanderCommandHandler(
         IIslanderCreateIslander islanderDomainIslander,
-        IMapper mapper, IConfiguration config,
+        IMapper mapper,
         IConnection rabbitConnection) : IRequestHandler<CreateIslanderCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateIslanderCommand request, CancellationToken cancellationToken)
@@ -35,10 +33,6 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 return dbResult.Error!;
 
             using var channel = rabbitConnection.CreateModel();
-
-            //var factory = new ConnectionFactory() { HostName = config["RabbitMQ:HostName"], UserName = config["RabbitMQ:UserName"], Password = config["RabbitMQ:Password"] };
-            //using var rabbitConnection = factory.CreateConnection();
-            //using var channel = rabbitConnection.CreateModel();
 
             channel.ExchangeDeclare(exchange: "keycloak_exchange", type: ExchangeType.Direct);
             channel.QueueDeclare(queue: "keycloak", durable: true, exclusive: false, autoDelete: false, arguments: null);
