@@ -11,6 +11,6 @@ public class CourtTypeOfCollectionEntity
     public double Amount { get; set; }
     [NotMapped]
     public string TypeOfCollectionName { get; set; }
-    public string Description { get; set; }
+    public string? Description { get; set; }
     public TypeOfCollectionEntity TypeOfCollection { get; set; }
 }

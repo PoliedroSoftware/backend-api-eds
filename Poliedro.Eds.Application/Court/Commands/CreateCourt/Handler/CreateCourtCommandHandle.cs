@@ -119,6 +119,10 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 
         private double GetTotalExpenditures(CreateCourtCommand command)
         {
+            if(command.CourtExpenditures == null || !command.CourtExpenditures.Any())
+            {
+                return 0;
+            }   
             return command.CourtExpenditures.Sum(d => d.Amount);
         }
 
