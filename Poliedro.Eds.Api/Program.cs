@@ -62,7 +62,7 @@ builder.Services.AddHealthChecks()
 
 builder.Services.AddLogging();
 
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Keycloak:KeycloakUri"]);
