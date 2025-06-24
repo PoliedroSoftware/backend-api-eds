@@ -6,7 +6,7 @@ public record CourtTypeOfCollectionDto(
     int IdTypeOfCollection,
     double Amount,
     string TypeOfCollectionName,
-    string? Description,
+    string Description,
     TypeOfCollectionDto TypeOfCollection);
 
 
