@@ -11,7 +11,9 @@ using Poliedro.Eds.Application.Islander.Errors;
 using Poliedro.Eds.Application.Islander.Queries.GellAllIslander;
 using Poliedro.Eds.Application.Islander.Queries.GetIslanderById;
 using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Swashbuckle.AspNetCore.Annotations;
+using YamlDotNet.Core;
 
 namespace Poliedro.Eds.Api.Controllers.v1.Islender
 {
@@ -70,9 +72,17 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
            [FromBody] CreateIslanderCommand createIslanderCommand)
 
         {
+
+            var nameClaimToken = HttpContext.User.FindFirst("name")?.Value;
+
+            var command = new CreateIslanderCommand(createIslanderCommand.Request, nameClaimToken);
+
+            Console.WriteLine($"nombre del token: {nameClaimToken}");
+
             //var validationResult = await validator.ValidateAsync(createIslanderCommand.Request);
             //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
-            var result = await mediator.Send(createIslanderCommand);
+
+            var result = await mediator.Send(command);
             return result.Match(
                  onSuccess => TypedResults.Created()
              );
