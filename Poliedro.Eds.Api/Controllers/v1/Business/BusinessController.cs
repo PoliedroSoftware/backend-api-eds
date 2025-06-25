@@ -32,6 +32,18 @@ public class BusinessController(IMediator mediator) : ControllerBase
         return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
     }
 
+    [Authorize(Policy = "AdminOnly")]
+    [HttpDelete]
+    public async Task<IActionResult> Delete([FromQuery] PaginationParams paginationParams)
+    {
+        var data = await mediator.Send(new GellAllBusinessQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+        if (data is null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
+        }
+        return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
+    }
+
     [SwaggerOperation(Summary = "Get business")]
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(BusinessDto))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
