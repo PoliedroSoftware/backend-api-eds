@@ -15,6 +15,7 @@ using Poliedro.Eds.Api;
 using Poliedro.Eds.Api.Common.Configurations;
 using Poliedro.Eds.Api.Middlelware.aws;
 using Poliedro.Eds.Api.Middlelware.Jwt;
+using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
 using Poliedro.Eds.Application.AWS.Configurations.Dto.Plemsi;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
@@ -244,6 +245,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<LoggingMiddleware>();
 app.UseAuthentication();
 app.UseMiddleware<JwtMiddleware>();
+app.UseMiddleware<TenantMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
