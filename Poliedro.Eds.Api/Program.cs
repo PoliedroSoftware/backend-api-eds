@@ -31,6 +31,7 @@ using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 using Poliedro.External.HealthCheck.Tolgee;
@@ -221,6 +222,7 @@ builder.Services.AddCors(options =>
               
     });
 });
+builder.Services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();
 var app = builder.Build();
 app.MapHealthChecks("/health", new HealthCheckOptions()
 {

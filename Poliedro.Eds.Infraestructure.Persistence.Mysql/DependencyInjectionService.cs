@@ -66,11 +66,7 @@ public static class DependencyInjectionService
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? configuration.GetConnectionString("MysqlConnection");
-        services.AddDbContext<DataBaseContext>(
-            options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)
-        ));
-
+       
         services.AddTransient<IMessageProvider, MessageProvider>();
         services.AddTransient<ICourtDomainService, CourtCreateService>();
         services.AddTransient<ICourtGetByIdDomainService, CourtGetByIDService>();

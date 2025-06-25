@@ -10,11 +10,12 @@ using System.Text.Json;
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 
 public class BusinessGetAllService(
-    DataBaseContext context, 
+    ITenantDbContextFactory dbContextFactory, 
     IRedisService redisService, ILogger<BusinessGetAllService> logger) : IBusinessGetAllService
 {
     public async Task<IEnumerable<BusinessEntity>> GetAllAsync(PaginationParams paginationParams)
     {
+        using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.Business.CountAsync();
 
        string cacheKey = $"business:{paginationParams.PageNumber}:{paginationParams.PageSize}";
