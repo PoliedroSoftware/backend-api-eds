@@ -22,7 +22,7 @@
           </elementProp>
           <elementProp name="token" elementType="Argument">
             <stringProp name="Argument.name">token</stringProp>
-            <stringProp name="Argument.value">Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJOSmpVX2drOVNWMWU4WE5OQ3lNc0xpancySUpUS1BxZGwyS1p3dkFXMGhvIn0.eyJleHAiOjE3NTA4NDMyOTgsImlhdCI6MTc1MDgwNzI5OCwianRpIjoib25ydHJvOjFlYjFkYjEzLTVjZjAtNGY5Zi05YjNkLTA2YTc0MDFmY2Q0YyIsImlzcyI6Imh0dHBzOi8va2V5Y2xvYWstMHlydHExLXU0NDgyOC52bS5lbGVzdGlvLmFwcC9yZWFsbXMvQXBwRURTIiwiYXVkIjpbImFwcGxpY2F0aW9uLWVkcyIsInJlYWxtLW1hbmFnZW1lbnQiLCJhY2NvdW50Il0sInN1YiI6IjM0ODY4Yzc0LTdhYzUtNGQ2NS1iNjY0LWQ2YzgxNTM3NjFjNSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFwcGxpY2F0aW9uLWVkcyIsInNpZCI6IjA4MGIzYmRlLTA1NjgtNGY2Ny05Y2M3LTU0M2ZmNjU5YzExMiIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1hcHBlZHMiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFwcGxpY2F0aW9uLWVkcyI6eyJyb2xlcyI6WyJBZG1pbiJdfSwicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJtYW5hZ2UtdXNlcnMiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoidXNlcl9hdHRyaWJ1dGVzIGdyb3Vwc19hdHRyaWJ1dGVzIGF1dG8tYWRkLWF1ZGllbmNlIHByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJlZHVhciBzYW5jaGV6IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYWRtaW4iLCJnaXZlbl9uYW1lIjoiZWR1YXIiLCJmYW1pbHlfbmFtZSI6InNhbmNoZXoiLCJlbWFpbCI6ImVkdWFybGVvbmFyZG9zYW5jaGV6MjBAZ21haWwuY29tIn0.oqfuGrhLAXS9I893nIqaUDsHPblj2RMznsUyWBhBVHXcZI7KtpGq7EKJ7YWuZik7LZ-roBI5erVIyHoHort4A6rCi7Z3Zg_wfPBSSLDPkkcgAK4cDM9lOueQtd26CnYMvIeIBpm3cMO6nKVQengbv05GdQ-y61_SGPz2aFtfIDX9kEmOe2iYN7zxPofDx8oZLqIzlI3Olu5AsKFX_nlIp26Vh6TqW1jDiQUOdenpNQ1fFFf_j9dzA9GT5AYyXy3TuhdmWQg7ojuYNyQg1F8w-vS9yUW986HaPfILahuzF3D0mz2m9NP7-5-Tq3whPE4ph8_qtsZF5NrVUbBnAY1WOw</stringProp>
+            <stringProp name="Argument.value">Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJOSmpVX2drOVNWMWU4WE5OQ3lNc0xpancySUpUS1BxZGwyS1p3dkFXMGhvIn0.eyJleHAiOjE3NTA4OTAzNDYsImlhdCI6MTc1MDg1NDM0NiwianRpIjoib25ydHJvOmM5NWQ5ZmJlLWU0MTItNGJhNS04NTI0LTI0YmM5OTA1ODhkMCIsImlzcyI6Imh0dHBzOi8va2V5Y2xvYWstMHlydHExLXU0NDgyOC52bS5lbGVzdGlvLmFwcC9yZWFsbXMvQXBwRURTIiwiYXVkIjpbImFwcGxpY2F0aW9uLWVkcyIsInJlYWxtLW1hbmFnZW1lbnQiLCJhY2NvdW50Il0sInN1YiI6IjM0ODY4Yzc0LTdhYzUtNGQ2NS1iNjY0LWQ2YzgxNTM3NjFjNSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFwcGxpY2F0aW9uLWVkcyIsInNpZCI6IjYyOGFjMjM5LTdhYTItNDMwZS04ZGZjLTMxNmVjNGNiODlhNCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1hcHBlZHMiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFwcGxpY2F0aW9uLWVkcyI6eyJyb2xlcyI6WyJBZG1pbiJdfSwicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJtYW5hZ2UtdXNlcnMiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoidXNlcl9hdHRyaWJ1dGVzIGdyb3Vwc19hdHRyaWJ1dGVzIGF1dG8tYWRkLWF1ZGllbmNlIHByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJlZHVhciBzYW5jaGV6IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYWRtaW4iLCJnaXZlbl9uYW1lIjoiZWR1YXIiLCJmYW1pbHlfbmFtZSI6InNhbmNoZXoiLCJlbWFpbCI6ImVkdWFybGVvbmFyZG9zYW5jaGV6MjBAZ21haWwuY29tIn0.nvujHFkMVzBLDqgkfDhqTuT2CqCVBzkDWzDpmRx18aBw0p2BbXbhiLlooGmmRy2NGAeakpJkSvJl6FjcjRtwgZtJKZVXVxDQQZvJXJtveJ7-AvQHvwpEuTqSu74OLO6Sbi3q6G72edWI4QUXeTi08iH_nwkYvOMWgMcaxE7qDuwTyYtRIE4tqLXTuzAZBlGePzR2V7A1Ar3ioIXMVaPepAUGYHPYZAUP8CU8RU8tE90g9I6zivLATk1H6peKKfFBRIeNK-xsiYPdAMpRE1YRF_NAdIM2ieToko3-FXaBkwqwntaH3NJDtMFvdd-cLor8wENNYJDO_pW21MMS2Z1pEQ</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -126,7 +126,7 @@
         <stringProp name="RandomTimer.range">50000</stringProp>
       </UniformRandomTimer>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Business" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Business">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">30</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -507,7 +507,7 @@
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Capacity">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Capacity" enabled="true">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">30</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -888,7 +888,7 @@
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Category">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Category" enabled="true">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">30</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -974,7 +974,7 @@
           </JSR223Assertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category POST">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category POST" enabled="false">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -999,7 +999,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -1036,7 +1036,7 @@
             <stringProp name="filename"></stringProp>
           </ResultCollector>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -1193,7 +1193,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -1230,7 +1230,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
