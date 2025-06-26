@@ -6,13 +6,15 @@ using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Hose.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Hose.DomainHose.Impl;
 
-public class HoseCreateHose(DataBaseContext context, IRedisService redisService) : IHoseCreateHose
+public class HoseCreateHose(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IHoseCreateHose
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(HoseEntity hoseEntity)
     {
+        using var context = dbContextFactory.CreateDbContext();
         var dispenser = await context.Dispensers
             .Where(d => d.Id == hoseEntity.IdDispensers)
             .Select(d => new { d.HoseNumber })

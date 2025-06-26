@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Compartiment.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
@@ -9,13 +10,14 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Compartiment.DomainCompartiment.Impl;
 
-public class CompartimentUpdateCompartiment(DataBaseContext context, IRedisService redisService) : ICompartimentUpdateCompartiment
+public class CompartimentUpdateCompartiment(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentUpdateCompartiment
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(CompartimentEntity compartimentEntity)
     {
         if (!await EntityExists(compartimentEntity.IdCompartment))
             return CompartimentErrorBuilder.CompartimentNotFoundException(compartimentEntity.IdCompartment);
 
+        using var context = dbContextFactory.CreateDbContext();
         context.Compartiment.Update(compartimentEntity);
 
         if (await context.SaveChangesAsync() <= 0)
@@ -26,6 +28,7 @@ public class CompartimentUpdateCompartiment(DataBaseContext context, IRedisServi
     }
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.Compartiment
             .AsNoTracking()
             .AnyAsync(c => c.IdCompartment == id);

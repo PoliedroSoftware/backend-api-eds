@@ -1,4 +1,5 @@
-﻿using Poliedro.Eds.Application.Category.Errors;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using Poliedro.Eds.Application.Category.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Category.DomainCategory;
 using Poliedro.Eds.Domain.Category.Entities;
@@ -8,10 +9,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Category.DomainCategory.Impl;
 
-public class CategoryCreateCategory(DataBaseContext context, IRedisService redisService) : ICategoryCreateCategory
+public class CategoryCreateCategory(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryCreateCategory
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CategoryEntity categoryEntity)
     {
+        using var context = dbContextFactory.CreateDbContext();
         await context.Category.AddAsync(categoryEntity);
         var result = await context.SaveChangesAsync() > 0;
         if (!result)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Tank.DomainTank;
@@ -7,11 +8,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Tank.DomainTank.Impl;
 
-public class TankGetAllTank(DataBaseContext context, IRedisService redisService) : ITankGetAllTank
+public class TankGetAllTank(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ITankGetAllTank
 {
     public async Task<IEnumerable<TankEntity>> GetAllAsync(PaginationParams paginationParams)
     {
-
+        using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.Tank.CountAsync();
 
         string cacheKey = $"tank:{paginationParams.PageNumber}:{paginationParams.PageSize}";

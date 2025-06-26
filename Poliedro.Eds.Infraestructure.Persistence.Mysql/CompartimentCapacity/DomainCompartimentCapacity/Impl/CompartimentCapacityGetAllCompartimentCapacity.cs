@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.CompartimentCapacity.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -10,12 +11,13 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.CompartimentCapacity.DomainCompartimentCapacity.Impl;
 
-public class CompartimentCapacityGetAllCompartimentCapacity(DataBaseContext context,IRedisService redisService) : ICompartimentCapacityGetAllCompartimentCapacity
+public class CompartimentCapacityGetAllCompartimentCapacity(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : ICompartimentCapacityGetAllCompartimentCapacity
 {
 
     public async Task<IEnumerable<CompartimentCapacityEntity>> GetAllAsync(PaginationParams paginationParams)
     {
-         var totalRows = await context.CompartimentCapacity.CountAsync();
+        using var context = dbContextFactory.CreateDbContext();
+        var totalRows = await context.CompartimentCapacity.CountAsync();
 
         string cacheKey = $"compartimentCapacity:{paginationParams.PageNumber}:{paginationParams.PageSize}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CompartimentCapacityEntity>>(cacheKey);

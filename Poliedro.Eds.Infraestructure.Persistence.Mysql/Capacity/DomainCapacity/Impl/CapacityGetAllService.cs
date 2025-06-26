@@ -4,13 +4,15 @@ using Poliedro.Eds.Domain.Capacity.DomainCapacity;
 using Poliedro.Eds.Domain.Capacity.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Application.Ports.Redis;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Capacity.DomainCapacity.Impl;
 
-public class CapacityGetAllService(DataBaseContext context, IRedisService redisService) : ICapacityGetAllService
+public class CapacityGetAllService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICapacityGetAllService
 {
     public async Task<IEnumerable<CapacityEntity>> GetAllAsync(PaginationParams paginationParams)
     {
+        using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.Capacity.CountAsync();
         string cacheKey = $"capacity:{paginationParams.PageNumber}:{paginationParams.PageSize}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CapacityEntity>>(cacheKey);

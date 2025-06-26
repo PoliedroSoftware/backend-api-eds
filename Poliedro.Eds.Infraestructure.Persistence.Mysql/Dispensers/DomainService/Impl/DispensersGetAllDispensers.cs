@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Dispensers.DomainDispensers;
@@ -7,10 +8,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Dispensers.DomainDispensers.Impl;
 
-public class DispensersGetAllDispensers(DataBaseContext context, IRedisService redisService) : IDispensersGetAllDispensers
+public class DispensersGetAllDispensers(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IDispensersGetAllDispensers
 {
     public async Task<IEnumerable<DispensersEntity>> GetAllAsync(PaginationParams paginationParams)
     {
+        using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.Dispensers.CountAsync();
 
         string cacheKey = $"dispensers:{paginationParams.PageNumber}:{paginationParams.PageSize}";

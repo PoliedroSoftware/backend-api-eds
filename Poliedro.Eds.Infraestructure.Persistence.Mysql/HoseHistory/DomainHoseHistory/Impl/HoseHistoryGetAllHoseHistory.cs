@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.HoseHistory.DomainHoseHistory;
@@ -7,10 +8,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.HoseHistory.DomainHoseHistory.Impl;
 
-public class HoseHistoryGetAllHoseHistory(DataBaseContext context, IRedisService redisService) : IHoseHistoryGetAllHoseHistory
+public class HoseHistoryGetAllHoseHistory(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IHoseHistoryGetAllHoseHistory
 {
     public async Task<IEnumerable<HoseHistoryEntity>> GetAllAsync(PaginationParams paginationParams)
     {
+        using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.HoseHistory.CountAsync();
 
         string cacheKey = $"hosehistory:{paginationParams.PageNumber}:{paginationParams.PageSize}";
