@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.ProductType.Errors;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -10,7 +11,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 
-public class ProductTypeGetByIdProductType(DataBaseContext context,IRedisService redisService) : IProductTypeGetByIdProductType
+public class ProductTypeGetByIdProductType(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IProductTypeGetByIdProductType
 {
     public async Task<Result<ProductTypeEntity, Error>> GetByIdAsync(int id)
     {
@@ -23,6 +24,7 @@ public class ProductTypeGetByIdProductType(DataBaseContext context,IRedisService
         if (!await EntityExists(id))
             return ProductTypeErrorBuilder.ProductTypeNotFoundException(id);
 
+        using var context = dbContextFactory.CreateDbContext();
         var data = await context.ProductType
             .FirstAsync(c => c.IdProductType == id);
 
@@ -33,6 +35,7 @@ public class ProductTypeGetByIdProductType(DataBaseContext context,IRedisService
 
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.ProductType
             .AsNoTracking()
             .AnyAsync(c => c.IdProductType == id);

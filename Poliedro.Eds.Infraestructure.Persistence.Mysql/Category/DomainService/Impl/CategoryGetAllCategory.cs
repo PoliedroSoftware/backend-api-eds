@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Category.DomainCategory;
 using Poliedro.Eds.Domain.Category.Entities;
@@ -7,10 +8,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Category.DomainCategory.Impl;
 
-public class CategoryGetAllCategory(DataBaseContext context, IRedisService redisService) : ICategoryGetAllCategory
+public class CategoryGetAllCategory(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryGetAllCategory
 {
     public async Task<IEnumerable<CategoryEntity>> GetAllAsync(PaginationParams paginationParams)
     {
+        using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.Category.CountAsync();
         string cacheKey = $"category:{paginationParams.PageNumber}:{paginationParams.PageSize}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CategoryEntity>>(cacheKey);

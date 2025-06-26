@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Category.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Category.DomainCategory;
@@ -9,13 +10,14 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Category.DomainCategory.Impl;
 
-public class CategoryUpdateCategory(DataBaseContext context, IRedisService redisService) : ICategoryUpdateCategory
+public class CategoryUpdateCategory(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryUpdateCategory
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(CategoryEntity categoryEntity)
     {
         if (!await EntityExists(categoryEntity.IdCategory))
             return CategoryErrorBuilder.CategoryNotFoundException(categoryEntity.IdCategory);
 
+        using var context = dbContextFactory.CreateDbContext();
         context.Category.Update(categoryEntity);
 
         if (await context.SaveChangesAsync() <= 0)
@@ -26,6 +28,7 @@ public class CategoryUpdateCategory(DataBaseContext context, IRedisService redis
     }
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.Category
             .AsNoTracking()
             .AnyAsync(c => c.IdCategory == id);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
@@ -6,10 +7,11 @@ using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
-public class ShoppingGetAllShopping(DataBaseContext context, IRedisService redisService) : IShoppingGetAllShopping
+public class ShoppingGetAllShopping(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IShoppingGetAllShopping
 {
     public async Task<IEnumerable<ShoppingEntity>> GetAllAsync(PaginationParams paginationParams)
     {
+        using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.Shopping.CountAsync();
         string cacheKey = $"shopping:{paginationParams.PageNumber}:{paginationParams.PageSize}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<ShoppingEntity>>(cacheKey);

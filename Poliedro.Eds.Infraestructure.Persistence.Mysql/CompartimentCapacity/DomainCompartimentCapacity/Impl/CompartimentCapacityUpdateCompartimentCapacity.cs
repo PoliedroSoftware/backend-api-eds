@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.CompartimentCapacity.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -10,13 +11,14 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.CompartimentCapacity.DomainCompartimentCapacity.Impl;
 
-public class CompartimentCapacityUpdateCompartimentCapacity(DataBaseContext context, IRedisService redisService) : ICompartimentCapacityUpdateCompartimentCapacity
+public class CompartimentCapacityUpdateCompartimentCapacity(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentCapacityUpdateCompartimentCapacity
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(CompartimentCapacityEntity CompartimentCapacityEntity)
     {
         if (!await EntityExists(CompartimentCapacityEntity.IdCompartimentCapacity))
             return CompartimentCapacityErrorBuilder.CompartimentCapacityNotFoundException(CompartimentCapacityEntity.IdCompartimentCapacity);
 
+        using var context = dbContextFactory.CreateDbContext();
         context.CompartimentCapacity.Update(CompartimentCapacityEntity);
 
         if (await context.SaveChangesAsync() <= 0)
@@ -26,6 +28,7 @@ public class CompartimentCapacityUpdateCompartimentCapacity(DataBaseContext cont
     }
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.CompartimentCapacity
             .AsNoTracking()
             .AnyAsync(c => c.IdCompartimentCapacity == id);

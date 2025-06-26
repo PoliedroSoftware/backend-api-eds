@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Expenditures.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -10,12 +11,13 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Expenditures.DomainExpenditures.Impl;
 
-public class ExpendituresGetAllExpenditures(DataBaseContext context,IRedisService redisService) : IExpendituresGetAllExpenditures
+public class ExpendituresGetAllExpenditures(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IExpendituresGetAllExpenditures
 {
 
     public async Task<IEnumerable<ExpendituresEntity>> GetAllAsync(PaginationParams paginationParams)
     {
-         var totalRows = await context.Expenditures.CountAsync();
+        using var context = dbContextFactory.CreateDbContext();
+        var totalRows = await context.Expenditures.CountAsync();
 
        string cacheKey = $"expenditures:{paginationParams.PageNumber}:{paginationParams.PageSize}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<ExpendituresEntity>>(cacheKey);

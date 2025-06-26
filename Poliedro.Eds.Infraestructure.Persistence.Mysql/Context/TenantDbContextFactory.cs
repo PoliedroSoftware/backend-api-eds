@@ -10,10 +10,14 @@ Microsoft.Extensions.Configuration.IConfiguration config) : ITenantDbContextFact
 {
     public DataBaseContext CreateDbContext()
     {
-        var tenant = httpContextAccessor.HttpContext?.User?.FindFirst("tenant")?.Value;
+
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+
+
         if (string.IsNullOrWhiteSpace(tenant))
             throw new InvalidOperationException("Tenant not found");
-        var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? config.GetConnectionString("MysqlConnection");
+
+        //var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? config.GetConnectionString("MysqlConnection");
         var template = config.GetConnectionString("MysqlConnection");
         var connectionStringFactory = template.Replace("{schema}", tenant);
 

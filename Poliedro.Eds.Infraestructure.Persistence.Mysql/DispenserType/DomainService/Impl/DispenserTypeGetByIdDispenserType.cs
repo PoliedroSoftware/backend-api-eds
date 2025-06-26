@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.DispenserType.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
@@ -9,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DispenserType.DomainDispenserType.Impl;
 
-public class DispenserTypeGetByIdDispenserType(DataBaseContext context, IRedisService redisService) : IDispenserTypeGetByIdDispenserType
+public class DispenserTypeGetByIdDispenserType(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IDispenserTypeGetByIdDispenserType
 {
     public async Task<Result<DispenserTypeEntity, Error>> GetByIdAsync(int id)
     {
@@ -22,6 +23,7 @@ public class DispenserTypeGetByIdDispenserType(DataBaseContext context, IRedisSe
         if (!await EntityExists(id))
             return DispenserTypeErrorBuilder.DispenserTypeNotFoundException(id);
 
+        using var context = dbContextFactory.CreateDbContext();
         var data = await context.DispenserType
             .FirstAsync(c => c.IdType == id);
 
@@ -31,6 +33,7 @@ public class DispenserTypeGetByIdDispenserType(DataBaseContext context, IRedisSe
     }
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.DispenserType
             .AsNoTracking()
             .AnyAsync(c => c.IdType == id);

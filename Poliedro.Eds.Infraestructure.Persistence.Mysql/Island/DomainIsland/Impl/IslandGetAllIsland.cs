@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Island.DomainIsland;
@@ -7,10 +8,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.Domainisland.Impl;
 
-public class IslandGetAllIsland(DataBaseContext context,IRedisService redisService) : IIslandGetAllIsland
+public class IslandGetAllIsland(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IIslandGetAllIsland
 {
     public async Task<IEnumerable<IslandEntity>> GetAllAsync(PaginationParams paginationParams)
     {
+        using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.Island.CountAsync();
 
         string cacheKey = $"island:{paginationParams.PageNumber}:{paginationParams.PageSize}";

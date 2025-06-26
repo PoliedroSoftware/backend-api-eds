@@ -16,6 +16,7 @@ public class BusinessGetAllService(
     public async Task<IEnumerable<BusinessEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
+
         var totalRows = await context.Business.CountAsync();
 
        string cacheKey = $"business:{paginationParams.PageNumber}:{paginationParams.PageSize}";

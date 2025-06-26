@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.CompartimentCapacity.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -10,10 +11,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.CompartimentCapacity.DomainCompartimentCapacity.Impl;
 
-public class CompartimentCapacityCreateCompartimentCapacity(DataBaseContext context, IRedisService redisService) : ICompartimentCapacityCreateCompartimentCapacity
+public class CompartimentCapacityCreateCompartimentCapacity(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentCapacityCreateCompartimentCapacity
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CompartimentCapacityEntity CompartimentCapacityEntity)
     {
+        using var context = dbContextFactory.CreateDbContext();
         await context.CompartimentCapacity.AddAsync(CompartimentCapacityEntity);
         var result = await context.SaveChangesAsync() > 0;
         if (!result)

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.ProductType.Errors;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -11,12 +12,13 @@ using StackExchange.Redis;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 
-public class ProductTypeGetAllProductType(DataBaseContext context,IRedisService redisService) : IProductTypeGetAllProductType
+public class ProductTypeGetAllProductType(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IProductTypeGetAllProductType
 {
 
     public async Task<IEnumerable<ProductTypeEntity>> GetAllAsync(PaginationParams paginationParams)
     {
-         var totalRows = await context.ProductType.CountAsync();
+        using var context = dbContextFactory.CreateDbContext();
+        var totalRows = await context.ProductType.CountAsync();
 
         string cacheKey = $"productType:{paginationParams.PageNumber}:{paginationParams.PageSize}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<ProductTypeEntity>>(cacheKey);
