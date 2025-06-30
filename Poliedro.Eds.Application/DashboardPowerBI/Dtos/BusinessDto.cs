@@ -1,6 +1,6 @@
-﻿namespace Poliedro.Eds.Application.DashboardPowerBI.Dtoss;
+﻿namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 
-public class BusinessDto
+public class Business2Dto
 {
     public string IdBusiness { get; set; }
     public string Name { get; set; }
