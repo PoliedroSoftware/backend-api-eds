@@ -8,11 +8,11 @@ public class GetAllBusinessQueryHandler
 (
     IBusinessGetAllService BusinessGetAllService,
     IMapper mapper)
-    : IRequestHandler<GellAllBusinessQuery, IEnumerable<BusinessDto>>
+    : IRequestHandler<GellAllBusinessQuery, IEnumerable<Business2Dto>>
 {
-    public async Task<IEnumerable<BusinessDto>> Handle(GellAllBusinessQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Business2Dto>> Handle(GellAllBusinessQuery request, CancellationToken cancellationToken)
     {
         var result = await BusinessGetAllService.GetAllAsync(request.PaginationParams);
-        return mapper.Map<List<BusinessDto>>(result);
+        return mapper.Map<List<Business2Dto>>(result);
     }
 }
