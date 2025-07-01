@@ -23,6 +23,8 @@
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath">C:\Users\leosa\Downloads\apache-jmeter-5.6.3\apache-jmeter-5.6.3\lib\mysql-connector-j-9.0.0</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
     </TestPlan>
     <hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
@@ -62,7 +64,7 @@
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
-      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
@@ -99,12 +101,12 @@
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
-      <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+      <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
         <stringProp name="ConstantTimer.delay">1</stringProp>
         <stringProp name="RandomTimer.range">5000</stringProp>
       </UniformRandomTimer>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Process">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Process" enabled="true">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">30</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -134,7 +136,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -149,11 +151,11 @@
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
           </JSONPostProcessor>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -173,12 +175,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -195,11 +197,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -209,7 +211,7 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -218,7 +220,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedBusinessId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idBusiness</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -337,7 +339,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Business GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Business GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -346,7 +348,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -368,7 +370,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -383,7 +385,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -392,12 +394,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -414,7 +416,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -428,7 +430,7 @@
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -437,7 +439,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedCapacityId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idCapacity</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -562,7 +564,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -571,7 +573,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -720,7 +722,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -729,7 +731,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -790,7 +792,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -827,7 +829,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -836,7 +838,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -881,7 +883,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedCompartimentId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idCompartiment</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -1010,7 +1012,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1019,7 +1021,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -1065,7 +1067,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -1252,7 +1254,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -1289,7 +1291,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Court GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Court GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1298,12 +1300,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -1343,14 +1345,14 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedCourtId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idCourt</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Court GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Court GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1359,7 +1361,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -1593,7 +1595,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1602,7 +1604,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -1647,7 +1649,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedCourtDispensersInventoryId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idCourtDispensersInventory</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -1768,7 +1770,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1777,7 +1779,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -1823,7 +1825,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -1875,7 +1877,7 @@
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Dispensers GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Dispensers GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1884,12 +1886,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -1929,7 +1931,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedDispensersId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idDispensers</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -2026,7 +2028,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2043,7 +2045,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -2058,7 +2060,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Dispensers GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Dispensers GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2067,12 +2069,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2089,11 +2091,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -2104,7 +2106,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DispenserType GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DispenserType GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2113,12 +2115,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2135,7 +2137,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -2145,11 +2147,11 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -2158,7 +2160,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedDispenserTypeId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idDispenserType</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -2190,7 +2192,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2207,7 +2209,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -2249,7 +2251,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2266,7 +2268,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -2281,7 +2283,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DispenserType GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DispenserType GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2290,7 +2292,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -2364,7 +2366,7 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2373,12 +2375,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2405,11 +2407,11 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -2418,7 +2420,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedEdsId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idEds</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -2454,7 +2456,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2471,7 +2473,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -2513,7 +2515,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2534,7 +2536,7 @@
             <stringProp name="DurationAssertion.duration">2000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -2545,7 +2547,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2554,12 +2556,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2576,7 +2578,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -2591,7 +2593,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2600,12 +2602,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2622,7 +2624,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -2632,11 +2634,11 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -2645,7 +2647,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedEdsTankId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idEdsTank</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -2680,7 +2682,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2697,11 +2699,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -2736,7 +2738,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2753,11 +2755,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -2768,7 +2770,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2777,12 +2779,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2799,11 +2801,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -2814,7 +2816,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Expenditures GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Expenditures GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2823,12 +2825,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2845,7 +2847,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -2855,11 +2857,11 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -2868,7 +2870,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedExpendituresId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idExpenditures</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -2900,7 +2902,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2917,11 +2919,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">3000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -2955,7 +2957,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -2972,11 +2974,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -2987,7 +2989,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Expenditures GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Expenditures GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2996,12 +2998,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3033,7 +3035,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3042,12 +3044,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3064,7 +3066,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -3087,7 +3089,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedHoseId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idHose</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -3123,7 +3125,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -3137,7 +3139,7 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3182,7 +3184,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3199,11 +3201,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -3214,7 +3216,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3223,12 +3225,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3245,11 +3247,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -3260,7 +3262,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET  LastAccumulated">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET  LastAccumulated" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3269,67 +3271,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">X-Environment</stringProp>
-                <stringProp name="Header.value">staging</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
-            <stringProp name="DurationAssertion.duration">30000</stringProp>
-          </DurationAssertion>
-          <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">
-</stringProp>
-            <stringProp name="scriptLanguage">groovy</stringProp>
-          </JSR223Assertion>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HoseHistory GET  GetAll">
-          <stringProp name="HTTPSampler.domain">${server}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
-          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
-          <stringProp name="HTTPSampler.path">eds/api/v1/hose-history</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3360,7 +3307,7 @@
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -3369,7 +3316,62 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HoseHistory GET  GetAll" enabled="true">
+          <stringProp name="HTTPSampler.domain">${server}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
+          <stringProp name="HTTPSampler.path">eds/api/v1/hose-history</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/json</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-Environment</stringProp>
+                <stringProp name="Header.value">staging</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+            <stringProp name="DurationAssertion.duration">30000</stringProp>
+          </DurationAssertion>
+          <hashTree/>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">
+</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedHoseHistoryId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idHoseHistory</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -3405,7 +3407,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3422,11 +3424,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -3464,7 +3466,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3481,7 +3483,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -3496,7 +3498,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HoseHistory GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HoseHistory GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3505,12 +3507,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3527,7 +3529,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -3542,7 +3544,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Inventory GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Inventory GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3551,12 +3553,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3573,7 +3575,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -3583,7 +3585,7 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -3596,14 +3598,14 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedInventoryId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idInventory</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3612,12 +3614,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3634,7 +3636,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -3644,11 +3646,11 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -3657,7 +3659,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedIslandId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idIsland</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -3689,7 +3691,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3706,7 +3708,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -3744,11 +3746,11 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -3758,7 +3760,7 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3776,7 +3778,7 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3785,12 +3787,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3807,11 +3809,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -3822,7 +3824,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3831,12 +3833,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3853,7 +3855,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -3863,11 +3865,11 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -3876,7 +3878,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedislanderId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idIslander</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -3913,7 +3915,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -3930,11 +3932,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -4038,7 +4040,7 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4047,12 +4049,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4069,11 +4071,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -4084,7 +4086,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Product GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Product GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4093,12 +4095,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4115,7 +4117,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -4138,7 +4140,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedProductId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idProduct</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -4172,7 +4174,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4189,7 +4191,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -4229,7 +4231,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4246,11 +4248,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -4261,7 +4263,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Product GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Product GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4270,12 +4272,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4292,11 +4294,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -4307,7 +4309,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductCompartiment GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductCompartiment GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4316,12 +4318,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4361,7 +4363,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selecteProductCompartimentId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idProductCompartiment</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -4395,7 +4397,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4412,11 +4414,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000-E#wrft</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -4452,7 +4454,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4469,11 +4471,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -4484,7 +4486,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductCompartiment GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductCompartiment GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4493,12 +4495,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4515,7 +4517,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -4530,7 +4532,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4539,231 +4541,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">X-Environment</stringProp>
-                <stringProp name="Header.value">staging</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
-            <stringProp name="DurationAssertion.duration">30000</stringProp>
-          </DurationAssertion>
-          <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">
-</stringProp>
-            <stringProp name="scriptLanguage">groovy</stringProp>
-          </JSR223Assertion>
-          <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
-            <stringProp name="JSONPostProcessor.referenceNames">selectedProductTypeId</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idProductType</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
-          </JSONPostProcessor>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType POST" enabled="false">
-          <stringProp name="HTTPSampler.domain">${server}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
-          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">eds/api/v1/producttype</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">POST</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&#xd;
-  &quot;request&quot;: {&#xd;
-    &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
-  }&#xd;
-}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">X-Environment</stringProp>
-                <stringProp name="Header.value">staging</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
-            <stringProp name="DurationAssertion.duration">30000</stringProp>
-          </DurationAssertion>
-          <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49587">201</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType PUT" enabled="false">
-          <stringProp name="HTTPSampler.domain">${server}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
-          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
-          <stringProp name="HTTPSampler.path">eds/api/v1/producttype</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">PUT</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&#xd;
-  &quot;idProductType&quot;: ${selectedProductTypeId},&#xd;
-  &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
-}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">X-Environment</stringProp>
-                <stringProp name="Header.value">staging</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
-            <stringProp name="DurationAssertion.duration">30000</stringProp>
-          </DurationAssertion>
-          <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49590">204</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType GET GetByID">
-          <stringProp name="HTTPSampler.domain">${server}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
-          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
-          <stringProp name="HTTPSampler.path">eds/api/v1/producttype/${selectedProductTypeId}</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Authorization</stringProp>
-                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">X-Environment</stringProp>
-                <stringProp name="Header.value">staging</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
-            <stringProp name="DurationAssertion.duration">30000</stringProp>
-          </DurationAssertion>
-          <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Provider GetAll">
-          <stringProp name="HTTPSampler.domain">${server}</stringProp>
-          <stringProp name="HTTPSampler.port">${port}</stringProp>
-          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
-          <stringProp name="HTTPSampler.path">eds/api/v1/provider</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4803,7 +4586,226 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">selectedProductTypeId</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idProductType</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType POST" enabled="false">
+          <stringProp name="HTTPSampler.domain">${server}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+          <stringProp name="HTTPSampler.path">eds/api/v1/producttype</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;request&quot;: {&#xd;
+    &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
+  }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/json</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-Environment</stringProp>
+                <stringProp name="Header.value">staging</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+            <stringProp name="DurationAssertion.duration">30000</stringProp>
+          </DurationAssertion>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49587">201</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType PUT" enabled="false">
+          <stringProp name="HTTPSampler.domain">${server}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
+          <stringProp name="HTTPSampler.path">eds/api/v1/producttype</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">PUT</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;idProductType&quot;: ${selectedProductTypeId},&#xd;
+  &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/json</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-Environment</stringProp>
+                <stringProp name="Header.value">staging</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+            <stringProp name="DurationAssertion.duration">30000</stringProp>
+          </DurationAssertion>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49590">204</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType GET GetByID" enabled="true">
+          <stringProp name="HTTPSampler.domain">${server}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
+          <stringProp name="HTTPSampler.path">eds/api/v1/producttype/${selectedProductTypeId}</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/json</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-Environment</stringProp>
+                <stringProp name="Header.value">staging</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+            <stringProp name="DurationAssertion.duration">30000</stringProp>
+          </DurationAssertion>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Provider GetAll" enabled="true">
+          <stringProp name="HTTPSampler.domain">${server}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
+          <stringProp name="HTTPSampler.path">eds/api/v1/provider</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/json</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">Bearer ${access_token}</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">X-Environment</stringProp>
+                <stringProp name="Header.value">staging</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+            <stringProp name="DurationAssertion.duration">30000</stringProp>
+          </DurationAssertion>
+          <hashTree/>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">
+</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedProviderId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idProvider</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -4835,7 +4837,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4890,7 +4892,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -4907,11 +4909,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -4922,7 +4924,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Provider GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Provider GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4931,7 +4933,7 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
@@ -5005,7 +5007,7 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Shopping GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Shopping GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5014,12 +5016,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5059,7 +5061,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedShoppingId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idShopping</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -5095,7 +5097,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5112,11 +5114,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -5154,7 +5156,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5171,11 +5173,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -5186,7 +5188,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Shopping GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Shopping GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5195,12 +5197,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5217,11 +5219,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -5232,7 +5234,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProduct GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProduct GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5241,12 +5243,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5277,7 +5279,7 @@
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
@@ -5286,7 +5288,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedShoppingProductId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idShoppingProduct</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -5322,7 +5324,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5339,11 +5341,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -5381,7 +5383,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5398,11 +5400,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -5413,7 +5415,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProduct GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProduct GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5422,12 +5424,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5444,7 +5446,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -5459,7 +5461,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProductInventory GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProductInventory GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5468,12 +5470,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5490,7 +5492,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -5500,7 +5502,7 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -5513,7 +5515,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedShoppingProductInventoryId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idShoppingProductInventory</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -5547,7 +5549,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5564,11 +5566,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -5579,7 +5581,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProductInventory GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProductInventory GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5588,12 +5590,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5610,7 +5612,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -5625,7 +5627,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5634,12 +5636,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5666,7 +5668,7 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -5679,7 +5681,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedTankId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idTank</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -5714,7 +5716,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5731,11 +5733,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -5772,7 +5774,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5789,7 +5791,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -5804,7 +5806,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5813,12 +5815,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5835,11 +5837,11 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -5850,7 +5852,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Translations GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Translations GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5859,12 +5861,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5904,14 +5906,14 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedTranslationsId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idTranslations</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection GET  GetAll">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection GET  GetAll" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5920,12 +5922,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -5942,7 +5944,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -5965,7 +5967,7 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">selectedTypeOfCollectionId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].idTypeOfCollection</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -5997,7 +5999,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -6014,7 +6016,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -6052,7 +6054,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -6069,7 +6071,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -6084,7 +6086,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection GET GetByID">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection GET GetByID" enabled="true">
           <stringProp name="HTTPSampler.domain">${server}</stringProp>
           <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -6093,12 +6095,12 @@
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -6115,7 +6117,7 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
             <stringProp name="DurationAssertion.duration">30000</stringProp>
           </DurationAssertion>
           <hashTree/>
@@ -6130,7 +6132,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler">
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
           <boolProp name="displayJMeterProperties">true</boolProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">false</boolProp>
@@ -6146,7 +6148,7 @@
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
