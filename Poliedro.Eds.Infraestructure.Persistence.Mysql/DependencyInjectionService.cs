@@ -59,6 +59,8 @@ using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 using Poliedro.Eds.Domain.Island.DomainIsland;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.Domainisland.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.DomainIsland.Impl;
+using Poliedro.Eds.Application.Product.Services;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.Services;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -99,6 +101,7 @@ public static class DependencyInjectionService
         services.AddScoped<IProductGetAllProduct, ProductGetAllProduct>();
         services.AddScoped<IProductGetByIdProduct, ProductGetByIdProduct>();
         services.AddScoped<IProductUpdateProduct, ProductUpdateProduct>();
+        services.AddScoped<IProductPriceUpdateService, ProductPriceUpdateService>();
         services.AddScoped<IProductCompartimentCreateProductCompartiment, ProductCompartimentCreateProductCompartiment>();
         services.AddScoped<IProductCompartimentGetAllProductCompartiment, ProductCompartimentGetAllProductCompartiment>();
         services.AddScoped<IProductCompartimentGetByIdProductCompartiment, ProductCompartimentGetByIdProductCompartiment>();
