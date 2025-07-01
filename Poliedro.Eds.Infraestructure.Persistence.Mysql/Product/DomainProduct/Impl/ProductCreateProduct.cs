@@ -1,8 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Court.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Product.DomainProduct;
