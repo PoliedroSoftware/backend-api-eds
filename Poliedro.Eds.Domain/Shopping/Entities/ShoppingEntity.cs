@@ -1,4 +1,6 @@
-﻿namespace Poliedro.Eds.Domain.Shopping.Entities;
+﻿using Poliedro.Eds.Domain.ShoppingProduct.Entities;
+
+namespace Poliedro.Eds.Domain.Shopping.Entities;
 
 public class ShoppingEntity
 {
@@ -7,7 +9,11 @@ public class ShoppingEntity
     public DateTime Date { get; set; } 
     public int IdProvider { get; set; } 
     public int IdCategory { get; set; } 
-    public double Amount { get; set; } 
+    public double Amount { get; set; }
+
+    public IEnumerable<ShoppingProductEntity> ShoppingProducts { get; set; }
+
+
 }
 
 
