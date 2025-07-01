@@ -1,7 +1,10 @@
-﻿namespace Poliedro.Eds.Domain.ShoppingProduct.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
 public class ShoppingProductEntity
 {
+    [Key]
     public int IdShoppingProduct { get; set; } 
     public int IdShopping { get; set; } 
     public int IdProduct { get; set; } 
