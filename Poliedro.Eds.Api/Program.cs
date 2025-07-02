@@ -3,6 +3,7 @@ using Amazon.Configurations;
 using Amazon.Runtime;
 using Amazon.S3.FileUploadService;
 using Amazon.Secrets;
+using Autofac.Core;
 using AWS.Logger;
 using FluentValidation;
 using HealthChecks.UI.Client;
@@ -208,10 +209,6 @@ builder.Logging.AddAWSProvider(loggerConfig);
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 
-var connectionString = builder.Configuration.GetConnectionString("MysqlConnection");
-
-var appConfigService = new AwsAppConfigService("hpgip50", "t3iui3q", "wfcp470", RegionEndpoint.USEast2);
-var config = await appConfigService.GetConfigurationAsync<ApiPlemsiDto>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PoliedroEDS", policy =>

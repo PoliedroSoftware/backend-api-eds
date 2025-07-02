@@ -1,29 +1,29 @@
 ﻿using System.Security.Claims;
 
-namespace Poliedro.Eds.Api.Middlelware.Tenant
+namespace Poliedro.Eds.Api.Middlelware.Tenant;
+
+
+public class TenantMiddleware(
+    RequestDelegate _next)
 {
-
-    public class TenantMiddleware(
-        RequestDelegate _next)
+    public async Task InvokeAsync(HttpContext context)
     {
-        public async Task InvokeAsync(HttpContext context)
+        var user = context.User;
+
+        if (user.Identity?.IsAuthenticated == true)
         {
-            var user = context.User;
+            var identity = user.Identity as ClaimsIdentity;
 
-            if (user.Identity?.IsAuthenticated == true)
+            var tenantClaim = user.FindFirst("preferred_username")?.Value;
+
+            if (!string.IsNullOrWhiteSpace(tenantClaim))
             {
-                var identity = user.Identity as ClaimsIdentity;
-
-                var tenantClaim = user.FindFirst("preferred_username")?.Value;
-
-                if (!string.IsNullOrWhiteSpace(tenantClaim))
-                {
-                    context.Items["tenant"] = tenantClaim;
-                }
+                context.Items["tenant"] = tenantClaim;
+              
             }
-
-            await _next(context);
-
         }
+
+        await _next(context);
+
     }
 }

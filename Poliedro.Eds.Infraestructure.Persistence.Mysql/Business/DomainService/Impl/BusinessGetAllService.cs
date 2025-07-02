@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
@@ -11,15 +12,17 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness
 
 public class BusinessGetAllService(
     ITenantDbContextFactory dbContextFactory, 
-    IRedisService redisService, ILogger<BusinessGetAllService> logger) : IBusinessGetAllService
+    IRedisService redisService, ILogger<BusinessGetAllService> logger,
+    IHttpContextAccessor httpContextAccessor
+    ) : IBusinessGetAllService
 {
     public async Task<IEnumerable<BusinessEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
-
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
         var totalRows = await context.Business.CountAsync();
 
-       string cacheKey = $"business:{paginationParams.PageNumber}:{paginationParams.PageSize}";
+       string cacheKey = $"{nameof(BusinessGetAllService)}:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<BusinessEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
         
