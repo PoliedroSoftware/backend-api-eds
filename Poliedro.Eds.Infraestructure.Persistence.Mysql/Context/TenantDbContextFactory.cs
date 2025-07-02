@@ -13,13 +13,12 @@ Microsoft.Extensions.Configuration.IConfiguration config) : ITenantDbContextFact
 
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
 
-
         if (string.IsNullOrWhiteSpace(tenant))
             throw new InvalidOperationException("Tenant not found");
 
         //var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? config.GetConnectionString("MysqlConnection");
-        var template = config.GetConnectionString("MysqlConnection");
-        var connectionStringFactory = template.Replace("{schema}", tenant);
+        var connectionString = config["ConnectionStrings:MysqlConnection"]!;
+        var connectionStringFactory = connectionString.Replace("{schema}", tenant);
 
         var optionsBuilder = new DbContextOptionsBuilder<DataBaseContext>();
         optionsBuilder.UseMySql(connectionStringFactory, ServerVersion.AutoDetect(connectionStringFactory));
