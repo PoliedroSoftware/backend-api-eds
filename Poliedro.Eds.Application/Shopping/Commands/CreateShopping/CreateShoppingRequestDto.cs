@@ -5,6 +5,7 @@ public record CreateShoppingRequestDto(
     DateTime Date,
     int IdProvider,
     int IdCategory,
-    double Amount);
-
-
+    double Amount,
+    IEnumerable<ShoppingProductRequestDto> ShoppingProducts,
+    IEnumerable<SellPriceProductRequestDto> SellPriceProducts
+    );
