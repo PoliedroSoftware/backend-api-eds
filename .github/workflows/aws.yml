@@ -3,45 +3,51 @@ name: Build, Test, Deploy to ECS
 on:
   push:
     branches:
-      - main
       - feature/test-checklist
+  
   pull_request:
-    types: [closed]
+    types: [opened, synchronize, reopened, closed]
     branches:
       - main
-      - 'release/*'          
+      - 'release/*'
       - 'releasecandidate/*'
 
+# Cancela workflows duplicados en la misma rama
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build_and_deploy:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest  
 
-    environment: QA  
-
+  # DOTNET - preprarar el entorno, restaurar dependencias, realizar Build y Tests
+  dotnet:
+    if: github.event.action != 'closed' 
+    runs-on: ubuntu-latest
     steps:
-      - name: Cancel Running Workflows
-        run: |
-          echo "Cancelando workflows anteriores..."
-          current_run_id=$(echo $GITHUB_RUN_ID)
-          running_workflows=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/runs?status=in_progress")
-
-          echo "$running_workflows" | jq -r '.workflow_runs[] | select(.status=="in_progress") | select(.id!='$current_run_id') | .id' | while read run_id; do
-            # Cancelamos los workflows anteriores
-            echo "Cancelando el workflow con ID $run_id"
-            curl -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id/cancel"
-          done
-
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up .NET SDK
+      - name: Setup .NET & Restore
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '8.0.x'
-          
+      - run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Unit Tests
+        run: dotnet test --configuration Release --no-build
+
+# SONAR - Análisis del código
+  sonar:
+    if: github.event.action != 'closed'
+    needs: dotnet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
@@ -50,17 +56,16 @@ jobs:
             -Dsonar.organization=poliedro-software-sonarqube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          
-     
-      - name: Restore dependencies
-        run: dotnet restore
 
-      - name: Build the project
-        run: dotnet build --configuration Release
+# JMETER - Pruebas de carga
+  jmeter:
+    if: github.event.action != 'closed'
+    needs: dotnet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Run unit tests
-        run: dotnet test --configuration Release --no-build
-        
       - name: Install JMeter
         run: |
           sudo apt-get update
@@ -83,7 +88,6 @@ jobs:
             exit 1
           fi
 
-
       - name: Upload JMeter HTML Reports
         uses: actions/upload-artifact@v4
         with:
@@ -93,11 +97,23 @@ jobs:
           compression-level: 6
           overwrite: false
           include-hidden-files: false
-          
+
+  # DEPLOY - Despliegue solo con merge aprobado
+  deploy:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    needs: [dotnet, sonar, jmeter]
+    runs-on: ubuntu-latest
+    environment: QA
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+ 
       - name: Set AWS region
         run: |
-          aws configure set region ${{ secrets.AWS_REGION }}  # Usar la región configurada en Secrets
-          
+          echo "Configurando región AWS..."
+          aws configure set region ${{ secrets.AWS_REGION }}
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -110,14 +126,17 @@ jobs:
 
       - name: Build Docker image
         run: |
+          echo "Construyendo imagen Docker..."
           docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest .
 
       - name: Tag Docker image
         run: |
+          echo "Etiquetando imagen Docker..."
           docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
 
       - name: Push Docker image to ECR
         run: |
+          echo "Subiendo imagen Docker a ECR..."
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
 
       - name: Deploy to Amazon ECS
@@ -137,7 +156,7 @@ jobs:
 
       - name: Check ECS Service Status
         run: |
-          # Verifica el estado del servicio
+          echo "Verificando estado del servicio ECS..."
           service_status=$(aws ecs describe-services \
             --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
             --services ${{ secrets.AWS_ECS_SERVICE }} \
@@ -147,7 +166,7 @@ jobs:
 
       - name: Check ECS Task Definition
         run: |
-          # Verifica la imagen de la task definition
+          echo "Verificando imagen de la task definition..."
           task_definition_image=$(aws ecs describe-task-definition \
             --task-definition ${{ secrets.TASK_DEFINITION_ARN }} \
             --query 'taskDefinition.containerDefinitions[0].image' --output text)
