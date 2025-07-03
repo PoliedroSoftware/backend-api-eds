@@ -19,9 +19,8 @@ concurrency:
 
 jobs:
 
-
-# Preparar el entorno y restaurar dependencias
-  prepare:
+  # DOTNET - preprarar el entorno, restaurar dependencias, realizar Build y Tests
+  dotnet:
     if: github.event.action != 'closed' 
     runs-on: ubuntu-latest
     steps:
@@ -34,20 +33,6 @@ jobs:
           dotnet-version: '8.0.x'
       - run: dotnet restore
 
-  # DOTNET - realizar Build y Tests
-  dotnet:
-    if: github.event.action != 'closed'
-    needs: prepare
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '8.0.x'
-
       - name: Build
         run: dotnet build --configuration Release
 
@@ -57,7 +42,7 @@ jobs:
 # SONAR - Análisis del código
   sonar:
     if: github.event.action != 'closed'
-    needs: prepare
+    needs: dotnet
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -75,7 +60,7 @@ jobs:
 # JMETER - Pruebas de carga
   jmeter:
     if: github.event.action != 'closed'
-    needs: prepare
+    needs: dotnet
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
