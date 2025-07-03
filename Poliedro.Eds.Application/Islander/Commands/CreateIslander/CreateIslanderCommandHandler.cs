@@ -17,7 +17,12 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateIslanderCommand request, CancellationToken cancellationToken)
         {
+
             var islanderEntity = mapper.Map<IslanderEntity>(request.Request);
+
+            var nameClaimToken = request.NameClaimToken;
+
+            Console.WriteLine($"nombre del clain del token: {nameClaimToken}");
 
             var originalPassword = islanderEntity.Password;
 
@@ -29,6 +34,10 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
 
             using var channel = rabbitConnection.CreateModel();
 
+            channel.ExchangeDeclare(exchange: "keycloak_exchange", type: ExchangeType.Direct);
+            channel.QueueDeclare(queue: "keycloak", durable: true, exclusive: false, autoDelete: false, arguments: null);
+            channel.QueueBind(queue: "keycloak", exchange: "keycloak_exchange", routingKey: "keycloak");
+
             var message = new
             {
                 islanderEntity.IdEds,
@@ -36,19 +45,28 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 islanderEntity.Email,
                 islanderEntity.FirstName,
                 islanderEntity.LastName,
-                Password = originalPassword
+                Password = originalPassword,
+                NameClaimToken = nameClaimToken
             };
-
+  
+          
             var json = JsonSerializer.Serialize(message);
             var body = Encoding.UTF8.GetBytes(json);
 
+           
             var properties = channel.CreateBasicProperties();
             properties.Persistent = true;
 
-            channel.BasicPublish(exchange: "keycloak_exchange",
-                                 routingKey: "keycloak_user",
-                                 basicProperties: properties,
-                                 body: body);
+            
+            channel.BasicPublish(
+                exchange: "keycloak_exchange",     
+                routingKey: "keycloak",         
+                basicProperties: properties,        
+                body: body                         
+            );
+
+            Console.WriteLine("Mensaje enviado a la cola keycloak_user");
+        
 
             return VoidResult.Instance;
         }
