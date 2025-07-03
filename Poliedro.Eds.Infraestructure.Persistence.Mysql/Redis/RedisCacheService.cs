@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 using StackExchange.Redis;
 using System.Text.Json;
