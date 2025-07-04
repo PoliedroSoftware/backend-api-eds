@@ -107,7 +107,6 @@ public class BusinessController(IMediator mediator) : ControllerBase
         //{
         //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
         //}
-
         var result = await mediator.Send(updateBusinessCommand);
 
         if (!result.IsSuccess)
