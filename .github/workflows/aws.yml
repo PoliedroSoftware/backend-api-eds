@@ -12,16 +12,14 @@ on:
       - 'release/*'
       - 'releasecandidate/*'
 
-# Cancela workflows duplicados en la misma rama
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
 
-  # DOTNET - preprarar el entorno, restaurar dependencias, realizar Build y Tests
   dotnet:
-    if: github.event.action != 'closed' 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -39,9 +37,8 @@ jobs:
       - name: Unit Tests
         run: dotnet test --configuration Release --no-build
 
-# SONAR - Análisis del código
+
   sonar:
-    if: github.event.action != 'closed'
     needs: dotnet
     runs-on: ubuntu-latest
     steps:
@@ -57,9 +54,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-# JMETER - Pruebas de carga
   jmeter:
-    if: github.event.action != 'closed'
     needs: dotnet
     runs-on: ubuntu-latest
     steps:
@@ -98,9 +93,8 @@ jobs:
           overwrite: false
           include-hidden-files: false
 
-  # DEPLOY - Despliegue solo con merge aprobado
   deploy:
-    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     needs: [dotnet, sonar, jmeter]
     runs-on: ubuntu-latest
     environment: QA
