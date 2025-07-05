@@ -1,27 +1,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
-using MySqlConnector;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using StackExchange.Redis;
 using System.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using System.Net.NetworkInformation;
+using Microsoft.AspNetCore.Http;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
 public class CourtListService(IConfiguration config, 
     IRedisService redisService, 
-    ITenantDbContextFactory dbContextFactory) : ICourtListDomainService
+    ITenantDbContextFactory dbContextFactory,
+    IHttpContextAccessor httpContextAccessor) : ICourtListDomainService
 {
     private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
 
     public async Task<IEnumerable<CourtListResponseDto>> GetAllAsync(PaginationParams paginationParams)
     {
-        string cachekey = $"coutListService:{paginationParams.PageNumber}:{paginationParams.PageSize}";
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+        string cachekey = $"coutListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CourtListResponseDto>>(cachekey);
         
         if (cachedData != null) return cachedData;

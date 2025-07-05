@@ -1,4 +1,5 @@
 ﻿using System.Net.NetworkInformation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
@@ -12,12 +13,17 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Hose.DomainHose.Impl;
 
-public class LastAccumulatedService(ITenantDbContextFactory dbContextFactory, IRedisService redisService, IConfiguration config) : ILastAccumulatedService
+public class LastAccumulatedService(
+    ITenantDbContextFactory dbContextFactory,
+    IRedisService redisService,
+    IHttpContextAccessor httpContextAccessor
+    , IConfiguration config) : ILastAccumulatedService
 {
     public async Task<Result<LastAccumulatedEntity, Error>> GetLastAccumulatedAsync(int idDispenser, int idHose)
     {
         LastAccumulatedEntity? lastAccumulated = null;
-        string cacheKey = $"LastAccumulated:{idDispenser}:{idHose}";
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+        string cacheKey = $"LastAccumulated:{idDispenser}:{idHose}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<LastAccumulatedEntity>(cacheKey);
 
         if (cachedData is not null)

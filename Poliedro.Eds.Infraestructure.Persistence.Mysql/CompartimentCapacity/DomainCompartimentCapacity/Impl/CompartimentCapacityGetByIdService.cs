@@ -11,7 +11,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.CompartimentCapacity.DomainCompartimentCapacity.Impl;
 
-public class CompartimentCapacityGetByIdCompartimentCapacity(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : ICompartimentCapacityGetByIdCompartimentCapacity
+public class CompartimentCapacityGetByIdService(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : ICompartimentCapacityGetByIdService
 {
     public async Task<Result<CompartimentCapacityEntity, Error>> GetByIdAsync(int id)
     {

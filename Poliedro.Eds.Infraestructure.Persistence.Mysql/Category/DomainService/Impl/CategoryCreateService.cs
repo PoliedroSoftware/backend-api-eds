@@ -9,7 +9,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Category.DomainCategory.Impl;
 
-public class CategoryCreateCategory(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryCreateCategory
+public class CategoryCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CategoryEntity categoryEntity)
     {

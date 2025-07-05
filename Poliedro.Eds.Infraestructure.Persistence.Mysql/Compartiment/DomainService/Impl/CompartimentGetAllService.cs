@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -8,13 +9,19 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Compartiment.DomainCompartiment.Impl;
 
-public class CompartimentGetAllCompartiment(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentGetAllCompartiment
+public class CompartimentGetAllService(
+    ITenantDbContextFactory dbContextFactory,
+    IRedisService redisService,
+    IHttpContextAccessor httpContextAccessor
+    ) : ICompartimentGetAllService
 {
     public async Task<IEnumerable<CompartimentEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.Compartiment.CountAsync();
-        string cacheKey = $"compartiment:{paginationParams.PageNumber}:{paginationParams.PageSize}";
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+
+        string cacheKey = $"compartiment:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CompartimentEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
 

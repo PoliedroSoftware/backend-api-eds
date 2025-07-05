@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Application.CompartimentCapacity.Dtos;
 using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
@@ -7,7 +6,7 @@ using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 namespace Poliedro.Eds.Application.CompartimentCapacity.Queries.GellAllCompartimentCapacity;
 public class GetAllCompartimentCapacityQueryHandler
 (
-    ICompartimentCapacityGetAllCompartimentCapacity CompartimentCapacityDomainCompartimentCapacity,
+    ICompartimentCapacityGetAllService CompartimentCapacityDomainCompartimentCapacity,
     IMapper mapper)
     : IRequestHandler<GellAllCompartimentCapacityQuery, IEnumerable<CompartimentCapacityDto>>
 {

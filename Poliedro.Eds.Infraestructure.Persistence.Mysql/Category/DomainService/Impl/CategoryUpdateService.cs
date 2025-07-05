@@ -10,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Category.DomainCategory.Impl;
 
-public class CategoryUpdateCategory(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryUpdateCategory
+public class CategoryUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryUpdateService
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(CategoryEntity categoryEntity)
     {

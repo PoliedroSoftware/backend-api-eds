@@ -10,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Compartiment.DomainCompartiment.Impl;
 
-public class CompartimentGetByIdCompartiment(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentGetByIdCompartiment
+public class CompartimentGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentGetByIdService
 {
     public async Task<Result<CompartimentEntity, Error>> GetByIdAsync(int id)
     {

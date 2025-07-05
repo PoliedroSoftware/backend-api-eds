@@ -3,7 +3,7 @@ using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Domain.Category.DomainCategory;
-    public interface ICategoryUpdateCategory
+    public interface ICategoryUpdateService
 {
         Task<Result<VoidResult, Error>> UpdateAsync(CategoryEntity categoryEntity);
     }

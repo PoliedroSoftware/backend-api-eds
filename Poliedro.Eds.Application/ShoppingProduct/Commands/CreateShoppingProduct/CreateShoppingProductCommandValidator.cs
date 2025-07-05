@@ -8,11 +8,11 @@ namespace Poliedro.Eds.Application.ShoppingProduct.Shopping.CreateShoppingProduc
 
 public class CreateShoppingProductCommandValidator : AbstractValidator<CreateShoppingProductRequestDto>
 {
-    private readonly ICompartimentGetByIdCompartiment _compartimentService;
+    private readonly ICompartimentGetByIdService _compartimentService;
     private readonly IProductCompartimentGetByCompartmentId _productCompartimentService;
 
     public CreateShoppingProductCommandValidator(
-        ICompartimentGetByIdCompartiment compartimentService,
+        ICompartimentGetByIdService compartimentService,
         IRedisService redisService,
         IProductCompartimentGetByCompartmentId productCompartimentService)
     {
