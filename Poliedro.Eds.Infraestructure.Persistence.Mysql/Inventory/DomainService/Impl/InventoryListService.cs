@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -7,13 +8,18 @@ using Poliedro.Eds.Domain.Inventory.Dto.View;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 
-public class InventoryListService(IConfiguration config, IRedisService redisService) : IInventoryListDomainService
+public class InventoryListService(
+    IConfiguration config,
+    IRedisService redisService,
+    IHttpContextAccessor httpContextAccessor
+    ) : IInventoryListDomainService
 {
     private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
 
     public async Task<IEnumerable<InventoryListResponseDto>> GetAllAsync(PaginationParams paginationParams)
     {
-        string cachekey = $"inventoryListService:{paginationParams.PageNumber}:{paginationParams.PageSize}";
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+        string cachekey = $"inventoryListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<InventoryListResponseDto>>(cachekey);
 
         if (cachedData != null) return cachedData;

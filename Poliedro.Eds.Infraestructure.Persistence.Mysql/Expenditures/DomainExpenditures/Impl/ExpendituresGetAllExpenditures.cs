@@ -1,25 +1,27 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Poliedro.Eds.Application.Expenditures.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
-using Poliedro.Eds.Domain.Common.Results;
-using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Expenditures.DomainExpenditures;
 using Poliedro.Eds.Domain.Expenditures.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Expenditures.DomainExpenditures.Impl;
 
-public class ExpendituresGetAllExpenditures(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IExpendituresGetAllExpenditures
+public class ExpendituresGetAllExpenditures(
+    ITenantDbContextFactory dbContextFactory,
+    IRedisService redisService,
+    IHttpContextAccessor httpContextAccessor
+    ) : IExpendituresGetAllExpenditures
 {
 
     public async Task<IEnumerable<ExpendituresEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
         var totalRows = await context.Expenditures.CountAsync();
 
-       string cacheKey = $"expenditures:{paginationParams.PageNumber}:{paginationParams.PageSize}";
+       string cacheKey = $"expenditures:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<ExpendituresEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
         

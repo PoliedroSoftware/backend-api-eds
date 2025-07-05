@@ -10,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Category.DomainCategory.Impl;
 
-public class CategoryGetByIdCategory(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryGetByIdCategory
+public class CategoryGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryGetByIdService
 {
     public async Task<Result<CategoryEntity, Error>> GetByIdAsync(int id)
     {

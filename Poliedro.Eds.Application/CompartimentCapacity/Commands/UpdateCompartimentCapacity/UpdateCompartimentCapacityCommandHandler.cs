@@ -8,7 +8,7 @@ using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 namespace Poliedro.Eds.Application.CompartimentCapacity.Commands.UpdateCompartimentCapacity;
 
     public class UpdateCompartimentCapacityCommandHandler(
-        ICompartimentCapacityUpdateCompartimentCapacity CompartimentCapacityDomainCompartimentCapacity,
+        ICompartimentCapacityUpdateService CompartimentCapacityDomainCompartimentCapacity,
         IMapper mapper
     ) : IRequestHandler<UpdateCompartimentCapacityCommand, Result<VoidResult, Error>>
     {

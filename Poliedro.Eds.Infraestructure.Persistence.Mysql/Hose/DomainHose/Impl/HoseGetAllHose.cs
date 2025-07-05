@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -8,11 +9,17 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Hose.DomainHose.Impl;
 
-public class HoseGetAllHose(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IHoseGetAllHose
+public class HoseGetAllHose(
+    ITenantDbContextFactory dbContextFactory,
+    IRedisService redisService,
+    IHttpContextAccessor httpContextAccessor
+    ) : IHoseGetAllHose
 {
     public async Task<IEnumerable<HoseDto>> GetAllAsync(PaginationParams paginationParams)
     {
-        string cacheKey = $"hoseDto:{paginationParams.PageNumber}:{paginationParams.PageSize}";
+
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+        string cacheKey = $"hoseDto:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
 
         var cachedDtos = await redisService.GetCacheAsync<IEnumerable<HoseDto>>(cacheKey);
         if (cachedDtos is not null)

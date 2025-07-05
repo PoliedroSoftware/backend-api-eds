@@ -9,7 +9,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Compartiment.DomainCompartiment.Impl;
 
-public class CompartimentCreateCompartiment(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentCreateCompartiment
+public class CompartimentCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CompartimentEntity compartimentEntity)
     {

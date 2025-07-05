@@ -11,7 +11,7 @@ using System.Text.Json;
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 
 public class BusinessGetAllService(
-    ITenantDbContextFactory dbContextFactory, 
+    ITenantDbContextFactory dbContextFactory,
     IRedisService redisService, ILogger<BusinessGetAllService> logger,
     IHttpContextAccessor httpContextAccessor
     ) : IBusinessGetAllService
@@ -22,7 +22,7 @@ public class BusinessGetAllService(
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
         var totalRows = await context.Business.CountAsync();
 
-       string cacheKey = $"{nameof(BusinessGetAllService)}:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
+        string cacheKey = $"business:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<BusinessEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
         
