@@ -8,7 +8,7 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 namespace Poliedro.Eds.Application.Category.Commands.UpdateCategory
 {
     public class UpdateCategoryCommandHandler(
-        ICategoryUpdateCategory categoryDomainCategory,
+        ICategoryUpdateService categoryDomainCategory,
         IMapper mapper
    ) : IRequestHandler<UpdateCategoryCommand, Result<VoidResult, Error>>
     {

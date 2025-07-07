@@ -1,4 +1,5 @@
-﻿using Poliedro.Eds.Application.ShoppingProduct.Errors;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using Poliedro.Eds.Application.ShoppingProduct.Errors;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.ShoppingProduct.DomainShoppingProduct;
@@ -14,12 +15,12 @@ using System.Threading.Tasks;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProductInventory.DomainShoppingProductInventory.Impl
 {
-    public class ShoppingProductCreateShoppingProductInventory(DataBaseContext context) : IShoppingCreateShoppingProductInventory
+    public class ShoppingProductCreateShoppingProductInventory(ITenantDbContextFactory dbContextFactory) : IShoppingCreateShoppingProductInventory
     {
         public async Task<Result<VoidResult, Error>> CreateAsync(ShoppingProductInventoryEntity shoppingProductEntity)
         {
             //throw new NotImplementedException();
-
+            using var context = dbContextFactory.CreateDbContext();
             await context.ShoppingProductInventory.AddAsync(shoppingProductEntity);
             var result = await context.SaveChangesAsync() > 0;
             if (!result)
