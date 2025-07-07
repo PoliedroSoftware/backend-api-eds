@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.EdsTank.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -10,7 +11,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EdsTank.DomainEdsTank.Impl;
 
-public class EdsTankGetByIdEdsTank(DataBaseContext context, IRedisService redisService) : IEdsTankGetByIdEdsTank
+public class EdsTankGetByIdEdsTank(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IEdsTankGetByIdEdsTank
 {
     public async Task<Result<EdsTankEntity, Error>> GetByIdAsync(int id)
     {
@@ -23,6 +24,7 @@ public class EdsTankGetByIdEdsTank(DataBaseContext context, IRedisService redisS
         if (!await EntityExists(id))
             return EdsTankErrorBuilder.EdsTankNotFoundException(id);
 
+        using var context = dbContextFactory.CreateDbContext();
         var data = await context.EdsTank
             .FirstAsync(c => c.IdEdsTank == id);
 
@@ -33,6 +35,7 @@ public class EdsTankGetByIdEdsTank(DataBaseContext context, IRedisService redisS
 
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.Tank
             .AsNoTracking()
             .AnyAsync(c => c.IdTank == id);

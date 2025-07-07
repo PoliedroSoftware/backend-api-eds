@@ -1,24 +1,27 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Application.ProductType.Errors;
 using Poliedro.Eds.Domain.Common.Pagination;
-using Poliedro.Eds.Domain.Common.Results;
-using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.ProductType.DomainProductType;
 using Poliedro.Eds.Domain.ProductType.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using StackExchange.Redis;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 
-public class ProductTypeGetAllProductType(DataBaseContext context,IRedisService redisService) : IProductTypeGetAllProductType
+public class ProductTypeGetAllProductType(
+    ITenantDbContextFactory dbContextFactory,
+    IRedisService redisService,
+    IHttpContextAccessor httpContextAccessor
+    ) : IProductTypeGetAllProductType
 {
 
     public async Task<IEnumerable<ProductTypeEntity>> GetAllAsync(PaginationParams paginationParams)
     {
-         var totalRows = await context.ProductType.CountAsync();
+        using var context = dbContextFactory.CreateDbContext();
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+        var totalRows = await context.ProductType.CountAsync();
 
-        string cacheKey = $"productType:{paginationParams.PageNumber}:{paginationParams.PageSize}";
+        string cacheKey = $"productType:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<ProductTypeEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
         

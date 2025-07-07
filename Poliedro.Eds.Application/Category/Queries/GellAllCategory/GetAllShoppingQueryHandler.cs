@@ -6,7 +6,7 @@ using Poliedro.Eds.Domain.Category.DomainCategory;
 namespace Poliedro.Eds.Application.Category.Queries.GellAllCategory;
 public class GetAllCategoryQueryHandler
 (
-    ICategoryGetAllCategory categoryDomainService,
+    ICategoryGetAllService categoryDomainService,
     IMapper mapper)
     : IRequestHandler<GellAllCategoryQuery, IEnumerable<CategoryDto>>
 {

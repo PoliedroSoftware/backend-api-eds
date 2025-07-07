@@ -6,7 +6,7 @@ using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 namespace Poliedro.Eds.Application.Compartiment.Queries.GellAllCompartiment;
 public class GetAllCompartimentQueryHandler
 (
-    ICompartimentGetAllCompartiment compartimentDomainService,
+    ICompartimentGetAllService compartimentDomainService,
     IMapper mapper)
     : IRequestHandler<GellAllCompartimentQuery, IEnumerable<CompartimentDto>>
 {

@@ -3,6 +3,7 @@ using Amazon.Configurations;
 using Amazon.Runtime;
 using Amazon.S3.FileUploadService;
 using Amazon.Secrets;
+using Autofac.Core;
 using AWS.Logger;
 using FluentValidation;
 using HealthChecks.UI.Client;
@@ -15,6 +16,7 @@ using Poliedro.Eds.Api;
 using Poliedro.Eds.Api.Common.Configurations;
 using Poliedro.Eds.Api.Middlelware.aws;
 using Poliedro.Eds.Api.Middlelware.Jwt;
+using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
 using Poliedro.Eds.Application.AWS.Configurations.Dto.Plemsi;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
@@ -30,6 +32,7 @@ using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 using Poliedro.External.HealthCheck.Tolgee;
@@ -206,10 +209,6 @@ builder.Logging.AddAWSProvider(loggerConfig);
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 
-var connectionString = builder.Configuration.GetConnectionString("MysqlConnection");
-
-var appConfigService = new AwsAppConfigService("hpgip50", "t3iui3q", "wfcp470", RegionEndpoint.USEast2);
-var config = await appConfigService.GetConfigurationAsync<ApiPlemsiDto>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PoliedroEDS", policy =>
@@ -220,6 +219,7 @@ builder.Services.AddCors(options =>
               
     });
 });
+builder.Services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();
 var app = builder.Build();
 app.MapHealthChecks("/health", new HealthCheckOptions()
 {
@@ -244,6 +244,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<LoggingMiddleware>();
 app.UseAuthentication();
 app.UseMiddleware<JwtMiddleware>();
+app.UseMiddleware<TenantMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 
 namespace Poliedro.Eds.Domain.Category.DomainCategory;
-    public interface ICategoryCreateCategory
+    public interface ICategoryCreateService
 {
         Task<Result<VoidResult, Error>> CreateAsync(CategoryEntity categoryEntity);
     }

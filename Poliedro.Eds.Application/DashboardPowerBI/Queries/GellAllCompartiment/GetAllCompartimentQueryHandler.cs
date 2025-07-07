@@ -6,7 +6,7 @@ using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllCompartiment;
 public class GetAllCompartimentQueryHandler
 (
-    ICompartimentGetAllCompartiment compartimentDomainService,
+    ICompartimentGetAllService compartimentDomainService,
     IMapper mapper)
     : IRequestHandler<GellAllCompartimentQuery, IEnumerable<CompartimentDto>>
 {

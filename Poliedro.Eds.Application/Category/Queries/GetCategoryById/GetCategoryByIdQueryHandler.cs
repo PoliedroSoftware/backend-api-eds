@@ -7,7 +7,7 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.Category.Queries.GetCategoryById;
     public class GetCategoryByIdQueryHandler(
-        ICategoryGetByIdCategory categoryDomainService,
+        ICategoryGetByIdService categoryDomainService,
         IMapper mapper)
         : IRequestHandler<GetCategoryByIdQuery, Result<CategoryDto, Error>>
     {
