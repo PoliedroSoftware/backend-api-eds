@@ -16,8 +16,7 @@ Microsoft.Extensions.Configuration.IConfiguration config) : ITenantDbContextFact
         if (string.IsNullOrWhiteSpace(tenant))
             throw new InvalidOperationException("Tenant not found");
 
-        //var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? config.GetConnectionString("MysqlConnection");
-        var connectionString = config["ConnectionStrings:MysqlConnection"]!;
+        var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? config["ConnectionStrings:MysqlConnection"];
         var connectionStringFactory = connectionString.Replace("{schema}", tenant);
 
         var optionsBuilder = new DbContextOptionsBuilder<DataBaseContext>();
