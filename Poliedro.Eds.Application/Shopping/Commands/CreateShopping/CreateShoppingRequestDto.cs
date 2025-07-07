@@ -7,5 +7,6 @@ public record CreateShoppingRequestDto(
     int IdCategory,
     double Amount,
     IEnumerable<ShoppingProductRequestDto> ShoppingProducts,
-    IEnumerable<SellPriceProductRequestDto> SellPriceProducts
+    IEnumerable<SellPriceProductRequestDto> SellPriceProducts,
+    ShoppingInventoryCommand? ShoppingInventory
     );

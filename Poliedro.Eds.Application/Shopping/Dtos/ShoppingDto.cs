@@ -8,5 +8,6 @@ public record ShoppingDto(
     int IdProvider,
     int IdCategory,
     double Amount,
-    IEnumerable<ShoppingProductDto> ShoppingProducts
+    IEnumerable<ShoppingProductDto> ShoppingProducts,
+    ShoppingInventoryDto? ShoppingInventory
 );
