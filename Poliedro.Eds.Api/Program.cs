@@ -1,9 +1,8 @@
 ﻿using Amazon;
-using Amazon.Configurations;
 using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.S3.FileUploadService;
 using Amazon.Secrets;
-using Autofac.Core;
 using AWS.Logger;
 using FluentValidation;
 using HealthChecks.UI.Client;
@@ -18,13 +17,13 @@ using Poliedro.Eds.Api.Middlelware.aws;
 using Poliedro.Eds.Api.Middlelware.Jwt;
 using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
-using Poliedro.Eds.Application.AWS.Configurations.Dto.Plemsi;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
+using Poliedro.Eds.Common;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
@@ -101,6 +100,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+
+builder.Services.Configure<AwsOptions>(builder.Configuration.GetSection("AWS"));
+
+
 
 // Configura politica
 builder.Services.AddAuthorization(options =>
