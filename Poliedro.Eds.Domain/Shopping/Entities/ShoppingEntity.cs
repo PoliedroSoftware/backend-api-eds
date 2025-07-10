@@ -12,8 +12,8 @@ public class ShoppingEntity
     public double Amount { get; set; }
 
     public IEnumerable<ShoppingProductEntity> ShoppingProducts { get; set; }
-
-
+    public ShoppingInventoryEntity ShoppingInventory { get; set; }
 }
+
 
 
