@@ -9,6 +9,7 @@ using FluentValidation;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -58,8 +59,12 @@ builder.Services
     .AddExternalTolgee();
 
 builder.Services.AddHostedService<Worker>();
+var httpContextAccessor = new HttpContextAccessor();
+var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? builder.Configuration["ConnectionStrings:MysqlConnection"];
+var connectionStringFactory = connectionString.Replace("{schema}", tenant);
 builder.Services.AddHealthChecks()
-    .AddMySql(builder.Configuration.GetConnectionString("MysqlConnection"), name: "sql", tags: ["ready"])
+    .AddMySql(connectionStringFactory, name: "sql", tags: ["ready"])
     .AddRedis(builder.Configuration["Redis:ConnectionString"], name: "redis", tags: ["ready"])
     .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee"); 
 
