@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Category.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Category.DomainCategory;
@@ -9,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Category.DomainCategory.Impl;
 
-public class CategoryGetByIdCategory(DataBaseContext context, IRedisService redisService) : ICategoryGetByIdCategory
+public class CategoryGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICategoryGetByIdService
 {
     public async Task<Result<CategoryEntity, Error>> GetByIdAsync(int id)
     {
@@ -22,6 +23,8 @@ public class CategoryGetByIdCategory(DataBaseContext context, IRedisService redi
         if (!await EntityExists(id))
             return CategoryErrorBuilder.CategoryNotFoundException(id);
 
+        using var context = dbContextFactory.CreateDbContext();
+
         var data = await context.Category
             .FirstAsync(c => c.IdCategory == id);
 
@@ -31,6 +34,7 @@ public class CategoryGetByIdCategory(DataBaseContext context, IRedisService redi
     }
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.Category
             .AsNoTracking()
             .AnyAsync(c => c.IdCategory == id);

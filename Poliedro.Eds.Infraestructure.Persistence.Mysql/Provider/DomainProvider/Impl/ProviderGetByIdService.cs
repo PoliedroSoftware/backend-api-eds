@@ -6,10 +6,11 @@ using Poliedro.Eds.Domain.Provider.DomainProvider;
 using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Application.Ports.Redis;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Provider.DomainProvider.Impl;
 
-public class ProviderGetByIdService(DataBaseContext context, IRedisService redisService) : IProviderGetByIdService
+public class ProviderGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IProviderGetByIdService
 
 {
     public async Task<Result<ProviderEntity, Error>> GetByIdAsync(int id)
@@ -23,6 +24,7 @@ public class ProviderGetByIdService(DataBaseContext context, IRedisService redis
         if (!await EntityExists(id))
             return ProviderErrorBuilder.ProviderNotFoundException(id);
 
+        using var context = dbContextFactory.CreateDbContext();
         var data = await context.Provider
             .FirstAsync(c => c.IdProvider == id);
 
@@ -33,6 +35,7 @@ public class ProviderGetByIdService(DataBaseContext context, IRedisService redis
 
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.Tank
             .AsNoTracking()
             .AnyAsync(c => c.IdTank == id);

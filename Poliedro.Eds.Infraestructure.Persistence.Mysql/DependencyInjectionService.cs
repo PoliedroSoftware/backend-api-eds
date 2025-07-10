@@ -68,11 +68,7 @@ public static class DependencyInjectionService
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? configuration.GetConnectionString("MysqlConnection");
-        services.AddDbContext<DataBaseContext>(
-            options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)
-        ));
-
+       
         services.AddTransient<IMessageProvider, MessageProvider>();
         services.AddTransient<ICourtDomainService, CourtCreateService>();
         services.AddTransient<ICourtGetByIdDomainService, CourtGetByIDService>();
@@ -118,10 +114,10 @@ public static class DependencyInjectionService
         services.AddScoped<ITypeOfCollectionGetAllTypeOfCollection, TypeOfCollectionGetAllTypeOfCollection>();
         services.AddScoped<ITypeOfCollectionGetByIdTypeOfCollection, TypeOfCollectionGetByIdTypeOfCollection>();
         services.AddScoped<ITypeOfCollectionUpdateTypeOfCollection, TypeOfCollectionUpdateTypeOfCollection>();
-        services.AddScoped<ICompartimentCapacityCreateCompartimentCapacity, CompartimentCapacityCreateCompartimentCapacity>();
-        services.AddScoped<ICompartimentCapacityGetAllCompartimentCapacity, CompartimentCapacityGetAllCompartimentCapacity>();
-        services.AddScoped<ICompartimentCapacityGetByIdCompartimentCapacity, CompartimentCapacityGetByIdCompartimentCapacity>();
-        services.AddScoped<ICompartimentCapacityUpdateCompartimentCapacity, CompartimentCapacityUpdateCompartimentCapacity>();
+        services.AddScoped<ICompartimentCapacityCreateService, CompartimentCapacityCreateService>();
+        services.AddScoped<ICompartimentCapacityGetAllService, CompartimentCapacityGetAllService>();
+        services.AddScoped<ICompartimentCapacityGetByIdService, CompartimentCapacityGetByIdService>();
+        services.AddScoped<ICompartimentCapacityUpdateService, CompartimentCapacityUpdateService>();
         services.AddScoped<IIslanderCreateIslander, IslanderCreateIslander>();
         services.AddScoped<IIslanderUpdateIslander, IslanderUpdateIslander>();
         services.AddScoped<IIslanderGetByIdIslander, IslanderGetByIdIslander>();
@@ -163,18 +159,18 @@ public static class DependencyInjectionService
         services.AddScoped<ITankUpdateTank, TankUpdateTank>();
         services.AddScoped<ITankGetByIdTank, TankGetByIdTank>();
         services.AddScoped<ITankGetAllTank, TankGetAllTank>();
-        services.AddScoped<ICompartimentCreateCompartiment, CompartimentCreateCompartiment>();
-        services.AddScoped<ICompartimentUpdateCompartiment, CompartimentUpdateCompartiment>();
-        services.AddScoped<ICompartimentGetByIdCompartiment, CompartimentGetByIdCompartiment>();
-        services.AddScoped<ICompartimentGetAllCompartiment, CompartimentGetAllCompartiment>();
+        services.AddScoped<ICompartimentCreateService, CompartimentCreateService>();
+        services.AddScoped<ICompartimentUpdateService, CompartimentUpdateService>();
+        services.AddScoped<ICompartimentGetByIdService, CompartimentGetByIdService>();
+        services.AddScoped<ICompartimentGetAllService, CompartimentGetAllService>();
         services.AddScoped<ICourtDispensersInventoryCreateCourtDispensersInventory, CourtDispensersInventoryCreateCourtDispensersInventory>();
         services.AddScoped<ICourtDispensersInventoryUpdateCourtDispensersInventory, CourtDispensersInventoryUpdateCourtDispensersInventory>();
         services.AddScoped<ICourtDispensersInventoryGetByIdCourtDispensersInventory, CourtDispensersInventoryGetByIdCourtDispensersInventory>();
         services.AddScoped<ICourtDispensersInventoryGetAllCourtDispensersInventory, CourtDispensersInventoryGetAllCourtDispensersInventory>();
-        services.AddScoped<ICategoryCreateCategory, CategoryCreateCategory>();
-        services.AddScoped<ICategoryUpdateCategory, CategoryUpdateCategory>();
-        services.AddScoped<ICategoryGetByIdCategory, CategoryGetByIdCategory>();
-        services.AddScoped<ICategoryGetAllCategory, CategoryGetAllCategory>();
+        services.AddScoped<ICategoryCreateService, CategoryCreateService>();
+        services.AddScoped<ICategoryUpdateService, CategoryUpdateService>();
+        services.AddScoped<ICategoryGetByIdService, CategoryGetByIdService>();
+        services.AddScoped<ICategoryGetAllService, CategoryGetAllService>();
         services.AddScoped<ICourtUpdateInventoryService, CourtInventoryService>();
         services.AddSingleton<IRedisService, RedisCacheService>();
         return services;
