@@ -14,7 +14,7 @@ public class TenantMiddleware(
         {
             var identity = user.Identity as ClaimsIdentity;
 
-            var tenantClaim = user.FindFirst("preferred_username")?.Value;
+            var tenantClaim = user.FindFirst("tenant")?.Value;
 
             if (!string.IsNullOrWhiteSpace(tenantClaim))
             {
