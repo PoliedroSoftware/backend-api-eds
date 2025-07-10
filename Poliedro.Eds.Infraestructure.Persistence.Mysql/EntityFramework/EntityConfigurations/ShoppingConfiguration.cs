@@ -20,5 +20,10 @@ public class ShoppingConfiguration
         builder.HasMany(x => x.ShoppingProducts)
                    .WithOne()
                    .HasForeignKey(x => x.IdShopping);
+
+        builder.HasOne(x => x.ShoppingInventory)
+                     .WithOne()
+                     .HasForeignKey<ShoppingInventoryEntity>(x => x.ReferenceId)
+                     .OnDelete(DeleteBehavior.Cascade);
     }
 }

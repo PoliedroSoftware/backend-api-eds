@@ -17,5 +17,8 @@ public class ShoppingMapper : Profile
 
         CreateMap<ShoppingProductEntity, ShoppingProductDto>().ReverseMap();
         CreateMap<ShoppingProductEntity, ShoppingProductRequestDto>().ReverseMap();
+
+        CreateMap<ShoppingInventoryEntity, ShoppingInventoryDto>().ReverseMap();
+        CreateMap<ShoppingInventoryEntity, ShoppingInventoryCommand>().ReverseMap();
     }
 }
