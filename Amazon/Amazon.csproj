@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AWS.Logger.AspNetCore" Version="4.0.0" />
     <PackageReference Include="AWSSDK.AppConfigData" Version="4.0.0.4" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.4.2" />
     <PackageReference Include="AWSSDK.SecretsManager" Version="4.0.0.4" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
   </ItemGroup>
