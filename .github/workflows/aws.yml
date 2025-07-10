@@ -93,7 +93,7 @@ jobs:
           overwrite: false
           include-hidden-files: false
 
-  deploy:
+  docker:
     if: github.event.pull_request.merged == true
     needs: [dotnet, sonar, jmeter]
     runs-on: ubuntu-latest
@@ -115,7 +115,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Log in to Amazon ECR
+      - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build Docker image
@@ -131,8 +131,15 @@ jobs:
       - name: Push Docker image to ECR
         run: |
           echo "Subiendo imagen Docker a ECR..."
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest          
 
+  deploy:
+    if: github.event.pull_request.merged == true
+    needs: docker
+    runs-on: ubuntu-latest
+    environment: QA
+
+    steps:
       - name: Deploy to Amazon ECS
         run: |
           # Usar el ARN de la task definition desde Secrets
