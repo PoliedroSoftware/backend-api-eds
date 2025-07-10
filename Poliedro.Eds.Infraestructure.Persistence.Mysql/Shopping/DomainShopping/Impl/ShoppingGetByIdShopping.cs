@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Shopping.Errors;
 using Poliedro.Eds.Domain.Common.Results;
@@ -9,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
 
-public class ShoppingGetByIdShopping(DataBaseContext context, IRedisService redisService) : IShoppingGetByIdShopping
+public class ShoppingGetByIdShopping(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IShoppingGetByIdShopping
 {
     public async Task<Result<ShoppingEntity, Error>> GetByIdAsync(int id)
     {
@@ -22,6 +23,7 @@ public class ShoppingGetByIdShopping(DataBaseContext context, IRedisService redi
         if (!await EntityExists(id))
             return ShoppingErrorBuilder.ShoppingNotFoundException(id);
 
+        using var context = dbContextFactory.CreateDbContext();
         var data = await context.Shopping
             .FirstAsync(c => c.IdShopping == id);
 
@@ -31,6 +33,7 @@ public class ShoppingGetByIdShopping(DataBaseContext context, IRedisService redi
     }
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.Shopping
             .AsNoTracking()
             .AnyAsync(c => c.IdShopping == id);

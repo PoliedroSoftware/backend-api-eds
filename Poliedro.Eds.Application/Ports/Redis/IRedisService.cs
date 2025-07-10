@@ -1,4 +1,6 @@
-﻿namespace Poliedro.Eds.Application.Ports.Redis;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Poliedro.Eds.Application.Ports.Redis;
 
 public interface IRedisService
 {

@@ -11,10 +11,12 @@ public class RedisCacheService : IRedisService
 {
     private readonly ConnectionMultiplexer _redis;
     private readonly StackExchange.Redis.IDatabase _db;
-
     public ILogger<BusinessGetAllService> Logger { get; }
 
-    public RedisCacheService(IOptions<RedisConfig> config, ILogger<BusinessGetAllService> logger)
+    public RedisCacheService(
+        IOptions<RedisConfig> config,
+        ILogger<BusinessGetAllService> logger
+       )
     {
         _redis = ConnectionMultiplexer.Connect(config.Value.ConnectionString);
         _db = _redis.GetDatabase();
@@ -26,7 +28,7 @@ public class RedisCacheService : IRedisService
         try
         {
             var json = JsonSerializer.Serialize(value);
-            await _db.StringSetAsync(key, json, expiration);
+            await _db.StringSetAsync(key , json, expiration);
         }
         catch (RedisException ex)
         {

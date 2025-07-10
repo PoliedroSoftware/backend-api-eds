@@ -8,7 +8,7 @@ using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 namespace Poliedro.Eds.Application.CompartimentCapacity.Queries.GetCompartimentCapacityById;
 
     public class GetCompartimentCapacityByIdQueryHandler(
-        ICompartimentCapacityGetByIdCompartimentCapacity CompartimentCapacityDomainCompartimentCapacity,
+        ICompartimentCapacityGetByIdService CompartimentCapacityDomainCompartimentCapacity,
         IMapper mapper)
         : IRequestHandler<GetCompartimentCapacityByIdQuery, Result<CompartimentCapacityDto, Error>>
     {

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.ProductType.Errors;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -10,10 +11,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 
-public class ProductTypeCreateProductType(DataBaseContext context,IRedisService redisService) : IProductTypeCreateProductType
+public class ProductTypeCreateProductType(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IProductTypeCreateProductType
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ProductTypeEntity ProductTypeEntity)
     {
+        using var context = dbContextFactory.CreateDbContext();
         await context.ProductType.AddAsync(ProductTypeEntity);
         var result = await context.SaveChangesAsync() > 0;
         if (!result)

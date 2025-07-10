@@ -8,7 +8,7 @@ using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 namespace Poliedro.Eds.Application.Compartiment.Queries.GetCompartimentById
 {
     public class GetCompartimentByIdQueryHandler(
-        ICompartimentGetByIdCompartiment compartimentDomainService,
+        ICompartimentGetByIdService compartimentDomainService,
         IMapper mapper)
         : IRequestHandler<GetCompartimentByIdQuery, Result<CompartimentDto, Error>>
     {

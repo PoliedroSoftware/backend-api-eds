@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.Compartiment.Entities;
 
 namespace Poliedro.Eds.Domain.Compartiment.DomainCompartiment
 {
-    public interface ICompartimentCreateCompartiment
+    public interface ICompartimentCreateService
     {
         Task<Result<VoidResult, Error>> CreateAsync(CompartimentEntity compartimentEntity);
 
