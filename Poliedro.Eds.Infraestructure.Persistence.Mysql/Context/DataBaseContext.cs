@@ -25,6 +25,7 @@ using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 using Poliedro.Eds.Domain.DispenserType.Entities;
 using Poliedro.Eds.Domain.Island.Entities;
+using Poliedro.Eds.Domain.ShoppingProductView.Entities;
 
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
@@ -53,6 +54,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<ShoppingEntity> Shopping { get; set; }
     public DbSet<ShoppingProductEntity> ShoppingProduct { get; set; }
     public DbSet<ShoppingProductInventoryEntity> ShoppingProductInventory { get; set; }
+
+    public DbSet<ShoppingProductViewEntity> ShoppingProductView { get; set; }
     public DbSet<TankEntity> Tank { get; set; }
     public DbSet<CompartimentEntity> Compartiment { get; set; }
     public DbSet<CourtDispensersInventoryEntity> CourtDispensersInventory { get; set; }
@@ -92,6 +95,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new TypeOfCollectionConfiguration(modelBuilder.Entity<TypeOfCollectionEntity>());
         new ShoppingConfiguration(modelBuilder.Entity<ShoppingEntity>());
         new ShoppingProductConfiguration(modelBuilder.Entity<ShoppingProductEntity>());
+        new ShoppingProductViewConfiguration(modelBuilder.Entity<ShoppingProductViewEntity>());
         new ShoppingProductInventoryConfiguration(modelBuilder.Entity<ShoppingProductInventoryEntity>());
         new TankConfiguration(modelBuilder.Entity<TankEntity>());
         new CompartimentConfiguration(modelBuilder.Entity<CompartimentEntity>());
