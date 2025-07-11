@@ -127,7 +127,7 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">client_id=application-eds&amp;username=admin&amp;password=admin&amp;grant_type=password</stringProp>
+                <stringProp name="Argument.value">client_id=application-eds&amp;username=eds_qa&amp;password=admin_&amp;grant_type=password</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
