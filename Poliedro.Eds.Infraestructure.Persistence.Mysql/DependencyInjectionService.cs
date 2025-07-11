@@ -61,6 +61,8 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.Domainisland.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.DomainIsland.Impl;
 using Poliedro.Eds.Application.Product.Services;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.Services;
+using Poliedro.Eds.Domain.ShoppingProductView.DomainShoppingProductView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProductView.DomainShoppingProductView.Impl;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -155,6 +157,7 @@ public static class DependencyInjectionService
         services.AddScoped<IShoppingUpdateShoppingProductInventory, ShoppingProductUpdateShoppingProductInventory>();
         services.AddScoped<IShoppingProductInventoryGetAll, ShoppingProductInventoryGetAll>();
         services.AddScoped<IShoppingProductInventoryGetById, ShoppingProductInventoryGetById>();
+        services.AddScoped<IShoppingProductGetAllShoppingProductView, ShoppingProductGetAllShoppingProductView>();
         services.AddScoped<ITankCreateTank, TankCreateTank>();
         services.AddScoped<ITankUpdateTank, TankUpdateTank>();
         services.AddScoped<ITankGetByIdTank, TankGetByIdTank>();

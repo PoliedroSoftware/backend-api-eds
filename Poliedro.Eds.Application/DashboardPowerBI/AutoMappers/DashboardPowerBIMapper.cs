@@ -16,6 +16,7 @@ using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos.Court;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+using Poliedro.Eds.Domain.ShoppingProductView.Entities;
 
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;
@@ -52,6 +53,12 @@ public class DashboardPowerBIMapper: Profile
           .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
           .ForMember(dest => dest.Sicom, opt => opt.MapFrom(src => src.Sicom))
           .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()));
+
+        CreateMap<ShoppingProductViewEntity, ShoppingProductViewDto>()
+              .ForMember(dest => dest.IdShoppingProduct, opt => opt.MapFrom(src => src.IdShoppingProduct.ToString()))
+              .ForMember(dest => dest.IdShopping, opt => opt.MapFrom(src => src.IdShopping.ToString()))
+              .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
+              .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()));
 
         CreateMap<Domain.Inventory.Dto.View.InventoryListResponseDto, InventoryDto>();
 
