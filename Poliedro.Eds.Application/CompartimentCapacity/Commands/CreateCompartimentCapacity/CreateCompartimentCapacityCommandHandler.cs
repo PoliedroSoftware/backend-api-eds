@@ -7,7 +7,7 @@ using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 
 namespace Poliedro.Eds.Application.CompartimentCapacity.Commands.CreateCompartimentCapacity;
     public class CreateCompartimentCapacityCommandHandler(
-        ICompartimentCapacityCreateCompartimentCapacity CompartimentCapacityDomainCompartimentCapacity,
+        ICompartimentCapacityCreateService CompartimentCapacityDomainCompartimentCapacity,
         IMapper mapper) : IRequestHandler<CreateCompartimentCapacityCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCompartimentCapacityCommand request, CancellationToken cancellationToken)

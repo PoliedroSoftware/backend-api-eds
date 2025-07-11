@@ -59,8 +59,8 @@ using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 using Poliedro.Eds.Domain.Island.DomainIsland;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.Domainisland.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.DomainIsland.Impl;
-using Poliedro.Eds.Domain.DashboardPowerBI.DomainDashboardPowerBI;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.DomainService.lmpl;
+using Poliedro.Eds.Application.Product.Services;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.Services;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -68,11 +68,7 @@ public static class DependencyInjectionService
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? configuration.GetConnectionString("MysqlConnection");
-        services.AddDbContext<DataBaseContext>(
-            options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)
-        ));
-
+       
         services.AddTransient<IMessageProvider, MessageProvider>();
         services.AddTransient<ICourtDomainService, CourtCreateService>();
         services.AddTransient<ICourtGetByIdDomainService, CourtGetByIDService>();
@@ -101,6 +97,7 @@ public static class DependencyInjectionService
         services.AddScoped<IProductGetAllProduct, ProductGetAllProduct>();
         services.AddScoped<IProductGetByIdProduct, ProductGetByIdProduct>();
         services.AddScoped<IProductUpdateProduct, ProductUpdateProduct>();
+        services.AddScoped<IProductPriceUpdateService, ProductPriceUpdateService>();
         services.AddScoped<IProductCompartimentCreateProductCompartiment, ProductCompartimentCreateProductCompartiment>();
         services.AddScoped<IProductCompartimentGetAllProductCompartiment, ProductCompartimentGetAllProductCompartiment>();
         services.AddScoped<IProductCompartimentGetByIdProductCompartiment, ProductCompartimentGetByIdProductCompartiment>();
@@ -117,10 +114,10 @@ public static class DependencyInjectionService
         services.AddScoped<ITypeOfCollectionGetAllTypeOfCollection, TypeOfCollectionGetAllTypeOfCollection>();
         services.AddScoped<ITypeOfCollectionGetByIdTypeOfCollection, TypeOfCollectionGetByIdTypeOfCollection>();
         services.AddScoped<ITypeOfCollectionUpdateTypeOfCollection, TypeOfCollectionUpdateTypeOfCollection>();
-        services.AddScoped<ICompartimentCapacityCreateCompartimentCapacity, CompartimentCapacityCreateCompartimentCapacity>();
-        services.AddScoped<ICompartimentCapacityGetAllCompartimentCapacity, CompartimentCapacityGetAllCompartimentCapacity>();
-        services.AddScoped<ICompartimentCapacityGetByIdCompartimentCapacity, CompartimentCapacityGetByIdCompartimentCapacity>();
-        services.AddScoped<ICompartimentCapacityUpdateCompartimentCapacity, CompartimentCapacityUpdateCompartimentCapacity>();
+        services.AddScoped<ICompartimentCapacityCreateService, CompartimentCapacityCreateService>();
+        services.AddScoped<ICompartimentCapacityGetAllService, CompartimentCapacityGetAllService>();
+        services.AddScoped<ICompartimentCapacityGetByIdService, CompartimentCapacityGetByIdService>();
+        services.AddScoped<ICompartimentCapacityUpdateService, CompartimentCapacityUpdateService>();
         services.AddScoped<IIslanderCreateIslander, IslanderCreateIslander>();
         services.AddScoped<IIslanderUpdateIslander, IslanderUpdateIslander>();
         services.AddScoped<IIslanderGetByIdIslander, IslanderGetByIdIslander>();
@@ -162,20 +159,19 @@ public static class DependencyInjectionService
         services.AddScoped<ITankUpdateTank, TankUpdateTank>();
         services.AddScoped<ITankGetByIdTank, TankGetByIdTank>();
         services.AddScoped<ITankGetAllTank, TankGetAllTank>();
-        services.AddScoped<ICompartimentCreateCompartiment, CompartimentCreateCompartiment>();
-        services.AddScoped<ICompartimentUpdateCompartiment, CompartimentUpdateCompartiment>();
-        services.AddScoped<ICompartimentGetByIdCompartiment, CompartimentGetByIdCompartiment>();
-        services.AddScoped<ICompartimentGetAllCompartiment, CompartimentGetAllCompartiment>();
+        services.AddScoped<ICompartimentCreateService, CompartimentCreateService>();
+        services.AddScoped<ICompartimentUpdateService, CompartimentUpdateService>();
+        services.AddScoped<ICompartimentGetByIdService, CompartimentGetByIdService>();
+        services.AddScoped<ICompartimentGetAllService, CompartimentGetAllService>();
         services.AddScoped<ICourtDispensersInventoryCreateCourtDispensersInventory, CourtDispensersInventoryCreateCourtDispensersInventory>();
         services.AddScoped<ICourtDispensersInventoryUpdateCourtDispensersInventory, CourtDispensersInventoryUpdateCourtDispensersInventory>();
         services.AddScoped<ICourtDispensersInventoryGetByIdCourtDispensersInventory, CourtDispensersInventoryGetByIdCourtDispensersInventory>();
         services.AddScoped<ICourtDispensersInventoryGetAllCourtDispensersInventory, CourtDispensersInventoryGetAllCourtDispensersInventory>();
-        services.AddScoped<ICategoryCreateCategory, CategoryCreateCategory>();
-        services.AddScoped<ICategoryUpdateCategory, CategoryUpdateCategory>();
-        services.AddScoped<ICategoryGetByIdCategory, CategoryGetByIdCategory>();
-        services.AddScoped<ICategoryGetAllCategory, CategoryGetAllCategory>();
+        services.AddScoped<ICategoryCreateService, CategoryCreateService>();
+        services.AddScoped<ICategoryUpdateService, CategoryUpdateService>();
+        services.AddScoped<ICategoryGetByIdService, CategoryGetByIdService>();
+        services.AddScoped<ICategoryGetAllService, CategoryGetAllService>();
         services.AddScoped<ICourtUpdateInventoryService, CourtInventoryService>();
-        services.AddScoped<IMasterGetAllService, MasterGetAllService>();
         services.AddSingleton<IRedisService, RedisCacheService>();
         return services;
     }

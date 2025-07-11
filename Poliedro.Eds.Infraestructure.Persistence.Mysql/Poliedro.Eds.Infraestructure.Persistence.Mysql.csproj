@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="Inventory\DomainService\Impl\" />
+    <Folder Include="ScriptMySQL\" />
   </ItemGroup>
 
 </Project>

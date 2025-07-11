@@ -4,7 +4,7 @@ using Poliedro.Eds.Domain.Compartiment.Entities;
 
 namespace Poliedro.Eds.Domain.Compartiment.DomainCompartiment
 {
-    public interface ICompartimentUpdateCompartiment
+    public interface ICompartimentUpdateService
     {
         Task<Result<VoidResult, Error>> UpdateAsync(CompartimentEntity compartimentEntity);
 

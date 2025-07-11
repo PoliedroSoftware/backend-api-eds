@@ -48,21 +48,19 @@ namespace WorkerKeycloackService
                         Password = islanderDto.Password,
                     };
 
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        var keycloakUserService = scope.ServiceProvider.GetRequiredService<IKeycloakUserService>();
-                        var resultService = await keycloakUserService.CreateUserAsync(islanderEntity, islanderDto.Password);
+                    using var scope = _serviceProvider.CreateScope();
+                    var keycloakUserService = scope.ServiceProvider.GetRequiredService<IKeycloakUserService>();
+                    var resultService = await keycloakUserService.CreateUserAsync(islanderEntity, islanderDto.Password, islanderDto.NameClaimToken);
 
-                        if (resultService.IsSuccess)
-                        {
-                            _logger.LogInformation($"Usuario creado en Keycloak: {islanderDto.Email}");
-                            channel.BasicAck(result.DeliveryTag, false);
-                        }
-                        else
-                        {
-                            _logger.LogError($"Error creando usuario: {resultService.Error}");
-                            channel.BasicNack(result.DeliveryTag, false, true);
-                        }
+                    if (resultService.IsSuccess)
+                    {
+                        _logger.LogInformation($"Usuario creado en Keycloak: {islanderDto.Email}");
+                        channel.BasicAck(result.DeliveryTag, false);
+                    }
+                    else
+                    {
+                        _logger.LogError($"Error creando usuario: {resultService.Error}");
+                        channel.BasicNack(result.DeliveryTag, false, requeue: true);
                     }
                 }
                 else

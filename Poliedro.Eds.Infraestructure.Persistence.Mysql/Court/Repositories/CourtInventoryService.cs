@@ -7,24 +7,20 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class CourtInventoryService : ICourtUpdateInventoryService
+public class CourtInventoryService(IConfiguration config, 
+    IRedisService redisService, 
+    ITenantDbContextFactory dbContextFactory) : ICourtUpdateInventoryService
 {
-    private readonly string _connectionString;
-    private readonly IRedisService _redisService;
-    private readonly DataBaseContext _context;
-
-    public CourtInventoryService(IConfiguration config, IRedisService redisService, DataBaseContext context)
-    {
-        _connectionString = config["ConnectionStrings:MysqlConnection"];
-        _redisService = redisService;
-        _context = context;
-    }
+    private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
 
     public async Task CourtUpdateInventoryAsync(IEnumerable<ICourtDispenserSaleEntity> courtDispensers)
     {
+
+        using var context = dbContextFactory.CreateDbContext();
+
         foreach (var dispenser in courtDispensers)
         {
-            var compartment = await _context.Compartiment
+            var compartment = await context.Compartiment
                 .FirstOrDefaultAsync(c => c.IdCompartment == dispenser.IdCompartiment);
 
             if (compartment != null)
@@ -32,11 +28,11 @@ public class CourtInventoryService : ICourtUpdateInventoryService
                 Console.WriteLine($"Actualizando compartimiento {compartment.IdCompartment}: Stock antes: {compartment.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
 
                 compartment.Stock -= dispenser.GallonsDifferenceResult;
-                _context.Compartiment.Update(compartment);
+                context.Compartiment.Update(compartment);
             }
         }
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     public Task CourtUpdateInventoryAsync(IEnumerable<CourtDispenserEntity> courtDispensers)
