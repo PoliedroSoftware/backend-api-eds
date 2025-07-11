@@ -28,8 +28,6 @@ namespace Poliedro.Eds.Application.Court.AutoMappers
              .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct));
             CreateMap<CourtDispenserCommand, ICourtDispenserSaleEntity>()
              .ForMember(dest => dest.GallonsDifferenceResult, opt => opt.MapFrom(src => src.GallonsDifferenceResult));
-            CreateMap<CourtInventoryEntity, CourtInventoryDto>().ReverseMap();
-            CreateMap<CourtInventoryEntity, CourtInventoryCommand>().ReverseMap();
         }
     }
 }

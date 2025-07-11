@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
@@ -17,9 +16,5 @@ public class ShoppingProductConfiguration
         builder.Property(x => x.Quantity).HasColumnName("quantity");
         builder.Property(x => x.Price).HasColumnName("price");
         builder.Property(x => x.IdCompartment).HasColumnName("id_compartiment");
-
-        builder.HasOne<ShoppingEntity>()
-            .WithMany(x => x.ShoppingProducts)
-            .HasForeignKey(x => x.IdShopping);
     }
 }

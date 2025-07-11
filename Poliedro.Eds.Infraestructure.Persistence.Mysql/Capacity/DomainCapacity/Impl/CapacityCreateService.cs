@@ -5,15 +5,13 @@ using Poliedro.Eds.Domain.Capacity.DomainCapacity;
 using Poliedro.Eds.Domain.Capacity.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Application.Ports.Redis;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Capacity.DomainCapacity.Impl;
 
-public class CapacityCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICapacityCreateService
+public class CapacityCreateService(DataBaseContext context, IRedisService redisService) : ICapacityCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CapacityEntity CapacityEntity)
     {
-        using var context = dbContextFactory.CreateDbContext();
         await context.Capacity.AddAsync(CapacityEntity);
         var result = await context.SaveChangesAsync() > 0;
         if (!result)

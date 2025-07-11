@@ -13,8 +13,7 @@ public class CourtEntity
     public string? Descripcion { get; set; }
     public double Distintic { get; set; }
     public IEnumerable<CourtDispenserEntity> CourtDispensers { get; set; }
-    public IEnumerable<DocumentEntity?>? CourtDocuments { get; set; }
-    public IEnumerable<CourtExpenditureEntity?>? CourtExpenditures { get; set; }
+    public IEnumerable<DocumentEntity> CourtDocuments { get; set; }
+    public IEnumerable<CourtExpenditureEntity> CourtExpenditures { get; set; }
     public IEnumerable<CourtTypeOfCollectionEntity> CourtTypeOfCollections { get; set; }
-    public CourtInventoryEntity CourtInventory { get; set; }
 }

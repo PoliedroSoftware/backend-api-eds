@@ -22,15 +22,12 @@ public class CourtConfiguration
         builder.Property(x => x.Descripcion).HasColumnName("descripcion");
         builder.Property(x => x.Distintic).HasColumnName("distintic");
 
-        builder.HasOne(x => x.CourtInventory)
-                .WithOne()
-                .HasForeignKey<CourtInventoryEntity>(x => x.ReferenceId);
         builder.HasMany(x => x.CourtDispensers)
-                .WithOne()
-                .HasForeignKey(x => x.IdCourt);
+       .WithOne()
+       .HasForeignKey(x => x.IdCourt);
 
         builder.HasMany(x => x.CourtDocuments)
-                .WithOne()
+               .WithOne()
                .HasForeignKey(x => x.IdCourt);
 
         builder.HasMany(x => x.CourtExpenditures)
@@ -40,7 +37,5 @@ public class CourtConfiguration
         builder.HasMany(x => x.CourtTypeOfCollections)
                .WithOne()
                .HasForeignKey(x => x.IdCourt);
-        
-
     }
 }

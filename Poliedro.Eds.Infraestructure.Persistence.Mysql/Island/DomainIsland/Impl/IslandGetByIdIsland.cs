@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Island.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
@@ -10,7 +9,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.Domainisland.Impl;
 
-public class IslandGetByIdIsland(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IIslandGetByIdIsland
+public class IslandGetByIdIsland(DataBaseContext context,IRedisService redisService) : IIslandGetByIdIsland
 {
     public async Task<Result<IslandEntity, Error>> GetByIdAsync(int id)
     {
@@ -22,8 +21,6 @@ public class IslandGetByIdIsland(ITenantDbContextFactory dbContextFactory,IRedis
 
         if (!await EntityExists(id))
             return IslandErrorBuilder.IslandNotFoundException(id);
-
-        using var context = dbContextFactory.CreateDbContext();
         var data = await context.Island
             .FirstAsync(c => c.IdIsland == id);
 
@@ -34,7 +31,6 @@ public class IslandGetByIdIsland(ITenantDbContextFactory dbContextFactory,IRedis
 
     private async Task<bool> EntityExists(int id)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.Island
             .AsNoTracking()
             .AnyAsync(c => c.IdIsland == id);

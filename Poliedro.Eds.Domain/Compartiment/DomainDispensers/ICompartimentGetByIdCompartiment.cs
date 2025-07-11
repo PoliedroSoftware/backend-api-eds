@@ -4,7 +4,7 @@ using Poliedro.Eds.Domain.Compartiment.Entities;
 
 namespace Poliedro.Eds.Domain.Compartiment.DomainCompartiment
 {
-    public interface ICompartimentGetByIdService
+    public interface ICompartimentGetByIdCompartiment
     {
         Task<Result<CompartimentEntity, Error>> GetByIdAsync(int id);
     }

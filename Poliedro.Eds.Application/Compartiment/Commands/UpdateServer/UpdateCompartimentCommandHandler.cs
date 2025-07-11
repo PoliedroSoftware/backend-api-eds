@@ -9,7 +9,7 @@ using Poliedro.Eds.Domain.Compartiment.Entities;
 namespace Poliedro.Eds.Application.Compartiment.UpdateCompartiment
 {
     public class UpdateCompartimentCommandHandler(
-        ICompartimentUpdateService compartimentDomainCompartiment,
+        ICompartimentUpdateCompartiment compartimentDomainCompartiment,
         IMapper mapper
    ) : IRequestHandler<UpdateCompartimentCommand, Result<VoidResult, Error>>
     {

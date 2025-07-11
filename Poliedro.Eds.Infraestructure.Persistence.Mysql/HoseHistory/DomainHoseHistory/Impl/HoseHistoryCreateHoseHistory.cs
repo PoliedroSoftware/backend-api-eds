@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using Poliedro.Eds.Application.HoseHistory.Errors;
+﻿using Poliedro.Eds.Application.HoseHistory.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
@@ -12,13 +11,12 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.HoseHistory.DomainHoseHistory.Impl;
 
 public class HoseHistoryCreateHoseHistory(
-    ITenantDbContextFactory dbContextFactory,
+    DataBaseContext context,
     IRedisService redisService,
     IHoseUpdateHose hoseUpdateHose) : IHoseHistoryCreateHoseHistory
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(HoseHistoryEntity hoseHistoryEntity)
     {
-        using var context = dbContextFactory.CreateDbContext();
         await context.HoseHistory.AddAsync(hoseHistoryEntity);
         var saveResult = await context.SaveChangesAsync();
 

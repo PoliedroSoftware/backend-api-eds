@@ -33,7 +33,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<ProductTypeEntity> ProductType { get; set; }
     public DbSet<CourtEntity> Court { get; set; }
-    public DbSet<CourtInventoryEntity> CourtInventory { get; set; }
     public DbSet<BusinessEntity> Business { get; set; }
     public DbSet<CapacityEntity> Capacity { get; set; }
     public DbSet<EdsEntity> Eds { get; set; }
@@ -82,7 +81,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new CourtExpendituresConfiguration(modelBuilder.Entity<CourtExpenditureEntity>());
         new CourtTypeOfCollectionsConfiguration(modelBuilder.Entity<CourtTypeOfCollectionEntity>());
         new DocumentConfiguration(modelBuilder.Entity<DocumentEntity>());
-        new CourtInventoryConfiguration(modelBuilder.Entity<CourtInventoryEntity>());
         new IslanderConfiguration(modelBuilder.Entity<IslanderEntity>());
         new IslandConfiguration(modelBuilder.Entity<IslandEntity>());
         new DispensersConfiguration(modelBuilder.Entity<DispensersEntity>());

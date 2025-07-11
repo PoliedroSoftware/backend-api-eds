@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Islander.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
@@ -10,15 +9,13 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.DomainIslander.Impl;
 
-public class IslanderUpdateIslander(
-    ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IIslanderUpdateIslander
+public class IslanderUpdateIslander(DataBaseContext context, IRedisService redisService) : IIslanderUpdateIslander
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(IslanderEntity islanderEntity)
     {
         if (!await EntityExists(islanderEntity.IdIslander))
             return IslanderErrorBuilder.IslanderNotFoundException(islanderEntity.IdIslander);
 
-        using var context = dbContextFactory.CreateDbContext();
         context.Islander.Update(islanderEntity);
 
         if (await context.SaveChangesAsync() <= 0)
@@ -29,8 +26,6 @@ public class IslanderUpdateIslander(
     }
     private async Task<bool> EntityExists(int id)
     {
-        using var context = dbContextFactory.CreateDbContext();
-
         return await context.Islander
             .AsNoTracking()
             .AnyAsync(c => c.IdIslander == id);

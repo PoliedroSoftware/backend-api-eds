@@ -6,11 +6,10 @@ using Poliedro.Eds.Domain.Tank.DomainTank;
 using Poliedro.Eds.Domain.Tank.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Application.Ports.Redis;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Tank.DomainTank.Impl;
 
-public class TankGetByIdTank(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ITankGetByIdTank
+public class TankGetByIdTank(DataBaseContext context, IRedisService redisService) : ITankGetByIdTank
 {
     public async Task<Result<TankEntity, Error>> GetByIdAsync(int id)
     {
@@ -23,7 +22,6 @@ public class TankGetByIdTank(ITenantDbContextFactory dbContextFactory, IRedisSer
         if (!await EntityExists(id))
             return TankErrorBuilder.TankNotFoundException(id);
 
-        using var context = dbContextFactory.CreateDbContext();
         var data = await context.Tank
             .FirstAsync(c => c.IdTank == id);
 
@@ -34,7 +32,6 @@ public class TankGetByIdTank(ITenantDbContextFactory dbContextFactory, IRedisSer
 
     private async Task<bool> EntityExists(int id)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.Tank
             .AsNoTracking()
             .AnyAsync(c => c.IdTank == id);

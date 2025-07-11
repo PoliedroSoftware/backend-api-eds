@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Expenditures.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -11,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Expenditures.DomainExpenditures.Impl;
 
-public class ExpendituresGetByIdExpenditures(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IExpendituresGetByIdExpenditures
+public class ExpendituresGetByIdExpenditures(DataBaseContext context,IRedisService redisService) : IExpendituresGetByIdExpenditures
 {
     public async Task<Result<ExpendituresEntity, Error>> GetByIdAsync(int id)
     {
@@ -24,7 +23,6 @@ public class ExpendituresGetByIdExpenditures(ITenantDbContextFactory dbContextFa
         if (!await EntityExists(id))
             return ExpendituresErrorBuilder.ExpendituresNotFoundException(id);
 
-        using var context = dbContextFactory.CreateDbContext();
         var data = await context.Expenditures
             .FirstAsync(c => c.IdExpenditures == id);
 
@@ -35,7 +33,6 @@ public class ExpendituresGetByIdExpenditures(ITenantDbContextFactory dbContextFa
 
     private async Task<bool> EntityExists(int id)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.Tank
             .AsNoTracking()
             .AnyAsync(c => c.IdTank == id);

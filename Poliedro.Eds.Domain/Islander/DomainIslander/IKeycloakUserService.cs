@@ -7,6 +7,6 @@ namespace Poliedro.Eds.Domain.Islander.DomainIslander
 {
     public interface IKeycloakUserService
     {
-        Task<Result<VoidResult, Error>> CreateUserAsync(IslanderEntity IslanderEntity, string plainPassword, string? nameClaimToken);
+        Task<Result<VoidResult, Error>> CreateUserAsync(IslanderEntity IslanderEntity, string plainPassword);
     }
 }

@@ -19,7 +19,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Eds;
 [ApiController]
 public class EdsController(IMediator mediator) : ControllerBase
 {
-    [Authorize(Policy = "AdminOrIslander")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
     {
@@ -37,7 +37,7 @@ public class EdsController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The specified eds does not exist.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-    [Authorize(Policy = "AdminOrIslander")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
     public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetEdsByIdQuery> validator)
     {
@@ -63,7 +63,7 @@ public class EdsController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-    [Authorize(Policy = "AdminOrIslander")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
     public async Task<IResult> Create(

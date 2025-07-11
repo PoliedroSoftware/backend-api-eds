@@ -7,6 +7,5 @@ public record ShoppingDto(
     DateTime Date, 
     int IdProvider,
     int IdCategory,
-    double Amount,
-    IEnumerable<ShoppingProductDto> ShoppingProducts
-);
+    double Amount
+    );

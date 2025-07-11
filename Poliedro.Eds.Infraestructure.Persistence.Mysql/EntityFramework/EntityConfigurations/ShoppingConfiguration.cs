@@ -16,9 +16,5 @@ public class ShoppingConfiguration
         builder.Property(x => x.IdProvider).HasColumnName("id_provider");
         builder.Property(x => x.IdCategory).HasColumnName("id_category");
         builder.Property(x => x.Amount).HasColumnName("amount");
-
-        builder.HasMany(x => x.ShoppingProducts)
-                   .WithOne()
-                   .HasForeignKey(x => x.IdShopping);
     }
 }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProductInventory.DomainShoppingProductInventory.Impl
 {
-    public class ShoppingProductUpdateShoppingProductInventory(ITenantDbContextFactory dbContextFactory) : IShoppingUpdateShoppingProductInventory
+    public class ShoppingProductUpdateShoppingProductInventory(DataBaseContext context) : IShoppingUpdateShoppingProductInventory
     {
         
 

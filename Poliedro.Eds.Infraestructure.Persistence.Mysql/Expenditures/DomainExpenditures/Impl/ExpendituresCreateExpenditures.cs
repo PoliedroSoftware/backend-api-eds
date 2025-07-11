@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Expenditures.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -11,11 +10,10 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Expenditures.DomainExpenditures.Impl;
 
-public class ExpendituresCreateExpenditures(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IExpendituresCreateExpenditures
+public class ExpendituresCreateExpenditures(DataBaseContext context, IRedisService redisService) : IExpendituresCreateExpenditures
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ExpendituresEntity ExpendituresEntity)
     {
-        using var context = dbContextFactory.CreateDbContext();
         await context.Expenditures.AddAsync(ExpendituresEntity);
         var result = await context.SaveChangesAsync() > 0;
         if (!result)

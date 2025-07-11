@@ -7,7 +7,7 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.Category.Commands.CreateCategory;
     public class CreateCategoryCommandHandler(
-        ICategoryCreateService categoryDomainService,
+        ICategoryCreateCategory categoryDomainService,
         IMapper mapper) : IRequestHandler<CreateCategoryCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)

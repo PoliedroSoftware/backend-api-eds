@@ -3,48 +3,30 @@ name: Build, Test, Deploy to ECS
 on:
   push:
     branches:
-      - feature/test-checklist
-  
+      - main
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [closed]
     branches:
       - main
-      - 'release/*'
+      - 'release/*'          
       - 'releasecandidate/*'
 
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
+  build_and_deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest  
 
-  dotnet:
-    runs-on: ubuntu-latest
+    environment: QA  
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup .NET & Restore
+      - name: Set up .NET SDK
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '8.0.x'
-      - run: dotnet restore
-
-      - name: Build
-        run: dotnet build --configuration Release
-
-      - name: Unit Tests
-        run: dotnet test --configuration Release --no-build
-
-
-  sonar:
-    needs: dotnet
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
+          
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
@@ -53,14 +35,17 @@ jobs:
             -Dsonar.organization=poliedro-software-sonarqube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
+     
+      - name: Restore dependencies
+        run: dotnet restore
 
-  jmeter:
-    needs: dotnet
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Build the project
+        run: dotnet build --configuration Release
 
+      - name: Run unit tests
+        run: dotnet test --configuration Release --no-build
+        
       - name: Install JMeter
         run: |
           sudo apt-get update
@@ -72,42 +57,18 @@ jobs:
 
       - name: Run JMeter Load Test
         run: |
-          ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
-
-      - name: Check for errors in JMeter results
-        run: |
-          echo "Checking JMeter results for errors..."
-          # Buscar errores HTTP 500 en los resultados (.jtl)
-          if grep -q "500" LoadTest/results.jtl; then
-            echo "JMeter test failed due to 500 Internal Server Error in results.jtl. Exiting pipeline."
-            exit 1
-          fi
-
+          ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report
+          
       - name: Upload JMeter HTML Reports
         uses: actions/upload-artifact@v4
         with:
           name: jmeter-reports
-          path: LoadTest/report/*
-          if-no-files-found: warn
-          compression-level: 6
-          overwrite: false
-          include-hidden-files: false
-
-  docker:
-    if: github.event.pull_request.merged == true
-    needs: [dotnet, sonar, jmeter]
-    runs-on: ubuntu-latest
-    environment: QA
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
- 
+          path: LoadTest/*_report
+          
       - name: Set AWS region
         run: |
-          echo "Configurando región AWS..."
-          aws configure set region ${{ secrets.AWS_REGION }}
-
+          aws configure set region ${{ secrets.AWS_REGION }}  # Usar la región configurada en Secrets
+          
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -115,65 +76,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Login to Amazon ECR
+      - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build Docker image
         run: |
-          echo "Construyendo imagen Docker..."
           docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest .
 
       - name: Tag Docker image
         run: |
-          echo "Etiquetando imagen Docker..."
           docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
 
       - name: Push Docker image to ECR
         run: |
-          echo "Subiendo imagen Docker a ECR..."
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest    
-
-  docker-hub:
-    if: github.event.pull_request.merged == true
-    needs: [dotnet, sonar, jmeter]
-    runs-on: ubuntu-latest
-    environment: QA
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME_EDS }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push Docker image to Docker Hub
-        uses: docker/build-push-action@v5
-        with:
-          context: .                          
-          push: true                          
-          tags: ${{ secrets.DOCKERHUB_USERNAME_EDS }}/${{ secrets.DOCKERHUB_REPOSITORY_EDS }}:latest  
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME_EDS }}/${{ secrets.DOCKERHUB_REPOSITORY_EDS }}:buildcache  
-          cache-to: type=inline               
-
-  deploy:
-    if: github.event.pull_request.merged == true
-    needs: docker
-    runs-on: ubuntu-latest
-    environment: QA
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
 
       - name: Deploy to Amazon ECS
         run: |
@@ -192,7 +108,7 @@ jobs:
 
       - name: Check ECS Service Status
         run: |
-          echo "Verificando estado del servicio ECS..."
+          # Verifica el estado del servicio
           service_status=$(aws ecs describe-services \
             --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
             --services ${{ secrets.AWS_ECS_SERVICE }} \
@@ -202,7 +118,7 @@ jobs:
 
       - name: Check ECS Task Definition
         run: |
-          echo "Verificando imagen de la task definition..."
+          # Verifica la imagen de la task definition
           task_definition_image=$(aws ecs describe-task-definition \
             --task-definition ${{ secrets.TASK_DEFINITION_ARN }} \
             --query 'taskDefinition.containerDefinitions[0].image' --output text)

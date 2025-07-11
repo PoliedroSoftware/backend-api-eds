@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 using StackExchange.Redis;
 using System.Text.Json;
@@ -11,12 +12,10 @@ public class RedisCacheService : IRedisService
 {
     private readonly ConnectionMultiplexer _redis;
     private readonly StackExchange.Redis.IDatabase _db;
+
     public ILogger<BusinessGetAllService> Logger { get; }
 
-    public RedisCacheService(
-        IOptions<RedisConfig> config,
-        ILogger<BusinessGetAllService> logger
-       )
+    public RedisCacheService(IOptions<RedisConfig> config, ILogger<BusinessGetAllService> logger)
     {
         _redis = ConnectionMultiplexer.Connect(config.Value.ConnectionString);
         _db = _redis.GetDatabase();
@@ -28,7 +27,7 @@ public class RedisCacheService : IRedisService
         try
         {
             var json = JsonSerializer.Serialize(value);
-            await _db.StringSetAsync(key , json, expiration);
+            await _db.StringSetAsync(key, json, expiration);
         }
         catch (RedisException ex)
         {

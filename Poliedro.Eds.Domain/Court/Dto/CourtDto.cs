@@ -12,7 +12,7 @@ public record CourtDto(
     string? Descripcion,
     double Distintic,
     IEnumerable<CourtDispenserDto> CourtDispensers,
-    IEnumerable<DocumentDto?>? CourtDocuments,
-    IEnumerable<CourtExpenditureDto?>? CourtExpenditures,
+    IEnumerable<DocumentDto> CourtDocuments,
+    IEnumerable<CourtExpenditureDto> CourtExpenditures,
     IEnumerable<CourtTypeOfCollectionDto> CourtTypeOfCollections);
 

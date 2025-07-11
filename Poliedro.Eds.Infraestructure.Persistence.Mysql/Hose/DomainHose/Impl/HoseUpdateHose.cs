@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Hose.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
@@ -10,14 +9,13 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Hose.DomainHose.Impl;
 
-public class HoseUpdateHose(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IHoseUpdateHose
+public class HoseUpdateHose(DataBaseContext context, IRedisService redisService) : IHoseUpdateHose
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(HoseEntity hoseEntity)
     {
         if (!await EntityExists(hoseEntity.IdHose))
             return HoseErrorBuilder.HoseNotFoundException(hoseEntity.IdHose);
 
-        using var context = dbContextFactory.CreateDbContext();
         var existingHose = await context.Hose.FindAsync(hoseEntity.IdHose);
         if (existingHose == null)
             return HoseErrorBuilder.HoseNotFoundException(hoseEntity.IdHose);
@@ -39,7 +37,6 @@ public class HoseUpdateHose(ITenantDbContextFactory dbContextFactory, IRedisServ
 
     private async Task<bool> EntityExists(int id)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.Hose
             .AsNoTracking()
             .AnyAsync(c => c.IdHose == id);

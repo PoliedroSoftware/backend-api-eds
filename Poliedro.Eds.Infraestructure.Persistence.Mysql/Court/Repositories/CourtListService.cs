@@ -1,26 +1,21 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
+using MySqlConnector;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using StackExchange.Redis;
 using System.Data;
-using Microsoft.AspNetCore.Http;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class CourtListService(IConfiguration config, 
-    IRedisService redisService, 
-    ITenantDbContextFactory dbContextFactory,
-    IHttpContextAccessor httpContextAccessor) : ICourtListDomainService
+public class CourtListService(IConfiguration config, IRedisService redisService) : ICourtListDomainService
 {
     private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
 
     public async Task<IEnumerable<CourtListResponseDto>> GetAllAsync(PaginationParams paginationParams)
     {
-        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        string cachekey = $"coutListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
+        string cachekey = $"coutListService:{paginationParams.PageNumber}:{paginationParams.PageSize}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CourtListResponseDto>>(cachekey);
         
         if (cachedData != null) return cachedData;
@@ -70,17 +65,12 @@ public class CourtListService(IConfiguration config,
 
     private async Task<IEnumerable<CourtViewDto>> GetCourtsFromViewAsync()
     {
-        using var context = dbContextFactory.CreateDbContext();
         var courts = new List<CourtViewDto>();
-        //using var connection = new MySqlConnection(_connectionString);
-        using var connection = context.Database.GetDbConnection();
+        using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
 
         string query = "SELECT * FROM v_court";
-        using var command = connection.CreateCommand();
-        command.CommandText = query;
-
-        //using var command = new MySqlCommand(query, connection);
+        using var command = new MySqlCommand(query, connection);
         using var reader = await command.ExecuteReaderAsync();
 
         while (await reader.ReadAsync())
@@ -93,10 +83,10 @@ public class CourtListService(IConfiguration config,
                 Eds = reader.IsDBNull("eds") ? null : reader.GetString("eds"),
                 Bussiness = reader.IsDBNull("bussiness") ? string.Empty : reader.GetString("bussiness"),
                 Islander = reader.IsDBNull("islander") ? string.Empty : reader.GetString("islander"),
-                DateStarttime = reader.IsDBNull("date_starttime") ? default: DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_starttime"))),
-                Starttime = reader.IsDBNull("starttime")? default:TimeOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("starttime"))),
-                DateEndtime = reader.IsDBNull("date_endtime")? default: DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_endtime"))),
-                Endtime = reader.IsDBNull("endtime")? default: TimeOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("endtime"))),
+                DateStarttime = reader.GetDateOnly("date_starttime"),
+                Starttime = reader.GetTimeOnly("starttime"),
+                DateEndtime = reader.GetDateOnly("date_endtime"),
+                Endtime = reader.GetTimeOnly("endtime"),
                 Distinc = reader.IsDBNull("distinc") ? 0.0 : reader.GetDouble("distinc"),
                 TotalAccumulatedAmount = reader.IsDBNull("total_accumulated_amount") ? 0.0 : reader.GetDouble("total_accumulated_amount"),
                 TotalAccumulatedGallons = reader.IsDBNull("total_accumulated_gallons") ? 0.0 : reader.GetDouble("total_accumulated_gallons")
@@ -108,17 +98,12 @@ public class CourtListService(IConfiguration config,
 
     private async Task<IEnumerable<CourtCollectionViewDto>> GetCourtCollectionsFromViewAsync()
     {
-        using var context = dbContextFactory.CreateDbContext();
         var collections = new List<CourtCollectionViewDto>();
-        //using var connection = new MySqlConnection(_connectionString);
-        using var connection = context.Database.GetDbConnection();
+        using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
 
         string query = "SELECT * FROM v_court_collection";
-        //using var command = new MySqlCommand(query, connection);
-        using var command = connection.CreateCommand();
-        command.CommandText = query;
-
+        using var command = new MySqlCommand(query, connection);
         using var reader = await command.ExecuteReaderAsync();
         
         while (await reader.ReadAsync())
@@ -127,7 +112,7 @@ public class CourtListService(IConfiguration config,
             {
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Court = reader.IsDBNull("court") ? 0 : reader.GetInt32("court"),
-                Date = reader.IsDBNull("date") ? default: DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date"))),
+                Date = reader.GetDateOnly("date"),
                 Collection = reader.IsDBNull("collection") ? string.Empty : reader.GetString("collection"),
                 Amount = reader.IsDBNull("amount") ? 0 : reader.GetDouble("amount"),
                 Description = reader.IsDBNull("description") ? string.Empty : reader.GetString("description")
@@ -140,16 +125,11 @@ public class CourtListService(IConfiguration config,
     private async Task<IEnumerable<CourtDispenserViewDto>> GetCourtDispensersFromViewAsync()
     {
         var dispensers = new List<CourtDispenserViewDto>();
-
-        using var context = dbContextFactory.CreateDbContext();
-        //using var connection = new MySqlConnection(_connectionString);
-        using var connection = context.Database.GetDbConnection();
+        using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
 
         string query = "SELECT * FROM v_court_dispenser";
-        using var command = connection.CreateCommand();
-        command.CommandText = query;
-        //using var command = new MySqlCommand(query, connection);
+        using var command = new MySqlCommand(query, connection);
         using var reader = await command.ExecuteReaderAsync();
 
         while (await reader.ReadAsync())
@@ -166,10 +146,10 @@ public class CourtListService(IConfiguration config,
                 LastAccumulatedGallons = reader.IsDBNull("last_accumulated_gallons") ? 0.0 : reader.GetDouble("last_accumulated_gallons"),
                 CodeCourt = reader.IsDBNull("code_court") ? 0 : reader.GetInt32("code_court"),
                 Islander = reader.IsDBNull("islander") ? string.Empty : reader.GetString("islander"),
-                DateStarttime =  reader.IsDBNull("date_starttime") ? default: DateOnly.FromDateTime(reader.GetDateTime("date_starttime")),
-                Starttime = reader.IsDBNull("starttime") ? default : TimeOnly.FromDateTime(reader.GetDateTime("starttime")),
-                DateEndtime = reader.IsDBNull("date_endtime") ? default : DateOnly.FromDateTime(reader.GetDateTime("date_endtime")),
-                Endtime = reader.IsDBNull("endtime") ? default: TimeOnly.FromDateTime(reader.GetDateTime("endtime")),
+                DateStarttime =  reader.GetDateOnly("date_starttime"),
+                Starttime = reader.GetTimeOnly("starttime"),
+                DateEndtime = reader.GetDateOnly("date_endtime"),
+                Endtime = reader.GetTimeOnly("endtime"),
                 Distinc = reader.IsDBNull("distinc") ? 0.0 : reader.GetDouble("distinc"),
                 Product = reader.IsDBNull("product") ? string.Empty : reader.GetString("product"),
                 Price = reader.IsDBNull("price") ? 0.0 : reader.GetDouble("price"),
@@ -185,15 +165,11 @@ public class CourtListService(IConfiguration config,
     private async Task<IEnumerable<CourtDocumentViewDto>> GetCourtDocumentsFromViewAsync()
     {
         var documents = new List<CourtDocumentViewDto>();
-        //using var connection = new MySqlConnection(_connectionString);
-        using var context = dbContextFactory.CreateDbContext();
-        using var connection = context.Database.GetDbConnection();
+        using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
 
         string query = "SELECT * FROM v_court_document";
-        //using var command = new MySqlCommand(query, connection);
-        using var command = connection.CreateCommand();
-        command.CommandText = query;
+        using var command = new MySqlCommand(query, connection);
         using var reader = await command.ExecuteReaderAsync();
 
         while (await reader.ReadAsync())
@@ -212,15 +188,11 @@ public class CourtListService(IConfiguration config,
     private async Task<IEnumerable<CourtExpenditureViewDto>> GetCourtExpendituresFromViewAsync()
     {
         var expenditures = new List<CourtExpenditureViewDto>();
-        //using var connection = new MySqlConnection(_connectionString);
-        using var context = dbContextFactory.CreateDbContext();
-        using var connection = context.Database.GetDbConnection();
+        using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
 
         string query = "SELECT * FROM v_court_expenditure";
-        //using var command = new MySqlCommand(query, connection);
-        using var command = connection.CreateCommand();
-        command.CommandText = query;
+        using var command = new MySqlCommand(query, connection);
         using var reader = await command.ExecuteReaderAsync();
 
         while (await reader.ReadAsync())
@@ -229,7 +201,7 @@ public class CourtListService(IConfiguration config,
             {
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Court = reader.IsDBNull("court") ? 0 : reader.GetInt32("court"),
-                Date = reader.IsDBNull("date") ? default : DateOnly.FromDateTime(reader.GetDateTime("date")),
+                Date = reader.GetDateOnly("date"),
                 Expenditure = reader.GetString("expenditure"),
                 Amount = reader.IsDBNull("amount") ? 0.0 : reader.GetDouble("amount"),
                 Description = reader.IsDBNull("description") ? string.Empty : reader.GetString("description")

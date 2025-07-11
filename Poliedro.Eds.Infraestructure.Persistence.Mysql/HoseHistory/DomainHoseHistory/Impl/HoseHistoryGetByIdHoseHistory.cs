@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.HoseHistory.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
@@ -10,7 +9,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.HoseHistory.DomainHoseHistory.Impl;
 
-public class HoseHistoryGetByIdHoseHistory(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IHoseHistoryGetByIdHoseHistory
+public class HoseHistoryGetByIdHoseHistory(DataBaseContext context, IRedisService redisService) : IHoseHistoryGetByIdHoseHistory
 {
     public async Task<Result<HoseHistoryEntity, Error>> GetByIdAsync(int id)
     {
@@ -22,8 +21,6 @@ public class HoseHistoryGetByIdHoseHistory(ITenantDbContextFactory dbContextFact
 
         if (!await EntityExists(id))
             return HoseHistoryErrorBuilder.HoseHistoryNotFoundException(id);
-
-        using var context = dbContextFactory.CreateDbContext();
         var data = await context.HoseHistory
             .FirstAsync(c => c.IdHoseHistory == id);
 
@@ -34,7 +31,6 @@ public class HoseHistoryGetByIdHoseHistory(ITenantDbContextFactory dbContextFact
 
     private async Task<bool> EntityExists(int id)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.HoseHistory
             .AsNoTracking()
             .AnyAsync(c => c.IdHoseHistory == id);

@@ -1,27 +1,23 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Poliedro.Eds.Application.EdsTank.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain.Common.Results;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.EdsTank.DomainEdsTank;
 using Poliedro.Eds.Domain.EdsTank.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EdsTank.DomainEdsTank.Impl;
 
-public class EdsTankGetAllEdsTank(
-    ITenantDbContextFactory dbContextFactory,
-    IRedisService redisService,
-    IHttpContextAccessor httpContextAccessor
-    ) : IEdsTankGetAllEdsTank
+public class EdsTankGetAllEdsTank(DataBaseContext context,IRedisService redisService) : IEdsTankGetAllEdsTank
 {
 
     public async Task<IEnumerable<EdsTankEntity>> GetAllAsync(PaginationParams paginationParams)
     {
-        using var context = dbContextFactory.CreateDbContext();
-        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        var totalRows = await context.EdsTank.CountAsync();
+         var totalRows = await context.EdsTank.CountAsync();
 
-        string cacheKey = $"edsTank:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
+        string cacheKey = $"edsTank:{paginationParams.PageNumber}:{paginationParams.PageSize}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<EdsTankEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
         

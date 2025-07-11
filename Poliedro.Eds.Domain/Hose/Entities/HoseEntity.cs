@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Poliedro.Eds.Domain.Dispensers.Entities;
+using Poliedro.Eds.Domain.ProductType.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Poliedro.Eds.Domain.Hose.Entities;
 
@@ -11,5 +14,4 @@ public class HoseEntity
     public double AccumulatedGallons { get; set; }
     public double AccumulatedAmount { get; set; }
     public int IdProductType { get; set; }
-    public double Price { get; set; }
 }

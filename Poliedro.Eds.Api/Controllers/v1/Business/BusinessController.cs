@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Security.Claims;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,21 +20,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.Business;
 [ApiController]
 public class BusinessController(IMediator mediator) : ControllerBase
 {
-    [Authorize(Policy = "AdminOrIslander")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
-    {
-        var data = await mediator.Send(new GellAllBusinessQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
-        if (data is null)
-        {
-            return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
-        }
-        return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
-    }
-
-    [Authorize(Policy = "AdminOnly")]
-    [HttpDelete]
-    public async Task<IActionResult> Delete([FromQuery] PaginationParams paginationParams)
     {
         var data = await mediator.Send(new GellAllBusinessQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
         if (data is null)
@@ -49,7 +38,7 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The specified business does not exist.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-    [Authorize(Policy = "AdminOrIslander")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
     public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetBusinessByIdQuery> validator)
     {
@@ -75,7 +64,7 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-    [Authorize(Policy = "AdminOrIslander")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
     public async Task<IResult> Create(
@@ -106,6 +95,7 @@ public class BusinessController(IMediator mediator) : ControllerBase
         //{
         //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
         //}
+
         var result = await mediator.Send(updateBusinessCommand);
 
         if (!result.IsSuccess)

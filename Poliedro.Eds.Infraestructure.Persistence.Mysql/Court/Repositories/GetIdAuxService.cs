@@ -1,17 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Dto;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetProductAndCompartiment, IGetExpenditureId, IGetTypeOfCollectionId
+public class GetIdAuxService(DataBaseContext context) : IGetProductAndCompartiment, IGetExpenditureId, IGetTypeOfCollectionId
 {
     public async Task<ProductAndCompartimentDto> GetProductAndCompartimentAsync(int hoseId)
     {
-
-        using var context = dbContextFactory.CreateDbContext();
         var result = await context.Hose
             .Where(h => h.IdHose == hoseId)
             .Select(h => new
@@ -40,7 +37,6 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
 
     public async Task<int?> GetExpenditureIdAsync(string expenditureName)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.Expenditures
             .Where(e => e.Description == expenditureName)
             .Select(e => (int?)e.IdExpenditures)
@@ -49,7 +45,6 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
 
     public async Task<int?> GetTypeOfCollectionIdAsync(string typeOfCollectionName)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.TypeOfCollection
             .Where(tc => tc.Description == typeOfCollectionName)
             .Select(tc => (int?)tc.IdTypeOfCollection)

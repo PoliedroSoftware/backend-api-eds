@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.TypeOfCollection.Errors;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -11,14 +10,13 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
 
-public class TypeOfCollectionUpdateTypeOfCollection(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ITypeOfCollectionUpdateTypeOfCollection
+public class TypeOfCollectionUpdateTypeOfCollection(DataBaseContext context, IRedisService redisService) : ITypeOfCollectionUpdateTypeOfCollection
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(TypeOfCollectionEntity TypeOfCollectionEntity)
     {
         if (!await EntityExists(TypeOfCollectionEntity.IdTypeOfCollection))
             return TypeOfCollectionErrorBuilder.TypeOfCollectionNotFoundException(TypeOfCollectionEntity.IdTypeOfCollection);
 
-        using var context = dbContextFactory.CreateDbContext();
         context.TypeOfCollection.Update(TypeOfCollectionEntity);
 
         if (await context.SaveChangesAsync() <= 0)
@@ -28,7 +26,6 @@ public class TypeOfCollectionUpdateTypeOfCollection(ITenantDbContextFactory dbCo
     }
     private async Task<bool> EntityExists(int id)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.TypeOfCollection
             .AsNoTracking()
             .AnyAsync(c => c.IdTypeOfCollection == id);

@@ -8,7 +8,7 @@ using Poliedro.Eds.Domain.Compartiment.Entities;
 namespace Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment
 {
     public class CreateCompartimentCommandHandler(
-        ICompartimentCreateService compartimentDomainService,
+        ICompartimentCreateCompartiment compartimentDomainService,
         IMapper mapper) : IRequestHandler<CreateCompartimentCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCompartimentCommand request, CancellationToken cancellationToken)

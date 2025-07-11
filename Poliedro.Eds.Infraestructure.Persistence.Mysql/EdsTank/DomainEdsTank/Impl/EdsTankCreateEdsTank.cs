@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.EdsTank.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -11,11 +10,10 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EdsTank.DomainEdsTank.Impl;
 
-public class EdsTankCreateEdsTank(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IEdsTankCreateEdsTank
+public class EdsTankCreateEdsTank(DataBaseContext context, IRedisService redisService) : IEdsTankCreateEdsTank
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(EdsTankEntity EdsTankEntity)
     {
-        using var context = dbContextFactory.CreateDbContext();
         await context.EdsTank.AddAsync(EdsTankEntity);
         var result = await context.SaveChangesAsync() > 0;
         if (!result)

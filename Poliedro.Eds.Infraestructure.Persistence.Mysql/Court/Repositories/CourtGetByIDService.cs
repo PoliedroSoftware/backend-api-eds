@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Court.Errors;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
@@ -9,14 +8,12 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-internal class CourtGetByIDService(ITenantDbContextFactory dbContextFactory) : ICourtGetByIdDomainService
+internal class CourtGetByIDService(DataBaseContext context) : ICourtGetByIdDomainService
 {
     public async Task<Result<CourtEntity, Error>> GetByIdAsync(int id)
     {
         if (!await EntityExists(id))
             return CourtErrorBuilder.CourtNotFoundException(id);
-
-        using var context = dbContextFactory.CreateDbContext();
 
         var courtValue = await context.Court
                         .Include(c => c.CourtDispensers)
@@ -30,7 +27,6 @@ internal class CourtGetByIDService(ITenantDbContextFactory dbContextFactory) : I
 
     private async Task<bool> EntityExists(int id)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.Court
             .AsNoTracking()
             .AnyAsync(c => c.IdCourt == id);

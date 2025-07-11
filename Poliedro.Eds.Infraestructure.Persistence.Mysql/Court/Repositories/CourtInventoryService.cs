@@ -7,20 +7,24 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class CourtInventoryService(IConfiguration config, 
-    IRedisService redisService, 
-    ITenantDbContextFactory dbContextFactory) : ICourtUpdateInventoryService
+public class CourtInventoryService : ICourtUpdateInventoryService
 {
-    private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
+    private readonly string _connectionString;
+    private readonly IRedisService _redisService;
+    private readonly DataBaseContext _context;
+
+    public CourtInventoryService(IConfiguration config, IRedisService redisService, DataBaseContext context)
+    {
+        _connectionString = config["ConnectionStrings:MysqlConnection"];
+        _redisService = redisService;
+        _context = context;
+    }
 
     public async Task CourtUpdateInventoryAsync(IEnumerable<ICourtDispenserSaleEntity> courtDispensers)
     {
-
-        using var context = dbContextFactory.CreateDbContext();
-
         foreach (var dispenser in courtDispensers)
         {
-            var compartment = await context.Compartiment
+            var compartment = await _context.Compartiment
                 .FirstOrDefaultAsync(c => c.IdCompartment == dispenser.IdCompartiment);
 
             if (compartment != null)
@@ -28,11 +32,11 @@ public class CourtInventoryService(IConfiguration config,
                 Console.WriteLine($"Actualizando compartimiento {compartment.IdCompartment}: Stock antes: {compartment.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
 
                 compartment.Stock -= dispenser.GallonsDifferenceResult;
-                context.Compartiment.Update(compartment);
+                _context.Compartiment.Update(compartment);
             }
         }
 
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 
     public Task CourtUpdateInventoryAsync(IEnumerable<CourtDispenserEntity> courtDispensers)

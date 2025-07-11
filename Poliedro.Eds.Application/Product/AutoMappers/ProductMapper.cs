@@ -14,7 +14,5 @@ public class ProductMapper : Profile
         CreateMap<ProductEntity, CreateProductCommand>().ReverseMap();
         CreateMap<ProductEntity, CreateProductRequestDto>().ReverseMap();
         CreateMap<ProductEntity, UpdateProductCommand>().ReverseMap();
-
-        CreateMap<SellPriceProductRequestDto, ProductEntity>().ReverseMap();
     }
 }

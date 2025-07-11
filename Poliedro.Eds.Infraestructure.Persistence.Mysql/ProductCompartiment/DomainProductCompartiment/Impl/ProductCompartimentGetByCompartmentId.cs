@@ -1,14 +1,19 @@
 using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
-public class ProductCompartimentGetByCompartmentId(ITenantDbContextFactory dbContextFactory) : IProductCompartimentGetByCompartmentId
+public class ProductCompartimentGetByCompartmentId : IProductCompartimentGetByCompartmentId
 {
+    private readonly DataBaseContext _context;
+
+    public ProductCompartimentGetByCompartmentId(DataBaseContext context)
+    {
+        _context = context;
+    }
+
     public async Task<int?> GetProductIdByCompartmentIdAsync(int idCompartment)
     {
-        using var context = dbContextFactory.CreateDbContext();
-        var entity = await context.ProductCompartiment
+        var entity = await _context.ProductCompartiment
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.IdCompartiment == idCompartment);
 

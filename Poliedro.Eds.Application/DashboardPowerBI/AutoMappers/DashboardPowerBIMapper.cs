@@ -4,6 +4,7 @@ using Poliedro.Eds.Domain.Compartiment.Entities;
 using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Domain.Capacity.Entities;
 
+using BusinessDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.BusinessDto;
 using EdsDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.EdsDto;
 using TankDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.TankDto;
 using CompartmentDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.CompartmentDto;
@@ -16,6 +17,7 @@ using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos.Court;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+using Poliedro.Eds.Domain.DashboardPowerBI.Entities.Master;
 
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;
@@ -24,10 +26,7 @@ public class DashboardPowerBIMapper: Profile
 {
     public DashboardPowerBIMapper()
     {
-        CreateMap<Poliedro.Eds.Domain.Business.Entities.BusinessEntity, Business2Dto>()
-             .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
-             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-             .ForMember(dest => dest.Context, opt => opt.MapFrom(src => src.Context));
+        CreateMap<MasterEntity, MasterDto>();
 
         CreateMap<CapacityEntity, CapacityDto>()
             .ForMember(dest => dest.IdCapacity, opt => opt.MapFrom(src => src.IdCapacity.ToString()))
@@ -55,7 +54,7 @@ public class DashboardPowerBIMapper: Profile
 
         CreateMap<Domain.Inventory.Dto.View.InventoryListResponseDto, InventoryDto>();
 
-        CreateMap<Domain.Inventory.Dto.View.BusinessDto, Poliedro.Eds.Application.DashboardPowerBI.Dtos.BusinessDto>()
+        CreateMap<Domain.Inventory.Dto.View.BusinessDto, BusinessDto>()
             .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()));
 
         CreateMap<Domain.Inventory.Dto.View.EdsDto, EdssDto>()

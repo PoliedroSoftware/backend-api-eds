@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.TypeOfCollection.Errors;
 using Poliedro.Eds.Domain.Common.Pagination;
@@ -11,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
 
-public class TypeOfCollectionGetByIdTypeOfCollection(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : ITypeOfCollectionGetByIdTypeOfCollection
+public class TypeOfCollectionGetByIdTypeOfCollection(DataBaseContext context,IRedisService redisService) : ITypeOfCollectionGetByIdTypeOfCollection
 {
     public async Task<Result<TypeOfCollectionEntity, Error>> GetByIdAsync(int id)
     {
@@ -24,7 +23,6 @@ public class TypeOfCollectionGetByIdTypeOfCollection(ITenantDbContextFactory dbC
         if (!await EntityExists(id))
             return TypeOfCollectionErrorBuilder.TypeOfCollectionNotFoundException(id);
 
-        using var context = dbContextFactory.CreateDbContext();
         var data = await context.TypeOfCollection
             .FirstAsync(c => c.IdTypeOfCollection == id);
 
@@ -35,7 +33,6 @@ public class TypeOfCollectionGetByIdTypeOfCollection(ITenantDbContextFactory dbC
 
     private async Task<bool> EntityExists(int id)
     {
-        using var context = dbContextFactory.CreateDbContext();
         return await context.Tank
             .AsNoTracking()
             .AnyAsync(c => c.IdTank == id);

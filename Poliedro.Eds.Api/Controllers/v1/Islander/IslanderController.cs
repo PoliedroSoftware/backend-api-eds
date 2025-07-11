@@ -11,9 +11,7 @@ using Poliedro.Eds.Application.Islander.Errors;
 using Poliedro.Eds.Application.Islander.Queries.GellAllIslander;
 using Poliedro.Eds.Application.Islander.Queries.GetIslanderById;
 using Poliedro.Eds.Domain.Common.Pagination;
-using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Swashbuckle.AspNetCore.Annotations;
-using YamlDotNet.Core;
 
 namespace Poliedro.Eds.Api.Controllers.v1.Islender
 {
@@ -21,7 +19,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
     [ApiController]
     public class IslanderController(IMediator mediator) : ControllerBase
     {
-        [Authorize(Policy = "AdminOrIslander")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
@@ -39,7 +37,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "The specified islander does not exist.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-        [Authorize(Policy = "AdminOrIslander")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id}")]
         public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetIslanderByIdQuery> validator)
         {
@@ -65,24 +63,16 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-        [Authorize(Policy = "AdminOrIslander")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
 
         public async Task<IResult> Create(
            [FromBody] CreateIslanderCommand createIslanderCommand)
 
         {
-
-            var nameClaimToken = HttpContext.User.FindFirst("name")?.Value;
-
-            var command = new CreateIslanderCommand(createIslanderCommand.Request, nameClaimToken);
-
-            Console.WriteLine($"nombre del token: {nameClaimToken}");
-
             //var validationResult = await validator.ValidateAsync(createIslanderCommand.Request);
             //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
-
-            var result = await mediator.Send(command);
+            var result = await mediator.Send(createIslanderCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
              );

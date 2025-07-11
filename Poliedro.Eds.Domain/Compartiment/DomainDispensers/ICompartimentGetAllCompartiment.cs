@@ -2,7 +2,7 @@
 using Poliedro.Eds.Domain.Compartiment.Entities;
 namespace Poliedro.Eds.Domain.Compartiment.DomainCompartiment
 {
-    public interface ICompartimentGetAllService
+    public interface ICompartimentGetAllCompartiment
     {
         Task<IEnumerable<CompartimentEntity>> GetAllAsync(PaginationParams paginationParams);
     }
