@@ -4,12 +4,16 @@ using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Querys;
 
+
 namespace Poliedro.Eds.Application.Translations.Handle;
 
-public class GetTranslationsHandler(IRedisService redisService)
+public class GetTranslationsHandler(
+    IRedisService redisService,
+    ITolgeeService tolgeeService)
     : IRequestHandler<GetTranslationsQuery, TranslationsAvailableDto>
 {
     private const string RedisPrefix = "translations";
+
     private static readonly Dictionary<string, string> FlagToCountryCodeMap = new()
     {
         { "🇺🇸", "US" },
@@ -20,8 +24,19 @@ public class GetTranslationsHandler(IRedisService redisService)
         GetTranslationsQuery request,
         CancellationToken cancellationToken)
     {
-        
-        var translationKeys = await GetTranslationKeys();
+        var translationKeys = await redisService.GetKeysByPatternAsync($"{RedisPrefix}:*");
+
+        // Si no hay claves, buscar en Tolgee y cachear
+        if (translationKeys.Count == 0)
+        {
+            var tolgeeTranslations = await tolgeeService.GetAllTranslationsFromTolgee();
+
+            foreach (var (lang, dict) in tolgeeTranslations)
+                await redisService.SetCacheAsync($"{RedisPrefix}:{lang}", dict, TimeSpan.FromHours(24));
+
+            translationKeys = tolgeeTranslations.Keys.Select(lang => $"{RedisPrefix}:{lang}").ToList();
+        }
+
         var translationsByLanguage = new Dictionary<string, Dictionary<string, string>>();
         var languages = new List<Language>();
 
@@ -36,7 +51,6 @@ public class GetTranslationsHandler(IRedisService redisService)
 
             translationsByLanguage[langCode] = translations;
 
-         
             languages.Add(new Language
             {
                 Code = langCode,
@@ -53,32 +67,19 @@ public class GetTranslationsHandler(IRedisService redisService)
         );
     }
 
-    private async Task<List<string>> GetTranslationKeys()
+    private string GetLanguageName(string langCode) => langCode switch
     {
-        
-        
-         return await redisService.GetKeysByPatternAsync($"{RedisPrefix}:*");
-    }
+        "en" => "English",
+        "es-CO" => "Español (Colombia)",
+        _ => langCode
+    };
 
-    private string GetLanguageName(string langCode)
+    private string GetFlagEmoji(string langCode) => langCode switch
     {
-        return langCode switch
-        {
-            "en" => "English",
-            "es-CO" => "Español (Colombia)",
-            _ => langCode
-        };
-    }
-
-    private string GetFlagEmoji(string langCode)
-    {
-        return langCode switch
-        {
-            "en" => "🇺🇸",
-            "es-CO" => "🇨🇴",
-            _ => "🌐"
-        };
-    }
+        "en" => "🇺🇸",
+        "es-CO" => "🇨🇴",
+        _ => "🌐"
+    };
 
     private void MapCountryCodes(IEnumerable<Language> languages)
     {
