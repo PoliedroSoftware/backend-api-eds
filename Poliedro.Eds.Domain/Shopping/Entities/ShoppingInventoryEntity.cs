@@ -4,6 +4,7 @@ namespace Poliedro.Eds.Domain.Shopping.Entities;
 
 public class ShoppingInventoryEntity
 {
+    [Key]
     public int IdInventory { get; set; }
     public DateTime Date { get; set; }
     public string ReferenceType { get; set; }
