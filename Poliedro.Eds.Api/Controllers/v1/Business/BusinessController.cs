@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Business;
 [ApiController]
 public class BusinessController(IMediator mediator) : ControllerBase
 {
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
     {
@@ -50,7 +49,7 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The specified business does not exist.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpGet("{id}")]
     public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetBusinessByIdQuery> validator)
     {
@@ -76,7 +75,7 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpPost]
 
     public async Task<IResult> Create(
