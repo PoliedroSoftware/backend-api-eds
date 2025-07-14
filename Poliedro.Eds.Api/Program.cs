@@ -23,6 +23,7 @@ using Poliedro.Eds.Application.AWS.Configurations.Dto.Plemsi;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
@@ -43,6 +44,8 @@ using System.Net.Http.Headers;
 using WorkerKeycloackService;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var config = builder.Configuration;
 
 
 // Configura el logging
@@ -188,6 +191,25 @@ builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompar
 
 builder.Services.AddScoped<ICourtListDomainService, CourtListService>();
 builder.Services.AddScoped<IInventoryListDomainService, InventoryListService>();
+
+//Configura Tolgee
+
+builder.Services.AddScoped<ITolgeeService, TolgeeService>();
+
+builder.Services.AddHttpClient(nameof(TolgeeService), client =>
+{
+    var baseUrl = config["Tolgee:BaseUrl"];
+    if (string.IsNullOrWhiteSpace(baseUrl))
+        throw new InvalidOperationException("Tolgee:BaseUrl no está configurada.");
+
+    client.BaseAddress = new Uri(baseUrl);
+
+    var apiKey = config["Tolgee:ApiKey"];
+    if (!string.IsNullOrWhiteSpace(apiKey))
+        client.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+});
+
+
 
 
 
