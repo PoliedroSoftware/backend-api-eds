@@ -25,6 +25,15 @@ using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 using Poliedro.Eds.Domain.DispenserType.Entities;
 using Poliedro.Eds.Domain.Island.Entities;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
+using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.ProductView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.ProviderView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.TypeOfCollectionView.Entities;
 
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
@@ -59,6 +68,15 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<CategoryEntity> Category { get; set; }
     public DbSet<ProductTypeEntity> ProductTypes { get; set; }
 
+    public DbSet<BusinessViewEntity> BusinessView { get; set; }
+    public DbSet<CapacityViewEntity> CapacityView { get; set; }
+    public DbSet<EdsViewEntity> EdsView { get; set; }
+    public DbSet<ProviderViewEntity> ProviderView { get; set; }
+    public DbSet<ProductViewEntity> ProductView { get; set; }
+    public DbSet<ShoppingProductViewEntity> ShoppingProductView { get; set; }
+    public DbSet<CompartimentViewEntity> CompartimentView { get; set; }
+    public DbSet<TypeOfCollectionViewEntity> TypeOfCollectionView { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -92,10 +110,20 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new TypeOfCollectionConfiguration(modelBuilder.Entity<TypeOfCollectionEntity>());
         new ShoppingConfiguration(modelBuilder.Entity<ShoppingEntity>());
         new ShoppingProductConfiguration(modelBuilder.Entity<ShoppingProductEntity>());
+        
         new ShoppingProductInventoryConfiguration(modelBuilder.Entity<ShoppingProductInventoryEntity>());
         new TankConfiguration(modelBuilder.Entity<TankEntity>());
         new CompartimentConfiguration(modelBuilder.Entity<CompartimentEntity>());
         new CourtDispensersInventoryConfiguration(modelBuilder.Entity<CourtDispensersInventoryEntity>());
         new CategoryConfiguration(modelBuilder.Entity<CategoryEntity>());
+
+        new EdsViewConfiguration(modelBuilder.Entity<EdsViewEntity>());
+        new BusinessViewConfiguration(modelBuilder.Entity<BusinessViewEntity>());
+        new CapacityViewConfiguration(modelBuilder.Entity<CapacityViewEntity>());
+        new ProductViewConfiguration(modelBuilder.Entity<ProductViewEntity>());
+        new ProviderViewConfiguration(modelBuilder.Entity<ProviderViewEntity>());
+        new CompartimentViewConfiguration(modelBuilder.Entity<CompartimentViewEntity>());
+        new TypeOfCollectionViewConfiguration(modelBuilder.Entity<TypeOfCollectionViewEntity>());
+        new ShoppingProductViewConfiguration(modelBuilder.Entity<ShoppingProductViewEntity>());
     }
 }
