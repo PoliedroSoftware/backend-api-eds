@@ -11,5 +11,4 @@ public class HoseEntity
     public double AccumulatedGallons { get; set; }
     public double AccumulatedAmount { get; set; }
     public int IdProductType { get; set; }
-    public double Price { get; set; }
 }
