@@ -1,20 +1,23 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Inventory.Dto.View;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 
 public class InventoryListService(
     IConfiguration config,
     IRedisService redisService,
-    IHttpContextAccessor httpContextAccessor
+    IHttpContextAccessor httpContextAccessor,
+    ITenantDbContextFactory dbContextFactory
     ) : IInventoryListDomainService
 {
-    private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
+    //private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
 
     public async Task<IEnumerable<InventoryListResponseDto>> GetAllAsync(PaginationParams paginationParams)
     {
@@ -43,30 +46,35 @@ public class InventoryListService(
 
     private async Task<IEnumerable<InventoryListResponseDto>> GetInventoriesFromViewAsync()
     {
+        using var context = dbContextFactory.CreateDbContext();
         var rows = new List<dynamic>();
-        using var connection = new MySqlConnection(_connectionString);
+        using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
+        //using var connection = new MySqlConnection(_connectionString);
+        //await connection.OpenAsync();
 
         string query = "SELECT * FROM v_inventory";
-        using var command = new MySqlCommand(query, connection);
+        using var command = connection.CreateCommand();
+        command.CommandText = query;
+        //using var command = new MySqlCommand(query, connection);
         using var reader = await command.ExecuteReaderAsync();
 
         while (await reader.ReadAsync())
         {
             rows.Add(new
             {
-                IdBusiness = reader.GetInt32("id_business"),
-                Business = reader.GetString("business"),
-                IdEds = reader.GetInt32("id_eds"),
-                Eds = reader.GetString("eds"),
-                IdTank = reader.GetInt32("id_tank"),
-                Tank = reader.GetString("tank"),
-                TankCapacity = reader.GetDouble("tank_capacity"),
-                IdCompartment = reader.GetInt32("id_compartment"),
-                Compartment = reader.GetInt32("compartment"),
-                IdProduct = reader.GetInt32("id_product"),
-                Product = reader.GetString("product"),
-                Stock = reader.GetDouble("stock")
+                IdBusiness = reader.GetInt32(reader.GetOrdinal("id_business")),
+                Business = reader.GetString(reader.GetOrdinal("business")),
+                IdEds = reader.GetInt32(reader.GetOrdinal("id_eds")),
+                Eds = reader.GetString(reader.GetOrdinal("eds")),
+                IdTank = reader.GetInt32(reader.GetOrdinal("id_tank")),
+                Tank = reader.GetString(reader.GetOrdinal("tank")),
+                TankCapacity = reader.GetDouble(reader.GetOrdinal("tank_capacity")),
+                IdCompartment = reader.GetInt32(reader.GetOrdinal("id_compartment")),
+                Compartment = reader.GetInt32(reader.GetOrdinal("compartment")),
+                IdProduct = reader.GetInt32(reader.GetOrdinal("id_product")),
+                Product = reader.GetString(reader.GetOrdinal("product")),
+                Stock = reader.GetDouble(reader.GetOrdinal("stock"))
             });
         }
 
