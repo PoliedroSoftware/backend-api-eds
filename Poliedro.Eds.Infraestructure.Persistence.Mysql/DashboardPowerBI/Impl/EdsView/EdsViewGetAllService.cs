@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Domain.Common.Pagination;
-using Poliedro.Eds.Domain.Eds.DomainEds;
-using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Application.Ports.Redis;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.AspNetCore.Http;
+using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.DomainEds;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.EdsView;
 
@@ -13,16 +13,16 @@ public class EdsViewGetAllService(
     ITenantDbContextFactory dbContextFactory,
     IRedisService redisService,
     IHttpContextAccessor httpContextAccessor
-    ) : IEdsGetAllService
+    ) : IEdsViewGetAllService
 {
-    public async Task<IEnumerable<EdsEntity>> GetAllAsync(PaginationParams paginationParams)
+    public async Task<IEnumerable<EdsViewEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
         var totalRows = await context.Eds.CountAsync();
 
         string cacheKey = $"edsView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
-        var cachedData = await redisService.GetCacheAsync<IEnumerable<EdsEntity>>(cacheKey);
+        var cachedData = await redisService.GetCacheAsync<IEnumerable<EdsViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
 
         var data = await context.Eds

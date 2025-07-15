@@ -1,28 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Domain.Common.Pagination;
-using Poliedro.Eds.Domain.Capacity.DomainCapacity;
-using Poliedro.Eds.Domain.Capacity.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Application.Ports.Redis;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
+using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.DomainCapacityView;
+using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.Entities;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CapacityView;
 
 public class CapacityViewGetAllService(
     ITenantDbContextFactory dbContextFactory,
     IRedisService redisService, 
-    IHttpContextAccessor httpContextAccessor) : ICapacityGetAllService
+    IHttpContextAccessor httpContextAccessor) : ICapacityViewGetAllService
 {
-    public async Task<IEnumerable<CapacityEntity>> GetAllAsync(PaginationParams paginationParams)
+    public async Task<IEnumerable<CapacityViewEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
         var totalRows = await context.Capacity.CountAsync();
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
 
         string cacheKey = $"capacityView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
-        var cachedData = await redisService.GetCacheAsync<IEnumerable<CapacityEntity>>(cacheKey);
+        var cachedData = await redisService.GetCacheAsync<IEnumerable<CapacityViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
 
         var data = await context.Capacity
