@@ -3,7 +3,9 @@
 public record ProductDto
 (    
     string IdProduct, 
+    string IdBusiness,
     string Name, 
     string IdProductType, 
-    double Price
+    double Price,
+    DateOnly Date
     );

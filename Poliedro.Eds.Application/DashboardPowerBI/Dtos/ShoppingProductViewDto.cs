@@ -10,5 +10,6 @@ public record ShoppingProductViewDto(
     double Price ,
     double TotalPrice,
     string ProductName,
-    int IdCompartment
+    int IdCompartment,
+    DateOnly Date
     );
