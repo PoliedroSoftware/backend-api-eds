@@ -61,6 +61,22 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.Domainisland.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.DomainIsland.Impl;
 using Poliedro.Eds.Application.Product.Services;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.Services;
+using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.DomainBusinessView;
+using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.DomainCapacityView;
+using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.DomainCompartimentView;
+using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.DomainEds;
+using Poliedro.Eds.Domain.DashboardPowerBI.ProductView.DomainProductView;
+using Poliedro.Eds.Domain.DashboardPowerBI.ProviderView.DomainProviderView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.BusinessView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CapacityView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CompartimentView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.EdsView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.ProductView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.ProviderView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.TypeOfCollectionView;
+using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.DomainShoppingProductView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.ShoppingProductView;
+using Poliedro.Eds.Domain.DashboardPowerBI.TypeOfCollectionView.DomainTypeOfCollectionView;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -173,6 +189,16 @@ public static class DependencyInjectionService
         services.AddScoped<ICategoryGetAllService, CategoryGetAllService>();
         services.AddScoped<ICourtUpdateInventoryService, CourtInventoryService>();
         services.AddSingleton<IRedisService, RedisCacheService>();
+
+
+        services.AddScoped<IBusinessViewGetAllService, BusinessViewGetAllService>();
+        services.AddScoped<ICompartimenViewGetAllService, CompartimentViewGetAllService>();
+        services.AddScoped<IProductViewGetAllProduct, ProductViewGetAllProduct>();
+        services.AddScoped<ICapacityViewGetAllService, CapacityViewGetAllService>();
+        services.AddScoped<IEdsViewGetAllService, EdsViewGetAllService>();
+        services.AddScoped<IProviderViewGetAllService, ProviderViewGetAllService>();
+        services.AddScoped<IShoppingProductGetAllShoppingProductView, ShoppingProductGetAllShoppingProductView>();
+        services.AddScoped<ITypeOfCollectionViewGetAllTypeOfCollection, TypeOfCollectionViewGetAllTypeOfCollection>();
         return services;
     }
 }

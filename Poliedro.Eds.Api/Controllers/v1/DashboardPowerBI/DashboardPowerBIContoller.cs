@@ -15,6 +15,7 @@ using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllProvider;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllShopping;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllTypeOfCollection;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllBusiness;
+using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllShoppingProductView;
 
 namespace Poliedro.Eds.Api.Controllers.v1.DashboardPowerBI;
     
@@ -129,6 +130,18 @@ public class DashboardPowerBI(IMediator mediator) : ControllerBase
         {
             return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
         }
+        return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
+    }
+
+    [HttpGet("shopping-products")]
+    public async Task<ActionResult<IEnumerable<ShoppingProductViewDto>>> GetAll([FromQuery] PaginationParams paginationParams)
+    {
+        var data = await mediator.Send(new GellAllShoppingProductViewQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+        if (data is null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
+        }
+
         return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
     }
 }
