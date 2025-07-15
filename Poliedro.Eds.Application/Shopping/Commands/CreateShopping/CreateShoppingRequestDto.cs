@@ -1,4 +1,6 @@
-﻿namespace Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
+﻿using Poliedro.Eds.Application.Inventory.Commands;
+
+namespace Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
 
 public record CreateShoppingRequestDto(
     string Invoice,
@@ -7,5 +9,6 @@ public record CreateShoppingRequestDto(
     int IdCategory,
     double Amount,
     IEnumerable<ShoppingProductRequestDto> ShoppingProducts,
-    IEnumerable<SellPriceProductRequestDto> SellPriceProducts
+    IEnumerable<SellPriceProductRequestDto> SellPriceProducts,
+    InventoryCommand? ShoppingInventory
     );

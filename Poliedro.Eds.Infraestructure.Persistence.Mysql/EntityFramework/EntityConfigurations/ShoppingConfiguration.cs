@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Poliedro.Eds.Domain.Inventory.Entities;
 using Poliedro.Eds.Domain.Shopping.Entities;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
@@ -20,5 +21,10 @@ public class ShoppingConfiguration
         builder.HasMany(x => x.ShoppingProducts)
                    .WithOne()
                    .HasForeignKey(x => x.IdShopping);
+
+        builder.HasOne(x => x.ShoppingInventory)
+                     .WithOne()
+                     .HasForeignKey<InventoryEntity>(x => x.ReferenceId)
+                     .OnDelete(DeleteBehavior.Cascade);
     }
 }
