@@ -1,4 +1,6 @@
-﻿namespace Poliedro.Eds.Domain.Court.Entities;
+﻿using Poliedro.Eds.Domain.Inventory.Entities;
+
+namespace Poliedro.Eds.Domain.Court.Entities;
 
 public class CourtEntity
 {
@@ -16,5 +18,5 @@ public class CourtEntity
     public IEnumerable<DocumentEntity?>? CourtDocuments { get; set; }
     public IEnumerable<CourtExpenditureEntity?>? CourtExpenditures { get; set; }
     public IEnumerable<CourtTypeOfCollectionEntity> CourtTypeOfCollections { get; set; }
-    public CourtInventoryEntity CourtInventory { get; set; }
+    public InventoryEntity CourtInventory { get; set; }
 }

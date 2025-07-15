@@ -1,4 +1,5 @@
-﻿using Poliedro.Eds.Domain.ShoppingProduct.Entities;
+﻿using Poliedro.Eds.Domain.Inventory.Entities;
+using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
 namespace Poliedro.Eds.Domain.Shopping.Entities;
 
@@ -12,8 +13,8 @@ public class ShoppingEntity
     public double Amount { get; set; }
 
     public IEnumerable<ShoppingProductEntity> ShoppingProducts { get; set; }
-
-
+    public InventoryEntity ShoppingInventory { get; set; }
 }
+
 
 

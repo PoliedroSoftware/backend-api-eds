@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
+using Poliedro.Eds.Application.Product.Services;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
+using Poliedro.Eds.Domain.Inventory.Entities;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
 using Poliedro.Eds.Domain.Shopping.Entities;
-using Poliedro.Eds.Application.Product.Services;
-using Poliedro.Eds.Domain.Product.Entities;
 
 namespace Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
     public class CreateShoppingCommandHandler(
@@ -17,15 +17,24 @@ namespace Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
         public async Task<Result<VoidResult, Error>> Handle(CreateShoppingCommand request, CancellationToken cancellationToken)
         {
 
-        if (request.Request.SellPriceProducts is { } sellPriceProducts && sellPriceProducts.Any())
-        {
-            var products = mapper.Map<IEnumerable<ProductEntity>>(sellPriceProducts);
-            var priceUpdateResult = await productPriceUpdateService.UpdatePricesAsync(products);
-            if (!priceUpdateResult.IsSuccess)
-                return priceUpdateResult.Error!;
-        }
-
         var shoppingEntity = mapper.Map<ShoppingEntity>(request.Request);
+
+
+        //if (request.Request.SellPriceProducts is { } sellPriceProducts && sellPriceProducts.Any())
+        //{
+        //    var products = mapper.Map<IEnumerable<ProductEntity>>(sellPriceProducts);
+        //    var priceUpdateResult = await productPriceUpdateService.UpdatePricesAsync(products);
+        //    if (!priceUpdateResult.IsSuccess)
+        //        return priceUpdateResult.Error!;
+        //}
+
+        shoppingEntity.ShoppingInventory = new InventoryEntity
+        {
+            Date = DateOnly.FromDateTime(shoppingEntity.Date),
+            ReferenceType = "shopping",
+        };
+
+        
         var result = await shoppingDomainService.CreateAsync(shoppingEntity);
             if (!result.IsSuccess)
                 return result.Error!;

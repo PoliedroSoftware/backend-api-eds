@@ -1,4 +1,6 @@
-﻿namespace Poliedro.Eds.Application.Court.Dtos
+﻿using Poliedro.Eds.Application.Inventory.Dtos;
+
+namespace Poliedro.Eds.Application.Court.Dtos
 {
     public class CourtDto
     {
@@ -16,7 +18,7 @@
         public IEnumerable<DocumentDto?>? CourtDocuments { get; set; }
         public IEnumerable<CourtExpenditureDto?>? CourtExpenditures { get; set; }
         public IEnumerable<CourtTypeOfCollectionDto> CourtTypeOfCollections { get; set; }
-        public CourtInventoryDto? CourtInventory { get; set; }
+        public InventoryDto? CourtInventory { get; set; }
 
     }
 }
