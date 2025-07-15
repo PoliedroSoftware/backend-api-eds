@@ -25,6 +25,7 @@ using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 using Poliedro.Eds.Domain.DispenserType.Entities;
 using Poliedro.Eds.Domain.Island.Entities;
+using Poliedro.Eds.Domain.Inventory.Entities;
 
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
@@ -33,7 +34,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<ProductTypeEntity> ProductType { get; set; }
     public DbSet<CourtEntity> Court { get; set; }
-    public DbSet<CourtInventoryEntity> CourtInventory { get; set; }
     public DbSet<BusinessEntity> Business { get; set; }
     public DbSet<CapacityEntity> Capacity { get; set; }
     public DbSet<EdsEntity> Eds { get; set; }
@@ -58,6 +58,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<CourtDispensersInventoryEntity> CourtDispensersInventory { get; set; }
     public DbSet<CategoryEntity> Category { get; set; }
     public DbSet<ProductTypeEntity> ProductTypes { get; set; }
+    public DbSet<InventoryEntity> Inventory { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -81,8 +82,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new CourtDispenserConfiguration(modelBuilder.Entity<CourtDispenserEntity>());
         new CourtExpendituresConfiguration(modelBuilder.Entity<CourtExpenditureEntity>());
         new CourtTypeOfCollectionsConfiguration(modelBuilder.Entity<CourtTypeOfCollectionEntity>());
-        new DocumentConfiguration(modelBuilder.Entity<DocumentEntity>());
-        new CourtInventoryConfiguration(modelBuilder.Entity<CourtInventoryEntity>());
+        new DocumentConfiguration(modelBuilder.Entity<DocumentEntity>());        
         new IslanderConfiguration(modelBuilder.Entity<IslanderEntity>());
         new IslandConfiguration(modelBuilder.Entity<IslandEntity>());
         new DispensersConfiguration(modelBuilder.Entity<DispensersEntity>());
@@ -97,5 +97,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new CompartimentConfiguration(modelBuilder.Entity<CompartimentEntity>());
         new CourtDispensersInventoryConfiguration(modelBuilder.Entity<CourtDispensersInventoryEntity>());
         new CategoryConfiguration(modelBuilder.Entity<CategoryEntity>());
+        new InventoryConfiguration().Configure(modelBuilder.Entity<InventoryEntity>());
     }
 }

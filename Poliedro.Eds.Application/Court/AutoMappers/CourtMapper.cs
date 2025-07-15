@@ -2,8 +2,11 @@
 using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.Court.Commands.UpdateCourt;
 using Poliedro.Eds.Application.Court.Dtos;
+using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+using Poliedro.Eds.Application.Inventory.Commands;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
+using Poliedro.Eds.Domain.Inventory.Entities;
 
 namespace Poliedro.Eds.Application.Court.AutoMappers
 {
@@ -28,8 +31,9 @@ namespace Poliedro.Eds.Application.Court.AutoMappers
              .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct));
             CreateMap<CourtDispenserCommand, ICourtDispenserSaleEntity>()
              .ForMember(dest => dest.GallonsDifferenceResult, opt => opt.MapFrom(src => src.GallonsDifferenceResult));
-            CreateMap<CourtInventoryEntity, CourtInventoryDto>().ReverseMap();
-            CreateMap<CourtInventoryEntity, CourtInventoryCommand>().ReverseMap();
+
+            CreateMap<InventoryEntity, InventoryDto>().ReverseMap();
+            CreateMap<InventoryEntity, InventoryCommand>().ReverseMap();
         }
     }
 }

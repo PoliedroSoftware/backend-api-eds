@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Poliedro.Eds.Domain.Shopping.Entities;
+using Poliedro.Eds.Domain.Inventory.Entities;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 
-public class ShoppingInventoryConfiguration
+public class InventoryConfiguration : IEntityTypeConfiguration<InventoryEntity>
 {
-    public ShoppingInventoryConfiguration(EntityTypeBuilder<ShoppingInventoryEntity> builder)
+    public void Configure(EntityTypeBuilder<InventoryEntity> builder)
     {
         builder.ToTable("inventory");
         builder.HasKey(x => x.IdInventory);
