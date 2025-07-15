@@ -20,13 +20,13 @@ public class BusinessViewGetAllService(
     {
         using var context = dbContextFactory.CreateDbContext();
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        var totalRows = await context.Business.CountAsync();
+        var totalRows = await context.BusinessView.CountAsync();
 
         string cacheKey = $"businessView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<BusinessViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
         
-        var data = await context.Business
+        var data = await context.BusinessView
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
             .ToListAsync();

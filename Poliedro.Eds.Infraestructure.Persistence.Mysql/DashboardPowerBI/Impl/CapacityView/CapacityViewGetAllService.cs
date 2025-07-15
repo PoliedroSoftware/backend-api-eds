@@ -18,14 +18,14 @@ public class CapacityViewGetAllService(
     public async Task<IEnumerable<CapacityViewEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
-        var totalRows = await context.Capacity.CountAsync();
+        var totalRows = await context.CapacityView.CountAsync();
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
 
         string cacheKey = $"capacityView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CapacityViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
 
-        var data = await context.Capacity
+        var data = await context.CapacityView
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
             .ToListAsync();

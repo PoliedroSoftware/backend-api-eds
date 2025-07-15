@@ -19,13 +19,13 @@ public class ProductViewGetAllProduct(
     {
         using var context = dbContextFactory.CreateDbContext();
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        var totalRows = await context.Product.CountAsync();
+        var totalRows = await context.ProductView.CountAsync();
 
         string cacheKey = $"productView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<ProductViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
         
-        var data = await context.Product
+        var data = await context.ProductView
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
             .ToListAsync();

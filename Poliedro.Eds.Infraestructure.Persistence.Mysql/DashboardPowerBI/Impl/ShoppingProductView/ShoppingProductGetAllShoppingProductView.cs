@@ -16,7 +16,7 @@ public class ShoppingProductGetAllShoppingProductView(
     public async Task<IEnumerable<ShoppingProductViewEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
-        var totalRows = await context.ShoppingProduct.CountAsync();
+        var totalRows = await context.ShoppingProductView.CountAsync();
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
 
         string cacheKey = $"shoppingproductview:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
