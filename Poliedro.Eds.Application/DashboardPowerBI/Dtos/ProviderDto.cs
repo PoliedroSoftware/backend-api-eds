@@ -3,5 +3,8 @@
 public record ProviderDto
 (
      string IdProvider,
-     string Name 
+     string IdProduct,
+     string IdBusiness,
+     string Name,
+     DateOnly Date
     );
