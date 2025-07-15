@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Poliedro.Eds.Domain.ShoppingProductView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.Entities;
 
-namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
+namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
 
 public class ShoppingProductViewConfiguration
 {
@@ -19,6 +19,7 @@ public class ShoppingProductViewConfiguration
         builder.Property(x => x.Price).HasColumnName("price");
         builder.Property(x => x.TotalPrice).HasColumnName("total_precio");
         builder.Property(x => x.IdCompartment).HasColumnName("id_compartiment");
+        builder.Property(x => x.Date).HasColumnName("fecha");
         builder.Property(x => x.IdBusiness).HasColumnName("id_business");
 
     }

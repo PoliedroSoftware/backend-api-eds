@@ -4,9 +4,9 @@ public record Business2Dto
 (
     string IdBusiness,
     string IdProduct,
-    string IdTank ,
+    string IdCompartiment,
+    string IdTank,
+    string NameEds,
     string Name,
-    string Context,
-
-     DateOnly Date 
+    DateOnly Date 
 );

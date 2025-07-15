@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
-using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
+using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.DomainCompartimentView;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllCompartiment;
 public class GetAllCompartimentQueryHandler
 (
-    ICompartimentGetAllService compartimentDomainService,
+    ICompartimenViewGetAllService compartimentViewDomainService,
     IMapper mapper)
     : IRequestHandler<GellAllCompartimentQuery, IEnumerable<CompartimentDto>>
 {
     public async Task<IEnumerable<CompartimentDto>> Handle(GellAllCompartimentQuery request, CancellationToken cancellationToken)
     {
-        var result = await compartimentDomainService.GetAllAsync(request.PaginationParams);
+        var result = await compartimentViewDomainService.GetAllAsync(request.PaginationParams);
         var ccc = mapper.Map<List<CompartimentDto>>(result);
         return ccc;
     }

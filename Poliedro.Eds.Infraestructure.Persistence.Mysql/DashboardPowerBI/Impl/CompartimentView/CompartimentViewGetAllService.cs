@@ -18,14 +18,14 @@ public class CompartimentViewGetAllService(
     public async Task<IEnumerable<CompartimentViewEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
-        var totalRows = await context.Compartiment.CountAsync();
+        var totalRows = await context.CompartimentView.CountAsync();
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
 
         string cacheKey = $"compartimentView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CompartimentViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
 
-        var data = await context.Compartiment
+        var data = await context.CompartimentView
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
             .ToListAsync();

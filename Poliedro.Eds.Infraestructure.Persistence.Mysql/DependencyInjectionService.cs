@@ -76,6 +76,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.Provi
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.TypeOfCollectionView;
 using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.DomainShoppingProductView;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.ShoppingProductView;
+using Poliedro.Eds.Domain.DashboardPowerBI.TypeOfCollectionView.DomainTypeOfCollectionView;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 

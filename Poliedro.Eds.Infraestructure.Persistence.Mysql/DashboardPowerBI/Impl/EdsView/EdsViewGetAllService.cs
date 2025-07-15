@@ -19,13 +19,13 @@ public class EdsViewGetAllService(
     {
         using var context = dbContextFactory.CreateDbContext();
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        var totalRows = await context.Eds.CountAsync();
+        var totalRows = await context.EdsView.CountAsync();
 
         string cacheKey = $"edsView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<EdsViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
 
-        var data = await context.Eds
+        var data = await context.EdsView
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
             .ToListAsync();
