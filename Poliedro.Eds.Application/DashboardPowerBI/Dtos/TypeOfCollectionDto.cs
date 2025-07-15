@@ -2,6 +2,9 @@
 
 public record TypeOfCollectionDto
 (
-    string IdTypeOfCollection, 
-    string Description
+    string IdTypeOfCollection,
+    string IdBusiness,
+    string IdProduct,
+    string Description,
+    DateOnly Date
     );
