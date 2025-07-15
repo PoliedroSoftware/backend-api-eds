@@ -1,6 +1,6 @@
-namespace Poliedro.Eds.Domain.Court.Entities;
+namespace Poliedro.Eds.Application.Inventory.Dtos;
 
-public class CourtInventoryEntity
+public class InventoryDto
 {
     public int IdInventory { get; set; }
     public DateOnly Date { get; set; }

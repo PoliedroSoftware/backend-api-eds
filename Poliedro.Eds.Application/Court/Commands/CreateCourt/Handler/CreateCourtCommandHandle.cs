@@ -5,6 +5,7 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Dto;
 using Poliedro.Eds.Domain.Court.Entities;
+using Poliedro.Eds.Domain.Inventory.Entities;
 using System.Text.Json;
 
 namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
@@ -69,7 +70,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                 }
             }
 
-            courtEntity.CourtInventory = new CourtInventoryEntity
+            courtEntity.CourtInventory = new InventoryEntity
             {
                 Date = courtEntity.DateStarttime,
                 ReferenceType = "court",

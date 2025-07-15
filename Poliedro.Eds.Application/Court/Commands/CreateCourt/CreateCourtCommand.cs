@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Poliedro.Eds.Application.Inventory.Commands;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 
@@ -18,6 +19,6 @@ public record CreateCourtCommand(
     IEnumerable<DocumentCommand?>? CourtDocuments,
     IEnumerable<CourtExpenditureCommand?>? CourtExpenditures,
     IEnumerable<CourtTypeOfCollectionCommand> CourtTypeOfCollections,
-    CourtInventoryCommand? CourtInventory
+    InventoryCommand? CourtInventory
     ) : IRequest<Result<VoidResult, Error>>;
 

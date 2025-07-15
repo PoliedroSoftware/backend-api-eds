@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Domain.Court.Entities;
+using Poliedro.Eds.Domain.Inventory.Entities;
 
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
@@ -24,7 +25,7 @@ public class CourtConfiguration
 
         builder.HasOne(x => x.CourtInventory)
                 .WithOne()
-                .HasForeignKey<CourtInventoryEntity>(x => x.ReferenceId);
+                .HasForeignKey<InventoryEntity>(x => x.ReferenceId);
         builder.HasMany(x => x.CourtDispensers)
                 .WithOne()
                 .HasForeignKey(x => x.IdCourt);
