@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
-using Poliedro.Eds.Domain.ShoppingProductView.DomainShoppingProductView;
-using Poliedro.Eds.Domain.ShoppingProductView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.DomainShoppingProductView;
+using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.ShoppingProductView;

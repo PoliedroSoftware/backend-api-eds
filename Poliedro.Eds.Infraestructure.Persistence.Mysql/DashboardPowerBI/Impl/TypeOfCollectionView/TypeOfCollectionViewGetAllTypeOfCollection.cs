@@ -12,17 +12,17 @@ public class TypeOfCollectionViewGetAllTypeOfCollection(
     ITenantDbContextFactory dbContextFactory,
     IRedisService redisService,
     IHttpContextAccessor httpContextAccessor
-    ) : ITypeOfCollectionGetAllTypeOfCollection
+    ) : ITypeOfCollectionViewGetAllTypeOfCollection
 {
 
-    public async Task<IEnumerable<TypeOfCollectionEntity>> GetAllAsync(PaginationParams paginationParams)
+    public async Task<IEnumerable<TypeOfCollectionViewEntity>> GetAllAsync(PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
         var totalRows = await context.TypeOfCollection.CountAsync();
 
         string cacheKey = $"typeOfCollectionView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
-        var cachedData = await redisService.GetCacheAsync<IEnumerable<TypeOfCollectionEntity>>(cacheKey);
+        var cachedData = await redisService.GetCacheAsync<IEnumerable<TypeOfCollectionViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
         
         var data = await context.TypeOfCollection
