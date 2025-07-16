@@ -9,7 +9,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class CourtCreateService(ITenantDbContextFactory dbContextFactory) : ICourtDomainService
+public class CourtCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICourtDomainService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CourtEntity courtEntity)
     {
