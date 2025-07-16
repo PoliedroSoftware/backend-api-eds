@@ -46,22 +46,15 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetDispenserTypeByIdQuery> validator)
+
+    public async Task<IResult> GetById(int id)
     {
-        var getDispenserTypeQuery = new GetDispenserTypeByIdQuery(Id: id);
+        var result = await mediator.Send(new GetDispenserTypeByIdQuery(id));
 
-        //var validationResult = await validator.ValidateAsync(getDispenserTypeQuery);
+        if (result.IsSuccess)
+            return TypedResults.Ok(result.Value);
 
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
-
-        var result = await mediator.Send(getDispenserTypeQuery);
-
-        return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
-        );
+        return TypedResults.NotFound("DispenserType no encontrado.");
     }
 
     [SwaggerOperation(
@@ -98,11 +91,6 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
  [FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand,
  [FromServices] IValidator<UpdateDispenserTypeCommand> validator)
     {
-        //var validationResult = await validator.ValidateAsync(updateDispenserTypeCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
 
         var result = await mediator.Send(updateDispenserTypeCommand);
 
