@@ -100,7 +100,7 @@ CREATE TABLE `compartiment_capacity` (
   `id_compartiment_capacity` int NOT NULL AUTO_INCREMENT,
   `id_compartiment` int NOT NULL,
   `id_capacity` int NOT NULL,
-  `default` tinyint NOT NULL,
+  `is_default` tinyint NOT NULL,
   PRIMARY KEY (`id_compartiment_capacity`),
   KEY `fk_compartiment_capacity_compartiment1` (`id_compartiment`),
   KEY `fk_compartiment_capacity_capacity1` (`id_capacity`),
