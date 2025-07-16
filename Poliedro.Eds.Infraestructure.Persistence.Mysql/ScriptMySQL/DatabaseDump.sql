@@ -271,7 +271,7 @@ CREATE TABLE `court_expenditures` (
   `id_court` int NOT NULL,
   `id_expenditures` int NOT NULL,
   `amount` double NOT NULL,
-  `decription` varchar(100) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_court_expenditure`),
   KEY `fk_court_has_expenditures_expenditures1_idx` (`id_expenditures`),
   KEY `fk_court_has_expenditures_court1_idx` (`id_court`),
