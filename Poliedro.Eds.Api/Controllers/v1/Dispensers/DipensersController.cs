@@ -10,6 +10,7 @@ using Poliedro.Eds.Application.Dispensers.Dtos;
 using Poliedro.Eds.Application.Dispensers.Errors;
 using Poliedro.Eds.Application.Dispensers.Queries.GellAllDispensers;
 using Poliedro.Eds.Application.Dispensers.Queries.GetDispensersById;
+using Poliedro.Eds.Application.DispenserType.Queries.GetDispenserTypeById;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -46,22 +47,15 @@ public class DispensersController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetDispensersByIdQuery> validator)
+
+    public async Task<IResult> GetById(int id)
     {
-        var getDispenserseQuery = new GetDispensersByIdQuery(Id: id);
+        var result = await mediator.Send(new GetDispensersByIdQuery(id));
 
-        //var validationResult = await validator.ValidateAsync(getDispenserseQuery);
+        if (result.IsSuccess)
+            return TypedResults.Ok(result.Value);
 
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
-
-        var result = await mediator.Send(getDispenserseQuery);
-
-        return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
-        );
+        return TypedResults.NotFound("Dispenser no encontrado.");
     }
 
     [SwaggerOperation(
