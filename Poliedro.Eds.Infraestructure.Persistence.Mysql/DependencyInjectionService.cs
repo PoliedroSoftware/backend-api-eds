@@ -190,6 +190,7 @@ public static class DependencyInjectionService
         services.AddScoped<ICourtUpdateInventoryService, CourtInventoryService>();
         services.AddSingleton<IRedisService, RedisCacheService>();
 
+        services.AddScoped<IHoseQueryService, HoseQueryService>();
 
         services.AddScoped<IBusinessViewGetAllService, BusinessViewGetAllService>();
         services.AddScoped<ICompartimenViewGetAllService, CompartimentViewGetAllService>();
