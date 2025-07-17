@@ -26,7 +26,7 @@ public class HoseCreateHose(ITenantDbContextFactory dbContextFactory, IRedisServ
         int hoseCount = await context.Hose.CountAsync(h => h.IdDispensers == hoseEntity.IdDispensers);
 
         if (hoseCount >= dispenser.HoseNumber)
-            return HoseErrorBuilder.HoseCreationException();
+            return HoseErrorBuilder.HoseLimitErrorException();
 
             await context.Hose.AddAsync(hoseEntity);
             var result = await context.SaveChangesAsync() > 0;
