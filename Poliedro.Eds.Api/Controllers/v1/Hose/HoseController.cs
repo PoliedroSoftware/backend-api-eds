@@ -21,7 +21,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
     [ApiController]
     public class HoseController(IMediator mediator) : ControllerBase
     {
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOrIslander")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
@@ -65,7 +65,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "The specified Hose does not exist.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOrIslander")]
         [HttpGet("last-accumulated")]
         public async Task<IActionResult> GetLastAccumulated(
             [FromQuery] int idDispenser,

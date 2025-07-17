@@ -27,7 +27,7 @@ public class DispensersController(IMediator mediator) : ControllerBase
     /// <response code="200">Returns the list of client billing electronic records.</response>
     /// <response code="404">Returns when there are no client billing electronic records found.</response>
     /// <response code="500">Returns when there is an Internal Server Error.</response>
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DispensersDto>>> GetAll([FromQuery] PaginationParams paginationParams)
     {
