@@ -15,5 +15,9 @@ public class ProductConfiguration
         builder.Property(x => x.IdProductType).HasColumnName("id_product_type");
         builder.Property(x => x.Price).HasColumnName("price");
 
+        builder.Property(x => x.Date)
+           .HasColumnName("date")
+           .ValueGeneratedOnAdd();
+
     }
 }
