@@ -26,7 +26,7 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     /// <response code="200">Returns the list of client billing electronic records.</response>
     /// <response code="404">Returns when there are no client billing electronic records found.</response>
     /// <response code="500">Returns when there is an Internal Server Error.</response>
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DispenserTypeDto>>> GetAll([FromQuery] PaginationParams paginationParams)
     {
@@ -46,22 +46,15 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetDispenserTypeByIdQuery> validator)
+
+    public async Task<IResult> GetById(int id)
     {
-        var getDispenserTypeQuery = new GetDispenserTypeByIdQuery(Id: id);
+        var result = await mediator.Send(new GetDispenserTypeByIdQuery(id));
 
-        //var validationResult = await validator.ValidateAsync(getDispenserTypeQuery);
+        if (result.IsSuccess)
+            return TypedResults.Ok(result.Value);
 
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
-
-        var result = await mediator.Send(getDispenserTypeQuery);
-
-        return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
-        );
+        return TypedResults.NotFound("DispenserType no encontrado.");
     }
 
     [SwaggerOperation(
@@ -98,11 +91,6 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
  [FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand,
  [FromServices] IValidator<UpdateDispenserTypeCommand> validator)
     {
-        //var validationResult = await validator.ValidateAsync(updateDispenserTypeCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
 
         var result = await mediator.Send(updateDispenserTypeCommand);
 
