@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using Poliedro.Eds.Application.Court.Errors;
+﻿using Poliedro.Eds.Application.Court.Errors;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
@@ -8,7 +8,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class CourtCreateService(ITenantDbContextFactory dbContextFactory) : ICourtDomainService
+public class CourtCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICourtDomainService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CourtEntity courtEntity)
     {
@@ -17,7 +17,7 @@ public class CourtCreateService(ITenantDbContextFactory dbContextFactory) : ICou
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return CourtErrorBuilder.CourtCreationException();
-
+        await redisService.RemoveByPrefixAsync("courtListService:");
         return VoidResult.Instance;
     }
 }

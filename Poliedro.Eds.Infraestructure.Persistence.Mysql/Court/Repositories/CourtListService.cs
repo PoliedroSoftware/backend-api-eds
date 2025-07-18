@@ -17,7 +17,7 @@ public class CourtListService(IConfiguration config,
     public async Task<IEnumerable<CourtListResponseDto>> GetAllAsync(PaginationParams paginationParams)
     {
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        string cachekey = $"coutListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
+        string cachekey = $"courtListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CourtListResponseDto>>(cachekey);
         
         if (cachedData != null) return cachedData;
