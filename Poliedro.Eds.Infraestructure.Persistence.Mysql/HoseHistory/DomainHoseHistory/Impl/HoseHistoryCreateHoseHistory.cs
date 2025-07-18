@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using Poliedro.Eds.Application.HoseHistory.Errors;
+﻿using Poliedro.Eds.Application.HoseHistory.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
@@ -24,7 +23,7 @@ public class HoseHistoryCreateHoseHistory(
 
         if (saveResult <= 0)
             return HoseHistoryErrorBuilder.HoseHistoryCreationException();
-
+        await redisService.RemoveByPrefixAsync("hoseHistory:");
         await UpdateHoseWithLatestAccumulated(hoseHistoryEntity);
         await ClearHoseHistoryCache();
 
