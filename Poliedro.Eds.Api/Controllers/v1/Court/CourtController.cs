@@ -42,7 +42,7 @@ public class CourtController(IMediator mediator) : ControllerBase
     }
 
     [SwaggerOperation(Summary = "Create new Court")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpPost]
     public async Task<IResult> Create(
         [FromBody] CreateCourtCommand createCourtCommand)
@@ -81,7 +81,7 @@ public class CourtController(IMediator mediator) : ControllerBase
 
     [SwaggerOperation(Summary = "Get all Courts")]
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(IEnumerable<CourtListResponseDto>))]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpGet]
     public async Task<IEnumerable<CourtListResponseDto>> GetAll([FromQuery] PaginationParams paginationParams, [FromServices] IValidator<GetCourtsListQuery> validator)
     {

@@ -19,7 +19,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
     [ApiController]
     public class ProductController(IMediator mediator) : ControllerBase
     {
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOrIslander")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
