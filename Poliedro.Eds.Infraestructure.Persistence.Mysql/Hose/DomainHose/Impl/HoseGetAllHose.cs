@@ -32,7 +32,10 @@ public class HoseGetAllHose(
                     join productType in context.ProductTypes on hose.IdProductType equals productType.IdProductType
                     join eds in context.Eds on dispenser.EdsId equals eds.IdEds
                     join product in context.Product on hose.IdProductType equals product.IdProductType
-                    
+                    where product.Date == context.Product
+                    .Where(p => p.IdProductType == hose.IdProductType)
+                    .Max(p => p.Date)
+
                     select new HoseDto(
                         hose.IdHose,
                         hose.Number,
