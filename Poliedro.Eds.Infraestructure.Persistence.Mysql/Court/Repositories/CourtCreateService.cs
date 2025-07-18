@@ -17,7 +17,7 @@ public class CourtCreateService(ITenantDbContextFactory dbContextFactory, IRedis
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return CourtErrorBuilder.CourtCreationException();
-        await redisService.RemoveByPrefixAsync("coutListService:");
+        await redisService.RemoveByPrefixAsync("courtListService:");
         return VoidResult.Instance;
     }
 }
