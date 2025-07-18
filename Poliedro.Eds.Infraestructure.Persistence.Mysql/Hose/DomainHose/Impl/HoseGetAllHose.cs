@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Hose.DomainHose;
@@ -19,7 +18,7 @@ public class HoseGetAllHose(
     {
 
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        string cacheKey = $"hoseDto:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
+        string cacheKey = $"hose:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
 
         var cachedDtos = await redisService.GetCacheAsync<IEnumerable<HoseDto>>(cacheKey);
         if (cachedDtos is not null)
