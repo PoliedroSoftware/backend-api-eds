@@ -9,5 +9,4 @@ public class ProductEntity
     public string Name { get; set; } = default!;
     public int IdProductType { get; set; }
     public double Price { get; set; }
-    public DateTime Date { get; set; }
 }
