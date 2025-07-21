@@ -4,8 +4,7 @@ using Poliedro.Eds.Domain.Business.Entities;
 
 namespace Poliedro.Eds.Domain.Business.DomainBusiness;
 
-public interface IBusinessCreateService
+public interface IBusinessCreateRepository
 {
     Task<Result<VoidResult, Error>> CreateAsync(BusinessEntity BusinessEntity);
-
 }

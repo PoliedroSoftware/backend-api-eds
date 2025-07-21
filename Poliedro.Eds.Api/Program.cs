@@ -1,16 +1,12 @@
-﻿using Amazon;
-using Amazon.Configurations;
-using Amazon.Runtime;
+﻿using Amazon.Runtime;
 using Amazon.S3.FileUploadService;
 using Amazon.Secrets;
-using Autofac.Core;
 using AWS.Logger;
 using FluentValidation;
 using HealthChecks.UI.Client;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Poliedro.Eds.Api;
@@ -19,7 +15,6 @@ using Poliedro.Eds.Api.Middlelware.aws;
 using Poliedro.Eds.Api.Middlelware.Jwt;
 using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
-using Poliedro.Eds.Application.AWS.Configurations.Dto.Plemsi;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -27,6 +22,7 @@ using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
+using Poliedro.Eds.Domain.Business.DomaianServices.Create;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
@@ -47,7 +43,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
 
-
 // Configura el logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -62,6 +57,8 @@ builder.Services
     .AddExternalTolgee();
 
 builder.Services.AddHostedService<Worker>();
+builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
+
 var httpContextAccessor = new HttpContextAccessor();
 var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
 var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? builder.Configuration["ConnectionStrings:MysqlConnection"];
@@ -272,6 +269,7 @@ app.UseMiddleware<LoggingMiddleware>();
 app.UseAuthentication();
 app.UseMiddleware<JwtMiddleware>();
 app.UseMiddleware<TenantMiddleware>();
+
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

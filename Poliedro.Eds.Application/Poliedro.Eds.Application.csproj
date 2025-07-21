@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Common\Behaviors\" />
     <Folder Include="Inventory\AutoMappers\" />
     <Folder Include="Inventory\Commands\" />
     <Folder Include="Inventory\Dtos\" />
