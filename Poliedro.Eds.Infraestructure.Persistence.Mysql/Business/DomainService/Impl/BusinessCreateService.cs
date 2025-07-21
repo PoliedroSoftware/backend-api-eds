@@ -8,7 +8,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 
-public class BusinessCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IBusinessCreateService
+public class BusinessCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IBusinessCreateRepository
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(BusinessEntity BusinessEntity)
     {
