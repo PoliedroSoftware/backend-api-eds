@@ -79,12 +79,9 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [HttpPost]
 
     public async Task<IResult> Create(
-        [FromBody] CreateBusinessCommand createBusinessCommand, 
-        IValidator<CreateBusinessRequestDto> validator
+        [FromBody] CreateBusinessCommand createBusinessCommand 
         )
     {
-        var validationResult = await validator.ValidateAsync(createBusinessCommand.Request);
-        if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createBusinessCommand);
         return result.Match(onSuccess => TypedResults.Created());
     }
