@@ -107,6 +107,15 @@ public class RedisCacheService : IRedisService
             Console.WriteLine($"[Error] removing cache keys by prefix '{prefix}': {ex.Message}");
         }
     }
+
+    public async Task RemoveByPrefixesAsync(IEnumerable<string> prefixes)
+    {
+        foreach (var prefix in prefixes)
+        {
+            await RemoveByPrefixAsync(prefix);
+        }
+    }
+
     public async Task<List<string>> GetKeysByPatternAsync(string pattern)
     {
         try
