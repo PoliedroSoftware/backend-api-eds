@@ -83,17 +83,25 @@ public class CourtController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(IEnumerable<CourtListResponseDto>))]
     [Authorize(Policy = "AdminOrIslander")]
     [HttpGet]
-    public async Task<IEnumerable<CourtListResponseDto>> GetAll([FromQuery] PaginationParams paginationParams, [FromServices] IValidator<GetCourtsListQuery> validator)
+    public async Task<IResult> GetAll(
+    [FromQuery] PaginationParams paginationParams,
+    [FromServices] IValidator<GetCourtsListQuery> validator)
     {
-        var getCourtsQuery = new GetCourtsListQuery(paginationParams);
+        try
+        {
+            var query = new GetCourtsListQuery(paginationParams);
 
-        //var validationResult = await validator.ValidateAsync(getCourtsQuery);
+            var validation = await validator.ValidateAsync(query);
+            if (!validation.IsValid)
+                return TypedResults.BadRequest(validation.Errors);
 
-        //if (!validationResult.IsValid)
-        //{
-        //    return [];
-        //}
-
-        return await mediator.Send(getCourtsQuery);
+            var result = await mediator.Send(query);
+            return TypedResults.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return TypedResults.Problem($"Error interno del servidor: {ex.Message}");
+        }
     }
+
 }
