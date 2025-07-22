@@ -17,11 +17,11 @@ public class CourtCreateService(ITenantDbContextFactory dbContextFactory, IRedis
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return CourtErrorBuilder.CourtCreationException();
-        await redisService.RemoveByPrefixesAsync(new[]
+        await redisService.RemoveByPrefixAsync(new[]
         {
             "business:",
             "compartiment:",
-            "dispenser:",
+            "dispensers:",
             "eds:",
             "expenditures:",
             "hose:",
