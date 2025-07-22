@@ -108,12 +108,10 @@ public class RedisCacheService : IRedisService
         }
     }
 
-    public async Task RemoveByPrefixesAsync(IEnumerable<string> prefixes)
+    public async Task RemoveByPrefixAsync(IEnumerable<string> prefixes)
     {
-        foreach (var prefix in prefixes)
-        {
-            await RemoveByPrefixAsync(prefix);
-        }
+        var tasks = prefixes.Select(prefix => RemoveByPrefixAsync(prefix));
+        await Task.WhenAll(tasks);
     }
 
     public async Task<List<string>> GetKeysByPatternAsync(string pattern)
