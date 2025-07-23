@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.Provider.Entities;
 
-public class ProviderEntity
+public class ProviderEntity : AuditableEntity
 {
     [Key]
     public int IdProvider { get; set; } = default!;

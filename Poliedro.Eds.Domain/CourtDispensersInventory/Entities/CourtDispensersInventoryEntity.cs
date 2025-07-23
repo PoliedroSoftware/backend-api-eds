@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.CourtDispensersInventory.Entities;
 
-public class CourtDispensersInventoryEntity
+public class CourtDispensersInventoryEntity : AuditableEntity
 {
     [Key]
     public int IdCourtDispensersInventory { get; set; }

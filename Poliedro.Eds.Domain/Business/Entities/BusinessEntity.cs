@@ -1,9 +1,10 @@
-﻿using Poliedro.Eds.Domain.Business.Exepction;
+﻿using Poliedro.Eds.Domain.Audit.Entities;
+using Poliedro.Eds.Domain.Business.Exepction;
 using System.ComponentModel.DataAnnotations;
 
 namespace Poliedro.Eds.Domain.Business.Entities;
 
-public class BusinessEntity
+public class BusinessEntity : AuditableEntity
 {
         [Key]
         public int IdBusiness { get; private set; }

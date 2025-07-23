@@ -14,6 +14,7 @@ using Poliedro.Eds.Api.Common.Configurations;
 using Poliedro.Eds.Api.Middlelware.aws;
 using Poliedro.Eds.Api.Middlelware.Jwt;
 using Poliedro.Eds.Api.Middlelware.Tenant;
+using Poliedro.Eds.Api.Middlelware.NameIdentifier;
 using Poliedro.Eds.Application;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.FileUploadS3.Command;
@@ -61,6 +62,7 @@ builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>(
 
 var httpContextAccessor = new HttpContextAccessor();
 var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+var currentUser = httpContextAccessor.HttpContext?.Items["preferred_username"]?.ToString();
 var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? builder.Configuration["ConnectionStrings:MysqlConnection"];
 var connectionStringFactory = connectionString.Replace("{schema}", tenant);
 builder.Services.AddHealthChecks()
@@ -269,6 +271,7 @@ app.UseMiddleware<LoggingMiddleware>();
 app.UseAuthentication();
 app.UseMiddleware<JwtMiddleware>();
 app.UseMiddleware<TenantMiddleware>();
+app.UseMiddleware<NameIdentifierMiddleware>();
 
 app.UseAuthorization();
 app.MapControllers();

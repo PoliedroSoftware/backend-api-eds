@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
-public class ShoppingProductEntity
+public class ShoppingProductEntity : AuditableEntity
 {
     [Key]
     public int IdShoppingProduct { get; set; } 
