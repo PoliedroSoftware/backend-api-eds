@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.EdsTank.Entities;
 
-public class EdsTankEntity
+public class EdsTankEntity : AuditableEntity
 {
     [Key]
     public int IdEdsTank { get; set; } = default!;

@@ -1,8 +1,9 @@
-﻿using Poliedro.Eds.Domain.Inventory.Entities;
+﻿using Poliedro.Eds.Domain.Audit.Entities;
+using Poliedro.Eds.Domain.Inventory.Entities;
 
 namespace Poliedro.Eds.Domain.Court.Entities;
 
-public class CourtEntity
+public class CourtEntity : AuditableEntity
 {
     public int IdCourt { get; set; }
     public int IdIslander { get; set; }

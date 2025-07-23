@@ -68,7 +68,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<CategoryEntity> Category { get; set; }
     public DbSet<ProductTypeEntity> ProductTypes { get; set; }
     public DbSet<InventoryEntity> Inventory { get; set; }
-
     public DbSet<BusinessViewEntity> BusinessView { get; set; }
     public DbSet<CapacityViewEntity> CapacityView { get; set; }
     public DbSet<EdsViewEntity> EdsView { get; set; }
