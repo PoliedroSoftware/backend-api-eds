@@ -30,6 +30,9 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit
 
                 if (entry.State == EntityState.Modified)
                 {
+                    entry.Property(nameof(AuditableEntity.CreatedBy)).IsModified = false;
+                    entry.Property(nameof(AuditableEntity.CreatedAt)).IsModified = false;
+
                     entity.UpdatedBy = currentUser;
                     entity.UpdatedAt = DateTime.UtcNow;
                 }

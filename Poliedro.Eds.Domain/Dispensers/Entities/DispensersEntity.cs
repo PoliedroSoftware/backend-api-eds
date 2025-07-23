@@ -1,10 +1,11 @@
-﻿using Poliedro.Eds.Domain.Eds.Entities;
+﻿using Poliedro.Eds.Domain.Audit.Entities;
+using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Domain.Hose.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Poliedro.Eds.Domain.Dispensers.Entities;
 
-public class DispensersEntity
+public class DispensersEntity : AuditableEntity
 {
     public int Id { get; set; } 
     public string Code { get; set; } = default!; 
