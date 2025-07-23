@@ -7,7 +7,7 @@ namespace Poliedro.Eds.Application.Shopping.Commands.UpdateShopping;
     public UpdateShoppingCommandValidator(IRedisService redisService)
     {
         RuleFor(x => x.IdShopping)
-            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdShoppingGreaterThan)").GetAwaiter().GetResult());
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdShoppingGreaterThan").GetAwaiter().GetResult());
 
         RuleFor(x => x.Invoice)
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("InvoiceNotEmpty").GetAwaiter().GetResult())
