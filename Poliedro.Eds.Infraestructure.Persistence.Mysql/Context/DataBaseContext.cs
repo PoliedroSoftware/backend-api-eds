@@ -35,15 +35,11 @@ using Poliedro.Eds.Domain.DashboardPowerBI.ProductView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.ProviderView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.TypeOfCollectionView.Entities;
-using Poliedro.Eds.Domain.Audit.Entities;
-using Microsoft.AspNetCore.Http;
 
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
-public class DataBaseContext(
-    DbContextOptions options,
-    IHttpContextAccessor httpContextAccessor) : DbContext(options)
+public class DataBaseContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<ProductTypeEntity> ProductType { get; set; }
     public DbSet<CourtEntity> Court { get; set; }
@@ -86,34 +82,6 @@ public class DataBaseContext(
         base.OnModelCreating(modelBuilder);
         EntityConfiguration(modelBuilder);
     }
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        var currentUser = httpContextAccessor.HttpContext?.Items["identifiername"]?.ToString();
-
-        var entries = ChangeTracker.Entries()
-            .Where(e => e.Entity is AuditableEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
-
-        foreach (var entry in entries)
-        {
-            var entity = (AuditableEntity)entry.Entity;
-
-            if (entry.State == EntityState.Added)
-            {
-                entity.CreatedBy = currentUser;
-                entity.CreatedAt = DateTime.UtcNow;
-            }
-
-            if (entry.State == EntityState.Modified)
-            {
-                entity.UpdatedBy = currentUser;
-                entity.UpdatedAt = DateTime.UtcNow;
-            }
-        }
-
-        return await base.SaveChangesAsync(cancellationToken);
-    }
-
 
     private static void EntityConfiguration(ModelBuilder modelBuilder)
     {
