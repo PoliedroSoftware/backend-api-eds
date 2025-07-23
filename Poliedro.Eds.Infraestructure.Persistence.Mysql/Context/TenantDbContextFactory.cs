@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
@@ -22,6 +23,6 @@ Microsoft.Extensions.Configuration.IConfiguration config) : ITenantDbContextFact
         var optionsBuilder = new DbContextOptionsBuilder<DataBaseContext>();
         optionsBuilder.UseMySql(connectionStringFactory, ServerVersion.AutoDetect(connectionStringFactory));
 
-        return new DataBaseContext(optionsBuilder.Options, httpContextAccessor);
+        return new AuditableDbContext(optionsBuilder.Options, httpContextAccessor);
     }
 }
