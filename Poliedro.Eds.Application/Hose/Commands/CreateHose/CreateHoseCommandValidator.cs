@@ -18,6 +18,6 @@ public class CreateHoseCommandValidator : AbstractValidator<CreateHoseRequestDto
 
         RuleFor(x => x.IdProductType)
            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("IdProductTypeNotNull").GetAwaiter().GetResult())
-           .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdProductTypeGreaterThan)").GetAwaiter().GetResult());
+           .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdProductTypeGreaterThan").GetAwaiter().GetResult());
     }
 }

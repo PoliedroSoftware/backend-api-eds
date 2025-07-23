@@ -11,8 +11,8 @@ public class CreateProviderCommandValidator : AbstractValidator<CreateProviderRe
     {
         RuleFor(x => x.Name)
             .NotNull().WithMessage(redisService.GetValueFromCacheAsync("NameNotNull").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("NameNotNull").GetAwaiter().GetResult())
-            .NotEqual("string").WithMessage(redisService.GetValueFromCacheAsync("NameNotNull").GetAwaiter().GetResult());
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("NameNotEmpty").GetAwaiter().GetResult())
+            .NotEqual("string").WithMessage(redisService.GetValueFromCacheAsync("NameNotEqual").GetAwaiter().GetResult());
     }
     public class GetProviderByIdCommandValidator : AbstractValidator<GetProviderByIdQuery>
     {

@@ -10,6 +10,6 @@ public class GetEdsyIdQueryValidator : AbstractValidator<GetEdsByIdQuery>
     {
         RuleFor(x => x.Id)
             .NotNull().WithMessage(redisService.GetValueFromCacheAsync("IdNotNull").GetAwaiter().GetResult())
-            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdNotGreaterThan").GetAwaiter().GetResult());
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdGreaterThan").GetAwaiter().GetResult());
     }
 }

@@ -13,7 +13,7 @@ namespace Poliedro.Eds.Application.EdsTank.Commands.UpdateEdsTank;
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdEdsNotEmpty").GetAwaiter().GetResult());
 
         RuleFor(x => x.IdTank)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("IdTank)NotNull").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdTankNotEmpty)").GetAwaiter().GetResult());
+            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("IdTankNotNull").GetAwaiter().GetResult())
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdTankNotEmpty").GetAwaiter().GetResult());
     }
 }
