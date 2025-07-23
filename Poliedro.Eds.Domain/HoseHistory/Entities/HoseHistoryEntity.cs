@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.HoseHistory.Entities;
 
-public class HoseHistoryEntity
+public class HoseHistoryEntity : AuditableEntity
 {
     [Key]
     public int IdHoseHistory { get; set; }
