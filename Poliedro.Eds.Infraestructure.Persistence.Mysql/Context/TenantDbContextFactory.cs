@@ -22,6 +22,6 @@ Microsoft.Extensions.Configuration.IConfiguration config) : ITenantDbContextFact
         var optionsBuilder = new DbContextOptionsBuilder<DataBaseContext>();
         optionsBuilder.UseMySql(connectionStringFactory, ServerVersion.AutoDetect(connectionStringFactory));
 
-        return new DataBaseContext(optionsBuilder.Options);
+        return new DataBaseContext(optionsBuilder.Options, httpContextAccessor);
     }
 }
