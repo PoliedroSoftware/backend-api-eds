@@ -10,7 +10,6 @@ using Poliedro.Eds.Application.Dispensers.Dtos;
 using Poliedro.Eds.Application.Dispensers.Errors;
 using Poliedro.Eds.Application.Dispensers.Queries.GellAllDispensers;
 using Poliedro.Eds.Application.Dispensers.Queries.GetDispensersById;
-using Poliedro.Eds.Application.DispenserType.Queries.GetDispenserTypeById;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -48,14 +47,17 @@ public class DispensersController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
 
-    public async Task<IResult> GetById(int id)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
-        var result = await mediator.Send(new GetDispensersByIdQuery(id));
+        var getDyspenserQuery = new GetDispensersByIdQuery(Id: id);
 
-        if (result.IsSuccess)
-            return TypedResults.Ok(result.Value);
+        var result = await mediator.Send(getDyspenserQuery);
 
-        return TypedResults.NotFound("Dispenser no encontrado.");
+        return result.Match(
+
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
+        );
     }
 
     [SwaggerOperation(

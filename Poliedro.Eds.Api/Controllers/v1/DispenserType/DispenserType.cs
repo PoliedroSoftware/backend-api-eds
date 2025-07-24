@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Api.Common.Extensions;
 using Poliedro.Eds.Application.Common.Features;
+using Poliedro.Eds.Application.Compartiment.Queries.GetCompartimentById;
 using Poliedro.Eds.Application.DispenserType.Commands.CreateDispenserType;
 using Poliedro.Eds.Application.DispenserType.Commands.UpdateDispenserType;
 using Poliedro.Eds.Application.DispenserType.Dtos;
@@ -47,17 +48,20 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
 
-    public async Task<IResult> GetById(int id)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
-        var result = await mediator.Send(new GetDispenserTypeByIdQuery(id));
+        var getDyspenserTypeQuery = new GetDispenserTypeByIdQuery(Id: id);
 
-        if (result.IsSuccess)
-            return TypedResults.Ok(result.Value);
+        var result = await mediator.Send(getDyspenserTypeQuery);
 
-        return TypedResults.NotFound("DispenserType no encontrado.");
+        return result.Match(
+
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
+        );
     }
 
-    [SwaggerOperation(
+        [SwaggerOperation(
         Summary = "Create new DispenserType")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "The operation was successful.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]

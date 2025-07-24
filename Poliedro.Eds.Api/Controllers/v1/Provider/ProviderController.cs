@@ -40,21 +40,15 @@ public class ProviderController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetProviderByIdQuery> validator)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
         var getProviderQuery = new GetProviderByIdQuery(Id: id);
-
-        //var validationResult = await validator.ValidateAsync(getProviderQuery);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
 
         var result = await mediator.Send(getProviderQuery);
 
         return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
         );
     }
 

@@ -23,21 +23,15 @@ public class CourtController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(CourtDto))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetCourtByIdQuery> validator)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
         var getCourtQuery = new GetCourtByIdQuery(Id: id);
-
-        //var validationResult = await validator.ValidateAsync(getCourtQuery);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
 
         var result = await mediator.Send(getCourtQuery);
 
         return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
         );
     }
 

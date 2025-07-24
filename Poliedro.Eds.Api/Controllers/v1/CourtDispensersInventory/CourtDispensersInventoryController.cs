@@ -39,21 +39,15 @@ namespace Poliedro.Eds.Api.Controllers.v1.CourtDispensersInventory
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetCourtDispensersInventoryByIdQuery> validator)
+        public async Task<IResult> GetById([FromRoute] int id)
         {
             var getCourtDispensersInventoryQuery = new GetCourtDispensersInventoryByIdQuery(Id: id);
-
-            //var validationResult = await validator.ValidateAsync(getCourtDispensersInventoryQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
 
             var result = await mediator.Send(getCourtDispensersInventoryQuery);
 
             return result.Match(
-                onSuccess => TypedResults.Ok(result.Value)
+                onSuccess => TypedResults.Ok(result.Value),
+                onFailure => TypedResults.BadRequest(onFailure)
             );
         }
 

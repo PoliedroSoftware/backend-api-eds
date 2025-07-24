@@ -46,16 +46,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.Shopping
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetShoppingByIdQuery> validator)
+        public async Task<IResult> GetById([FromRoute] int id)
         {
             var getShoppingQuery = new GetShoppingByIdQuery(Id: id);
-
-            //var validationResult = await validator.ValidateAsync(getShoppingQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
 
             var result = await mediator.Send(getShoppingQuery);
 
