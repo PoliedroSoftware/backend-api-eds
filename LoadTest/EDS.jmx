@@ -32,7 +32,7 @@
         <stringProp name="RandomTimer.range">2000</stringProp>
       </UniformRandomTimer>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Process">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Process" enabled="true">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">30</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -117,7 +117,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login" enabled="true">
           <stringProp name="HTTPSampler.domain">keycloak-0yrtq1-u44828.vm.elestio.app</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.path">/realms/AppEDS/protocol/openid-connect/token</stringProp>
@@ -238,7 +238,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -290,7 +290,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -299,7 +299,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -351,7 +351,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -365,7 +365,7 @@
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -396,7 +396,7 @@
               <stringProp name="DurationAssertion.duration">30000</stringProp>
             </DurationAssertion>
             <hashTree/>
-            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
               <stringProp name="cacheKey">true</stringProp>
               <stringProp name="filename"></stringProp>
               <stringProp name="parameters"></stringProp>
@@ -405,14 +405,26 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect IDs individuales (GET BY ID)">
               <stringProp name="JSONPostProcessor.referenceNames">selectedCompartimentId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCompartment</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect Number  de compartiments ya usados">
+              <stringProp name="JSONPostProcessor.referenceNames">existingCompartimentNumbers</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].number</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect todos los IDs (array, para lógica en JSR223)">
+              <stringProp name="JSONPostProcessor.referenceNames">allCompartimentIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCompartiment</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CompartimentCapacity GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CompartimentCapacity GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -466,14 +478,14 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedCompartimentCapacityId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCompartimentCapacity</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Court GET  GetAll">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Court GET  GetAll" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -482,68 +494,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-              <collectionProp name="Arguments.arguments"/>
-            </elementProp>
-          </HTTPSamplerProxy>
-          <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
-              <collectionProp name="HeaderManager.headers">
-                <elementProp name="" elementType="Header">
-                  <stringProp name="Header.name">Content-Type</stringProp>
-                  <stringProp name="Header.value">application/json</stringProp>
-                </elementProp>
-                <elementProp name="" elementType="Header">
-                  <stringProp name="Header.name">Authorization</stringProp>
-                  <stringProp name="Header.value">Bearer ${access_token}</stringProp>
-                </elementProp>
-                <elementProp name="" elementType="Header">
-                  <stringProp name="Header.name">X-Environment</stringProp>
-                  <stringProp name="Header.value">staging</stringProp>
-                </elementProp>
-              </collectionProp>
-            </HeaderManager>
-            <hashTree/>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
-              <collectionProp name="Asserion.test_strings">
-                <stringProp name="49586">200</stringProp>
-              </collectionProp>
-              <stringProp name="Assertion.custom_message"></stringProp>
-              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-              <boolProp name="Assertion.assume_success">false</boolProp>
-              <intProp name="Assertion.test_type">16</intProp>
-            </ResponseAssertion>
-            <hashTree/>
-            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
-              <stringProp name="DurationAssertion.duration">30000</stringProp>
-            </DurationAssertion>
-            <hashTree/>
-            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
-              <stringProp name="cacheKey">true</stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="script">
-</stringProp>
-              <stringProp name="scriptLanguage">groovy</stringProp>
-            </JSR223Assertion>
-            <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
-              <stringProp name="JSONPostProcessor.referenceNames">selectedCourtId</stringProp>
-              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCourt</stringProp>
-              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
-            </JSONPostProcessor>
-            <hashTree/>
-          </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET  GetAll" enabled="true">
-            <stringProp name="HTTPSampler.domain">${server}</stringProp>
-            <stringProp name="HTTPSampler.port">${port}</stringProp>
-            <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
-            <stringProp name="HTTPSampler.path">eds/api/v1/court-dispensers-inventory</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-            <stringProp name="HTTPSampler.method">GET</stringProp>
-            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -589,12 +540,73 @@
             </JSR223Assertion>
             <hashTree/>
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">selectedCourtId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCourt</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET  GetAll" enabled="true">
+            <stringProp name="HTTPSampler.domain">${server}</stringProp>
+            <stringProp name="HTTPSampler.port">${port}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
+            <stringProp name="HTTPSampler.path">eds/api/v1/court-dispensers-inventory</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Content-Type</stringProp>
+                  <stringProp name="Header.value">application/json</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Authorization</stringProp>
+                  <stringProp name="Header.value">Bearer ${access_token}</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">X-Environment</stringProp>
+                  <stringProp name="Header.value">staging</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+              <stringProp name="DurationAssertion.duration">30000</stringProp>
+            </DurationAssertion>
+            <hashTree/>
+            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">
+</stringProp>
+              <stringProp name="scriptLanguage">groovy</stringProp>
+            </JSR223Assertion>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedCourtDispensersInventoryId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCourtDispensersInventory</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selecteidCourtdDispensers</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCourtdDispensers</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
@@ -610,7 +622,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -671,7 +683,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -732,7 +744,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -784,7 +796,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -838,14 +850,20 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedEdsId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idEds</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect all">
+              <stringProp name="JSONPostProcessor.referenceNames">allEdsIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idEds</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -890,7 +908,7 @@
               <stringProp name="DurationAssertion.duration">30000</stringProp>
             </DurationAssertion>
             <hashTree/>
-            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion">
               <stringProp name="cacheKey">true</stringProp>
               <stringProp name="filename"></stringProp>
               <stringProp name="parameters"></stringProp>
@@ -899,14 +917,32 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect ALL Existing EDSTank">
+              <stringProp name="JSONPostProcessor.referenceNames">existingEdsTankIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idEdsTank</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect ALL Existing EDS">
+              <stringProp name="JSONPostProcessor.referenceNames">existingEdsIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idEds</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect ALL Existing Tank">
+              <stringProp name="JSONPostProcessor.referenceNames">existingTankIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idTank</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedEdsTankId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idEdsTank</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Expenditures GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Expenditures GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -976,7 +1012,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1037,7 +1073,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1098,7 +1134,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1153,7 +1189,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1214,7 +1250,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1275,7 +1311,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1327,7 +1363,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Product GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Product GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1381,14 +1417,20 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedProductId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idProduct</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect ALL">
+              <stringProp name="JSONPostProcessor.referenceNames">allProductIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idProduct</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductCompartiment GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductCompartiment GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1442,14 +1484,32 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect individuales (GET BY ID)">
               <stringProp name="JSONPostProcessor.referenceNames">selecteProductCompartimentId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idProductCompartiment</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect  ALL">
+              <stringProp name="JSONPostProcessor.referenceNames">allProductCompartimentIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idProductCompartiment</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect  IDs YA EXISTENTES PRODUCT">
+              <stringProp name="JSONPostProcessor.referenceNames">usedProductIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idProduct</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect  IDs YA EXISTENTES Compartiment ">
+              <stringProp name="JSONPostProcessor.referenceNames">usedCompartimentIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCompartiment</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1519,7 +1579,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1580,7 +1640,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1641,7 +1701,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1702,7 +1762,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1754,7 +1814,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1808,10 +1868,16 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedTankId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idTank</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect all">
+              <stringProp name="JSONPostProcessor.referenceNames">allTankIds</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idTank</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
@@ -1824,7 +1890,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1876,7 +1942,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection GET  GetAll">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection GET  GetAll" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1885,7 +1951,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -1986,7 +2052,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1995,7 +2061,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2041,7 +2107,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2078,7 +2144,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2087,7 +2153,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2133,7 +2199,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2216,7 +2282,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2225,7 +2291,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2271,7 +2337,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2308,7 +2374,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DispenserType GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DispenserType GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2317,7 +2383,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2363,7 +2429,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2409,7 +2475,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2455,7 +2521,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2501,7 +2567,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2547,7 +2613,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2584,7 +2650,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2593,7 +2659,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2630,7 +2696,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2639,7 +2705,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2676,7 +2742,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Product GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Product GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2685,7 +2751,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2731,7 +2797,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2768,7 +2834,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2777,7 +2843,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2823,7 +2889,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2860,7 +2926,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Shopping GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Shopping GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2869,7 +2935,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2906,7 +2972,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProduct GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ShoppingProduct GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2915,7 +2981,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2961,7 +3027,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -2998,7 +3064,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3007,7 +3073,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -3053,7 +3119,7 @@
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables definidas por el Usuario">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
           </HTTPSamplerProxy>
@@ -3180,7 +3246,7 @@
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -3201,7 +3267,7 @@
               <stringProp name="DurationAssertion.duration">30000</stringProp>
             </DurationAssertion>
             <hashTree/>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="49587">201</stringProp>
               </collectionProp>
@@ -3285,7 +3351,7 @@
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;request&quot;: {&#xd;
-    &quot;number&quot;: ${__Random(1,9)},&#xd;
+    &quot;number&quot;: ${uniqueCompartimentNumber},&#xd;
     &quot;nominal&quot;: ${__Random(1,20000)},&#xd;
     &quot;operative&quot;: ${__Random(1,20000)},&#xd;
     &quot;stock&quot;: ${__Random(1,20000)},&#xd;
@@ -3299,7 +3365,7 @@
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -3329,6 +3395,31 @@
               <boolProp name="Assertion.assume_success">false</boolProp>
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
+            <hashTree/>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">// Lee todos los números existentes
+def existingNumbers = []
+int i = 1
+while (vars.get(&quot;existingNumbers_&quot; + i)) {
+    existingNumbers &lt;&lt; vars.get(&quot;existingNumbers_&quot; + i) as Integer
+    i++
+}
+
+// Genera un número único (ejemplo: aleatorio entre 1 y 1000)
+def uniqueNumber
+def random = new Random()
+do {
+    uniqueNumber = random.nextInt(1000) + 1 // Ajusta el rango si lo necesitas
+} while (existingNumbers.contains(uniqueNumber))
+
+// Guarda la variable para usarla en tu POST
+vars.put(&quot;uniqueCompartimentNumber&quot;, uniqueNumber.toString())
+</stringProp>
+            </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CompartimentCapacity POST" enabled="false">
@@ -3771,7 +3862,7 @@
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion">
               <stringProp name="DurationAssertion.duration">30000</stringProp>
             </DurationAssertion>
             <hashTree/>
@@ -3784,6 +3875,43 @@
               <boolProp name="Assertion.assume_success">false</boolProp>
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
+            <hashTree/>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">// 1. Obtener todos los posibles Eds y Tank
+def nEds = vars.get(&apos;allEdsIds_matchNr&apos;) as Integer
+def nTanks = vars.get(&apos;allTankIds_matchNr&apos;) as Integer
+
+def allEdsIds = (1..nEds).collect { vars.get(&quot;allEdsIds_${it}&quot;) }
+def allTankIds = (1..nTanks).collect { vars.get(&quot;allTankIds_${it}&quot;) }
+
+// 2. Obtener las combinaciones ya existentes
+def nEdsTank = vars.get(&apos;existingEdsTankIds_matchNr&apos;) as Integer
+def existingCombos = (1..nEdsTank).collect { [vars.get(&quot;existingEdsIds_${it}&quot;), vars.get(&quot;existingTankIds_${it}&quot;)] }
+
+// 3. Buscar una combinación libre (no usada)
+def freeCombo = null
+outer: for (eds in allEdsIds) {
+    for (tank in allTankIds) {
+        if (!existingCombos.contains([eds, tank])) {
+            freeCombo = [eds, tank]
+            break outer
+        }
+    }
+}
+if (freeCombo) {
+    vars.put(&quot;selectedEdsId&quot;, freeCombo[0])
+    vars.put(&quot;selectedTankId&quot;, freeCombo[1])
+} else {
+    // Si no hay combos libres, usa cualquier combinación (o lanza error)
+    vars.put(&quot;selectedEdsId&quot;, allEdsIds[0])
+    vars.put(&quot;selectedTankId&quot;, allTankIds[0])
+}
+</stringProp>
+            </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Expenditures POST">
@@ -3967,7 +4095,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island POST">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island POST" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4162,7 +4290,7 @@
                   <stringProp name="Argument.value">{&#xd;
   &quot;request&quot;: {&#xd;
     &quot;idProduct&quot;: ${selectedProductId},&#xd;
-    &quot;idCompartiment&quot;: ${selectedCompartimentId} ,&#xd;
+    &quot;idCompartiment&quot;: ${selectedCompartimentId},&#xd;
     &quot;stock&quot;: ${__Random(1,10000)}&#xd;
   }&#xd;
 }</stringProp>
@@ -4203,8 +4331,51 @@
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
             <hashTree/>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">// 1. Obtener listas de IDs disponibles
+def allProducts = (1..(vars.get(&apos;allProductIds_matchNr&apos;) as int)).collect { vars.get(&quot;allProductIds_${it}&quot;) }
+def allCompartiments = (1..(vars.get(&apos;allCompartimentIds_matchNr&apos;) as int)).collect { vars.get(&quot;allCompartimentIds_${it}&quot;) }
+
+// 2. Listas de combinaciones ya usadas
+def usedProducts = (1..(vars.get(&apos;usedProductIds_matchNr&apos;) as int)).collect { vars.get(&quot;usedProductIds_${it}&quot;) }
+def usedCompartiments = (1..(vars.get(&apos;usedCompartimentIds_matchNr&apos;) as int)).collect { vars.get(&quot;usedCompartimentIds_${it}&quot;) }
+
+// 3. Crear pares existentes para comparar
+def usedPairs = usedProducts.collectIndexed { idx, prodId -&gt;
+    [prodId, usedCompartiments[idx]]
+}
+
+// 4. Buscar una combinación libre
+def freePair = null
+outer:
+for (prodId in allProducts) {
+    for (compId in allCompartiments) {
+        if (!usedPairs.contains([prodId, compId])) {
+            freePair = [prodId, compId]
+            break outer
+        }
+    }
+}
+
+// 5. Si encuentra combinación libre, setear variables; si no, usa cualquier combinación random
+if (freePair) {
+    vars.put(&quot;selectedProductId&quot;, freePair[0])
+    vars.put(&quot;selectedCompartimentId&quot;, freePair[1])
+} else {
+    vars.put(&quot;selectedProductId&quot;, allProducts[new Random().nextInt(allProducts.size())])
+    vars.put(&quot;selectedCompartimentId&quot;, allCompartiments[new Random().nextInt(allCompartiments.size())])
+}
+
+// Ahora puedes usar ${selectedProductId} y ${selectedCompartimentId} en el body del POST
+</stringProp>
+            </JSR223PreProcessor>
+            <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType POST">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType POST" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4261,7 +4432,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Provider POST">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Provider POST" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4499,7 +4670,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank POST">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank POST" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4559,7 +4730,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection POST">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection POST" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4722,7 +4893,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity PUT" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4780,7 +4951,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category PUT" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4850,7 +5021,7 @@
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;idCompartment&quot;: ${selectedCompartimentId},&#xd;
-    &quot;number&quot;: ${__Random(1,9)},&#xd;
+    &quot;number&quot;:${uniqueCompartimentNumber},&#xd;
     &quot;nominal&quot;: ${__Random(1,20000)},&#xd;
     &quot;operative&quot;: ${__Random(1,20000)},&#xd;
     &quot;stock&quot;: ${__Random(1,20000)},&#xd;
@@ -4893,6 +5064,33 @@
               <boolProp name="Assertion.assume_success">false</boolProp>
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
+            <hashTree/>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">// 1. Recoge todos los numbers existentes
+def totalNumbers = vars.get(&apos;existingCompartimentNumbers_matchNr&apos;) as Integer
+def numbers = (1..totalNumbers).collect { vars.get(&quot;existingCompartimentNumbers_${it}&quot;) as Integer }
+
+// 2. Obtén el number ACTUAL del registro (del GET by ID)
+def currentNumber = vars.get(&apos;currentCompartimentNumber&apos;) as Integer
+
+// 3. Elimina el number actual de la lista (evita que se bloquee su propio number)
+numbers.removeElement(currentNumber)
+
+// 4. Genera uno único (ejemplo, aleatorio entre 1 y 9999, verifica que no exista)
+def newNumber
+def random = new Random()
+do {
+    newNumber = random.nextInt(9999) + 1
+} while (numbers.contains(newNumber))
+
+// 5. Guarda la variable para el body del PUT
+vars.put(&apos;uniqueCompartimentNumber&apos;, newNumber.toString())
+</stringProp>
+            </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CompartimentCapacity PUT" enabled="true">
@@ -5283,7 +5481,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank PUT" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5328,7 +5526,7 @@
               <stringProp name="DurationAssertion.duration">30000</stringProp>
             </DurationAssertion>
             <hashTree/>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="49590">204</stringProp>
               </collectionProp>
@@ -5337,6 +5535,20 @@
               <boolProp name="Assertion.assume_success">false</boolProp>
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
+            <hashTree/>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">// 1. Obtener un registro existente de EdsTank
+def nEdsTank = vars.get(&apos;existingEdsTankIds_matchNr&apos;) as Integer
+def idx = new Random().nextInt(nEdsTank) + 1
+vars.put(&apos;selectedEdsTankId&apos;, vars.get(&quot;existingEdsTankIds_${idx}&quot;))
+vars.put(&apos;selectedEdsId&apos;, vars.get(&quot;existingEdsIds_${idx}&quot;))
+vars.put(&apos;selectedTankId&apos;, vars.get(&quot;existingTankIds_${idx}&quot;))
+</stringProp>
+            </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Expenditures PUT" enabled="true">
@@ -5684,7 +5896,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductCompartiment PUT" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductCompartiment PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5710,7 +5922,7 @@
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -5741,8 +5953,26 @@
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
             <hashTree/>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">// 1. Obtener lista de IDs existentes
+def total = vars.get(&apos;allProductCompartimentIds_matchNr&apos;) as int
+def allIds = (1..total).collect { vars.get(&quot;allProductCompartimentIds_${it}&quot;) }
+
+// 2. Elegir uno al azar
+def idx = new Random().nextInt(allIds.size())
+vars.put(&quot;selecteProductCompartimentId&quot;, allIds[idx])
+
+// Si necesitas también el idProduct y idCompartiment asociados a ese id, crea extractores adicionales.
+// O puedes usar extractores JMESPath para extraer los campos asociados al id elegido.
+</stringProp>
+            </JSR223PreProcessor>
+            <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType PUT" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ProductType PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5797,7 +6027,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Provider PUT" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Provider PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5970,7 +6200,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank PUT" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Tank PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -6028,7 +6258,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection PUT">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection PUT" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -6084,14 +6314,14 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler">
           <boolProp name="displayJMeterProperties">true</boolProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">false</boolProp>
         </DebugSampler>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="DateBase_EDS">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="DateBase_EDS" enabled="false">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">30</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -6102,7 +6332,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="MySQL QA View Results Tree ">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="MySQL QA View Results Tree " enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -6139,7 +6369,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -6213,7 +6443,7 @@
             <stringProp name="variableNames"></stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Capacity">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Capacity" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_capacity, code, height, gallon, liters FROM capacity;</stringProp>
@@ -6240,7 +6470,7 @@ FROM category;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Compartiment">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Compartiment" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_compartiment, `number`, nominal, operative, stock, height, id_tank
@@ -6254,7 +6484,7 @@ FROM compartiment;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Compartiment_Capacity">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Compartiment_Capacity" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_compartiment_capacity, id_compartiment, id_capacity, `default`
@@ -6268,7 +6498,7 @@ FROM compartiment_capacity;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_court, id_islander, date_starttime, starttime, date_endtime, endtime, consecutive, id_eds, descripcion, distintic
@@ -6282,7 +6512,7 @@ FROM court;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Dispensers">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Dispensers" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_court_dispensers, id_court, accumulated_amount, accumulated_gallons, id_product, id_compartiment, id_hose
@@ -6296,7 +6526,7 @@ FROM court_dispensers;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Dispensers_Inventorycol">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Dispensers_Inventorycol" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_court_dispensers_inventorycol, id_court_dispensers, id_inventory
@@ -6310,7 +6540,7 @@ FROM court_dispensers_inventory;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Document">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Document" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT idcourt_document, descripcion, id_court
@@ -6324,7 +6554,7 @@ FROM court_document;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Expenditure">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Expenditure" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_court_expenditure, id_court, id_expenditures, amount, decription
@@ -6338,7 +6568,7 @@ FROM court_expenditures;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_type_of_collection">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_type_of_collection" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_court_type_of_collection, id_court, id_type_of_collection, amount, description
@@ -6366,7 +6596,7 @@ FROM dispenser_type;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Dispenser">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Dispenser" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_dispensers, code, `number`, id_dispenser_type, id_eds, idisland, number_hose
@@ -6380,7 +6610,7 @@ FROM dispensers;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Eds">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Eds" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_eds, name, nit, address, sicom, idbusiness
@@ -6394,7 +6624,7 @@ FROM eds;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Eds_tank">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Eds_tank" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_eds_tank, id_eds, id_tank
@@ -6408,7 +6638,7 @@ FROM eds_tank;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Expenditures">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Expenditures" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_expenditures, description
@@ -6422,7 +6652,7 @@ FROM expenditures;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Hose">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Hose" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_hose, id_dispensers, `number`, accumulated_amount, accumulated_gallons, id_product_type
@@ -6436,7 +6666,7 @@ FROM hose;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Hose_hose_history">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Hose_hose_history" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_hose_hose_history, id_hose, id_dispensers, accumulated_amount, accumulated_gallons, `date`
@@ -6450,7 +6680,7 @@ FROM hose_history;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Inventory">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Inventory" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_inventory, `date`, reference_type, reference_id
@@ -6464,7 +6694,7 @@ FROM inventory;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Island">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Island" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT idisland, description
@@ -6478,7 +6708,7 @@ FROM island;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Islander">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Islander" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_islander, name, id_eds, password, email, last_name, first_name
@@ -6492,7 +6722,7 @@ FROM islander;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Product">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Product" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_product, name, id_product_type, price
@@ -6506,7 +6736,7 @@ FROM product;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Product_compartiment">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Product_compartiment" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_product_compartiment, id_product, id_compartiment, stock
@@ -6520,7 +6750,7 @@ FROM product_compartiment;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Product_type">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Product_type" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_product_type, description
@@ -6534,7 +6764,7 @@ FROM product_type;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Provider">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Provider" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_provider, name
@@ -6548,7 +6778,7 @@ FROM provider;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Shopping">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Shopping" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_shopping, invoice, `date`, id_provider, id_category, amount
@@ -6562,7 +6792,7 @@ FROM shopping;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Shopping_produc_inventory">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Shopping_produc_inventory" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_shopping_produc_inventorycol, id_shopping_product, idinventory
@@ -6576,7 +6806,7 @@ FROM shopping_produc_inventory;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Shopping_product">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Shopping_product" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_shopping_product, id_shopping, id_product, quantity, price, id_compartiment
@@ -6590,7 +6820,7 @@ FROM shopping_product;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Tank">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Tank" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_tank, `number`, ability, compartment, stock
@@ -6604,7 +6834,7 @@ FROM tank;</stringProp>
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Type_of_collection">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Type_of_collection" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">SELECT id_type_of_collection, description
@@ -6684,7 +6914,7 @@ VALUES(0, ${__Random(1,9)}, ${__Random(1,20000)}, ${__Random(1,20000)}, ${__Rand
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
               <stringProp name="scriptLanguage">groovy</stringProp>
               <stringProp name="parameters"></stringProp>
               <stringProp name="filename"></stringProp>
@@ -7033,7 +7263,7 @@ pickRandomId(&quot;court_vars&quot;, &quot;id_court&quot;, &quot;random_id_court
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Court_Expenditure">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Court_Expenditure" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO court_expenditures
@@ -7089,7 +7319,7 @@ pickRandomId(&quot;expenditures_vars&quot;, &quot;id_expenditures&quot;, &quot;r
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Court_type_of_collection">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Court_type_of_collection" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO court_type_of_collection
@@ -7145,7 +7375,7 @@ pickRandomId(&quot;type_of_collection_vars&quot;, &quot;id_type_of_collection&qu
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Dispenser_type">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Dispenser_type" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO dispenser_type
@@ -7160,7 +7390,7 @@ VALUES(0,  &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Dispenser">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Dispenser" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO dispensers
@@ -7221,7 +7451,7 @@ pickRandomId(&quot;island_vars&quot;, &quot;idisland&quot;, &quot;random_id_isla
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Eds">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Eds" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO eds
@@ -7277,7 +7507,7 @@ pickRandomId(&quot;business_vars&quot;, &quot;id_business&quot;, &quot;random_id
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Eds_tank">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Eds_tank" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO eds_tank
@@ -7331,7 +7561,7 @@ pickRandomId(&quot;id_tank_vars&quot;, &quot;id_tank&quot;, &quot;random_id_tank
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Expenditures">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Expenditures" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO expenditures
@@ -7350,7 +7580,7 @@ VALUES(
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Hose">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Hose" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO hose
@@ -7407,7 +7637,7 @@ pickRandomId(&quot;product_type_vars&quot;, &quot;id_product_type&quot;, &quot;r
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Hose_hose_history">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Hose_hose_history" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO hose_history
@@ -7464,7 +7694,7 @@ pickRandomId(&quot;dispensers_vars&quot;, &quot;id_dispensers&quot;, &quot;rando
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Inventory">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Inventory" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO inventory
@@ -7485,7 +7715,7 @@ VALUES(
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Island">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Island" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO island
@@ -7504,7 +7734,7 @@ VALUES(
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Islander">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Islander" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO islander
@@ -7561,7 +7791,7 @@ pickRandomId(&quot;eds_vars&quot;, &quot;id_eds&quot;, &quot;random_id_eds&quot;
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Product">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Product" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO product
@@ -7615,7 +7845,7 @@ pickRandomId(&quot;product_type_vars&quot;, &quot;id_product_type&quot;, &quot;r
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Product_compartiment">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Product_compartiment" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO product_compartiment
@@ -7670,7 +7900,7 @@ pickRandomId(&quot;compartiment_vars&quot;, &quot;id_compartiment&quot;, &quot;r
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Product_type">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Product_type" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO product_type
@@ -7689,7 +7919,7 @@ VALUES(
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Provider">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Provider" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO provider
@@ -7708,7 +7938,7 @@ VALUES(
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Shopping">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Shopping" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO shopping
@@ -7765,7 +7995,7 @@ pickRandomId(&quot;category_vars&quot;, &quot;idcategory&quot;, &quot;random_id_
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Shopping_produc_inventory">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Shopping_produc_inventory" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO shopping_produc_inventory
@@ -7819,7 +8049,7 @@ pickRandomId(&quot;inventory_vars&quot;, &quot;id_inventory&quot;, &quot;random_
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Shopping_product">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Shopping_product" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO shopping_product
@@ -7877,7 +8107,7 @@ pickRandomId(&quot;compartiment_vars&quot;, &quot;id_compartiment&quot;, &quot;r
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Tank">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Tank" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO tank
@@ -7899,7 +8129,7 @@ VALUES(
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Type_of_collection">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_Type_of_collection" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">INSERT INTO type_of_collection
@@ -7923,7 +8153,7 @@ VALUES(
           <stringProp name="TestPlan.comments">Simple Controller</stringProp>
         </GenericController>
         <hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Bussiness">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Bussiness" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="query">UPDATE business
 SET
@@ -7960,7 +8190,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Capacity">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Capacity" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE capacity
@@ -7999,7 +8229,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Category">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Category" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE category
@@ -8034,7 +8264,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Compartiment">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Compartiment" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE compartiment
@@ -8086,7 +8316,7 @@ if (tankMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Compartiment_Capacity">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Compartiment_Capacity" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE compartiment_capacity
@@ -8146,7 +8376,7 @@ if (capacityMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE court
@@ -8234,7 +8464,7 @@ if (hoseMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_Dispensers">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_Dispensers" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE court_dispensers
@@ -8319,7 +8549,7 @@ if (hoseMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_Dispensers_Inventorycol">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_Dispensers_Inventorycol" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE court_dispensers_inventory
@@ -8378,7 +8608,7 @@ if (inventoryMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_Document">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_Document" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE court_document
@@ -8426,7 +8656,7 @@ if (courtMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_Expenditure">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_Expenditure" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE court_expenditures
@@ -8487,7 +8717,7 @@ if (expendMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_type_of_collection">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Court_type_of_collection" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE court_type_of_collection
@@ -8548,7 +8778,7 @@ if (tocMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Dispenser_type">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Dispenser_type" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE dispenser_type
@@ -8583,7 +8813,7 @@ if (typeMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Dispenser">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Dispenser" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE dispensers
@@ -8657,7 +8887,7 @@ if (islandMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Eds">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Eds" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE eds
@@ -8708,7 +8938,7 @@ if (businessMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Eds_tank">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Eds_tank" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE eds_tank
@@ -8767,7 +8997,7 @@ if (tankMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Expenditures">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Expenditures" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE expenditures
@@ -8802,7 +9032,7 @@ if (expMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Hose">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Hose" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE hose
@@ -8864,7 +9094,7 @@ if (ptMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Hose_hose_history">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Hose_hose_history" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE hose_history
@@ -8926,7 +9156,7 @@ if (dispMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Inventory">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Inventory" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE inventory
@@ -8964,7 +9194,7 @@ if (invMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Island">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Island" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE island
@@ -8999,7 +9229,7 @@ if (islandMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Islander">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Islander" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE islander
@@ -9051,7 +9281,7 @@ if (edsMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Product">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Product" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE product
@@ -9100,7 +9330,7 @@ if (ptMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Product_compartiment">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Product_compartiment" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE product_compartiment
@@ -9160,7 +9390,7 @@ if (compartMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Product_type">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Product_type" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE product_type
@@ -9195,7 +9425,7 @@ if (ptMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Provider">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Provider" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE provider
@@ -9230,7 +9460,7 @@ if (provMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Shopping">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Shopping" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE shopping
@@ -9293,7 +9523,7 @@ if (catMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Shopping_produc_inventory">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Shopping_produc_inventory" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE shopping_produc_inventory
@@ -9352,7 +9582,7 @@ if (invMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Shopping_product">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Shopping_product" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE shopping_product
@@ -9425,7 +9655,7 @@ if (compartMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Tank">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Tank" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE tank
@@ -9464,7 +9694,7 @@ if (tankMatches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Type_of_collection">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_Type_of_collection" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">UPDATE type_of_collection
@@ -9500,7 +9730,7 @@ if (tocMatches.count &gt; 0) {
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="DELETE_eds_qa">
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="DELETE_eds_qa" enabled="true">
           <stringProp name="TestPlan.comments">Simple Controller</stringProp>
         </GenericController>
         <hashTree>
@@ -9630,7 +9860,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Compartiment_Capacity">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Compartiment_Capacity" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.compartiment_capacity WHERE id_compartiment_capacity=${random_id_compartiment_capacity};
@@ -9723,7 +9953,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Court_Dispensers_Inventorycol">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Court_Dispensers_Inventorycol" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.court_dispensers_inventory WHERE id_court_dispensers_inventorycol=${random_id_court_dispensers_inventorycol};
@@ -9754,7 +9984,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Court_Document">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Court_Document" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.court_document WHERE idcourt_document=${random_idcourt_document};
@@ -9785,7 +10015,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Court_Expenditure">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Court_Expenditure" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.court_expenditures WHERE id_court_expenditure=${random_id_court_expenditure};
@@ -9816,7 +10046,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Court_type_of_collection">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Court_type_of_collection" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.court_type_of_collection WHERE id_court_type_of_collection=${random_id_court_type_of_collection};
@@ -9940,7 +10170,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Eds_tank">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Eds_tank" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.eds_tank WHERE id_eds_tank=${random_id_eds_tank};
@@ -10033,7 +10263,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Hose_hose_history">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Hose_hose_history" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.hose_history WHERE id_hose_hose_history=${random_id_hose_hose_history};
@@ -10188,7 +10418,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Product_compartiment">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Product_compartiment" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.product_compartiment WHERE id_product_compartiment=${random_id_product_compartiment};
@@ -10312,7 +10542,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Shopping_produc_inventory">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Shopping_produc_inventory" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.shopping_produc_inventory WHERE id_shopping_produc_inventorycol=${random_id_shopping_produc_inventorycol};
@@ -10343,7 +10573,7 @@ if (matches.count &gt; 0) {
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Shopping_product">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_Shopping_product" enabled="true">
             <stringProp name="dataSource">MySQL_Connection</stringProp>
             <stringProp name="queryType">Update Statement</stringProp>
             <stringProp name="query">DELETE FROM eds_qa.shopping_product WHERE id_shopping_product=${random_id_shopping_product};
@@ -10437,7 +10667,7 @@ if (matches.count &gt; 0) {
             <hashTree/>
           </hashTree>
         </hashTree>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler">
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
           <boolProp name="displayJMeterProperties">false</boolProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">false</boolProp>
