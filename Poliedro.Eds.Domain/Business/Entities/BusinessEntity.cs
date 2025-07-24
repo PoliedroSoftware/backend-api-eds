@@ -1,4 +1,5 @@
 ﻿using Poliedro.Eds.Domain.Audit.Entities;
+using Poliedro.Eds.Domain.Business.Events;
 using Poliedro.Eds.Domain.Business.Exepction;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,7 +22,8 @@ public class BusinessEntity : AuditableEntity
 
         public static BusinessEntity Create(string name, string context)
         {
-            return new BusinessEntity(name, context);
+             PersonRegistered(name, context);
+             return new BusinessEntity(name, context);
         }
 
         private static void Validate(string name, string context)
@@ -36,6 +38,10 @@ public class BusinessEntity : AuditableEntity
                 throw new BusinessDomainException("El contexto del negocio no puede estar vacío.");
         }
 
-        
-        protected BusinessEntity() { }
+        public static void PersonRegistered(string Name, string Context)
+        {
+            BusinessEvents.BusinessCreatedEvents.Publish(new BusinessCreated(Name: Name, Context: Context));
+        }
+
+    protected BusinessEntity() { }
     }
