@@ -16,6 +16,7 @@ public class CreateBusinessCommandHandler(
 {
     public async Task<Result<VoidResult, Error>> Handle(CreateBusinessCommand request, CancellationToken cancellationToken)
     {
+
         var result = await businessCreateDomianService.CreateAsync(mapper.Map<BusinessEntity>(request.Request));
         await RedisHelper.RemoveBusinessCacheIfSuccessAsync(result, redisService);
         return result.IsSuccess ? result.Value! : result.Error!;
