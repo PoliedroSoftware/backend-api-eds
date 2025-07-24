@@ -46,21 +46,16 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetCompartimentByIdQuery> validator)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
         var getCompartimentQuery = new GetCompartimentByIdQuery(Id: id);
-
-        //var validationResult = await validator.ValidateAsync(getCompartimentQuery);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
 
         var result = await mediator.Send(getCompartimentQuery);
 
         return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
+
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
         );
     }
 
