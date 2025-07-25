@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
             var data = await mediator.Send(new GellAllHoseQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
             if (data is null)
             {
+               // new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize };
+
                 return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
             }
             return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
@@ -136,4 +139,3 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         }
     }
 }
-
