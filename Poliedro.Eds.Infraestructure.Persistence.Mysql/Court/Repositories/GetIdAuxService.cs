@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Dto;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
