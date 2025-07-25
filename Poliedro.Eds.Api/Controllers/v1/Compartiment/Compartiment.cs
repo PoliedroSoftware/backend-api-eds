@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -68,13 +67,9 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-            [FromBody] CreateCompartimentCommand createCompartimentCommand,
-            [FromServices] IValidator<CreateCompartimentRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateCompartimentCommand createCompartimentCommand)
 
     {
-        //var validationResult = await validator.ValidateAsync(createCompartimentCommand.Request);
-        //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createCompartimentCommand);
         return result.Match(
              onSuccess => TypedResults.Created()
@@ -89,16 +84,8 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
- [FromBody] UpdateCompartimentCommand updateCompartimentCommand,
- [FromServices] IValidator<UpdateCompartimentCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateCompartimentCommand updateCompartimentCommand)
     {
-        //var validationResult = await validator.ValidateAsync(updateCompartimentCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
-
         var result = await mediator.Send(updateCompartimentCommand);
 
         if (!result.IsSuccess)

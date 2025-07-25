@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Api.Common.Extensions;
@@ -61,14 +60,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOrIslander")]
         [HttpGet("last-accumulated")]
-        public async Task<IActionResult> GetLastAccumulated(
-            [FromQuery] int idDispenser,
-            [FromQuery] int idHose,
-            [FromServices] IValidator<GetLastAccumulatedQuery> validator)
+        public async Task<IActionResult> GetLastAccumulated([FromQuery] int idDispenser,[FromQuery] int idHose)
         {
             var getLastAccumulatedQuery = new GetLastAccumulatedQuery(idDispenser, idHose);
-            //var validationResult = await validator.ValidateAsync(getLastAccumulatedQuery);
-            //if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
             var result = await mediator.Send(getLastAccumulatedQuery);
             if (!result.IsSuccess) return StatusCode((int)result.Error.HttpStatusCode, result.Error);
             return Ok(result.Value);
@@ -83,13 +77,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
 
-        public async Task<IResult> Create(
-            [FromBody] CreateHoseCommand createHoseCommand,
-            [FromServices] IValidator<CreateHoseRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateHoseCommand createHoseCommand)
 
         {
-            //var validationResult = await validator.ValidateAsync(createHoseCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createHoseCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
@@ -104,15 +94,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-     [FromBody] UpdateHoseCommand updateHoseCommand,
-     [FromServices] IValidator<UpdateHoseCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateHoseCommand updateHoseCommand)
         {
-            //var validationResult = await validator.ValidateAsync(updateHoseCommand);
-            //if (!validationResult.IsValid)
-            //{
-            //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            //}
 
             var result = await mediator.Send(updateHoseCommand);
 

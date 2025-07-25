@@ -60,13 +60,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.CourtDispensersInventory
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
 
-        public async Task<IResult> Create(
-            [FromBody] CreateCourtDispensersInventoryCommand createCourtDispensersInventoryCommand,
-            [FromServices] IValidator<CreateCourtDispensersInventoryRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateCourtDispensersInventoryCommand createCourtDispensersInventoryCommand)
 
         {
-            //var validationResult = await validator.ValidateAsync(createCourtDispensersInventoryCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createCourtDispensersInventoryCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
@@ -81,16 +77,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.CourtDispensersInventory
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-     [FromBody] UpdateCourtDispensersInventoryCommand updateCourtDispensersInventoryCommand,
-     [FromServices] IValidator<UpdateCourtDispensersInventoryCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateCourtDispensersInventoryCommand updateCourtDispensersInventoryCommand)
         {
-            var validationResult = await validator.ValidateAsync(updateCourtDispensersInventoryCommand);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            }
-
             var result = await mediator.Send(updateCourtDispensersInventoryCommand);
 
             if (!result.IsSuccess)

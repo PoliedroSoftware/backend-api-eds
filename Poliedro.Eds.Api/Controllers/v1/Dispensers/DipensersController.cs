@@ -69,13 +69,9 @@ public class DispensersController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-            [FromBody] CreateDispensersCommand createDispensersCommand,
-            [FromServices] IValidator<CreateDispensersRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateDispensersCommand createDispensersCommand)
 
     {
-            //var validationResult = await validator.ValidateAsync(createDispensersCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createDispensersCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()

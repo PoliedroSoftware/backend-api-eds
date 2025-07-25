@@ -61,11 +61,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [HttpPost]
 
         public async Task<IResult> Create(
-            [FromBody] CreateTypeOfCollectionCommand createTypeOfCollectionCommand, 
-            [FromServices] IValidator<CreateTypeOfCollectionRequestDto> validator)
+            [FromBody] CreateTypeOfCollectionCommand createTypeOfCollectionCommand)
         {
-            //var validationResult = await validator.ValidateAsync(createTypeOfCollectionCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createTypeOfCollectionCommand);
             return result.Match(onSuccess => TypedResults.Created());
         }
@@ -78,16 +75,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-     [FromBody] UpdateTypeOfCollectionCommand updateTypeOfCollectionCommand,
-     [FromServices] IValidator<UpdateTypeOfCollectionCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateTypeOfCollectionCommand updateTypeOfCollectionCommand)
         {
-            //var validationResult = await validator.ValidateAsync(updateTypeOfCollectionCommand);
-            //if (!validationResult.IsValid)
-            //{
-            //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            //}
-
             var result = await mediator.Send(updateTypeOfCollectionCommand);
 
             if (!result.IsSuccess)
