@@ -18,9 +18,13 @@ public class CourtListService(IConfiguration config,
     public async Task<IEnumerable<CourtListResponseDto>> GetAllAsync(PaginationParams paginationParams)
     {
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        string cachekey = $"courtListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
-        var cachedData = await redisService.GetCacheAsync<IEnumerable<CourtListResponseDto>>(cachekey);
+        var username = httpContextAccessor.HttpContext?.Items["identifiername"]?.ToString();
+        var roles = httpContextAccessor.HttpContext?.User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
 
+        string userKeyPart = roles.Contains("Admin") ? "admin" : $"user:{username}";
+        string cachekey = $"courtListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}:{userKeyPart}";
+
+        var cachedData = await redisService.GetCacheAsync<IEnumerable<CourtListResponseDto>>(cachekey);
         if (cachedData != null) return cachedData;
         try
         {
@@ -70,7 +74,7 @@ public class CourtListService(IConfiguration config,
     private async Task<IEnumerable<CourtViewDto>> GetCourtsFromViewAsync()
     {
         var username = httpContextAccessor.HttpContext?.Items["identifiername"]?.ToString();
-        var userRole = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value;
+        var roles = httpContextAccessor.HttpContext?.User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
 
         using var context = dbContextFactory.CreateDbContext();
         var courts = new List<CourtViewDto>();
@@ -80,7 +84,12 @@ public class CourtListService(IConfiguration config,
         string query = "SELECT * FROM v_court";
         using var command = connection.CreateCommand();
 
-        if (userRole == "User")
+        if (roles != null && roles.Contains("Admin"))
+        {
+            query = "SELECT * FROM v_court";
+            command.CommandText = query;
+        }
+        else
         {
             query = "SELECT * FROM v_court WHERE islander = @islanderName";
             command.CommandText = query;
@@ -89,12 +98,6 @@ public class CourtListService(IConfiguration config,
             parameter.ParameterName = "@islanderName";
             parameter.Value = username;
             command.Parameters.Add(parameter);
-        }
-        else
-        {
-         
-            query = "SELECT * FROM v_court";
-            command.CommandText = query;
         }
 
         using var reader = await command.ExecuteReaderAsync();
