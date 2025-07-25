@@ -41,21 +41,15 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOrIslander")]
         [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetIslanderByIdQuery> validator)
+        public async Task<IResult> GetById([FromRoute] int id)
         {
             var getIslanderQuery = new GetIslanderByIdQuery(Id: id);
-
-            //var validationResult = await validator.ValidateAsync(getIslanderQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
 
             var result = await mediator.Send(getIslanderQuery);
 
             return result.Match(
-                onSuccess => TypedResults.Ok(result.Value)
+                onSuccess => TypedResults.Ok(result.Value),
+                onFailure => TypedResults.BadRequest(onFailure)
             );
         }
 
@@ -68,19 +62,14 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [Authorize(Policy = "AdminOrIslander")]
         [HttpPost]
 
-        public async Task<IResult> Create(
-           [FromBody] CreateIslanderCommand createIslanderCommand)
+        public async Task<IResult> Create([FromBody] CreateIslanderCommand createIslanderCommand)
 
         {
-
             var nameClaimToken = HttpContext.User.FindFirst("name")?.Value;
 
             var command = new CreateIslanderCommand(createIslanderCommand.Request, nameClaimToken);
 
             Console.WriteLine($"nombre del token: {nameClaimToken}");
-
-            //var validationResult = await validator.ValidateAsync(createIslanderCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
 
             var result = await mediator.Send(command);
             return result.Match(
@@ -96,16 +85,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-     [FromBody] UpdateIslanderCommand updateIslanderCommand,
-     [FromServices] IValidator<UpdateIslanderCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateIslanderCommand updateIslanderCommand)
         {
-            var validationResult = await validator.ValidateAsync(updateIslanderCommand);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            }
-
             var result = await mediator.Send(updateIslanderCommand);
 
             if (!result.IsSuccess)

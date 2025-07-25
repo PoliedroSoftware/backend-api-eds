@@ -46,16 +46,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.Shopping
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetShoppingByIdQuery> validator)
+        public async Task<IResult> GetById([FromRoute] int id)
         {
             var getShoppingQuery = new GetShoppingByIdQuery(Id: id);
-
-            //var validationResult = await validator.ValidateAsync(getShoppingQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
 
             var result = await mediator.Send(getShoppingQuery);
 
@@ -74,12 +67,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.Shopping
         [HttpPost]
 
         public async Task<IResult> Create(
-            [FromBody] CreateShoppingCommand createShoppingCommand,
-            [FromServices] IValidator<CreateShoppingRequestDto> validator)
+            [FromBody] CreateShoppingCommand createShoppingCommand)
 
         {
-            //var validationResult = await validator.ValidateAsync(createShoppingCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createShoppingCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
@@ -94,16 +84,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Shopping
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-        [FromBody] UpdateShoppingCommand updateShoppingCommand,
-        [FromServices] IValidator<UpdateShoppingCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateShoppingCommand updateShoppingCommand)
         {
-            //var validationResult = await validator.ValidateAsync(updateShoppingCommand);
-            //if (!validationResult.IsValid)
-            //{
-            //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            //}
-
             var result = await mediator.Send(updateShoppingCommand);
 
             if (!result.IsSuccess)
