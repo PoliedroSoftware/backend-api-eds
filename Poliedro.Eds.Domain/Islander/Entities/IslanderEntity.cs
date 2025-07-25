@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.Islander.Entities;
 
-public class IslanderEntity
+public class IslanderEntity : AuditableEntity
 {
     [Key]
     public int IdIslander { get; set; } = default!;

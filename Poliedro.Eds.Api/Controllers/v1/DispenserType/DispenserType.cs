@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,17 +46,20 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
 
-    public async Task<IResult> GetById(int id)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
-        var result = await mediator.Send(new GetDispenserTypeByIdQuery(id));
+        var getDyspenserTypeQuery = new GetDispenserTypeByIdQuery(Id: id);
 
-        if (result.IsSuccess)
-            return TypedResults.Ok(result.Value);
+        var result = await mediator.Send(getDyspenserTypeQuery);
 
-        return TypedResults.NotFound("DispenserType no encontrado.");
+        return result.Match(
+
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
+        );
     }
 
-    [SwaggerOperation(
+        [SwaggerOperation(
         Summary = "Create new DispenserType")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "The operation was successful.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
@@ -66,13 +68,9 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-            [FromBody] CreateDispenserTypeCommand createDispenserTypeCommand,
-            [FromServices] IValidator<CreateDispenserTypeRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateDispenserTypeCommand createDispenserTypeCommand)
 
     {
-            //var validationResult = await validator.ValidateAsync(createDispenserTypeCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createDispenserTypeCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
@@ -87,9 +85,7 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
- [FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand,
- [FromServices] IValidator<UpdateDispenserTypeCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand)
     {
 
         var result = await mediator.Send(updateDispenserTypeCommand);

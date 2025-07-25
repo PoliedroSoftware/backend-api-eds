@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,21 +45,15 @@ namespace Poliedro.Eds.Api.Controllers.v1.ShoppingProduct
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetShoppingProductByIdQuery> validator)
+        public async Task<IResult> GetById([FromRoute] int id)
         {
             var getShoppingProductQuery = new GetShoppingProductByIdQuery(Id: id);
-
-            //var validationResult = await validator.ValidateAsync(getShoppingProductQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
 
             var result = await mediator.Send(getShoppingProductQuery);
 
             return result.Match(
-                onSuccess => TypedResults.Ok(result.Value)
+                onSuccess => TypedResults.Ok(result.Value),
+                onFailure => TypedResults.BadRequest(onFailure)
             );
         }
 
@@ -73,19 +66,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.ShoppingProduct
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
 
-        public async Task<IResult> Create(
-            [FromBody] CreateShoppingProductCommand createShoppingProductCommand,
-            [FromServices] IValidator<CreateShoppingProductRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateShoppingProductCommand createShoppingProductCommand)
 
         {
-
-            var validationResult = await validator.ValidateAsync(createShoppingProductCommand.Request);
-            if (!validationResult.IsValid)
-            {
-                var mensajes = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
-                return TypedResults.BadRequest(mensajes);
-            }
-
             var result = await mediator.Send(createShoppingProductCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
@@ -100,16 +83,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.ShoppingProduct
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-        [FromBody] UpdateShoppingProductCommand updateShoppingProductCommand,
-        [FromServices] IValidator<UpdateShoppingProductCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateShoppingProductCommand updateShoppingProductCommand)
         {
-            var validationResult = await validator.ValidateAsync(updateShoppingProductCommand);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            }
-
             var result = await mediator.Send(updateShoppingProductCommand);
 
             if (!result.IsSuccess)

@@ -44,18 +44,13 @@ namespace Poliedro.Eds.Api.Controllers.v1.ShoppingProductInventory
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
-        public async Task<IResult> Create([FromBody] CreateShoppingProductInventoryCommand createShoppingProductInventoryCommand,
-            [FromServices] IValidator<CreateShoppingProductInventoryRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateShoppingProductInventoryCommand createShoppingProductInventoryCommand)
         {
-            //var validationResult = await validator.ValidateAsync(createShoppingProductInventoryCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createShoppingProductInventoryCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
              );
         }
-
-
 
         [SwaggerOperation(Summary = "Get ShoppingProductInventory")]
         [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(ShoppingProductDto))]
@@ -65,21 +60,15 @@ namespace Poliedro.Eds.Api.Controllers.v1.ShoppingProductInventory
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id}")]
-        public async Task<IResult> GetShopingProductInventoryByIdShopping([FromRoute] int id, [FromServices] IValidator<GetShoppingProductInventoryByIdQuery> validator)
+        public async Task<IResult> GetShopingProductInventoryByIdShopping([FromRoute] int id)
         {
             var getShoppingProductQuery = new GetShoppingProductInventoryByIdQuery(Id: id);
-
-            //var validationResult = await validator.ValidateAsync(getShoppingProductQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
 
             var result = await mediator.Send(getShoppingProductQuery);
 
             return result.Match(
-                onSuccess => TypedResults.Ok(result.Value)
+                onSuccess => TypedResults.Ok(result.Value),
+                onFailure => TypedResults.BadRequest(onFailure)
             );
         }
 

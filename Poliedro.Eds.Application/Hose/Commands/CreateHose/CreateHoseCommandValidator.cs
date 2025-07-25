@@ -1,22 +1,23 @@
 ﻿using FluentValidation;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.Hose.Commands.CreateHose;
 
 public class CreateHoseCommandValidator : AbstractValidator<CreateHoseRequestDto>
 {
-    //public CreateHoseCommandValidator(ITranslationService translationService)
-    //{
-    //    RuleFor(x => x.Number) 
-    //        .NotNull().WithMessage(translationService.GetTranslationByKey("NumberNotNull").GetAwaiter().GetResult())
-    //        .GreaterThan(0).WithMessage(translationService.GetTranslationByKey("NumberGreaterThan").GetAwaiter().GetResult());
+    public CreateHoseCommandValidator(IRedisService redisService)
+    {
+        RuleFor(x => x.Number)
+            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("NumberNotNull").GetAwaiter().GetResult())
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("NumberGreaterThan").GetAwaiter().GetResult());
 
-    //    RuleFor(x => x.IdDispensers) 
-    //        .NotNull().WithMessage(translationService.GetTranslationByKey("IdDispensersNotNull").GetAwaiter().GetResult())
-    //        .GreaterThan(0).WithMessage(translationService.GetTranslationByKey("IdDispensersGreaterThan").GetAwaiter().GetResult());
+        RuleFor(x => x.IdDispensers)
+            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("IdDispensersNotNull").GetAwaiter().GetResult())
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdDispensersGreaterThan").GetAwaiter().GetResult());
 
-    //    RuleFor(x => x.IdProductType) 
-    //       .NotNull().WithMessage(translationService.GetTranslationByKey("IdProductTypeNotNull").GetAwaiter().GetResult())
-    //       .GreaterThan(0).WithMessage(translationService.GetTranslationByKey("IdProductTypeGreaterThan)").GetAwaiter().GetResult());
-    //}
+        RuleFor(x => x.IdProductType)
+           .NotNull().WithMessage(redisService.GetValueFromCacheAsync("IdProductTypeNotNull").GetAwaiter().GetResult())
+           .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdProductTypeGreaterThan").GetAwaiter().GetResult());
+    }
 }

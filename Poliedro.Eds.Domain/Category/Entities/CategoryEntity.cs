@@ -1,6 +1,8 @@
-﻿namespace Poliedro.Eds.Domain.Category.Entities;
+﻿using Poliedro.Eds.Domain.Audit.Entities;
 
-public class CategoryEntity
+namespace Poliedro.Eds.Domain.Category.Entities;
+
+public class CategoryEntity : AuditableEntity
 {
     public int IdCategory { get; set; } 
     public string Description { get; set; } = default!;

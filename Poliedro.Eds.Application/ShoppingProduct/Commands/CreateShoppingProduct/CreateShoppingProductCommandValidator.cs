@@ -51,26 +51,26 @@ public class CreateShoppingProductCommandValidator : AbstractValidator<CreateSho
 
     }
 
-    //public CreateShoppingProductCommandValidator(ITranslationService translationService)
-    //{
-    //    RuleFor(x => x.IdShopping)
-    //        .GreaterThan(0).WithMessage(translationService.GetTranslationByKey("IdShoppingGreaterThan").GetAwaiter().GetResult())
-    //        .NotEmpty().WithMessage(translationService.GetTranslationByKey("IdShoppingNotEmpty").GetAwaiter().GetResult());
+    public CreateShoppingProductCommandValidator(IRedisService redisService)
+    {
+        RuleFor(x => x.IdShopping)
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdShoppingGreaterThan").GetAwaiter().GetResult())
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdShoppingNotEmpty").GetAwaiter().GetResult());
 
-    //    RuleFor(x => x.IdProduct)
-    //        .GreaterThan(0).WithMessage(translationService.GetTranslationByKey("IdProductGreaterThan").GetAwaiter().GetResult())
-    //        .NotEmpty().WithMessage(translationService.GetTranslationByKey("IdProductNotEmpty").GetAwaiter().GetResult());
+        RuleFor(x => x.IdProduct)
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdProductGreaterThan").GetAwaiter().GetResult())
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdProductNotEmpty").GetAwaiter().GetResult());
 
-    //    RuleFor(x => x.Quantity)
-    //        .GreaterThan(0).WithMessage(translationService.GetTranslationByKey("QuantityGreaterThan").GetAwaiter().GetResult())
-    //        .NotEmpty().WithMessage(translationService.GetTranslationByKey("QuantityNotEmpty").GetAwaiter().GetResult());
+        RuleFor(x => x.Quantity)
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("QuantityGreaterThan").GetAwaiter().GetResult())
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("QuantityNotEmpty").GetAwaiter().GetResult());
 
-    //    RuleFor(x => x.Price)
-    //        .GreaterThanOrEqualTo(0).WithMessage(translationService.GetTranslationByKey("PriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
-    //        .NotEmpty().WithMessage(translationService.GetTranslationByKey("PriceNotEmpty").GetAwaiter().GetResult());
+        RuleFor(x => x.Price)
+            .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("PriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PriceNotEmpty").GetAwaiter().GetResult());
 
-    //    RuleFor(x => x.IdCompartment)
-    //        .GreaterThan(0).WithMessage(translationService.GetTranslationByKey("IdCompartmentGreaterThan").GetAwaiter().GetResult())
-    //        .NotEmpty().WithMessage(translationService.GetTranslationByKey("IdCompartmentNotEmpty").GetAwaiter().GetResult());
-    //}
+        RuleFor(x => x.IdCompartment)
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdCompartmentGreaterThan").GetAwaiter().GetResult())
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdCompartmentNotEmpty").GetAwaiter().GetResult());
+    }
 }

@@ -39,21 +39,15 @@ namespace Poliedro.Eds.Api.Controllers.v1.HoseHistory
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetHoseHistoryByIdQuery> validator)
+        public async Task<IResult> GetById([FromRoute] int id)
         {
             var getHoseHistoryQuery = new GetHoseHistoryByIdQuery(Id: id);
-
-            //var validationResult = await validator.ValidateAsync(getHoseHistoryQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
 
             var result = await mediator.Send(getHoseHistoryQuery);
 
             return result.Match(
-                onSuccess => TypedResults.Ok(result.Value)
+                onSuccess => TypedResults.Ok(result.Value),
+                onFailure => TypedResults.BadRequest(onFailure)
             );
         }
 
@@ -66,12 +60,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.HoseHistory
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
 
-        public async Task<IResult> Create(
-            [FromBody] CreateHoseHistoryCommand createHoseHistoryCommand,
-            [FromServices] IValidator<CreateHoseHistoryRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateHoseHistoryCommand createHoseHistoryCommand)
         {
-            //var validationResult = await validator.ValidateAsync(createHoseHistoryCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createHoseHistoryCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
@@ -86,16 +76,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.HoseHistory
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-     [FromBody] UpdateHoseHistoryCommand updateHoseHistoryCommand,
-     [FromServices] IValidator<UpdateHoseHistoryCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateHoseHistoryCommand updateHoseHistoryCommand)
         {
-            var validationResult = await validator.ValidateAsync(updateHoseHistoryCommand);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            }
-
             var result = await mediator.Send(updateHoseHistoryCommand);
 
             if (!result.IsSuccess)
