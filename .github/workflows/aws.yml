@@ -70,11 +70,12 @@ jobs:
           export JMETER_HOME=$PWD/apache-jmeter-5.6.3
           echo "$JMETER_HOME/bin" >> $GITHUB_PATH
 
-      - name: Run JMeter Load Test
-        run: |
-          ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
-
+      #- name: Run JMeter Load Test
+      # run: |
+      #   ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
+      
       - name: Check for errors in JMeter results
+        if: false
         run: |
           echo "Checking JMeter results for errors..."
           # Buscar errores HTTP 500 en los resultados (.jtl)

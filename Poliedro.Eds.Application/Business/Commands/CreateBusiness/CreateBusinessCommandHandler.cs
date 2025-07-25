@@ -22,7 +22,10 @@ public class CreateBusinessCommandHandler(
         var validationResult = await validator.ValidateAsync(request.Request);
         if (!validationResult.IsValid)
             return Result<VoidResult, Error>.Failure(
-                Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+                Error.CreateInstance(
+                    "ValidationFailed",
+                    string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)) ?? string.Empty,
+                    HttpStatusCode.BadRequest));
 
         var result = await businessCreateDomianService.CreateAsync(mapper.Map<BusinessEntity>(request.Request));
         await RedisHelper.RemoveBusinessCacheIfSuccessAsync(result, redisService);
