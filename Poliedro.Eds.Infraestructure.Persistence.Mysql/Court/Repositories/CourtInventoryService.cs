@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
@@ -11,8 +11,6 @@ public class CourtInventoryService(IConfiguration config,
     IRedisService redisService, 
     ITenantDbContextFactory dbContextFactory) : ICourtUpdateInventoryService
 {
-    private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
-
     public async Task CourtUpdateInventoryAsync(IEnumerable<ICourtDispenserSaleEntity> courtDispensers)
     {
 
@@ -23,7 +21,7 @@ public class CourtInventoryService(IConfiguration config,
             var compartment = await context.Compartiment
                 .FirstOrDefaultAsync(c => c.IdCompartment == dispenser.IdCompartiment);
 
-            if (compartment != null)
+            if (compartment is not null)
             {
                 Console.WriteLine($"Actualizando compartimiento {compartment.IdCompartment}: Stock antes: {compartment.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
 
