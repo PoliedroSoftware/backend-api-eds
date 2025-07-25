@@ -85,7 +85,7 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand
+    public async Task<IActionResult> Update([FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand)
     {
 
         var result = await mediator.Send(updateDispenserTypeCommand);
