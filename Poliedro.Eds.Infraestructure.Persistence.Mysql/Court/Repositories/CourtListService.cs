@@ -6,6 +6,7 @@ using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using System.Data;
+using System.Security.Claims;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
@@ -20,7 +21,7 @@ public class CourtListService(IConfiguration config,
         string cachekey = $"courtListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<CourtListResponseDto>>(cachekey);
         
-        if (cachedData != null) return cachedData;
+        //if (cachedData != null) return cachedData;
         try
         {
             var courts = await GetCourtsFromViewAsync();
@@ -29,7 +30,8 @@ public class CourtListService(IConfiguration config,
             var documents = await GetCourtDocumentsFromViewAsync();
             var expenditures = await GetCourtExpendituresFromViewAsync();
 
-            var groupedCourts = courts.Select(court => new CourtListResponseDto
+            var groupedCourts = courts
+                .Select(court => new CourtListResponseDto
             {
                 Id = court.Id,
                 Consecutive = court.Consecutive,
@@ -67,6 +69,9 @@ public class CourtListService(IConfiguration config,
 
     private async Task<IEnumerable<CourtViewDto>> GetCourtsFromViewAsync()
     {
+        var username = httpContextAccessor.HttpContext?.Items["identifiername"]?.ToString();
+        var userRole = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value;
+
         using var context = dbContextFactory.CreateDbContext();
         var courts = new List<CourtViewDto>();
         using var connection = context.Database.GetDbConnection();
@@ -74,9 +79,24 @@ public class CourtListService(IConfiguration config,
 
         string query = "SELECT * FROM v_court";
         using var command = connection.CreateCommand();
-        command.CommandText = query;
 
-        
+        if (userRole == "User")
+        {
+            query = "SELECT * FROM v_court WHERE islander = @islanderName";
+            command.CommandText = query;
+
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = "@islanderName";
+            parameter.Value = username;
+            command.Parameters.Add(parameter);
+        }
+        else
+        {
+         
+            query = "SELECT * FROM v_court";
+            command.CommandText = query;
+        }
+
         using var reader = await command.ExecuteReaderAsync();
 
         while (await reader.ReadAsync())
