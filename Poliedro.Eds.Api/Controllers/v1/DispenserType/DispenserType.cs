@@ -1,10 +1,8 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Api.Common.Extensions;
 using Poliedro.Eds.Application.Common.Features;
-using Poliedro.Eds.Application.Compartiment.Queries.GetCompartimentById;
 using Poliedro.Eds.Application.DispenserType.Commands.CreateDispenserType;
 using Poliedro.Eds.Application.DispenserType.Commands.UpdateDispenserType;
 using Poliedro.Eds.Application.DispenserType.Dtos;
@@ -70,13 +68,9 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-            [FromBody] CreateDispenserTypeCommand createDispenserTypeCommand,
-            [FromServices] IValidator<CreateDispenserTypeRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateDispenserTypeCommand createDispenserTypeCommand)
 
     {
-            //var validationResult = await validator.ValidateAsync(createDispenserTypeCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createDispenserTypeCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
@@ -91,9 +85,7 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
- [FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand,
- [FromServices] IValidator<UpdateDispenserTypeCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand
     {
 
         var result = await mediator.Send(updateDispenserTypeCommand);

@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -67,13 +66,9 @@ public class CategoryController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-            [FromBody] CreateCategoryCommand createCategoryCommand,
-            [FromServices] IValidator<CreateCategoryRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateCategoryCommand createCategoryCommand)
 
     {
-        //var validationResult = await validator.ValidateAsync(createCategoryCommand.Request);
-        //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createCategoryCommand);
         return result.Match(
              onSuccess => TypedResults.Created()
@@ -88,15 +83,8 @@ public class CategoryController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
- [FromBody] UpdateCategoryCommand updateCategoryCommand,
- [FromServices] IValidator<UpdateCategoryCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateCategoryCommand updateCategoryCommand)
     {
-        //var validationResult = await validator.ValidateAsync(updateCategoryCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
 
         var result = await mediator.Send(updateCategoryCommand);
 

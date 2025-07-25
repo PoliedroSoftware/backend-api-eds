@@ -60,12 +60,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
 
-        public async Task<IResult> Create(
-            [FromBody] CreateProductTypeCommand createProductTypeCommand, 
-            [FromServices] IValidator<CreateProductTypeRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateProductTypeCommand createProductTypeCommand)
         {
-            //var validationResult = await validator.ValidateAsync(createProductTypeCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createProductTypeCommand);
             return result.Match(onSuccess => TypedResults.Created());
         }
@@ -78,16 +74,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-     [FromBody] UpdateProductTypeCommand updateProductTypeCommand,
-     [FromServices] IValidator<UpdateProductTypeCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateProductTypeCommand updateProductTypeCommand)
         {
-            //var validationResult = await validator.ValidateAsync(updateProductTypeCommand);
-            //if (!validationResult.IsValid)
-            //{
-            //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            //}
-
             var result = await mediator.Send(updateProductTypeCommand);
 
             if (!result.IsSuccess)

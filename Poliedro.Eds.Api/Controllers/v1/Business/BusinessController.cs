@@ -73,8 +73,7 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [HttpPost]
 
     public async Task<IResult> Create(
-        [FromBody] CreateBusinessCommand createBusinessCommand 
-        )
+        [FromBody] CreateBusinessCommand createBusinessCommand)
     {
         var result = await mediator.Send(createBusinessCommand);
         return result.Match(onSuccess => TypedResults.Created());
@@ -89,14 +88,8 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
     public async Task<IActionResult> Update(
-    [FromBody] UpdateBusinessCommand updateBusinessCommand
-    )
+    [FromBody] UpdateBusinessCommand updateBusinessCommand)
     {
-        //var validationResult = await validator.ValidateAsync(updateBusinessCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
         var result = await mediator.Send(updateBusinessCommand);
 
         if (!result.IsSuccess)

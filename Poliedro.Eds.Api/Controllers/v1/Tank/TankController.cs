@@ -60,13 +60,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.Tank
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
 
-        public async Task<IResult> Create(
-           [FromBody] CreateTankCommand createTankCommand,
-           [FromServices] IValidator<CreateTankRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateTankCommand createTankCommand)
 
         {
-            //var validationResult = await validator.ValidateAsync(createTankCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createTankCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
@@ -81,16 +77,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Tank
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-        [FromBody] UpdateTankCommand updateTankCommand,
-        [FromServices] IValidator<UpdateTankCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateTankCommand updateTankCommand)
         {
-            var validationResult = await validator.ValidateAsync(updateTankCommand);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            }
-
             var result = await mediator.Send(updateTankCommand);
 
             if (!result.IsSuccess)

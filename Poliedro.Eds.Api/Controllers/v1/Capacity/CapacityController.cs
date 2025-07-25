@@ -1,17 +1,16 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Api.Common.Extensions;
-using Poliedro.Eds.Application.Common.Features;
 using Poliedro.Eds.Application.Capacity.Commands.CreateCapacity;
 using Poliedro.Eds.Application.Capacity.Commands.UpdateCapacity;
 using Poliedro.Eds.Application.Capacity.Dtos;
 using Poliedro.Eds.Application.Capacity.Errors;
 using Poliedro.Eds.Application.Capacity.Queries.GellAllCapacity;
 using Poliedro.Eds.Application.Capacity.Queries.GetCapacityById;
+using Poliedro.Eds.Application.Common.Features;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Poliedro.Capacity.Api.Controllers.v1.Capacity;
 
@@ -60,12 +59,8 @@ public class CapacityController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-        [FromBody] CreateCapacityCommand createCapacityCommand,
-        [FromServices] IValidator<CreateCapacityRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateCapacityCommand createCapacityCommand)
     {
-        //var validationResult = await validator.ValidateAsync(createCapacityCommand.Request);
-        //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createCapacityCommand);
         return result.Match(onSuccess => TypedResults.Created());
     }
@@ -78,16 +73,8 @@ public class CapacityController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
-    [FromBody] UpdateCapacityCommand updateCapacityCommand,
-    [FromServices] IValidator<UpdateCapacityCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateCapacityCommand updateCapacityCommand)
     {
-        //var validationResult = await validator.ValidateAsync(updateCapacityCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
-
         var result = await mediator.Send(updateCapacityCommand);
 
         if (!result.IsSuccess)
