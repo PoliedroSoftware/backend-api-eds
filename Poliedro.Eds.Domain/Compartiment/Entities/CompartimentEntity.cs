@@ -1,6 +1,8 @@
-﻿namespace Poliedro.Eds.Domain.Compartiment.Entities;
+﻿using Poliedro.Eds.Domain.Audit.Entities;
 
-public class CompartimentEntity
+namespace Poliedro.Eds.Domain.Compartiment.Entities;
+
+public class CompartimentEntity : AuditableEntity
 {
     public int IdCompartment { get; set; } // id_compartiment
     public int Number { get; set; } // number

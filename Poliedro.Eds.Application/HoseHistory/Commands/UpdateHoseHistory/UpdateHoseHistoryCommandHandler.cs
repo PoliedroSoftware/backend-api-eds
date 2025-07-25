@@ -1,19 +1,27 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.HoseHistory.DomainHoseHistory;
 using Poliedro.Eds.Domain.HoseHistory.Entities;
+using System.Net;
 
 namespace Poliedro.Eds.Application.HoseHistory.Commands.UpdateHoseHistory
 {
     public class UpdateHoseHistoryCommandHandler(
         IHoseHistoryUpdateHoseHistory hosehistoryDomainHoseHistory,
-        IMapper mapper
-    ) : IRequestHandler<UpdateHoseHistoryCommand, Result<VoidResult, Error>>
+        IMapper mapper,
+        IValidator<UpdateHoseHistoryCommand> validator
+        ) : IRequestHandler<UpdateHoseHistoryCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(UpdateHoseHistoryCommand request, CancellationToken cancellationToken)
         {
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+                return Result<VoidResult, Error>.Failure(
+                    Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+
             var hosehistoryEntity = mapper.Map<HoseHistoryEntity>(request);
             var result = await hosehistoryDomainHoseHistory.UpdateAsync(hosehistoryEntity);
 

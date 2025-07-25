@@ -51,21 +51,15 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOrIslander")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetBusinessByIdQuery> validator)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
         var getBusinessQuery = new GetBusinessByIdQuery(Id: id);
-
-        //var validationResult = await validator.ValidateAsync(getBusinessQuery);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
 
         var result = await mediator.Send(getBusinessQuery);
 
         return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
         );
     }
 
@@ -79,8 +73,7 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [HttpPost]
 
     public async Task<IResult> Create(
-        [FromBody] CreateBusinessCommand createBusinessCommand 
-        )
+        [FromBody] CreateBusinessCommand createBusinessCommand)
     {
         var result = await mediator.Send(createBusinessCommand);
         return result.Match(onSuccess => TypedResults.Created());
@@ -95,14 +88,8 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
     public async Task<IActionResult> Update(
-    [FromBody] UpdateBusinessCommand updateBusinessCommand
-    )
+    [FromBody] UpdateBusinessCommand updateBusinessCommand)
     {
-        //var validationResult = await validator.ValidateAsync(updateBusinessCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
         var result = await mediator.Send(updateBusinessCommand);
 
         if (!result.IsSuccess)

@@ -39,21 +39,15 @@ public class EdsController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOrIslander")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetEdsByIdQuery> validator)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
         var getEdsQuery = new GetEdsByIdQuery(Id: id);
-
-        //var validationResult = await validator.ValidateAsync(getEdsQuery);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
 
         var result = await mediator.Send(getEdsQuery);
 
         return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
         );
     }
 
@@ -66,12 +60,8 @@ public class EdsController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOrIslander")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-            [FromBody] CreateEdsCommand createEdsCommand,
-            [FromServices] IValidator<CreateEdsRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateEdsCommand createEdsCommand)
     {
-        //var validationResult = await validator.ValidateAsync(createEdsCommand.Request);
-        //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createEdsCommand);
         return result.Match(onSuccess => TypedResults.Created());
     }
@@ -84,15 +74,8 @@ public class EdsController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
-    [FromBody] UpdateEdsCommand updateEdsCommand,
-    [FromServices] IValidator<UpdateEdsCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateEdsCommand updateEdsCommand)
     {
-        //var validationResult = await validator.ValidateAsync(updateEdsCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
 
         var result = await mediator.Send(updateEdsCommand);
 
