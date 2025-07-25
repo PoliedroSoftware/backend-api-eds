@@ -1,19 +1,27 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
 using Poliedro.Eds.Domain.Shopping.Entities;
+using System.Net;
 
 namespace Poliedro.Eds.Application.Shopping.Commands.UpdateShopping
 {
     public class UpdateShoppingCommandHandler(
         IShoppingUpdateShopping shoppingDomainShopping,
-        IMapper mapper
-   ) : IRequestHandler<UpdateShoppingCommand, Result<VoidResult, Error>>
+        IMapper mapper,
+        IValidator<UpdateShoppingCommand> validator
+         ) : IRequestHandler<UpdateShoppingCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(UpdateShoppingCommand request, CancellationToken cancellationToken)
         {
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+                return Result<VoidResult, Error>.Failure(
+                    Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+
             var shoppingEntity = mapper.Map<ShoppingEntity>(request);
             var result = await shoppingDomainShopping.UpdateAsync(shoppingEntity);
 

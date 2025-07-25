@@ -6,7 +6,6 @@ using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Dto;
 using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
-using System.Text.Json;
 
 namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 {
@@ -15,7 +14,8 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         IGetProductAndCompartiment  getProductAndCompartiment,
         IGetExpenditureId getExpenditureId,
         IGetTypeOfCollectionId getTypeOfCollectionId,
-        ICourtUpdateInventoryService courtUpdateInventoryService) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
+        ICourtUpdateInventoryService courtUpdateInventoryService
+        ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
         {

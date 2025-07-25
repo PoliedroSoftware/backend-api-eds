@@ -39,21 +39,15 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender;
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetEdsTankByIdQuery> validator)
+        public async Task<IResult> GetById([FromRoute] int id)
         {
             var getEdsTankQuery = new GetEdsTankByIdQuery(Id : id );
-
-            //var validationResult = await validator.ValidateAsync(getEdsTankQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
 
             var result = await mediator.Send(getEdsTankQuery);
 
             return result.Match(
-                onSuccess => TypedResults.Ok(result.Value)
+                onSuccess => TypedResults.Ok(result.Value),
+                onFailure => TypedResults.BadRequest(onFailure)
             );
         }
 
@@ -66,12 +60,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender;
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-        public async Task<IResult> Create(
-            [FromBody] CreateEdsTankCommand createEdsTankCommand, 
-            [FromServices] IValidator<CreateEdsTankRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateEdsTankCommand createEdsTankCommand)
         {
-            //var validationResult = await validator.ValidateAsync(createEdsTankCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createEdsTankCommand);
             return result.Match(onSuccess => TypedResults.Created());
         }
@@ -84,15 +74,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender;
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-        public async Task<IActionResult> Update(
-        [FromBody] UpdateEdsTankCommand updateEdsTankCommand,
-        [FromServices] IValidator<UpdateEdsTankCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateEdsTankCommand updateEdsTankCommand)
         {
-            //var validationResult = await validator.ValidateAsync(updateEdsTankCommand);
-            //if (!validationResult.IsValid)
-            //{
-            //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            //}
 
             var result = await mediator.Send(updateEdsTankCommand);
 
