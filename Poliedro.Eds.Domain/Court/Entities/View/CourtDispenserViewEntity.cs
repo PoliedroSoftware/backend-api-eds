@@ -1,4 +1,4 @@
-   public class CourtDispenserViewDto
+   public class CourtDispenserViewEntity
    {
        public int Id { get; set; }
        public string Business { get; set; }

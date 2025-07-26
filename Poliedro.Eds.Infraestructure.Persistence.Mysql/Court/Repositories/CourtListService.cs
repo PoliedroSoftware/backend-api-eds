@@ -1,41 +1,28 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using System.Data;
-using System.Security.Claims;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class CourtListService(IConfiguration config, 
-    IRedisService redisService, 
-    ITenantDbContextFactory dbContextFactory,
-    IHttpContextAccessor httpContextAccessor) : ICourtListDomainService
+public class CourtListService(
+    ITenantDbContextFactory dbContextFactory
+    ) : ICourtListDomainService
 {
-    public async Task<IEnumerable<CourtListResponseDto>> GetAllAsync(PaginationParams paginationParams)
+    public async Task<IEnumerable<CourtListResponseEntity>> GetAllAsync(PaginationParams paginationParams, string username, bool isAdmin)
     {
-        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        var username = httpContextAccessor.HttpContext?.Items["identifiername"]?.ToString();
-        var roles = httpContextAccessor.HttpContext?.User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
-
-        string userKeyPart = roles.Contains("Admin") ? "admin" : $"user:{username}";
-        string cachekey = $"courtListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}:{userKeyPart}";
-
-        var cachedData = await redisService.GetCacheAsync<IEnumerable<CourtListResponseDto>>(cachekey);
-        if (cachedData != null) return cachedData;
         try
         {
-            var courts = await GetCourtsFromViewAsync();
+            var courts = await GetCourtsFromViewAsync(username,isAdmin);
             var collections = await GetCourtCollectionsFromViewAsync();
             var dispensers = await GetCourtDispensersFromViewAsync();
             var documents = await GetCourtDocumentsFromViewAsync();
             var expenditures = await GetCourtExpendituresFromViewAsync();
 
             var groupedCourts = courts
-                .Select(court => new CourtListResponseDto
+                .Select(court => new CourtListResponseEntity
             {
                 Id = court.Id,
                 Consecutive = court.Consecutive,
@@ -62,7 +49,6 @@ public class CourtListService(IConfiguration config,
                 .Take(paginationParams.PageSize)
                 .ToList();
 
-            await redisService.SetCacheAsync(cachekey, pagedCourts, TimeSpan.FromMinutes(1440));
             return pagedCourts;
         }
         catch (Exception ex)
@@ -71,20 +57,17 @@ public class CourtListService(IConfiguration config,
         }
     }
 
-    private async Task<IEnumerable<CourtViewDto>> GetCourtsFromViewAsync()
+    private async Task<IEnumerable<CourtViewEntity>> GetCourtsFromViewAsync(string username,bool isAdmin)
     {
-        var username = httpContextAccessor.HttpContext?.Items["identifiername"]?.ToString();
-        var roles = httpContextAccessor.HttpContext?.User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
-
         using var context = dbContextFactory.CreateDbContext();
-        var courts = new List<CourtViewDto>();
+        var courts = new List<CourtViewEntity>();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
 
         string query = "SELECT * FROM v_court";
         using var command = connection.CreateCommand();
 
-        if (roles != null && roles.Contains("Admin"))
+        if (isAdmin)
         {
             query = "SELECT * FROM v_court";
             command.CommandText = query;
@@ -104,7 +87,7 @@ public class CourtListService(IConfiguration config,
 
         while (await reader.ReadAsync())
         {
-            courts.Add(new CourtViewDto
+            courts.Add(new CourtViewEntity
             {
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Consecutive = reader.IsDBNull("consecutive") ? 0 : reader.GetInt32("consecutive"),
@@ -125,10 +108,10 @@ public class CourtListService(IConfiguration config,
         return courts;
     }
 
-    private async Task<IEnumerable<CourtCollectionViewDto>> GetCourtCollectionsFromViewAsync()
+    private async Task<IEnumerable<CourtCollectionViewEntity>> GetCourtCollectionsFromViewAsync()
     {
         using var context = dbContextFactory.CreateDbContext();
-        var collections = new List<CourtCollectionViewDto>();
+        var collections = new List<CourtCollectionViewEntity>();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
         string query = "SELECT * FROM v_court_collection";
@@ -138,7 +121,7 @@ public class CourtListService(IConfiguration config,
         
         while (await reader.ReadAsync())
         {
-            collections.Add(new CourtCollectionViewDto
+            collections.Add(new CourtCollectionViewEntity
             {
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Court = reader.IsDBNull("court") ? 0 : reader.GetInt32("court"),
@@ -152,9 +135,9 @@ public class CourtListService(IConfiguration config,
         return collections;
     }
 
-    private async Task<IEnumerable<CourtDispenserViewDto>> GetCourtDispensersFromViewAsync()
+    private async Task<IEnumerable<CourtDispenserViewEntity>> GetCourtDispensersFromViewAsync()
     {
-        var dispensers = new List<CourtDispenserViewDto>();
+        var dispensers = new List<CourtDispenserViewEntity>();
 
         using var context = dbContextFactory.CreateDbContext();
         using var connection = context.Database.GetDbConnection();
@@ -166,7 +149,7 @@ public class CourtListService(IConfiguration config,
 
         while (await reader.ReadAsync())
         {
-            dispensers.Add(new CourtDispenserViewDto
+            dispensers.Add(new CourtDispenserViewEntity
             {
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Business = reader.IsDBNull("business") ? string.Empty : reader.GetString("business"),
@@ -194,9 +177,9 @@ public class CourtListService(IConfiguration config,
         return dispensers;
     }
 
-    private async Task<IEnumerable<CourtDocumentViewDto>> GetCourtDocumentsFromViewAsync()
+    private async Task<IEnumerable<CourtDocumentViewEntity>> GetCourtDocumentsFromViewAsync()
     {
-        var documents = new List<CourtDocumentViewDto>();
+        var documents = new List<CourtDocumentViewEntity>();
         using var context = dbContextFactory.CreateDbContext();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
@@ -208,7 +191,7 @@ public class CourtListService(IConfiguration config,
 
         while (await reader.ReadAsync())
         {
-            documents.Add(new CourtDocumentViewDto
+            documents.Add(new CourtDocumentViewEntity
             {
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Court = reader.IsDBNull("court") ? 0 : reader.GetInt32("court"),
@@ -219,9 +202,9 @@ public class CourtListService(IConfiguration config,
         return documents;
     }
 
-    private async Task<IEnumerable<CourtExpenditureViewDto>> GetCourtExpendituresFromViewAsync()
+    private async Task<IEnumerable<CourtExpenditureViewEntity>> GetCourtExpendituresFromViewAsync()
     {
-        var expenditures = new List<CourtExpenditureViewDto>();
+        var expenditures = new List<CourtExpenditureViewEntity>();
         using var context = dbContextFactory.CreateDbContext();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
@@ -233,7 +216,7 @@ public class CourtListService(IConfiguration config,
 
         while (await reader.ReadAsync())
         {
-            expenditures.Add(new CourtExpenditureViewDto
+            expenditures.Add(new CourtExpenditureViewEntity
             {
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Court = reader.IsDBNull("court") ? 0 : reader.GetInt32("court"),
