@@ -7,6 +7,7 @@ public class ProductTypeErrorBuilder : IError
 {
     public const string PRODUCTTYPE_CREATION_ERROR = "ProductTypeCreationErrorException";
     public const string PRODUCTTYPE_NOT_FOUND_ERROR = "ProductTypeNotFoundErrorException";
+
     public static Error ProductTypeCreationException() => Error.CreateInstance(
         PRODUCTTYPE_CREATION_ERROR,
         "Failed to create Server due to an internal error.",
@@ -18,6 +19,7 @@ public class ProductTypeErrorBuilder : IError
             PRODUCTTYPE_UPDATE_ERROR,
             "Failed to update ProductType due to an internal error.",
             HttpStatusCode.InternalServerError);
+
     public static Error ProductTypeNotFoundException(int id) => Error.CreateInstance(
        PRODUCTTYPE_NOT_FOUND_ERROR,
        $"ProductType with ID {id} was not found.",

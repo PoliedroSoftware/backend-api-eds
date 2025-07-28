@@ -7,6 +7,7 @@ public class ExpendituresErrorBuilder : IError
 {
     public const string EXPENDITURES_CREATION_ERROR = "ExpendituresCreationErrorException";
     public const string EXPENDITURES_NOT_FOUND_ERROR = "ExpendituresNotFoundErrorException";
+
     public static Error ExpendituresCreationException() => Error.CreateInstance(
         EXPENDITURES_CREATION_ERROR,
         "Failed to create Server due to an internal error.",
@@ -18,6 +19,7 @@ public class ExpendituresErrorBuilder : IError
             EXPENDITURES_UPDATE_ERROR,
             "Failed to update Expenditures due to an internal error.",
             HttpStatusCode.InternalServerError);
+
     public static Error ExpendituresNotFoundException(int id) => Error.CreateInstance(
        EXPENDITURES_NOT_FOUND_ERROR,
        $"Expenditures with ID {id} was not found.",

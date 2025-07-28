@@ -25,6 +25,7 @@ public class ProviderUpdateService(ITenantDbContextFactory dbContextFactory, IRe
         await redisService.RemoveByPrefixAsync("provider:");
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

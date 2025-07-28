@@ -11,6 +11,7 @@ public class DynamicDbContext(string _connectionString) : DbContext
             optionsBuilder.UseMySql(_connectionString, ServerVersion.AutoDetect(_connectionString));
         }
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 

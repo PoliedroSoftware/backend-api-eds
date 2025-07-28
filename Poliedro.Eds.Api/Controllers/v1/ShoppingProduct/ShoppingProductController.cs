@@ -37,6 +37,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.ShoppingProduct
 
             return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
         }
+
         [SwaggerOperation(Summary = "Get ShoppingProduct")]
         [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(ShoppingProductDto))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]

@@ -64,10 +64,16 @@ var httpContextAccessor = new HttpContextAccessor();
 var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
 var currentUser = httpContextAccessor.HttpContext?.Items["preferred_username"]?.ToString();
 var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? builder.Configuration["ConnectionStrings:MysqlConnection"];
-var connectionStringFactory = connectionString.Replace("{schema}", tenant);
+if (connectionString == null)
+    throw new InvalidOperationException("MYSQL_CONNECTION or ConnectionStrings:MysqlConnection is not configured.");
+var connectionStringFactory = connectionString.Replace("{schema}", tenant ?? string.Empty);
 builder.Services.AddHealthChecks()
     .AddMySql(connectionStringFactory, name: "sql", tags: ["ready"])
-    .AddRedis(builder.Configuration["Redis:ConnectionString"], name: "redis", tags: ["ready"])
+    .AddRedis(
+        builder.Configuration["Redis:ConnectionString"] 
+            ?? throw new InvalidOperationException("Redis:ConnectionString is not configured."),
+        name: "redis", 
+        tags: ["ready"])
     .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee");
 
 builder.Services.AddLogging();
@@ -75,7 +81,10 @@ builder.Services.AddLogging();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["Keycloak:KeycloakUri"]);
+    var keycloakUri = builder.Configuration["Keycloak:KeycloakUri"];
+    if (string.IsNullOrWhiteSpace(keycloakUri))
+        throw new InvalidOperationException("Keycloak:KeycloakUri is not configured.");
+    client.BaseAddress = new Uri(keycloakUri);
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 
