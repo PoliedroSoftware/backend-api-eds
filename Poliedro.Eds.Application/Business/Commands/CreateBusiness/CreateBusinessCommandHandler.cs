@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Poliedro.Eds.Application.Business.Helpers;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Business.DomaianServices.Create;
 using Poliedro.Eds.Domain.Business.Entities;
@@ -22,13 +23,12 @@ public class CreateBusinessCommandHandler(
         var validationResult = await validator.ValidateAsync(request.Request);
         if (!validationResult.IsValid)
             return Result<VoidResult, Error>.Failure(
-                Error.CreateInstance(
-                    "ValidationFailed",
+                Error.CreateInstance("ValidationFailed",
                     string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)) ?? string.Empty,
                     HttpStatusCode.BadRequest));
 
         var result = await businessCreateDomianService.CreateAsync(mapper.Map<BusinessEntity>(request.Request));
-        await RedisHelper.RemoveBusinessCacheIfSuccessAsync(result, redisService);
+        await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.BUSINESS);
         return result.IsSuccess ? result.Value! : result.Error!;
     }
 }

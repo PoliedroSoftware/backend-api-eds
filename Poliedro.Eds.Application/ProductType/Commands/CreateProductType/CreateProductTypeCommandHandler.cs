@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.ProductType.DomainProductType;
@@ -12,7 +15,8 @@ namespace Poliedro.Eds.Application.ProductType.Commands.CreateProductType
     public class CreateProductTypeCommandHandler(
         IProductTypeCreateProductType productTypeDomainProductType,
         IMapper mapper,
-        IValidator<CreateProductTypeRequestDto> validator
+        IValidator<CreateProductTypeRequestDto> validator,
+        IRedisService redisService
         ) : IRequestHandler<CreateProductTypeCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateProductTypeCommand request, CancellationToken cancellationToken)
@@ -22,12 +26,9 @@ namespace Poliedro.Eds.Application.ProductType.Commands.CreateProductType
                 return Result<VoidResult, Error>.Failure(
                     Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var ProductTypeEntity = mapper.Map<ProductTypeEntity>(request.Request);
-            var result = await productTypeDomainProductType.CreateAsync(ProductTypeEntity);
-            if (!result.IsSuccess)
-                return result.Error!;
-
-            return result.Value!;
+            var result = await productTypeDomainProductType.CreateAsync(mapper.Map<ProductTypeEntity>(request.Request));
+            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.PRODUCT_TYPE);
+            return result.IsSuccess ? result.Value! : result.Error!;
         }
     }
 }

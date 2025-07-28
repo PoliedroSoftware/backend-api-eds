@@ -1,5 +1,4 @@
 ﻿using Poliedro.Eds.Application.HoseHistory.Errors;
-using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Hose.DomainHose;
@@ -12,7 +11,6 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.HoseHistory.DomainHoseH
 
 public class HoseHistoryCreateHoseHistory(
     ITenantDbContextFactory dbContextFactory,
-    IRedisService redisService,
     IHoseUpdateHose hoseUpdateHose) : IHoseHistoryCreateHoseHistory
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(HoseHistoryEntity hoseHistoryEntity)
@@ -23,7 +21,6 @@ public class HoseHistoryCreateHoseHistory(
 
         if (saveResult <= 0)
             return HoseHistoryErrorBuilder.HoseHistoryCreationException();
-        await redisService.RemoveByPrefixAsync("hoseHistory:");
         await UpdateHoseWithLatestAccumulated(hoseHistoryEntity);
         await ClearHoseHistoryCache();
 

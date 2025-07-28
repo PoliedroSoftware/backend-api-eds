@@ -9,7 +9,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
 
-public class ShoppingCreateShopping(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IShoppingCreateShopping
+public class ShoppingCreateShopping(ITenantDbContextFactory dbContextFactory) : IShoppingCreateShopping
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ShoppingEntity shoppingEntity)
     {
@@ -18,8 +18,6 @@ public class ShoppingCreateShopping(ITenantDbContextFactory dbContextFactory, IR
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return ShoppingErrorBuilder.ShoppingCreationException();
-        await redisService.RemoveByPrefixAsync("shopping:");
-
         return VoidResult.Instance;
     }
 }

@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.CourtDispensersInventory.DomainCourtDispensersInventory;
@@ -12,7 +15,8 @@ namespace Poliedro.Eds.Application.CourtDispensersInventory.Commands.CreateCourt
     public class CreateCourtDispensersInventoryCommandHandler(
         ICourtDispensersInventoryCreateCourtDispensersInventory courtdispensersinventoryDomainCourtDispensersInventory,
         IMapper mapper,
-        IValidator<CreateCourtDispensersInventoryRequestDto> validator
+        IValidator<CreateCourtDispensersInventoryRequestDto> validator,
+        IRedisService redisService
         ) : IRequestHandler<CreateCourtDispensersInventoryCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtDispensersInventoryCommand request, CancellationToken cancellationToken)
@@ -22,11 +26,9 @@ namespace Poliedro.Eds.Application.CourtDispensersInventory.Commands.CreateCourt
                 return Result<VoidResult, Error>.Failure(
                     Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var courtdispensersinventoryEntity = mapper.Map<CourtDispensersInventoryEntity>(request.Request);
-            var result = await courtdispensersinventoryDomainCourtDispensersInventory.CreateAsync(courtdispensersinventoryEntity);
-            if (!result.IsSuccess)
-                return result.Error!;
-            return result.Value!;    
+            var result = await courtdispensersinventoryDomainCourtDispensersInventory.CreateAsync(mapper.Map<CourtDispensersInventoryEntity>(request.Request));
+            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.COURT_DISPENSERS_INVENTORY);
+            return result.IsSuccess ? result.Value! : result.Error!;
         }
     }
 }

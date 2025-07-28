@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
@@ -12,7 +15,8 @@ namespace Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment
     public class CreateCompartimentCommandHandler(
         ICompartimentCreateService compartimentDomainService,
         IMapper mapper,
-        IValidator<CreateCompartimentRequestDto> validator
+        IValidator<CreateCompartimentRequestDto> validator,
+        IRedisService redisService
         ) : IRequestHandler<CreateCompartimentCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCompartimentCommand request, CancellationToken cancellationToken)
@@ -22,11 +26,9 @@ namespace Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment
                 return Result<VoidResult, Error>.Failure(
                     Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var compartimentEntity = mapper.Map<CompartimentEntity>(request.Request);
-            var result = await compartimentDomainService.CreateAsync(compartimentEntity);
-            if (!result.IsSuccess)
-                return result.Error!;
-            return result.Value!;
+            var result = await compartimentDomainService.CreateAsync(mapper.Map<CompartimentEntity>(request.Request));
+            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.COMPARTIMENT);
+            return result.IsSuccess ? result.Value! : result.Error!;
         }
     }
 }

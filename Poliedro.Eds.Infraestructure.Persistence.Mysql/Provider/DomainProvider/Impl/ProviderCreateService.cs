@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Provider.DomainProvider.Impl;
 
-public class ProviderCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IProviderCreateService
+public class ProviderCreateService(ITenantDbContextFactory dbContextFactory) : IProviderCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ProviderEntity ProviderEntity)
     {
@@ -18,7 +18,6 @@ public class ProviderCreateService(ITenantDbContextFactory dbContextFactory, IRe
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return ProviderErrorBuilder.ProviderCreationException();
-        await redisService.RemoveByPrefixAsync("provider:");
         return VoidResult.Instance;
     }
 }
