@@ -64,7 +64,14 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         {
             var getLastAccumulatedQuery = new GetLastAccumulatedQuery(idDispenser, idHose);
             var result = await mediator.Send(getLastAccumulatedQuery);
-            if (!result.IsSuccess) return StatusCode((int)result.Error.HttpStatusCode, result.Error);
+            if (!result.IsSuccess)
+            {
+                if (result.Error != null)
+                {
+                    return StatusCode((int)result.Error.HttpStatusCode, result.Error);
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error occurred.");
+            }
             return Ok(result.Value);
         }
 

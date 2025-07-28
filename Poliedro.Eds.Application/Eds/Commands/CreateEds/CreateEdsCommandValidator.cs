@@ -36,6 +36,7 @@ public class CreateEdsCommandValidator : AbstractValidator<CreateEdsRequestDto>
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdBusinessNotEmpty").GetAwaiter().GetResult());
 
     }
+
     public class GetEdsByIdCommandValidator : AbstractValidator<GetEdsByIdQuery>
     {
         public GetEdsByIdCommandValidator(IRedisService redisService)

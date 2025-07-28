@@ -20,7 +20,7 @@ namespace Poliedro.Eds.Application.Shopping.Commands.UpdateShopping
             var validationResult = await validator.ValidateAsync(request);
             if (!validationResult.IsValid)
                 return Result<VoidResult, Error>.Failure(
-                    Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+                    Error.CreateInstance("ValidationFailed", string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)), HttpStatusCode.BadRequest));
 
             var shoppingEntity = mapper.Map<ShoppingEntity>(request);
             var result = await shoppingDomainShopping.UpdateAsync(shoppingEntity);

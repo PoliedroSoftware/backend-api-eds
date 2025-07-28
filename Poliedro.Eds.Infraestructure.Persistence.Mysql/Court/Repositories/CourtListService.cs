@@ -92,7 +92,7 @@ public class CourtListService(
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Consecutive = reader.IsDBNull("consecutive") ? 0 : reader.GetInt32("consecutive"),
                 IdEds = reader.IsDBNull("id_eds") ? 0 : reader.GetInt32("id_eds"),
-                Eds = reader.IsDBNull("eds") ? null : reader.GetString("eds"),
+                Eds = reader.IsDBNull("eds") ? string.Empty : reader.GetString("eds"),
                 Bussiness = reader.IsDBNull("bussiness") ? string.Empty : reader.GetString("bussiness"),
                 Islander = reader.IsDBNull("islander") ? string.Empty : reader.GetString("islander"),
                 DateStarttime = reader.IsDBNull("date_starttime") ? default : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_starttime"))),

@@ -11,14 +11,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 
 public class InventoryListService(
-    IConfiguration config,
     IRedisService redisService,
     IHttpContextAccessor httpContextAccessor,
     ITenantDbContextFactory dbContextFactory
     ) : IInventoryListDomainService
 {
-    //private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
-
     public async Task<IEnumerable<InventoryListResponseDto>> GetAllAsync(PaginationParams paginationParams)
     {
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
@@ -50,13 +47,9 @@ public class InventoryListService(
         var rows = new List<dynamic>();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
-        //using var connection = new MySqlConnection(_connectionString);
-        //await connection.OpenAsync();
-
         string query = "SELECT * FROM v_inventory";
         using var command = connection.CreateCommand();
         command.CommandText = query;
-        //using var command = new MySqlCommand(query, connection);
         using var reader = await command.ExecuteReaderAsync();
 
         while (await reader.ReadAsync())

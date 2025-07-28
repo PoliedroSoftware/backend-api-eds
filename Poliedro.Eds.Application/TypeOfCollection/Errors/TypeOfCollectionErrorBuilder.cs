@@ -7,6 +7,7 @@ public class TypeOfCollectionErrorBuilder : IError
 {
     public const string TYPEOFCOLLECTION_CREATION_ERROR = "TypeOfCollectionCreationErrorException";
     public const string TYPEOFCOLLECTION_NOT_FOUND_ERROR = "TypeOfCollectionNotFoundErrorException";
+
     public static Error TypeOfCollectionCreationException() => Error.CreateInstance(
         TYPEOFCOLLECTION_CREATION_ERROR,
         "Failed to create Server due to an internal error.",
@@ -18,6 +19,7 @@ public class TypeOfCollectionErrorBuilder : IError
             TYPEOFCOLLECTION_UPDATE_ERROR,
             "Failed to update TypeOfCollection due to an internal error.",
             HttpStatusCode.InternalServerError);
+
     public static Error TypeOfCollectionNotFoundException(int id) => Error.CreateInstance(
        TYPEOFCOLLECTION_NOT_FOUND_ERROR,
        $"TypeOfCollection with ID {id} was not found.",

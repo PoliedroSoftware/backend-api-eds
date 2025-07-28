@@ -29,6 +29,7 @@ namespace Poliedro.Eds.Application.Court.Commands.UpdateCourt
                 .NotNull().WithMessage(redisService.GetValueFromCacheAsync("EndtimeNotNull").GetAwaiter().GetResult())
                 .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("EndtimeNotEmpty").GetAwaiter().GetResult());
         }
+
         public class GetServerByIdCommandValidator : AbstractValidator<GetCourtByIdCommand>
         {
             public GetServerByIdCommandValidator(IRedisService redisService)

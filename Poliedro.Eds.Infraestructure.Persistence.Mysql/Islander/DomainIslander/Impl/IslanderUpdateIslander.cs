@@ -27,6 +27,7 @@ public class IslanderUpdateIslander(
 
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

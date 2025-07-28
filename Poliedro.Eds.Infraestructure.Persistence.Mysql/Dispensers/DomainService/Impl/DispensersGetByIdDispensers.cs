@@ -31,6 +31,7 @@ public class DispensersGetByIdDispensers(ITenantDbContextFactory dbContextFactor
 
         return data;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

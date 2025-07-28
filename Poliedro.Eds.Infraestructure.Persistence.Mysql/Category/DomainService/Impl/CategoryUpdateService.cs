@@ -26,6 +26,7 @@ public class CategoryUpdateService(ITenantDbContextFactory dbContextFactory, IRe
 
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();
