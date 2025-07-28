@@ -7,6 +7,7 @@ public class IslanderErrorBuilder : IError
 {
     public const string ISLANDER_CREATION_ERROR = "IslanderCreationErrorException";
     public const string ISLANDER_NOT_FOUND_ERROR = "IslanderNotFoundErrorException";
+
     public static Error IslanderCreationException() => Error.CreateInstance(
        ISLANDER_CREATION_ERROR,
         "Failed to create Islander due to an internal error.",
@@ -18,6 +19,7 @@ public class IslanderErrorBuilder : IError
             ISLANDER_UPDATE_ERROR,
             "Failed to update Islander due to an internal error.",
             HttpStatusCode.InternalServerError);
+
     public static Error IslanderNotFoundException(int id) => Error.CreateInstance(
       ISLANDER_NOT_FOUND_ERROR,
        $"Islander with ID {id} was not found.",

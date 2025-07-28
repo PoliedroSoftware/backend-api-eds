@@ -1,6 +1,7 @@
 using FluentValidation;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
+
 namespace Poliedro.Eds.Application.Dispensers.Commands.UpdateDispensers
 {
     public class UpdateDispensersCommandValidator : AbstractValidator<UpdateDispensersCommand>

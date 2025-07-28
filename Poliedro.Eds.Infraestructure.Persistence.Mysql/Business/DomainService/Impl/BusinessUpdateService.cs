@@ -25,6 +25,7 @@ public class BusinessUpdateService(ITenantDbContextFactory dbContextFactory, IRe
         await redisService.RemoveByPrefixAsync("business:");
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

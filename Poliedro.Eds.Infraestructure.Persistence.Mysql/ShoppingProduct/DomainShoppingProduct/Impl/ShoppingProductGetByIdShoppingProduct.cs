@@ -31,6 +31,7 @@ public class ShoppingProductGetByIdShoppingProduct(ITenantDbContextFactory dbCon
 
         return data;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

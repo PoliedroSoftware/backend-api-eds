@@ -42,39 +42,73 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 public class DataBaseContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<ProductTypeEntity> ProductType { get; set; }
+
     public DbSet<CourtEntity> Court { get; set; }
+
     public DbSet<BusinessEntity> Business { get; set; }
+
     public DbSet<CapacityEntity> Capacity { get; set; }
+
     public DbSet<EdsEntity> Eds { get; set; }
+
     public DbSet<ProviderEntity> Provider { get; set; }
+
     public DbSet<ProductEntity> Product { get; set; }
+
     public DbSet<ProductCompartimentEntity> ProductCompartiment { get; set; }
+
     public DbSet<EdsTankEntity> EdsTank { get; set; }
+
     public DbSet<ExpendituresEntity> Expenditures { get; set; }
+
     public DbSet<TypeOfCollectionEntity> TypeOfCollection { get; set; }
+
     public DbSet<CompartimentCapacityEntity> CompartimentCapacity { get; set; }
+
     public DbSet<IslanderEntity> Islander { get; set; }
+
     public DbSet<IslandEntity> Island { get; set; }
+
     public DbSet<HoseEntity> Hose { get; set; }
+
     public DbSet<HoseHistoryEntity> HoseHistory { get; set; }
+
     public DbSet<DispensersEntity> Dispensers { get; set; }
+
     public DbSet<DispenserTypeEntity> DispenserType { get; set; }
+
     public DbSet<ShoppingEntity> Shopping { get; set; }
+
     public DbSet<ShoppingProductEntity> ShoppingProduct { get; set; }
+
     public DbSet<ShoppingProductInventoryEntity> ShoppingProductInventory { get; set; }
+
     public DbSet<TankEntity> Tank { get; set; }
+
     public DbSet<CompartimentEntity> Compartiment { get; set; }
+
     public DbSet<CourtDispensersInventoryEntity> CourtDispensersInventory { get; set; }
+
     public DbSet<CategoryEntity> Category { get; set; }
+
     public DbSet<ProductTypeEntity> ProductTypes { get; set; }
+
     public DbSet<InventoryEntity> Inventory { get; set; }
+
     public DbSet<BusinessViewEntity> BusinessView { get; set; }
+
     public DbSet<CapacityViewEntity> CapacityView { get; set; }
+
     public DbSet<EdsViewEntity> EdsView { get; set; }
+
     public DbSet<ProviderViewEntity> ProviderView { get; set; }
+
     public DbSet<ProductViewEntity> ProductView { get; set; }
+
     public DbSet<ShoppingProductViewEntity> ShoppingProductView { get; set; }
+
     public DbSet<CompartimentViewEntity> CompartimentView { get; set; }
+
     public DbSet<TypeOfCollectionViewEntity> TypeOfCollectionView { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

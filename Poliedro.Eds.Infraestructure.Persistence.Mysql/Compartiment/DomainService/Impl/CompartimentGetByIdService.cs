@@ -33,6 +33,7 @@ public class CompartimentGetByIdService(ITenantDbContextFactory dbContextFactory
 
         return data;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

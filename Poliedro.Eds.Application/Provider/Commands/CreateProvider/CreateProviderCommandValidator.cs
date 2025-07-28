@@ -14,6 +14,7 @@ public class CreateProviderCommandValidator : AbstractValidator<CreateProviderRe
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("NameNotEmpty").GetAwaiter().GetResult())
             .NotEqual("string").WithMessage(redisService.GetValueFromCacheAsync("NameNotEqual").GetAwaiter().GetResult());
     }
+
     public class GetProviderByIdCommandValidator : AbstractValidator<GetProviderByIdQuery>
     {
         public GetProviderByIdCommandValidator(IRedisService redisService)

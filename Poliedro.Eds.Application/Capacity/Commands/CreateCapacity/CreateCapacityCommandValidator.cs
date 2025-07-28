@@ -27,6 +27,7 @@ public class CreateCapacityCommandValidator : AbstractValidator<CreateCapacityRe
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("LitersNotEmpty").GetAwaiter().GetResult());
 
     }
+
     public class GetCapacityByIdCommandValidator : AbstractValidator<GetCapacityByIdQuery>
     {
         public GetCapacityByIdCommandValidator(IRedisService redisService)

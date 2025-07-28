@@ -27,6 +27,7 @@ public class DispenserTypeUpdateDispenserType(ITenantDbContextFactory dbContextF
 
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

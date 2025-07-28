@@ -17,7 +17,7 @@ public class LastAccumulatedService(
     ITenantDbContextFactory dbContextFactory,
     IRedisService redisService,
     IHttpContextAccessor httpContextAccessor
-    , IConfiguration config) : ILastAccumulatedService
+    ) : ILastAccumulatedService
 {
     public async Task<Result<LastAccumulatedEntity, Error>> GetLastAccumulatedAsync(int idDispenser, int idHose)
     {

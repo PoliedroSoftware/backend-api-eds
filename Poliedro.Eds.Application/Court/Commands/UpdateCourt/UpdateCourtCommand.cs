@@ -20,5 +20,6 @@ namespace Poliedro.Eds.Application.Court.Commands.UpdateCourt
     IEnumerable<CourtExpenditureDto> CourtExpenditures,
     IEnumerable<CourtTypeOfCollectionDto> CourtTypeOfCollections
     ) : IRequest<Result<VoidResult, Error>>;
+
     public record GetCourtByIdCommand(int Id) : IRequest<Result<CourtDto, Error>>;
 }
