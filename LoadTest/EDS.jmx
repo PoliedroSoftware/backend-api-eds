@@ -23,8 +23,6 @@
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath">C:\Users\leosa\Downloads\apache-jmeter-5.6.3\apache-jmeter-5.6.3\lib\mysql-connector-j-9.0.0</stringProp>
-      <boolProp name="TestPlan.functional_mode">false</boolProp>
-      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
     </TestPlan>
     <hashTree>
       <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
@@ -166,6 +164,36 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor General Auditoría y valores comunes">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.UUID
+
+// Formato ISO para timestamp
+def formatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&apos;T&apos;HH:mm:ss&quot;)
+
+// Variables comunes
+def now = LocalDateTime.now().format(formatter)
+def randomUUID = UUID.randomUUID().toString()
+def user = &quot;QA_LoadTest_User&quot;
+
+// Set variables globales
+vars.put(&quot;nowISO&quot;, now)  //para timestamps
+vars.put(&quot;loadTestUser&quot;, user) //para auditoría
+vars.put(&quot;randomUUID&quot;, randomUUID)   // para asegurar valores únicos
+
+// (Opcional) Si necesitas una marca única por ejecución
+vars.put(&quot;runTag&quot;, &quot;LT-&quot; + now.replaceAll(&quot;[-:T]&quot;, &quot;&quot;).substring(0, 12))
+
+log.info(&quot;📌 Variables globales JSR223 General inicializadas&quot;)
+</stringProp>
+          <stringProp name="TestPlan.comments">Auditoria</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Requests GET_ALL"/>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Business GET  GetAll">
@@ -222,9 +250,15 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedBusinessId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idBusiness</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect name">
+              <stringProp name="JSONPostProcessor.referenceNames">selectedBusinessName</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].name </stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
@@ -290,7 +324,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -344,13 +378,13 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCategory</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect for descriptions" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect for descriptions">
               <stringProp name="JSONPostProcessor.referenceNames">existingCategoryDescriptions</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].description</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
@@ -411,22 +445,22 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect IDs individuales (GET BY ID)" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect IDs individuales (GET BY ID)">
               <stringProp name="JSONPostProcessor.referenceNames">selectedCompartimentId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCompartment</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect Number  de compartiments ya usados" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect Number  de compartiments ya usados">
               <stringProp name="JSONPostProcessor.referenceNames">existingCompartimentNumbers</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].number</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
             </JSONPostProcessor>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect todos los IDs (array, para lógica en JSR223)" enabled="true">
-              <stringProp name="JSONPostProcessor.referenceNames">allCompartimentIds</stringProp>
-              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCompartiment</stringProp>
-              <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect todos los IDs (array, para lógica en JSR223)">
+              <stringProp name="JSONPostProcessor.referenceNames">currentCompartmentNumber</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[?(@.idCompartment==${selectedCompartmentId})].number</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
@@ -487,6 +521,18 @@
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedCompartimentCapacityId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCompartimentCapacity</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect ID Compartimen">
+              <stringProp name="JSONPostProcessor.referenceNames">selectedCompartimentId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCompartment</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id Capacity">
+              <stringProp name="JSONPostProcessor.referenceNames">selectedCapacityId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idCapacity</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
@@ -680,7 +726,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Dispensers GET  GetAll">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Dispensers GET  GetAll" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -734,14 +780,14 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">selectedDispensersId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].id</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DispenserType GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DispenserType GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -856,20 +902,20 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">selectedEdsId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idEds</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect all">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect all" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">allEdsIds</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idEds</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank GET  GetAll">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank GET  GetAll" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1009,7 +1055,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET  GetAll" enabled="false">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET  GetAll" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1070,7 +1116,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HoseHistory GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HoseHistory GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1247,7 +1293,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1301,14 +1347,14 @@
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
             <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id" enabled="true">
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extrect id">
               <stringProp name="JSONPostProcessor.referenceNames">selectedIslandId</stringProp>
               <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[*].idIsland</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -1948,7 +1994,7 @@
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection GET  GetAll" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="TypeOfCollection GET  GetAll">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2010,7 +2056,7 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Request GET_BY_ID"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Request GET_BY_ID" enabled="false"/>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Business GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
@@ -2104,7 +2150,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2288,7 +2334,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET GetByID">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CourtDispensersInventory GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3165,7 +3211,22 @@
         </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Request POST "/>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Business POST">
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor Business POST">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// Generar nombre único para evitar colisión en constraint UNIQUE
+def name = &quot;Business_&quot; + UUID.randomUUID().toString().substring(0, 8)
+
+// Variables de auditoría
+vars.put(&quot;businessName&quot;, name)
+vars.put(&quot;createdBy&quot;, vars.get(&quot;loadTestUser&quot;))
+vars.put(&quot;createdAt&quot;, vars.get(&quot;nowISO&quot;))
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Business POST" enabled="false">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3181,14 +3242,13 @@
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;request&quot;: {&#xd;
-    &quot;name&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
-     &quot;context&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
-     &quot;createdBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-    &quot;createdAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;,&#xd;
-    &quot;updatedBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-    &quot;updatedAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;&#xd;
+    &quot;name&quot;: &quot;${businessName}&quot;,  // generado aleatorio único&#xd;
+    &quot;context&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+    &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
-}</stringProp>
+}&#xd;
+</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -3227,7 +3287,23 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity POST" enabled="true">
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor Capacity POST">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+// Formato ISO 8601
+def formatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&apos;T&apos;HH:mm:ss&quot;)
+
+vars.put(&quot;createdAt&quot;, LocalDateTime.now().format(formatter))
+vars.put(&quot;createdBy&quot;, &quot;LoadTestUser&quot;)
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity POST">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3247,10 +3323,8 @@
     &quot;height&quot;: ${__Random(100,200)},&#xd;
     &quot;gallon&quot;: ${__Random(1,50)},&#xd;
     &quot;liters&quot;: ${__Random(1,200)},&#xd;
-    &quot;createdBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-    &quot;createdAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;,&#xd;
-    &quot;updatedBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-    &quot;updatedAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;&#xd;
+  &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
 }&#xd;
 </stringProp>
@@ -3292,7 +3366,36 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category POST" enabled="true">
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor Category POST">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// 1. Obtener el número de descripciones existentes (matchNr lo da el JSON Extractor)
+int nDesc = vars.get(&quot;existingCategoryDescriptions_matchNr&quot;) as Integer
+
+// 2. Crear una lista con todas las descripciones actuales extraídas
+def existingDescriptions = (1..nDesc).collect {
+    vars.get(&quot;existingCategoryDescriptions_&quot; + it)
+}
+
+// 3. Preparar un generador aleatorio de texto para la nueva descripción
+def newDesc = &quot;&quot;
+def alphabet = (&apos;a&apos;..&apos;z&apos;) + (&apos;A&apos;..&apos;Z&apos;)  // Letras posibles
+Random rand = new Random()
+
+// 4. Generar una descripción de 12 letras que no exista aún
+while (true) {
+    newDesc = (1..12).collect { alphabet[rand.nextInt(alphabet.size())] }.join()
+    if (!existingDescriptions.contains(newDesc)) break  // Asegura unicidad
+}
+
+// 5. Guardar la descripción para usarla en el body del POST
+vars.put(&quot;uniqueCategoryDescription&quot;, newDesc)
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category POST">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3309,10 +3412,8 @@
                   <stringProp name="Argument.value">{&#xd;
   &quot;request&quot;: {&#xd;
     &quot;description&quot;: &quot;${uniqueCategoryDescription}&quot;,&#xd;
-    &quot;createdBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-    &quot;createdAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;,&#xd;
-    &quot;updatedBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-    &quot;updatedAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;&#xd;
+    &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
 }&#xd;
 </stringProp>
@@ -3353,31 +3454,37 @@
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
             <hashTree/>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
-              <stringProp name="scriptLanguage">groovy</stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">true</stringProp>
-              <stringProp name="script">// 1. Obtener todas las descripciones existentes (ya extraídas con el extractor)
-int nDesc = vars.get(&quot;existingCategoryDescriptions_matchNr&quot;) as Integer
-def existingDescriptions = (1..nDesc).collect { vars.get(&quot;existingCategoryDescriptions_&quot; + it) }
+          </hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor POST Compartment POST">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// ====================================
+// PREPROCESSOR: Compartment POST
+// ====================================
 
-// 2. Generar una descripción aleatoria que no exista aún
-def newDesc = &quot;&quot;
-def alphabet = (&apos;a&apos;..&apos;z&apos;) + (&apos;A&apos;..&apos;Z&apos;)
-Random rand = new Random()
+// 1. Obtener la cantidad de números ya registrados
+def totalNumbers = vars.get(&quot;existingCompartmentNumbers_matchNr&quot;) as Integer
 
-while (true) {
-    newDesc = (1..12).collect { alphabet[rand.nextInt(alphabet.size())] }.join()
-    if (!existingDescriptions.contains(newDesc)) break
+// 2. Cargar todos los valores únicos actuales (números ya usados)
+def numbers = (1..totalNumbers).collect {
+    vars.get(&quot;existingCompartmentNumbers_${it}&quot;) as Integer
 }
 
-// 3. Guardar la variable para usar en el body POST
-vars.put(&quot;uniqueCategoryDescription&quot;, newDesc)
+// 3. Generar un nuevo número aleatorio que no exista
+def uniqueNumber
+def random = new Random()
+
+do {
+    uniqueNumber = random.nextInt(9999) + 1
+} while (numbers.contains(uniqueNumber))  // Validación contra duplicados
+
+// 4. Guardar el número como variable para el body
+vars.put(&quot;uniqueCompartmentNumber&quot;, uniqueNumber.toString())
 </stringProp>
-            </JSR223PreProcessor>
-            <hashTree/>
-          </hashTree>
+          </JSR223PreProcessor>
+          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment POST">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
@@ -3394,16 +3501,14 @@ vars.put(&quot;uniqueCategoryDescription&quot;, newDesc)
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;request&quot;: {&#xd;
-    &quot;number&quot;: ${uniqueCompartimentNumber},&#xd;
-    &quot;nominal&quot;: ${__Random(1,20000)},&#xd;
-    &quot;operative&quot;: ${__Random(1,20000)},&#xd;
-    &quot;stock&quot;: ${__Random(1,20000)},&#xd;
-    &quot;height&quot;: ${__Random(1,200)},&#xd;
+    &quot;number&quot;: &quot;${uniqueCompartmentNumber}&quot;,&#xd;
+    &quot;nominal&quot;: &quot;${__Random(1,20000)}&quot;,&#xd;
+    &quot;operative&quot;: &quot;${__Random(1,20000)}&quot;,&#xd;
+    &quot;stock&quot;: &quot;${__Random(1,20000)}&quot;,&#xd;
+    &quot;height&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
     &quot;idTank&quot;: ${selectedTankId},&#xd;
     &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
-    &quot;createdAt&quot;: &quot;${createdAt}&quot;,&#xd;
-    &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
-    &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
 }&#xd;
 </stringProp>
@@ -3434,7 +3539,7 @@ vars.put(&quot;uniqueCategoryDescription&quot;, newDesc)
               <stringProp name="DurationAssertion.duration">30000</stringProp>
             </DurationAssertion>
             <hashTree/>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="49587">201</stringProp>
               </collectionProp>
@@ -3444,24 +3549,30 @@ vars.put(&quot;uniqueCategoryDescription&quot;, newDesc)
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
             <hashTree/>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
-              <stringProp name="scriptLanguage">groovy</stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">true</stringProp>
-              <stringProp name="script">// Obtén la cantidad de números encontrados
-def totalNumbers = vars.get(&apos;existingCompartimentNumbers_matchNr&apos;) as Integer
-def numbers = (1..totalNumbers).collect { vars.get(&quot;existingCompartimentNumbers_${it}&quot;) as Integer }
-def uniqueNumber
-def random = new Random()
-do {
-    uniqueNumber = random.nextInt(9999) + 1
-} while (numbers.contains(uniqueNumber))
-vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
-</stringProp>
-            </JSR223PreProcessor>
-            <hashTree/>
           </hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor CompartimentCapacity POST">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// Este PreProcessor define variables necesarias para el POST del endpoint compartiment_capacity
+
+// 1. Asignar un ID de Compartment aleatorio extraído en el extractor previo
+String idCompartment = vars.get(&quot;selectedCompartmentId&quot;)
+
+// 2. Asignar un ID de Capacity aleatorio extraído en el extractor previo
+String idCapacity = vars.get(&quot;selectedCapacityId&quot;)
+
+// 3. Definir un valor aleatorio para el campo booleano default (1 a 50 como ejemplo de distribución)
+int defaultValue = new Random().nextInt(50) + 1
+
+// 4. Asignar las variables al contexto de JMeter
+vars.put(&quot;selectedCompartmentId&quot;, idCompartment)
+vars.put(&quot;selectedCapacityId&quot;, idCapacity)
+vars.put(&quot;defaultValue&quot;, String.valueOf(defaultValue))
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CompartimentCapacity POST">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
@@ -3482,9 +3593,7 @@ vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
     &quot;idCapacity&quot;: ${selectedCapacityId},&#xd;
     &quot;default&quot;: ${__Random(1,50)},&#xd;
     &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
-    &quot;createdAt&quot;: &quot;${createdAt}&quot;,&#xd;
-    &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
-    &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
 }&#xd;
 </stringProp>
@@ -3526,6 +3635,17 @@ vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor Court POST">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// Generar valores de auditoría y campos dinámicos para el POST de Court
+vars.put(&quot;createdBy&quot;, vars.get(&quot;loadTestUser&quot;))         // Usuario de carga
+vars.put(&quot;createdAt&quot;, vars.get(&quot;nowISO&quot;))               // Timestamp ISO actual
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Court POST" enabled="false">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
@@ -3541,30 +3661,28 @@ vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-  &quot;idBusiness&quot;: ${selectedBusinessId},&#xd;
-  &quot;idEds&quot;: ${selectedEdsId},&#xd;
-  &quot;idIslander&quot;: ${selectedIslanderId},&#xd;
+  &quot;idBusiness&quot;: &quot;${selectedBusinessId}&quot;,&#xd;
+  &quot;idEds&quot;: &quot;${selectedEdsId}&quot;,&#xd;
+  &quot;idIslander&quot;: &quot;${selectedIslanderId}&quot;,&#xd;
   &quot;dateStarttime&quot;: &quot;${__time(yyyy-MM-dd)}&quot;,&#xd;
   &quot;starttime&quot;: &quot;${__time(HH:mm:ss)}&quot;,&#xd;
   &quot;dateEndtime&quot;: &quot;${__time(yyyy-MM-dd)}&quot;,&#xd;
   &quot;endtime&quot;: &quot;${__time(HH:mm:ss)}&quot;,&#xd;
-  &quot;consecutive&quot;: ${__Random(1,100)},&#xd;
-  &quot;descripcion&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
-  &quot;distinct&quot;: ${__Random(1,100)},&#xd;
+  &quot;consecutive&quot;: &quot;${__Random(1,100)}&quot;,&#xd;
+  &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;distinct&quot;: &quot;${__Random(1,100)}&quot;,&#xd;
   &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
   &quot;createdAt&quot;: &quot;${createdAt}&quot;,&#xd;
-  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
-  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;,&#xd;
   &quot;courtDispensers&quot;: [&#xd;
     {&#xd;
-      &quot;accumulatedAmount&quot;: ${__Random(1,200)},&#xd;
-      &quot;accumulatedGallons&quot;: ${__Random(1,200)},&#xd;
-      &quot;lastAccumulatedAmount&quot;: ${__Random(1,200)},&#xd;
-      &quot;lastAccumulatedGallons&quot;: ${__Random(1,200)},&#xd;
-      &quot;gallonDifferenceResult&quot;: ${__Random(1,200)},&#xd;
-      &quot;idProduct&quot;: ${selectedProductId},&#xd;
-      &quot;idCompartiment&quot;: ${selectedCompartimentId},&#xd;
-      &quot;idHose&quot;: ${selectedHoseId},&#xd;
+      &quot;accumulatedAmount&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;accumulatedGallons&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;lastAccumulatedAmount&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;lastAccumulatedGallons&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;gallonDifferenceResult&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;idProduct&quot;: &quot;${selectedProductId}&quot;,&#xd;
+      &quot;idCompartment&quot;: &quot;${selectedCompartmentId}&quot;,&#xd;
+      &quot;idHose&quot;: &quot;${selectedHoseId}&quot;,&#xd;
       &quot;numberName&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
       &quot;dispenserNumber&quot;: &quot;${__Random(1,200)}&quot;&#xd;
     }&#xd;
@@ -3577,16 +3695,16 @@ vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
   ],&#xd;
   &quot;courtExpenditures&quot;: [&#xd;
     {&#xd;
-      &quot;idExpenditures&quot;: ${selectedExpendituresId},&#xd;
-      &quot;amount&quot;: ${__Random(1,200)},&#xd;
+      &quot;idExpenditures&quot;: &quot;${selectedExpendituresId}&quot;,&#xd;
+      &quot;amount&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
       &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
       &quot;expenditureName&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
     }&#xd;
   ],&#xd;
   &quot;courtTypeOfCollections&quot;: [&#xd;
     {&#xd;
-      &quot;idTypeOfCollection&quot;: ${selectedTypeOfCollectionId},&#xd;
-      &quot;amount&quot;: ${__Random(1,200)},&#xd;
+      &quot;idTypeOfCollection&quot;: &quot;${selectedTypeOfCollectionId}&quot;,&#xd;
+      &quot;amount&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
       &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
       &quot;typeOfCollectionName&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
     }&#xd;
@@ -3650,9 +3768,131 @@ vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
     &quot;idCourtDispensers&quot;: ${selectedIdCourtDispensers},      // ID relacionado (debe ser variable válida)&#xd;
     &quot;idInventory&quot;: ${selectedInventoryId},                   // ID relacionado (debe ser variable válida)&#xd;
     &quot;createdBy&quot;: &quot;${createdBy}&quot;,                             // Usuario que crea&#xd;
-    &quot;createdAt&quot;: &quot;${createdAt}&quot;,                             // Fecha creación (formato: yyyy-MM-dd&apos;T&apos;HH:mm:ss)&#xd;
-    &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,                             // Usuario que actualiza&#xd;
-    &quot;updatedAt&quot;: &quot;${updatedAt}&quot;                              // Fecha actualización (formato: yyyy-MM-dd&apos;T&apos;HH:mm:ss)&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;                             // Fecha creación (formato: yyyy-MM-dd&apos;T&apos;HH:mm:ss)&#xd;
+  &#xd;
+}&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Content-Type</stringProp>
+                  <stringProp name="Header.value">application/json</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Authorization</stringProp>
+                  <stringProp name="Header.value">Bearer ${access_token}</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">X-Environment</stringProp>
+                  <stringProp name="Header.value">staging</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+              <stringProp name="DurationAssertion.duration">30000</stringProp>
+            </DurationAssertion>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49587">201</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Dispensers POST" enabled="true">
+            <stringProp name="HTTPSampler.domain">${server}</stringProp>
+            <stringProp name="HTTPSampler.port">${port}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <stringProp name="HTTPSampler.path">eds/api/v1/dispensers</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+  &quot;request&quot;: {&#xd;
+    &quot;code&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;,&#xd;
+    &quot;number&quot;: ${__Random(1,10)},&#xd;
+    &quot;dispenserTypeId&quot;: ${selectedDispenserTypeId},&#xd;
+    &quot;hoseNumber&quot;: ${__Random(1,10)},&#xd;
+    &quot;edsId&quot;: ${selectedEdsId},&#xd;
+    &quot;idIsland&quot;: ${selectedIslandId},&#xd;
+     &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
+}&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Content-Type</stringProp>
+                  <stringProp name="Header.value">application/json</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">Authorization</stringProp>
+                  <stringProp name="Header.value">Bearer ${access_token}</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">X-Environment</stringProp>
+                  <stringProp name="Header.value">staging</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+              <stringProp name="DurationAssertion.duration">30000</stringProp>
+            </DurationAssertion>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49587">201</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Dispenser-type POST" enabled="true">
+            <stringProp name="HTTPSampler.domain">${server}</stringProp>
+            <stringProp name="HTTPSampler.port">${port}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+            <stringProp name="HTTPSampler.path">eds/api/v1/dispenser-type</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+  &quot;request&quot;: {&#xd;
+    &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+    &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
 }&#xd;
 </stringProp>
@@ -3694,126 +3934,7 @@ vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Dispensers POST">
-            <stringProp name="HTTPSampler.domain">${server}</stringProp>
-            <stringProp name="HTTPSampler.port">${port}</stringProp>
-            <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
-            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-            <stringProp name="HTTPSampler.path">eds/api/v1/dispensers</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-            <stringProp name="HTTPSampler.method">POST</stringProp>
-            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-              <collectionProp name="Arguments.arguments">
-                <elementProp name="" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&#xd;
-  &quot;request&quot;: {&#xd;
-    &quot;code&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
-    &quot;number&quot;: ${__Random(1,10)},&#xd;
-    &quot;dispenserTypeId&quot;: ${selectedDispenserTypeId},&#xd;
-    &quot;hoseNumber&quot;: ${__Random(1,10)},&#xd;
-    &quot;edsId&quot;: ${selectedEdsId},&#xd;
-    &quot;idIsland&quot;: ${selectedIslandId}&#xd;
-  }&#xd;
-}</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-              </collectionProp>
-            </elementProp>
-          </HTTPSamplerProxy>
-          <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-              <collectionProp name="HeaderManager.headers">
-                <elementProp name="" elementType="Header">
-                  <stringProp name="Header.name">Content-Type</stringProp>
-                  <stringProp name="Header.value">application/json</stringProp>
-                </elementProp>
-                <elementProp name="" elementType="Header">
-                  <stringProp name="Header.name">Authorization</stringProp>
-                  <stringProp name="Header.value">Bearer ${access_token}</stringProp>
-                </elementProp>
-                <elementProp name="" elementType="Header">
-                  <stringProp name="Header.name">X-Environment</stringProp>
-                  <stringProp name="Header.value">staging</stringProp>
-                </elementProp>
-              </collectionProp>
-            </HeaderManager>
-            <hashTree/>
-            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
-              <stringProp name="DurationAssertion.duration">30000</stringProp>
-            </DurationAssertion>
-            <hashTree/>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-              <collectionProp name="Asserion.test_strings">
-                <stringProp name="49587">201</stringProp>
-              </collectionProp>
-              <stringProp name="Assertion.custom_message"></stringProp>
-              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-              <boolProp name="Assertion.assume_success">false</boolProp>
-              <intProp name="Assertion.test_type">16</intProp>
-            </ResponseAssertion>
-            <hashTree/>
-          </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DispenserType POST" enabled="true">
-            <stringProp name="HTTPSampler.domain">${server}</stringProp>
-            <stringProp name="HTTPSampler.port">${port}</stringProp>
-            <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
-            <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-            <stringProp name="HTTPSampler.path">eds/api/v1/dispenser-type</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-            <stringProp name="HTTPSampler.method">POST</stringProp>
-            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-              <collectionProp name="Arguments.arguments">
-                <elementProp name="" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&#xd;
-  &quot;request&quot;: {&#xd;
-    &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
-  }&#xd;
-}</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-              </collectionProp>
-            </elementProp>
-          </HTTPSamplerProxy>
-          <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-              <collectionProp name="HeaderManager.headers">
-                <elementProp name="" elementType="Header">
-                  <stringProp name="Header.name">Content-Type</stringProp>
-                  <stringProp name="Header.value">application/json</stringProp>
-                </elementProp>
-                <elementProp name="" elementType="Header">
-                  <stringProp name="Header.name">Authorization</stringProp>
-                  <stringProp name="Header.value">Bearer ${access_token}</stringProp>
-                </elementProp>
-                <elementProp name="" elementType="Header">
-                  <stringProp name="Header.name">X-Environment</stringProp>
-                  <stringProp name="Header.value">staging</stringProp>
-                </elementProp>
-              </collectionProp>
-            </HeaderManager>
-            <hashTree/>
-            <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
-              <stringProp name="DurationAssertion.duration">30000</stringProp>
-            </DurationAssertion>
-            <hashTree/>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-              <collectionProp name="Asserion.test_strings">
-                <stringProp name="49587">201</stringProp>
-              </collectionProp>
-              <stringProp name="Assertion.custom_message"></stringProp>
-              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-              <boolProp name="Assertion.assume_success">false</boolProp>
-              <intProp name="Assertion.test_type">16</intProp>
-            </ResponseAssertion>
-            <hashTree/>
-          </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds POST">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds POST" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3833,8 +3954,11 @@ vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
     &quot;nit&quot;: &quot;${__Random(1000000000,9999999999)}&quot;,&#xd;
     &quot;address&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)} ${__Random(1,999)}, ${__RandomString(6,abcdefghijklmnopqrstuvwxyz)} City&quot;,&#xd;
     &quot;sicom&quot;: &quot;${__Random(1,10000)}&quot;,&#xd;
-    &quot;idBusiness&quot;: ${selectedBusinessId}&#xd;
+    &quot;idBusiness&quot;: ${selectedBusinessId},&#xd;
+ 	&quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
+  &#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -3874,7 +3998,7 @@ vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank POST">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EdsTank POST" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -3891,8 +4015,11 @@ vars.put(&apos;uniqueCompartimentNumber&apos;, uniqueNumber.toString())
                   <stringProp name="Argument.value">{&#xd;
   &quot;request&quot;: {&#xd;
     &quot;idEds&quot;: ${selectedEdsId},&#xd;
-    &quot;idTank&quot;: ${selectedTankId}&#xd;
+    &quot;idTank&quot;: ${selectedTankId},&#xd;
+    &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
+  &#xd;
 }&#xd;
 &#xd;
 </stringProp>
@@ -3987,9 +4114,12 @@ if (freeCombo) {
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;request&quot;: {&#xd;
-    &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
+    &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+    &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
-}</stringProp>
+}&#xd;
+</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -4048,9 +4178,12 @@ if (freeCombo) {
     &quot;idDispensers&quot;: ${selectedDispensersId},&#xd;
     &quot;accumulatedGallons&quot;: &quot;${__Random(1,100)}&quot;,&#xd;
     &quot;accumulatedAmount&quot;: &quot;${__Random(1,50)}&quot;,&#xd;
-    &quot;idProductType&quot;: ${selectedProductTypeId}&#xd;
+    &quot;idProductType&quot;: ${selectedProductTypeId},&#xd;
+    &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
-}</stringProp>
+}&#xd;
+</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -4152,7 +4285,7 @@ if (freeCombo) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island POST" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island POST">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4168,7 +4301,9 @@ if (freeCombo) {
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;request&quot;: {&#xd;
-    &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
+    &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+    &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
+    &quot;createdAt&quot;: &quot;${createdAt}&quot;&#xd;
   }&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -4208,8 +4343,16 @@ if (freeCombo) {
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
             <hashTree/>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script"></stringProp>
+            </JSR223PreProcessor>
+            <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander POST" enabled="false">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Islander POST">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4891,16 +5034,25 @@ if (freePair) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
-            <boolProp name="displayJMeterProperties">true</boolProp>
-            <boolProp name="displayJMeterVariables">true</boolProp>
-            <boolProp name="displaySystemProperties">false</boolProp>
-          </DebugSampler>
-          <hashTree/>
         </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Request PUT"/>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Business PUT" enabled="true">
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor Business PUT">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// Generar nombre único para evitar colisión en constraint UNIQUE
+def name = &quot;Business_&quot; + UUID.randomUUID().toString().substring(0, 8)
+
+// Variables de auditoría
+vars.put(&quot;businessName&quot;, name)
+vars.put(&quot;updatedBy&quot;, vars.get(&quot;loadTestUser&quot;))
+vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;))
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Business PUT" enabled="false">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4914,12 +5066,13 @@ if (freePair) {
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-  &quot;idBusiness&quot;: ${selectedBusinessId},&#xd;
-  &quot;name&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
-  &quot;context&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
-  &quot;updatedBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-  &quot;updatedAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;&#xd;
-}</stringProp>
+  &quot;idBusiness&quot;: &quot;${selectedBusinessId}&quot;,  // obtenido de GET_ALL&#xd;
+  &quot;name&quot;: &quot;${businessName}&quot;,              // generado nuevamente&#xd;
+  &quot;context&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
+}&#xd;
+</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -4958,7 +5111,17 @@ if (freePair) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity PUT" enabled="true">
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor Capacity PUT">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Capacity PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -4977,8 +5140,8 @@ if (freePair) {
   &quot;height&quot;: ${__Random(100,200)},&#xd;
   &quot;gallon&quot;: ${__Random(1,50)},&#xd;
   &quot;liters&quot;: ${__Random(1,200)},&#xd;
-  &quot;updatedBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-  &quot;updatedAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -5019,7 +5182,22 @@ if (freePair) {
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category PUT" enabled="true">
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname=" JSR223 PreProcessor Category PUT ">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// 1. Generar una nueva descripción aleatoria para el PUT (6 caracteres)
+def newDesc = &quot;PUT_Category_&quot; + UUID.randomUUID().toString().substring(0, 6)
+
+// 2. Cargar los valores de auditoría desde variables globales
+vars.put(&quot;uniqueCategoryDescription&quot;, newDesc)
+vars.put(&quot;updatedBy&quot;, vars.get(&quot;loadTestUser&quot;))
+vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;))
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Category PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5033,12 +5211,10 @@ if (freePair) {
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-  &quot;idCategory&quot;: ${categoryIdToUpdate},&#xd;
+  &quot;idCategory&quot;: &quot;${selectedId}&quot;,&#xd;
   &quot;description&quot;: &quot;${uniqueCategoryDescription}&quot;,&#xd;
-  &quot;createdBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-  &quot;createdAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;,&#xd;
-  &quot;updatedBy&quot;: &quot;${__RandomString(8,abcdef)}&quot;,&#xd;
-  &quot;updatedAt&quot;: &quot;${__time(yyyy-MM-dd HH:mm:ss)}&quot;&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }&#xd;
 </stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
@@ -5078,41 +5254,47 @@ if (freePair) {
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
             <hashTree/>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
-              <stringProp name="scriptLanguage">groovy</stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">true</stringProp>
-              <stringProp name="script">// 1. Obtener todas las descripciones e IDs existentes
-int nDesc = vars.get(&quot;existingCategoryDescriptions_matchNr&quot;) as Integer
-def existingDescriptions = (1..nDesc).collect { vars.get(&quot;existingCategoryDescriptions_&quot; + it) }
+          </hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor Compartment PUT">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// ====================================
+// PREPROCESSOR: Compartment PUT
+// ====================================
 
-int nIds = vars.get(&quot;selectedId_matchNr&quot;) as Integer
-def allIds = (1..nIds).collect { vars.get(&quot;selectedId_&quot; + it) }
-
-// 2. Elegir al azar una categoría a actualizar
-Random rand = new Random()
-def idx = rand.nextInt(allIds.size())
-def idToUpdate = allIds[idx]
-
-// 3. Generar una descripción única diferente a la actual
-def oldDesc = vars.get(&quot;existingCategoryDescriptions_&quot; + (idx + 1))
-def newDesc = &quot;&quot;
-def alphabet = (&apos;a&apos;..&apos;z&apos;) + (&apos;A&apos;..&apos;Z&apos;)
-
-while (true) {
-    newDesc = (1..12).collect { alphabet[rand.nextInt(alphabet.size())] }.join()
-    if (!existingDescriptions.contains(newDesc)) break
+// 1. Cargar todos los numbers existentes
+def totalNumbers = vars.get(&quot;existingCompartmentNumbers_matchNr&quot;) as Integer
+def numbers = (1..totalNumbers).collect {
+    vars.get(&quot;existingCompartmentNumbers_${it}&quot;) as Integer
 }
 
-// 4. Guardar variables para el body
-vars.put(&quot;categoryIdToUpdate&quot;, idToUpdate)
-vars.put(&quot;uniqueCategoryDescription&quot;, newDesc)
+// 2. Obtener el número actual del registro a modificar
+def currentNumber = vars.get(&quot;currentCompartmentNumber&quot;) as Integer
+
+// 3. Eliminar el actual para permitir dejarlo igual si es necesario
+numbers.removeElement(currentNumber)
+
+// 4. Generar un nuevo número no repetido
+def newNumber
+def random = new Random()
+do {
+    newNumber = random.nextInt(1000) + 1
+} while (numbers.contains(newNumber))
+
+// 5. Datos de auditoría
+def now = org.apache.commons.lang3.time.FastDateFormat.getInstance(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(new Date())
+def username = org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric(8)
+
+// 6. Guardar variables en JMeter
+vars.put(&quot;uniqueCompartmentNumber&quot;, newNumber.toString())
+vars.put(&quot;updatedBy&quot;, username)
+vars.put(&quot;updatedAt&quot;, now)
 </stringProp>
-            </JSR223PreProcessor>
-            <hashTree/>
-          </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment PUT" enabled="true">
+          </JSR223PreProcessor>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Compartiment PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5143,7 +5325,7 @@ vars.put(&quot;uniqueCategoryDescription&quot;, newDesc)
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
@@ -5174,39 +5356,32 @@ vars.put(&quot;uniqueCategoryDescription&quot;, newDesc)
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
             <hashTree/>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
-              <stringProp name="scriptLanguage">groovy</stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">true</stringProp>
-              <stringProp name="script">// Recoge todos los numbers existentes
-def totalNumbers = vars.get(&apos;existingCompartimentNumbers_matchNr&apos;) as Integer
-def numbers = (1..totalNumbers).collect { vars.get(&quot;existingCompartimentNumbers_${it}&quot;) as Integer }
-
-// Obtén el number actual del registro (GET BY ID, asegúrate de tener el extractor)
-def currentNumber = vars.get(&apos;currentCompartimentNumber&apos;) as Integer
-
-// Elimina el number actual de la lista para permitir dejar el mismo número si lo deseas
-numbers.removeElement(currentNumber)
-
-// Genera uno único
-def newNumber
-def random = new Random()
-do {
-    newNumber = random.nextInt(1000) + 1
-} while (numbers.contains(newNumber))
-
-// Auditoría
-def now = org.apache.commons.lang3.time.FastDateFormat.getInstance(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(new Date())
-def username = org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric(8)
-
-vars.put(&apos;uniqueCompartimentNumber&apos;, newNumber.toString())
-vars.put(&quot;updatedBy&quot;, username)
-vars.put(&quot;updatedAt&quot;, now)
-</stringProp>
-            </JSR223PreProcessor>
-            <hashTree/>
           </hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor CompartimentCapacity PUT">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// Este PreProcessor asigna y asegura las variables necesarias para actualizar un registro compartiment_capacity
+
+// 1. Obtener el ID de la relación existente desde el extractor
+String idCompartimentCapacity = vars.get(&quot;selectedCompartimentCapacityId&quot;)
+
+// 2. Obtener valores previamente extraídos
+String idCompartment = vars.get(&quot;selectedCompartmentId&quot;)
+String idCapacity = vars.get(&quot;selectedCapacityId&quot;)
+
+// 3. Generar un valor booleano para default (1 a 20)
+int defaultValue = new Random().nextInt(20) + 1
+
+// 4. Asignar al contexto de JMeter
+vars.put(&quot;selectedCompartimentCapacityId&quot;, idCompartimentCapacity)
+vars.put(&quot;selectedCompartmentId&quot;, idCompartment)
+vars.put(&quot;selectedCapacityId&quot;, idCapacity)
+vars.put(&quot;defaultValue&quot;, String.valueOf(defaultValue))
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CompartimentCapacity PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
@@ -5221,12 +5396,10 @@ vars.put(&quot;updatedAt&quot;, now)
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-  &quot;idCompartmentCapacity&quot;: ${selectedCompartmentCapacityId},&#xd;
+  &quot;idCompartimentCapacity&quot;: ${selectedCompartimentCapacityId},&#xd;
   &quot;idCompartment&quot;: ${selectedCompartmentId},&#xd;
   &quot;idCapacity&quot;: ${selectedCapacityId},&#xd;
   &quot;default&quot;: ${__Random(1,20)},&#xd;
-  &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
-  &quot;createdAt&quot;: &quot;${createdAt}&quot;,&#xd;
   &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
   &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }&#xd;
@@ -5269,6 +5442,17 @@ vars.put(&quot;updatedAt&quot;, now)
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor Court PUT">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">// Generar valores de auditoría para el PUT de Court
+vars.put(&quot;updatedBy&quot;, vars.get(&quot;loadTestUser&quot;))         // Usuario de carga
+vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;))               // Timestamp ISO actual
+</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Court PUT" enabled="false">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
@@ -5283,57 +5467,55 @@ vars.put(&quot;updatedAt&quot;, now)
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-  &quot;idCourt&quot;: ${selectedCourtId},&#xd;
-  &quot;idBusiness&quot;: ${selectedBusinessId},&#xd;
-  &quot;idEds&quot;: ${selectedEdsId},&#xd;
-  &quot;idIslander&quot;: ${selectedIslanderId},&#xd;
+  &quot;idCourt&quot;: &quot;${selectedCourtId}&quot;,&#xd;
+  &quot;idBusiness&quot;: &quot;${selectedBusinessId}&quot;,&#xd;
+  &quot;idEds&quot;: &quot;${selectedEdsId}&quot;,&#xd;
+  &quot;idIslander&quot;: &quot;${selectedIslanderId}&quot;,&#xd;
   &quot;dateStarttime&quot;: &quot;${__time(yyyy-MM-dd)}&quot;,&#xd;
   &quot;starttime&quot;: &quot;${__time(HH:mm:ss)}&quot;,&#xd;
   &quot;dateEndtime&quot;: &quot;${__time(yyyy-MM-dd)}&quot;,&#xd;
   &quot;endtime&quot;: &quot;${__time(HH:mm:ss)}&quot;,&#xd;
-  &quot;consecutive&quot;: ${__Random(1,100)},&#xd;
-  &quot;descripcion&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
-  &quot;distinct&quot;: ${__Random(1,100)},&#xd;
-  &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
-  &quot;createdAt&quot;: &quot;${createdAt}&quot;,&#xd;
+  &quot;consecutive&quot;: &quot;${__Random(1,100)}&quot;,&#xd;
+  &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;distinct&quot;: &quot;${__Random(1,100)}&quot;,&#xd;
   &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
   &quot;updatedAt&quot;: &quot;${updatedAt}&quot;,&#xd;
   &quot;courtDispensers&quot;: [&#xd;
     {&#xd;
-      &quot;idCourtDispensers&quot;: ${selectedCourtDispensersId},&#xd;
-      &quot;idCourt&quot;: ${selectedCourtId},&#xd;
-      &quot;accumulatedAmount&quot;: ${__Random(1,200)},&#xd;
-      &quot;accumulatedGallons&quot;: ${__Random(1,200)},&#xd;
-      &quot;lastAccumulatedAmount&quot;: ${__Random(1,200)},&#xd;
-      &quot;lastAccumulatedGallons&quot;: ${__Random(1,200)},&#xd;
-      &quot;gallonDifferenceResult&quot;: ${__Random(1,200)},&#xd;
-      &quot;idProduct&quot;: ${selectedProductId},&#xd;
-      &quot;idCompartiment&quot;: ${selectedCompartimentId},&#xd;
-      &quot;idHose&quot;: ${selectedHoseId}&#xd;
+      &quot;idCourtDispenser&quot;: &quot;${selectedCourtDispenserId}&quot;,&#xd;
+      &quot;idCourt&quot;: &quot;${selectedCourtId}&quot;,&#xd;
+      &quot;accumulatedAmount&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;accumulatedGallons&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;lastAccumulatedAmount&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;lastAccumulatedGallons&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;gallonDifferenceResult&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
+      &quot;idProduct&quot;: &quot;${selectedProductId}&quot;,&#xd;
+      &quot;idCompartment&quot;: &quot;${selectedCompartmentId}&quot;,&#xd;
+      &quot;idHose&quot;: &quot;${selectedHoseId}&quot;&#xd;
     }&#xd;
   ],&#xd;
   &quot;courtDocuments&quot;: [&#xd;
     {&#xd;
-      &quot;idCourtDocument&quot;: ${selectedCourtDocumentId},&#xd;
+      &quot;idCourtDocument&quot;: &quot;${selectedCourtDocumentId}&quot;,&#xd;
       &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
-      &quot;idCourt&quot;: ${selectedCourtId}&#xd;
+      &quot;idCourt&quot;: &quot;${selectedCourtId}&quot;&#xd;
     }&#xd;
   ],&#xd;
   &quot;courtExpenditures&quot;: [&#xd;
     {&#xd;
-      &quot;idCourtExpenditure&quot;: ${selectedCourtExpenditureId},&#xd;
-      &quot;idCourt&quot;: ${selectedCourtId},&#xd;
-      &quot;idExpenditures&quot;: ${selectedExpendituresId},&#xd;
-      &quot;amount&quot;: ${__Random(1,200)},&#xd;
+      &quot;idCourtExpenditure&quot;: &quot;${selectedCourtExpenditureId}&quot;,&#xd;
+      &quot;idCourt&quot;: &quot;${selectedCourtId}&quot;,&#xd;
+      &quot;idExpenditures&quot;: &quot;${selectedExpendituresId}&quot;,&#xd;
+      &quot;amount&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
       &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
     }&#xd;
   ],&#xd;
   &quot;courtTypeOfCollections&quot;: [&#xd;
     {&#xd;
-      &quot;idCourtTypeOfCollection&quot;: ${selectedCourtTypeOfCollectionId},&#xd;
-      &quot;idCourt&quot;: ${selectedCourtId},&#xd;
-      &quot;idTypeOfCollection&quot;: ${selectedTypeOfCollectionId},&#xd;
-      &quot;amount&quot;: ${__Random(1,200)},&#xd;
+      &quot;idCourtTypeOfCollection&quot;: &quot;${selectedCourtTypeOfCollectionId}&quot;,&#xd;
+      &quot;idCourt&quot;: &quot;${selectedCourtId}&quot;,&#xd;
+      &quot;idTypeOfCollection&quot;: &quot;${selectedTypeOfCollectionId}&quot;,&#xd;
+      &quot;amount&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
       &quot;description&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
     }&#xd;
   ]&#xd;
@@ -5394,9 +5576,7 @@ vars.put(&quot;updatedAt&quot;, now)
   &quot;idCourtDispensersInventory&quot;: ${selectedCourtDispensersInventoryId}, // PK del registro a actualizar&#xd;
   &quot;idCourtDispensers&quot;: ${selectedIdCourtDispensers},                   // FK, puede actualizarse&#xd;
   &quot;idInventory&quot;: ${selectedInventoryId},                               // FK, puede actualizarse&#xd;
-  &quot;createdBy&quot;: &quot;${createdBy}&quot;,&#xd;
-  &quot;createdAt&quot;: &quot;${createdAt}&quot;,&#xd;
-  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+   &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
   &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }&#xd;
 </stringProp>
@@ -5458,7 +5638,9 @@ vars.put(&quot;updatedAt&quot;, now)
   &quot;dispenserTypeId&quot;: ${selectedDispenserTypeId},&#xd;
   &quot;hoseNumber&quot;: &quot;${__Random(1,10)}&quot;,&#xd;
   &quot;edsId&quot;: ${selectedEdsId},&#xd;
-  &quot;idIsland&quot;: ${selectedIslandId}&#xd;
+  &quot;idIsland&quot;: ${selectedIslandId},&#xd;
+   &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -5513,8 +5695,11 @@ vars.put(&quot;updatedAt&quot;, now)
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;idType&quot;: ${selectedDispenserTypeId},&#xd;
-  &quot;description&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
-}</stringProp>
+  &quot;description&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+   &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
+}&#xd;
+</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -5553,7 +5738,7 @@ vars.put(&quot;updatedAt&quot;, now)
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds PUT" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5572,7 +5757,10 @@ vars.put(&quot;updatedAt&quot;, now)
     &quot;nit&quot;: &quot;${__Random(1000000000,9999999999)}&quot;,&#xd;
     &quot;address&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)} ${__Random(1,999)}, ${__RandomString(6,abcdefghijklmnopqrstuvwxyz)} City&quot;,&#xd;
     &quot;sicom&quot;: &quot;${__Random(1,10000)}&quot;,&#xd;
-    &quot;idBusiness&quot;: ${selectedBusinessId}&#xd;
+    &quot;idBusiness&quot;: ${selectedBusinessId},&#xd;
+    &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+    &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
+  &#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -5628,7 +5816,10 @@ vars.put(&quot;updatedAt&quot;, now)
                   <stringProp name="Argument.value">{&#xd;
   &quot;idEdsTank&quot;: ${selectedEdsTankId},&#xd;
   &quot;idEds&quot;: ${selectedEdsId},&#xd;
-   &quot;idTank&quot;: ${selectedTankId}&#xd;
+   &quot;idTank&quot;: ${selectedTankId},&#xd;
+    &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+    &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
+  &#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -5697,8 +5888,11 @@ vars.put(&apos;selectedTankId&apos;, vars.get(&quot;existingTankIds_${idx}&quot;
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;idExpenditures&quot;: ${selectedExpendituresId},&#xd;
-  &quot;description&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
-}</stringProp>
+  &quot;description&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
+}&#xd;
+</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -5752,13 +5946,15 @@ vars.put(&apos;selectedTankId&apos;, vars.get(&quot;existingTankIds_${idx}&quot;
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;idHose&quot;: ${selectedHoseId},&#xd;
-    &quot;number&quot;: &quot;${__Random(1,40)}&quot;,&#xd;
-    &quot;idDispensers&quot;: ${selectedDispensersId},&#xd;
-    &quot;accumulatedGallons&quot;: &quot;${__Random(1,100)}&quot;,&#xd;
-    &quot;accumulatedAmount&quot;: &quot;${__Random(1,50)}&quot;,&#xd;
-    &quot;idProductType&quot;: ${selectedProductTypeId}&#xd;
-  &#xd;
-}</stringProp>
+  &quot;number&quot;: &quot;${__Random(1,40)}&quot;,&#xd;
+  &quot;idDispensers&quot;: ${selectedDispensersId},&#xd;
+  &quot;accumulatedGallons&quot;: &quot;${__Random(1,100)}&quot;,&#xd;
+  &quot;accumulatedAmount&quot;: &quot;${__Random(1,50)}&quot;,&#xd;
+  &quot;idProductType&quot;: ${selectedProductTypeId},&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
+}&#xd;
+</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -5811,13 +6007,14 @@ vars.put(&apos;selectedTankId&apos;, vars.get(&quot;existingTankIds_${idx}&quot;
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-  &quot;idHoseHistory&quot;: ${selectedHoseHistoryId},&#xd;
-  &#xd;
+  &quot;idHoseHistory&quot;: ${selectedHoseHistoryId},  &#xd;
   	&quot;idHose&quot;:${selectedHoseId} ,&#xd;
     &quot;idDispensers&quot;: ${selectedDispensersId},&#xd;
     &quot;accumulatedGallons&quot;: ${__Random(1,200)},&#xd;
     &quot;accumulatedAmount&quot;: ${__Random(1,200)},&#xd;
-    &quot;date&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;)}&quot;&#xd;
+    &quot;date&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;)}&quot;,&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 &#xd;
 &#xd;
 }</stringProp>
@@ -5859,7 +6056,7 @@ vars.put(&apos;selectedTankId&apos;, vars.get(&quot;existingTankIds_${idx}&quot;
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island PUT" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Island PUT">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -5874,7 +6071,9 @@ vars.put(&apos;selectedTankId&apos;, vars.get(&quot;existingTankIds_${idx}&quot;
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;idIsland&quot;: ${selectedIslandId},&#xd;
-  &quot;description&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
+  &quot;description&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -5930,7 +6129,9 @@ vars.put(&apos;selectedTankId&apos;, vars.get(&quot;existingTankIds_${idx}&quot;
                   <stringProp name="Argument.value">{&#xd;
   &quot;idIslander&quot;: ${selectedislanderId},&#xd;
   &quot;idEds&quot;: ${selectedEdsId},&#xd;
-  &quot;name&quot;: &quot;${__RandomString(7,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
+  &quot;name&quot;: &quot;${__RandomString(7,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -5987,7 +6188,9 @@ vars.put(&apos;selectedTankId&apos;, vars.get(&quot;existingTankIds_${idx}&quot;
   &quot;idProduct&quot;: ${selectedProductId},&#xd;
   &quot;name&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
   &quot;idProductType&quot;:${selectedProductTypeId},&#xd;
-  &quot;price&quot;: ${__Random(1,20000)}&#xd;
+  &quot;price&quot;: ${__Random(1,20000)},&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -6044,9 +6247,11 @@ vars.put(&apos;selectedTankId&apos;, vars.get(&quot;existingTankIds_${idx}&quot;
   &quot;idProductCompartiment&quot;: ${selecteProductCompartimentId},&#xd;
 	&quot;idProduct&quot;: ${selectedProductId},&#xd;
     &quot;idCompartiment&quot;: ${selectedCompartimentId} ,&#xd;
-    &quot;stock&quot;: ${__Random(1,3000)}&#xd;
+    &quot;stock&quot;: ${__Random(1,3000)},&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 &#xd;
-    }</stringProp>
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
@@ -6118,7 +6323,9 @@ vars.put(&quot;selecteProductCompartimentId&quot;, allIds[idx])
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;idProductType&quot;: ${selectedProductTypeId},&#xd;
-  &quot;description&quot;: &quot;${__RandomString(8,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
+  &quot;description&quot;: &quot;${__RandomString(8,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -6173,7 +6380,9 @@ vars.put(&quot;selecteProductCompartimentId&quot;, allIds[idx])
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;idProvider&quot;: ${selectedProviderId},&#xd;
-  &quot;name&quot;: &quot;${__RandomString(8,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
+  &quot;name&quot;: &quot;${__RandomString(8,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -6232,7 +6441,9 @@ vars.put(&quot;selecteProductCompartimentId&quot;, allIds[idx])
     &quot;date&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;)}&quot;,&#xd;
     &quot;idProvider&quot;: ${selectedProviderId},&#xd;
     &quot;idCategory&quot;: ${selectedId},&#xd;
-    &quot;amount&quot;: ${__Random(1,20000)}&#xd;
+    &quot;amount&quot;: ${__Random(1,20000)},&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -6291,7 +6502,9 @@ vars.put(&quot;selecteProductCompartimentId&quot;, allIds[idx])
     &quot;idProduct&quot;:${selectedProductId} ,&#xd;
     &quot;quantity&quot;: ${__Random(1,200)},&#xd;
     &quot;price&quot;: ${__Random(1,2000)},&#xd;
-    &quot;idCompartment&quot;: ${selectedCompartimentId}&#xd;
+    &quot;idCompartment&quot;: ${selectedCompartimentId},&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -6349,7 +6562,9 @@ vars.put(&quot;selecteProductCompartimentId&quot;, allIds[idx])
   &quot;number&quot;: &quot;${__Random(1,200)}&quot;,&#xd;
     &quot;compartment&quot;: ${__Random(1,200)},&#xd;
     &quot;ability&quot;: ${__Random(1,20000)},&#xd;
-    &quot;stock&quot;: ${__Random(1,20000)}&#xd;
+    &quot;stock&quot;: ${__Random(1,20000)},&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -6404,7 +6619,9 @@ vars.put(&quot;selecteProductCompartimentId&quot;, allIds[idx])
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
   &quot;idTypeOfCollection&quot;: ${selectedTypeOfCollectionId},&#xd;
-  &quot;description&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
+  &quot;description&quot;: &quot;${__RandomString(5,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;updatedBy&quot;: &quot;${updatedBy}&quot;,&#xd;
+  &quot;updatedAt&quot;: &quot;${updatedAt}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -6457,7 +6674,7 @@ vars.put(&quot;selecteProductCompartimentId&quot;, allIds[idx])
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="MySQL QA View Results Tree " enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="MySQL QA View Results Tree ">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
