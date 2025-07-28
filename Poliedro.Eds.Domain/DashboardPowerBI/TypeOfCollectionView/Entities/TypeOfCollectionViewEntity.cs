@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Poliedro.Eds.Domain.DashboardPowerBI.TypeOfCollectionView.Entities;
 

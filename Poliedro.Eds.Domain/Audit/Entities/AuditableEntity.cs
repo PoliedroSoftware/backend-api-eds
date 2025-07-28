@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Domain.Audit.Entities
+namespace Poliedro.Eds.Domain.Audit.Entities
 {
     public abstract class AuditableEntity
     {

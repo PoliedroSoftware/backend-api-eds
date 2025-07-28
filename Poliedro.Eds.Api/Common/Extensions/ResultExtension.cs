@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Common.Results;
+using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Api.Common.Extensions;

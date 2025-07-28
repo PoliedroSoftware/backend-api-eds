@@ -1,11 +1,11 @@
-﻿using FluentValidation;
-using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Application.Ports.Translations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
+using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.ShoppingProductInventory.Commands.UpdateShoppingProductInventory
 {

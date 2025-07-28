@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.EdsTank.Dtos;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.EdsTank.Entities;

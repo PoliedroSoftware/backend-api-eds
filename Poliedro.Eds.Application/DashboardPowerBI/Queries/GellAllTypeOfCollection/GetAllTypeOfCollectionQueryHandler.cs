@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.Metrics;
+using System.Diagnostics.Metrics;
 using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;

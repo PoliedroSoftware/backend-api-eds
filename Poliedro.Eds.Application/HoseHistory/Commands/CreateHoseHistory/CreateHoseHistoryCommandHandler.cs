@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.HoseHistory.DomainHoseHistory;
 using Poliedro.Eds.Domain.HoseHistory.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.HoseHistory.Commands.CreateHoseHistory
 {

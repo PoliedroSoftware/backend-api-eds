@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.Entities;
 
 namespace Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.DomainBusinessView;

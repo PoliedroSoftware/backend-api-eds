@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Application.Shopping.Dtos;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Shopping.Queries.GetShoppingById;
 

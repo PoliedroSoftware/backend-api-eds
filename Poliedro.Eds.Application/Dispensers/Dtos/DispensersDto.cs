@@ -1,4 +1,4 @@
-﻿
+
 namespace Poliedro.Eds.Application.Dispensers.Dtos;
 
 public record DispensersDto(

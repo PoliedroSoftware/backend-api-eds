@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.ShoppingProductInventory.DomainShoppingProductInventory;
 using Poliedro.Eds.Domain.ShoppingProductInventory.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.ShoppingProductInventory.Commands.CreateShoppingProductInventory
 {

@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Ports.Translations;
+namespace Poliedro.Eds.Application.Ports.Translations;
 
 public interface ITranslationService
 {

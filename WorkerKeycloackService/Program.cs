@@ -1,8 +1,8 @@
-using RabbitMQ.Client;
-using Poliedro.Eds.Domain.Islander.DomainIslander;
-using WorkerKeycloackService;
-using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using System.Net.Http.Headers;
+using Poliedro.Eds.Domain.Islander.DomainIslander;
+using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
+using RabbitMQ.Client;
+using WorkerKeycloackService;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((context, config) =>

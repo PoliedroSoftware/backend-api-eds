@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.DispenserType.Dtos
+namespace Poliedro.Eds.Application.DispenserType.Dtos
 {
     public class PaginationResponseDispenserTypeDto<T>
     {

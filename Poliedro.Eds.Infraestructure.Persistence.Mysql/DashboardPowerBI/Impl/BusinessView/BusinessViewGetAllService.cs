@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -6,7 +7,6 @@ using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.DomainBusinessView;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using System.Text.Json;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.BusinessView;
 

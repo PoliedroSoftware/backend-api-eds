@@ -1,4 +1,5 @@
-﻿using Amazon.Runtime;
+using System.Net.Http.Headers;
+using Amazon.Runtime;
 using Amazon.S3.FileUploadService;
 using Amazon.Secrets;
 using AWS.Logger;
@@ -13,8 +14,8 @@ using Poliedro.Eds.Api;
 using Poliedro.Eds.Api.Common.Configurations;
 using Poliedro.Eds.Api.Middlelware.aws;
 using Poliedro.Eds.Api.Middlelware.Jwt;
-using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Api.Middlelware.NameIdentifier;
+using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.FileUploadS3.Command;
@@ -37,7 +38,6 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 using Poliedro.External.HealthCheck.Tolgee;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
-using System.Net.Http.Headers;
 using WorkerKeycloackService;
 
 var builder = WebApplication.CreateBuilder(args);

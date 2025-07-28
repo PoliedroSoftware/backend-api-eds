@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Application.Capacity.Commands.UpdateCapacity;
@@ -6,7 +7,6 @@ using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.EdsTank.DomainEdsTank;
 using Poliedro.Eds.Domain.EdsTank.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.EdsTank.Commands.UpdateEdsTank;
 

@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Application.HoseHistory.Errors;
+using Poliedro.Eds.Application.HoseHistory.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;

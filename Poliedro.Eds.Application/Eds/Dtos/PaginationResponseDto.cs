@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Eds.Dtos;
+namespace Poliedro.Eds.Application.Eds.Dtos;
 
 public class PaginationResponseDto<T>
 {

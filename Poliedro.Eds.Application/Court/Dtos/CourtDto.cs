@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Application.Inventory.Dtos;
+using Poliedro.Eds.Application.Inventory.Dtos;
 
 namespace Poliedro.Eds.Application.Court.Dtos
 {

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment;
 using Poliedro.Eds.Application.Compartiment.Commands.UpdateCompartiment;
 using Poliedro.Eds.Application.Compartiment.Dtos;

@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Business.Entities;
+using Poliedro.Eds.Domain.Business.Entities;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 

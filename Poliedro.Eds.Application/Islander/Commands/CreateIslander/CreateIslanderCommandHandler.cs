@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+using System.Net;
+using System.Text;
+using System.Text.Json;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
@@ -6,9 +9,6 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Islander.Entities;
 using RabbitMQ.Client;
-using System.Net;
-using System.Text;
-using System.Text.Json;
 
 namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
 {

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 namespace Poliedro.Tolgee;
 
 public static class DependencyInjectionService

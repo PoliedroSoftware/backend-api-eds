@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Domain.Common.Results;
+namespace Poliedro.Eds.Domain.Common.Results;
 
 public class Result<TValue, TError>
 {

@@ -1,8 +1,8 @@
-﻿using Amazon;
+using System.Text.Json;
+using Amazon;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
-using System.Text.Json;
 
 namespace Poliedro.Eds.Api.Middlelware.aws;
 

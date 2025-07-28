@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Translations.Dtos;
+namespace Poliedro.Eds.Application.Translations.Dtos;
 
 public class TolgeeSettings
 {

@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment;
+namespace Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment;
 
 public record CreateCompartimentRequestDto(
     int Number,

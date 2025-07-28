@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.Category.Commands.CreateCategory;
 using Poliedro.Eds.Application.Category.Commands.UpdateCategory;
 using Poliedro.Eds.Application.Category.Dtos;

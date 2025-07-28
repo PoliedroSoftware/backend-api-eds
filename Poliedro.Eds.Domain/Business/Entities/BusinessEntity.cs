@@ -1,7 +1,7 @@
-﻿using Poliedro.Eds.Domain.Audit.Entities;
+using System.ComponentModel.DataAnnotations;
+using Poliedro.Eds.Domain.Audit.Entities;
 using Poliedro.Eds.Domain.Business.Events;
 using Poliedro.Eds.Domain.Business.Exepction;
-using System.ComponentModel.DataAnnotations;
 
 namespace Poliedro.Eds.Domain.Business.Entities;
 

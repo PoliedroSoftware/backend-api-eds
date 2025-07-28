@@ -1,4 +1,4 @@
-﻿using Poliedro.Billing.Infraestructure.Persistence.Mysql;
+using Poliedro.Billing.Infraestructure.Persistence.Mysql;
 using Poliedro.Eds.Domain.Ports;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Adapter;
