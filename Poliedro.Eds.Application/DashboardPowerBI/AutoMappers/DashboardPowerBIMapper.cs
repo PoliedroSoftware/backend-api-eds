@@ -123,21 +123,21 @@ public class DashboardPowerBIMapper: Profile
            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
 
-        CreateMap<CourtListResponseDto, Dtos.Court.CourtListResponseDto>()
+        CreateMap<CourtListResponseEntity, Dtos.Court.CourtListResponseDto>()
            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()))
            .ForMember(dest => dest.IdEds, opt => opt.MapFrom(src => src.IdEds.ToString()));
 
-        CreateMap<CourtCollectionViewDto, Dtos.Court.CourtCollectionViewDto>()
+        CreateMap<CourtCollectionViewEntity, Dtos.Court.CourtCollectionViewDto>()
            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
 
-        CreateMap<CourtDispenserViewDto, Dtos.Court.CourtDispenserViewDto>()
+        CreateMap<CourtDispenserViewEntity, Dtos.Court.CourtDispenserViewDto>()
            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()))
            .ForMember(dest => dest.IdEds, opt => opt.MapFrom(src => src.IdEds.ToString()));
 
-        CreateMap<CourtDocumentViewDto, Dtos.Court.CourtDocumentViewDto>()
+        CreateMap<CourtDocumentViewEntity, Dtos.Court.CourtDocumentViewDto>()
            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
 
-        CreateMap<CourtExpenditureViewDto, Dtos.Court.CourtExpenditureViewDto>()
+        CreateMap<CourtExpenditureViewEntity, Dtos.Court.CourtExpenditureViewDto>()
            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
 
         CreateMap<CourtEntity, CourtDto>().ReverseMap();

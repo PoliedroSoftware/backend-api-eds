@@ -1,4 +1,4 @@
-   public class CourtCollectionViewDto
+   public class CourtCollectionViewEntity
    {
        public int Id { get; set; }
        public int Court { get; set; }

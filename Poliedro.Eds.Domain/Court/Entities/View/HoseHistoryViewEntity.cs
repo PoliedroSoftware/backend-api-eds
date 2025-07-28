@@ -1,4 +1,4 @@
-public class HoseHistoryViewDto
+public class HoseHistoryViewEntity
 {
     public int Id { get; set; }
     public int IdHose { get; set; }

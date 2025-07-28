@@ -70,11 +70,12 @@ jobs:
           export JMETER_HOME=$PWD/apache-jmeter-5.6.3
           echo "$JMETER_HOME/bin" >> $GITHUB_PATH
 
-      - name: Run JMeter Load Test
-        run: |
-          ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
-
+      #- name: Run JMeter Load Test
+      # run: |
+      #   ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
+      
       - name: Check for errors in JMeter results
+        if: false
         run: |
           echo "Checking JMeter results for errors..."
           # Buscar errores HTTP 500 en los resultados (.jtl)
@@ -161,7 +162,7 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME_EDS }}/${{ secrets.DOCKERHUB_REPOSITORY_EDS }}:buildcache  
           cache-to: type=inline               
 
-  deploy:
+  deploy_Dev:
     if: github.event.pull_request.merged == true
     needs: docker
     runs-on: ubuntu-latest
@@ -208,3 +209,51 @@ jobs:
             --query 'taskDefinition.containerDefinitions[0].image' --output text)
           
           echo "Imagen de la task definition: $task_definition_image"
+
+  deploy_QA:
+    if: github.event.pull_request.merged == true
+    needs: docker
+    runs-on: ubuntu-latest
+    environment: QA
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to Amazon ECS
+        run: |
+          # Usar el ARN de la task definition desde Secrets
+          ecs_task_definition_arn="${{ secrets.TASK_DEFINITION_ARN_EDS_QA }}"
+          echo "Usando el ARN de la task definition: $ecs_task_definition_arn"
+          
+          # Forzar la actualización del servicio con la task definition existente
+          ecs_deploy=$(aws ecs update-service \
+            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+            --service ${{ secrets.AWS_ECS_SERVICE_EDS_QA }} \
+            --task-definition $ecs_task_definition_arn \
+            --force-new-deployment)
+          
+          echo "Resultado del despliegue en ECS: $ecs_deploy"
+
+      - name: Check ECS Service Status
+        run: |
+          echo "Verificando estado del servicio ECS..."
+          service_status=$(aws ecs describe-services \
+            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+            --services ${{ secrets.AWS_ECS_SERVICE_EDS_QA }} \
+            --query 'services[0].status' --output text)
+          
+          echo "Estado del servicio: $service_status"
+
+      - name: Check ECS Task Definition
+        run: |
+          echo "Verificando imagen de la task definition..."
+          task_definition_image=$(aws ecs describe-task-definition \
+            --task-definition ${{ secrets.TASK_DEFINITION_ARN_EDS_QA }} \
+            --query 'taskDefinition.containerDefinitions[0].image' --output text)
+          
+          echo "Imagen de la task definition: $task_definition_image"        

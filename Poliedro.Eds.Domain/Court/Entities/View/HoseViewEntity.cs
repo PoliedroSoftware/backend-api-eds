@@ -1,4 +1,4 @@
-public class HoseViewDto
+public class HoseViewEntity
 {
     public int IdHose { get; set; }
     public int HoseNumber { get; set; }
