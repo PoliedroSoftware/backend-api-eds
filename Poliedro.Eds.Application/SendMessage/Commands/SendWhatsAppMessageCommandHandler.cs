@@ -1,7 +1,4 @@
 ﻿using MediatR;
-using Poliedro.Eds.Domain.SendMessage;
-using System.Threading;
-using System.Threading.Tasks;
 
 public class SendWhatsAppMessageCommandHandler : IRequestHandler<SendWhatsAppMessageCommand, Unit>
 {
