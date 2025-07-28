@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Domain.Court.DomainService;
-using Poliedro.Eds.Domain.Court.Dto;
+using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
 public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetProductAndCompartiment, IGetExpenditureId, IGetTypeOfCollectionId
 {
-    public async Task<ProductAndCompartimentDto> GetProductAndCompartimentAsync(int hoseId)
+    public async Task<ProductAndCompartimentEntity> GetProductAndCompartimentAsync(int hoseId)
     {
 
         using var context = dbContextFactory.CreateDbContext();
@@ -35,7 +34,7 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
             throw new InvalidOperationException($"No se encontraron datos para el HoseId: {hoseId}");
         }
 
-        return new ProductAndCompartimentDto(result.IdProduct, result.IdCompartiment);
+        return new ProductAndCompartimentEntity(result.IdProduct, result.IdCompartiment);
     }
 
     public async Task<int?> GetExpenditureIdAsync(string expenditureName)
