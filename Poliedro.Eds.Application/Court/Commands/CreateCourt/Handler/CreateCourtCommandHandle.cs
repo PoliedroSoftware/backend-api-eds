@@ -3,7 +3,6 @@ using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
-using Poliedro.Eds.Domain.Court.Dto;
 using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
 
@@ -64,7 +63,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             if (courtEntity.CourtTypeOfCollections.Count() > 0) {
                 foreach (var item in courtEntity.CourtDispensers)
                 {
-                    ProductAndCompartimentDto productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(item.IdHose);
+                    ProductAndCompartimentEntity productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(item.IdHose);
                     item.IdProduct = productAndCompartiment.IdProduct;
                     item.IdCompartiment = productAndCompartiment.IdCompartiment;
                 }

@@ -2,6 +2,7 @@
 using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.Court.Commands.UpdateCourt;
 using Poliedro.Eds.Application.Court.Dtos;
+using Poliedro.Eds.Application.Court.Dtos.View;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Application.Inventory.Commands;
 using Poliedro.Eds.Domain.Court.DomainService;
@@ -34,6 +35,15 @@ namespace Poliedro.Eds.Application.Court.AutoMappers
 
             CreateMap<InventoryEntity, InventoryDto>().ReverseMap();
             CreateMap<InventoryEntity, InventoryCommand>().ReverseMap();
+
+            CreateMap<CourtCollectionViewEntity, CourtCollectionViewDto>().ReverseMap();
+            CreateMap<CourtDispenserViewEntity, CourtDispenserViewDto>().ReverseMap();
+            CreateMap<CourtDocumentViewEntity, CourtDocumentViewDto>().ReverseMap();
+            CreateMap<CourtExpenditureViewEntity, CourtExpenditureViewDto>().ReverseMap();
+            CreateMap<CourtListResponseEntity, CourtListResponseDto>();
+            CreateMap<CourtViewEntity, CourtViewDto>().ReverseMap();
+
+
         }
     }
 }

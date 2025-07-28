@@ -7,6 +7,7 @@ using Poliedro.Eds.Application.Common.Features;
 using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.Court.Commands.UpdateCourt;
 using Poliedro.Eds.Application.Court.Dtos;
+using Poliedro.Eds.Application.Court.Dtos.View;
 using Poliedro.Eds.Application.Court.Errors;
 using Poliedro.Eds.Application.Court.Queris.GetCourtById;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
