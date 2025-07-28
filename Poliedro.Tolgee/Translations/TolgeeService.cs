@@ -1,6 +1,6 @@
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 using Poliedro.Eds.Application.Ports.Translations;
+
 
 namespace Poliedro.Tolgee.Translations;
 
@@ -13,7 +13,7 @@ public class TolgeeService(
         var response = await httpClient.GetAsync("translations?size=1000");
 
         if (!response.IsSuccessStatusCode)
-            throw new Exception($"Error al consultar Tolgee: {response.StatusCode}");
+            throw new Exception($"Error al consultar Tolgee Transtalations: {response.StatusCode}");
 
         var body = await response.Content.ReadAsStringAsync();
         var data = JsonSerializer.Deserialize<RootObject>(body)

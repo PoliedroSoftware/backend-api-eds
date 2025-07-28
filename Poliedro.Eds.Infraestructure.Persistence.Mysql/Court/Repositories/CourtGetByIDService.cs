@@ -25,6 +25,10 @@ internal class CourtGetByIDService(ITenantDbContextFactory dbContextFactory) : I
                         .Include(c => c.CourtTypeOfCollections)
                             .ThenInclude(ct => ct.TypeOfCollection)
                         .FirstOrDefaultAsync(c => c.IdCourt == id);
+
+        if (courtValue is null)
+            return CourtErrorBuilder.CourtNotFoundException(id);
+
         return courtValue;
     }
 

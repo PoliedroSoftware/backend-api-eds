@@ -26,6 +26,7 @@ public class ExpendituresUpdateExpenditures(ITenantDbContextFactory dbContextFac
         await redisService.RemoveByPrefixAsync("expenditures:");
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

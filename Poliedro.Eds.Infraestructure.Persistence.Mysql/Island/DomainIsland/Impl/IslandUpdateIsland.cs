@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Island.DomainIsland;
 using Poliedro.Eds.Domain.Island.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.DomainIsland.Impl;
 
 public class IslandUpdateIsland(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IIslandUpdateIsland
@@ -25,6 +26,7 @@ public class IslandUpdateIsland(ITenantDbContextFactory dbContextFactory, IRedis
 
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

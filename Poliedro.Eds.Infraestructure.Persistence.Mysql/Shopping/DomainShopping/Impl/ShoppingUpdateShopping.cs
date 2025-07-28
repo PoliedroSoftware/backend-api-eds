@@ -26,6 +26,7 @@ public class ShoppingUpdateShopping(ITenantDbContextFactory dbContextFactory, IR
 
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

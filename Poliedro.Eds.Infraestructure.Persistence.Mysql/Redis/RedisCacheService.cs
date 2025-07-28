@@ -11,6 +11,7 @@ public class RedisCacheService : IRedisService
 {
     private readonly ConnectionMultiplexer _redis;
     private readonly StackExchange.Redis.IDatabase _db;
+
     public ILogger<BusinessGetAllService> Logger { get; }
 
     public RedisCacheService(

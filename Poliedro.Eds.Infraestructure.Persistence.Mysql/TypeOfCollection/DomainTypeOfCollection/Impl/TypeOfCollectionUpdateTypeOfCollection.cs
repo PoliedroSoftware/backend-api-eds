@@ -26,6 +26,7 @@ public class TypeOfCollectionUpdateTypeOfCollection(ITenantDbContextFactory dbCo
         await redisService.RemoveByPrefixAsync("typeOfCollection:");
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

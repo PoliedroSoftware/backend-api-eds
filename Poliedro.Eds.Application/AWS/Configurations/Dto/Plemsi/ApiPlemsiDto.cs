@@ -6,8 +6,10 @@ public class ApiPlemsiDto
 {
     [JsonPropertyName("ApiKey")]
     public string ApiKey { get; set; } = string.Empty;
+
     [JsonPropertyName("PosUrl")]
     public string PosUrl { get; set; } = string.Empty;
+
     [JsonPropertyName("ApiUrl")]
     public string ApiUrl { get; set; } = string.Empty;
 }
