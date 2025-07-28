@@ -80,7 +80,7 @@ public class TranslationCachingService(
             return redisValue;
         }
 
-        logger.LogWarning("not found key : {Language}/{Key}", language, key);
+        logger.LogWarning("not found key: {Language}/{Key}", language, key);
         return null;
     }
 
