@@ -1,8 +1,8 @@
-﻿using Amazon;
+using System.Text.Json;
+using Amazon;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
-using System.Text.Json;
 
 namespace Poliedro.Eds.Api.Middlelware.aws;
 
@@ -30,7 +30,7 @@ public class AwsSecrets(IConfiguration config)
         catch (Exception e)
         {
 
-            throw e;
+            throw;
         }
         return JsonSerializer.Deserialize<AwsSecretsDto>(response.SecretString,
               new JsonSerializerOptions { PropertyNameCaseInsensitive = true });

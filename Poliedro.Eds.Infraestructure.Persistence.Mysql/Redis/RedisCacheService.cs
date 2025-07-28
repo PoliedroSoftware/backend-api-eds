@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 using StackExchange.Redis;
-using System.Text.Json;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Redis;
 
@@ -28,7 +28,7 @@ public class RedisCacheService : IRedisService
         try
         {
             var json = JsonSerializer.Serialize(value);
-            await _db.StringSetAsync(key , json, expiration);
+            await _db.StringSetAsync(key, json, expiration);
         }
         catch (RedisException ex)
         {
@@ -141,7 +141,7 @@ public class RedisCacheService : IRedisService
         var translations = await GetCacheAsync<Dictionary<string, string>>(cacheKey);
         if (translations != null && translations.ContainsKey(key))
         {
-            return translations[key];  
+            return translations[key];
         }
         return null;
     }

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Islander.Dtos;
@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Islander.Entities;
 
 namespace Poliedro.Eds.Application.Islander.Queries.GellAllIslander;
+
 public class GetAllIslanderQueryHandler
 (
     IIslanderGetAllIslander IslanderGetAllService,

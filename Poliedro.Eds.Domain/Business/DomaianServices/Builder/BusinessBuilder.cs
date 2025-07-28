@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Business.Entities;
+using Poliedro.Eds.Domain.Business.Entities;
 
 namespace Poliedro.Eds.Domain.Business.DomaianServices.Builder;
 

@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Hose.Dtos
+namespace Poliedro.Eds.Application.Hose.Dtos
 {
     public class PaginationResponseDto<T>
     {

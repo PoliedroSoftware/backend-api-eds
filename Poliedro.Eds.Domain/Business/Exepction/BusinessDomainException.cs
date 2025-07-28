@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Domain.Business.Exepction;
+namespace Poliedro.Eds.Domain.Business.Exepction;
 
 public class BusinessDomainException : Exception
 {

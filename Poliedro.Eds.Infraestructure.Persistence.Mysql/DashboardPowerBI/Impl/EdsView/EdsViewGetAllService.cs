@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Poliedro.Eds.Domain.Common.Pagination;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using Poliedro.Eds.Application.Ports.Redis;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.AspNetCore.Http;
-using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.DomainEds;
+using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.Entities;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.EdsView;
 

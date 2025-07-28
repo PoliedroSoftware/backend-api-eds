@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Business.DomaianServices.Builder;
+using Poliedro.Eds.Domain.Business.DomaianServices.Builder;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
 using Poliedro.Eds.Domain.Business.Entities;
 using Poliedro.Eds.Domain.Business.Events;
@@ -18,8 +18,8 @@ public class BusinessDomainService(IBusinessCreateRepository repository) : IBusi
                             .Build();
         BusinessEvents.BusinessCreatedEvents.Register(async (parameter) =>
         {
-             businessSaved = await repository.CreateAsync(BussinesCreated);
+            businessSaved = await repository.CreateAsync(BussinesCreated);
         });
         return businessSaved;
-     }
+    }
 }

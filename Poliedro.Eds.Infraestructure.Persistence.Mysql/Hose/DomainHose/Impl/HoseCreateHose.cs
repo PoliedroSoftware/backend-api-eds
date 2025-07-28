@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Hose.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;

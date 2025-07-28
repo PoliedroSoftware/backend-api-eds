@@ -1,29 +1,29 @@
-﻿using MediatR;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Application.Common.Features;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllBusiness;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllCapacity;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllCompartiment;
-using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
-using FluentValidation;
-using Poliedro.Eds.Application.DashboardPowerBI.Queries.GetCourtList;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllEds;
-using Poliedro.Eds.Application.DashboardPowerBI.Queries.GetInventoryList;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllProduct;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllProvider;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllShopping;
-using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllTypeOfCollection;
-using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllBusiness;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllShoppingProductView;
+using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllTypeOfCollection;
+using Poliedro.Eds.Application.DashboardPowerBI.Queries.GetCourtList;
+using Poliedro.Eds.Application.DashboardPowerBI.Queries.GetInventoryList;
+using Poliedro.Eds.Domain.Common.Pagination;
 
 namespace Poliedro.Eds.Api.Controllers.v1.DashboardPowerBI;
-    
+
 [Route("api/v1/dashboard")]
 [ApiController]
 public class DashboardPowerBI(IMediator mediator) : ControllerBase
 {
-   
+
     [HttpGet("capacities")]
     public async Task<IActionResult> GetAllCapacity([FromQuery] PaginationParams paginationParams)
     {

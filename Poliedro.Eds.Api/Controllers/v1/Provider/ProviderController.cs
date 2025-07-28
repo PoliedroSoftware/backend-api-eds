@@ -1,7 +1,9 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Api.Common.Extensions;
+using Poliedro.Eds.Application.Capacity.Commands.CreateCapacity;
 using Poliedro.Eds.Application.Common.Features;
 using Poliedro.Eds.Application.Provider.Commands.CreateProvider;
 using Poliedro.Eds.Application.Provider.Commands.UpdateProvider;
@@ -11,8 +13,6 @@ using Poliedro.Eds.Application.Provider.Queries.GellAllProvider;
 using Poliedro.Eds.Application.Provider.Queries.GetProviderById;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
-using Poliedro.Eds.Application.Capacity.Commands.CreateCapacity;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Poliedro.Eds.Api.Controllers.v1.Provider;
 

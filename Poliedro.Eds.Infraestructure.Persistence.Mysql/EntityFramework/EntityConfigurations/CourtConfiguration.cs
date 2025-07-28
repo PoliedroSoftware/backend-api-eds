@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
 
@@ -41,7 +41,7 @@ public class CourtConfiguration
         builder.HasMany(x => x.CourtTypeOfCollections)
                .WithOne()
                .HasForeignKey(x => x.IdCourt);
-        
+
 
     }
 }

@@ -1,11 +1,12 @@
-﻿using Poliedro.Eds.Domain.Common.Results;
+using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Shopping.Entities;
 
 namespace Poliedro.Eds.Domain.Shopping.DomainShopping;
-    public interface IShoppingGetByIdShopping
-    {
-        Task<Result<ShoppingEntity, Error>> GetByIdAsync(int id);
-    }
+
+public interface IShoppingGetByIdShopping
+{
+    Task<Result<ShoppingEntity, Error>> GetByIdAsync(int id);
+}
 
 

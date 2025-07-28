@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Court.Entities;
+using Poliedro.Eds.Domain.Court.Entities;
 
 namespace Poliedro.Eds.Domain.Court.DomainService;
 
