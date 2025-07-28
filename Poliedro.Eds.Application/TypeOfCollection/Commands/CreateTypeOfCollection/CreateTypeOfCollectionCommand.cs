@@ -4,4 +4,4 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.TypeOfCollection.Commands.CreateTypeOfCollection;
 
-public record CreateTypeOfCollectionCommand (CreateTypeOfCollectionRequestDto Request) : IRequest<Result<VoidResult, Error>>;
+public record CreateTypeOfCollectionCommand(CreateTypeOfCollectionRequestDto Request) : IRequest<Result<VoidResult, Error>>;

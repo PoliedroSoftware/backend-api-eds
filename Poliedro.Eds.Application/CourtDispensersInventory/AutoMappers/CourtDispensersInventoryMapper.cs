@@ -5,6 +5,7 @@ using Poliedro.Eds.Application.CourtDispensersInventory.Dtos;
 using Poliedro.Eds.Domain.CourtDispensersInventory.Entities;
 
 namespace Poliedro.Eds.Application.CourtDispensersInventory.AutoMappers;
+
 public class CourtDispensersInventoryMapper : Profile
 {
     public CourtDispensersInventoryMapper()

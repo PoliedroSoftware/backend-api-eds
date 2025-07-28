@@ -23,7 +23,7 @@ using Poliedro.Eds.Domain.DashboardPowerBI.TypeOfCollectionView.Entities;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;
 
-public class DashboardPowerBIMapper: Profile
+public class DashboardPowerBIMapper : Profile
 {
     public DashboardPowerBIMapper()
     {

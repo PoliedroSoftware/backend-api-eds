@@ -25,7 +25,7 @@ namespace Poliedro.Eds.Application.DispenserType.Commands.UpdateDispneserType
 
             var dispenserTypeEntity = mapper.Map<DispenserTypeEntity>(request);
             var result = await dispenserTypeDomainDispenserType.UpdateAsync(dispenserTypeEntity);
-        
+
             if (!result.IsSuccess)
                 return result.Error!;
             return result.Value!;

@@ -6,7 +6,7 @@ namespace Poliedro.Eds.Domain.HoseHistory.DomainHoseHistory
 {
     public interface IHoseHistoryGetByIdHoseHistory
     {
-        Task<Result<HoseHistoryEntity, Error>> GetByIdAsync(int id);   
+        Task<Result<HoseHistoryEntity, Error>> GetByIdAsync(int id);
     }
 }
 

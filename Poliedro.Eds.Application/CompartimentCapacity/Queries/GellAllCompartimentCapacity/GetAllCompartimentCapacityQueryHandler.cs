@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 
 namespace Poliedro.Eds.Application.CompartimentCapacity.Queries.GellAllCompartimentCapacity;
+
 public class GetAllCompartimentCapacityQueryHandler
 (
     ICompartimentCapacityGetAllService CompartimentCapacityGetAllService,

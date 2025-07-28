@@ -5,6 +5,7 @@ using Poliedro.Eds.Application.ShoppingProduct.Dtos;
 using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
 namespace Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
+
 public class ShoppingProductMapper : Profile
 {
     public ShoppingProductMapper()

@@ -4,8 +4,8 @@ using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.Category.Queries.GetCategoryById;
 
-    public class GetCategoryByIdQueryValidator : AbstractValidator<GetCategoryByIdQuery>
-    {
+public class GetCategoryByIdQueryValidator : AbstractValidator<GetCategoryByIdQuery>
+{
     public GetCategoryByIdQueryValidator(IRedisService redisService)
     {
         RuleFor(x => x.Id)

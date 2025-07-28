@@ -6,7 +6,7 @@ namespace Poliedro.Eds.Domain.Islander.DomainIslander
 {
     public interface IIslanderGetByIdIslander
     {
-        Task<Result<IslanderEntity, Error>> GetByIdAsync(int id);   
+        Task<Result<IslanderEntity, Error>> GetByIdAsync(int id);
     }
 }
 

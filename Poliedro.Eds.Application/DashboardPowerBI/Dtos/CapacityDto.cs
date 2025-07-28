@@ -2,13 +2,13 @@
 
 public record CapacityDto
 (
-     string IdCapacity ,
+     string IdCapacity,
      string IdProduct,
      string IdBusiness,
-     string Code ,
+     string Code,
      double Height,
      double Gallon,
      int Liters,
-     DateOnly Date 
+     DateOnly Date
 
 );

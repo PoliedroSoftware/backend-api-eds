@@ -14,7 +14,8 @@ IHost host = Host.CreateDefaultBuilder(args)
         IConfiguration configuration = hostContext.Configuration;
 
         services.AddSingleton<IConnection>(sp =>
-        {;
+        {
+            ;
 
             var factory = new ConnectionFactory()
             {

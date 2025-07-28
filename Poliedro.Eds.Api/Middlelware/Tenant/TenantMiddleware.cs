@@ -19,7 +19,7 @@ public class TenantMiddleware(
             if (!string.IsNullOrWhiteSpace(tenantClaim))
             {
                 context.Items["tenant"] = tenantClaim;
-              
+
             }
         }
 

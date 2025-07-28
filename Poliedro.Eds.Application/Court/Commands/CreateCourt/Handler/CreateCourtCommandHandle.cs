@@ -9,8 +9,8 @@ using Poliedro.Eds.Domain.Inventory.Entities;
 namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 {
     public class CreateCourtCommandHandle(IMapper mapper,
-        ICourtDomainService courtDomainService, 
-        IGetProductAndCompartiment  getProductAndCompartiment,
+        ICourtDomainService courtDomainService,
+        IGetProductAndCompartiment getProductAndCompartiment,
         IGetExpenditureId getExpenditureId,
         IGetTypeOfCollectionId getTypeOfCollectionId,
         ICourtUpdateInventoryService courtUpdateInventoryService
@@ -19,7 +19,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
         {
             var courtEntity = mapper.Map<CourtEntity>(request);
-           
+
             var TotalAccumulatedAmount = GetTotalAccumulatedAmount(request);
 
             var TotalAccumulatedGallons = GetTotalAccumulatedGallons(request);
@@ -42,7 +42,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             {
                 throw new InvalidOperationException("Error, El total de efectivo no puede ser negativo");
             }
-            if(courtEntity.CourtExpenditures.Count() > 0)
+            if (courtEntity.CourtExpenditures.Count() > 0)
             {
                 foreach (var item in courtEntity.CourtExpenditures)
                 {
@@ -60,7 +60,8 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                 }
             }
 
-            if (courtEntity.CourtTypeOfCollections.Count() > 0) {
+            if (courtEntity.CourtTypeOfCollections.Count() > 0)
+            {
                 foreach (var item in courtEntity.CourtDispensers)
                 {
                     ProductAndCompartimentEntity productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(item.IdHose);
@@ -119,10 +120,10 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 
         private double GetTotalExpenditures(CreateCourtCommand command)
         {
-            if(command.CourtExpenditures == null || !command.CourtExpenditures.Any())
+            if (command.CourtExpenditures == null || !command.CourtExpenditures.Any())
             {
                 return 0;
-            }   
+            }
             return command.CourtExpenditures.Sum(d => d.Amount);
         }
 

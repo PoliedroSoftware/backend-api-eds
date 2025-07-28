@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Provider.DomainProvider;
 using Poliedro.Eds.Domain.Provider.Entities;
 
 namespace Poliedro.Eds.Application.Provider.Queries.GellAllProvider;
+
 public class GetAllProviderQueryHandler
 (
     IProviderGetAllService ProviderGetAllService,

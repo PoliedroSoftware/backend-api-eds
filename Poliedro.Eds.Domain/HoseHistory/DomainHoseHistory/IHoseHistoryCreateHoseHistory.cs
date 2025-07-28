@@ -7,7 +7,7 @@ namespace Poliedro.Eds.Domain.HoseHistory.DomainHoseHistory
     public interface IHoseHistoryCreateHoseHistory
     {
         Task<Result<VoidResult, Error>> CreateAsync(HoseHistoryEntity HoseHistoryEntity);
-       
+
     }
 }
 

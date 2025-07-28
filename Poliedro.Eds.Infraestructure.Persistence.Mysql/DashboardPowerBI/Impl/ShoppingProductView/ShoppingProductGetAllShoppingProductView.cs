@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.ShoppingProductView;
+
 public class ShoppingProductGetAllShoppingProductView(
     ITenantDbContextFactory dbContextFactory,
     IRedisService redisService,

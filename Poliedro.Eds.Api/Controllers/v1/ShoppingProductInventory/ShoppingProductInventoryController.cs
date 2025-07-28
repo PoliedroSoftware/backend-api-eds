@@ -36,7 +36,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.ShoppingProductInventory
             return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
         }
 
-       
+
         [SwaggerOperation(Summary = "Create new ShoppingInventoryProduct")]
         [SwaggerResponse(StatusCodes.Status204NoContent, "The operation was successful.")]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
@@ -73,7 +73,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.ShoppingProductInventory
         }
 
 
-        
+
 
 
 

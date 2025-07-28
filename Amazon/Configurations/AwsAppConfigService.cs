@@ -14,7 +14,7 @@ public class AwsAppConfigService(
 
     public async Task<T> GetConfigurationAsync<T>()
     {
-      
+
         var startResponse = await _client.StartConfigurationSessionAsync(new StartConfigurationSessionRequest
         {
             ApplicationIdentifier = applicationId,

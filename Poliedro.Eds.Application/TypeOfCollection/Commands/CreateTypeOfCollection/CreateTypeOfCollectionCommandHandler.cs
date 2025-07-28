@@ -8,24 +8,25 @@ using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 using System.Net;
 
 namespace Poliedro.Eds.Application.TypeOfCollection.Commands.CreateTypeOfCollection;
-    public class CreateTypeOfCollectionCommandHandler(
-        ITypeOfCollectionCreateTypeOfCollection TypeOfCollectionDomainTypeOfCollection,
-        IMapper mapper,
-        IValidator<CreateTypeOfCollectionRequestDto> validator
-        ) : IRequestHandler<CreateTypeOfCollectionCommand, Result<VoidResult, Error>>
+
+public class CreateTypeOfCollectionCommandHandler(
+    ITypeOfCollectionCreateTypeOfCollection TypeOfCollectionDomainTypeOfCollection,
+    IMapper mapper,
+    IValidator<CreateTypeOfCollectionRequestDto> validator
+    ) : IRequestHandler<CreateTypeOfCollectionCommand, Result<VoidResult, Error>>
+{
+    public async Task<Result<VoidResult, Error>> Handle(CreateTypeOfCollectionCommand request, CancellationToken cancellationToken)
     {
-        public async Task<Result<VoidResult, Error>> Handle(CreateTypeOfCollectionCommand request, CancellationToken cancellationToken)
-        {
-            var validationResult = await validator.ValidateAsync(request.Request);
-            if (!validationResult.IsValid)
-                return Result<VoidResult, Error>.Failure(
-                    Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+        var validationResult = await validator.ValidateAsync(request.Request);
+        if (!validationResult.IsValid)
+            return Result<VoidResult, Error>.Failure(
+                Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var TypeOfCollectionEntity = mapper.Map<TypeOfCollectionEntity>(request.Request);
-                var result = await TypeOfCollectionDomainTypeOfCollection.CreateAsync(TypeOfCollectionEntity);
-                if (!result.IsSuccess)
-                    return result.Error!;
+        var TypeOfCollectionEntity = mapper.Map<TypeOfCollectionEntity>(request.Request);
+        var result = await TypeOfCollectionDomainTypeOfCollection.CreateAsync(TypeOfCollectionEntity);
+        if (!result.IsSuccess)
+            return result.Error!;
 
-                return result.Value!;
-        }
+        return result.Value!;
     }
+}

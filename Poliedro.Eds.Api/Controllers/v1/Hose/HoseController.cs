@@ -60,7 +60,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOrIslander")]
         [HttpGet("last-accumulated")]
-        public async Task<IActionResult> GetLastAccumulated([FromQuery] int idDispenser,[FromQuery] int idHose)
+        public async Task<IActionResult> GetLastAccumulated([FromQuery] int idDispenser, [FromQuery] int idHose)
         {
             var getLastAccumulatedQuery = new GetLastAccumulatedQuery(idDispenser, idHose);
             var result = await mediator.Send(getLastAccumulatedQuery);

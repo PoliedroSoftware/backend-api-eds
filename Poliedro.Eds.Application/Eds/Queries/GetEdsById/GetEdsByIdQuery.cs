@@ -5,4 +5,4 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.Eds.Queries.GetEdsById;
 
-public record GetEdsByIdQuery (int Id) : IRequest<Result<EdsDto, Error>>;
+public record GetEdsByIdQuery(int Id) : IRequest<Result<EdsDto, Error>>;

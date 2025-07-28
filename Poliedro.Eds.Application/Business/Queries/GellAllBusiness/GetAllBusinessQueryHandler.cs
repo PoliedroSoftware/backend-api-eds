@@ -9,6 +9,7 @@ using Poliedro.Eds.Domain.Business.Entities;
 using System.Text.Json;
 
 namespace Poliedro.Eds.Application.Business.Queries.GellAllBusiness;
+
 public class GetAllBusinessQueryHandler
 (
     IBusinessGetAllService businessGetAllService,

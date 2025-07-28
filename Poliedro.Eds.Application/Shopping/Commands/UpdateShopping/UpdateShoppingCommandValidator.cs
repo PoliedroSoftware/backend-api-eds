@@ -2,8 +2,9 @@
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 namespace Poliedro.Eds.Application.Shopping.Commands.UpdateShopping;
-    public class UpdateShoppingCommandValidator : AbstractValidator<UpdateShoppingCommand>
-    {
+
+public class UpdateShoppingCommandValidator : AbstractValidator<UpdateShoppingCommand>
+{
     public UpdateShoppingCommandValidator(IRedisService redisService)
     {
         RuleFor(x => x.IdShopping)

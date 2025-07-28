@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace Poliedro.Eds.Application.ShoppingProductInventory.Commands.CreateShoppingProductInventory
 {
     public record CreateShoppingProductInventoryRequestDto(int IdShoppingProductInventory,
-    int IdShoppingProduct,int IdInventory);
+    int IdShoppingProduct, int IdInventory);
 }

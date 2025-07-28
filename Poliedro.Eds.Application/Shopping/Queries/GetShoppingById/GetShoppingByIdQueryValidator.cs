@@ -4,8 +4,8 @@ using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.Shopping.Queries.GetShoppingById;
 
-    public class GetShoppingByIdQueryValidator : AbstractValidator<GetShoppingByIdQuery>
-    {
+public class GetShoppingByIdQueryValidator : AbstractValidator<GetShoppingByIdQuery>
+{
     public GetShoppingByIdQueryValidator(IRedisService redisService)
     {
         RuleFor(x => x.Id)

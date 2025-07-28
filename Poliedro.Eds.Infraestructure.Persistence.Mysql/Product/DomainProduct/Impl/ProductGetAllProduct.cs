@@ -12,7 +12,7 @@ public class ProductGetAllProduct(
 {
     public async Task<IEnumerable<ProductEntity>> GetAllAsync(PaginationParams paginationParams)
     {
-        using var context = dbContextFactory.CreateDbContext();        
+        using var context = dbContextFactory.CreateDbContext();
         var data = await context.Product
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)

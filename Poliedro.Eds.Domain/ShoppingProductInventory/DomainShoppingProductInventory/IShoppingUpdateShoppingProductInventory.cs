@@ -14,6 +14,6 @@ namespace Poliedro.Eds.Domain.ShoppingProductInventory.DomainShoppingProductInve
     {
 
         Task<Result<VoidResult, Error>> UpdateAsync(ShoppingProductInventoryEntity shoppingProductInventory);
-        
+
     }
 }

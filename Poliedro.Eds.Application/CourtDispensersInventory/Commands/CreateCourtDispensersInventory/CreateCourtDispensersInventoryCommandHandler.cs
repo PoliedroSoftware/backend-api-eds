@@ -26,7 +26,7 @@ namespace Poliedro.Eds.Application.CourtDispensersInventory.Commands.CreateCourt
             var result = await courtdispensersinventoryDomainCourtDispensersInventory.CreateAsync(courtdispensersinventoryEntity);
             if (!result.IsSuccess)
                 return result.Error!;
-            return result.Value!;    
+            return result.Value!;
         }
     }
 }

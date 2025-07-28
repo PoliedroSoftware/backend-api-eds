@@ -24,13 +24,13 @@ public class ProductViewGetAllProduct(
         string cacheKey = $"productView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<ProductViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
-        
+
         var data = await context.ProductView
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
             .ToListAsync();
 
-       
+
         await redisService.SetCacheAsync(cacheKey, data, TimeSpan.FromMinutes(1440));
 
         return data;

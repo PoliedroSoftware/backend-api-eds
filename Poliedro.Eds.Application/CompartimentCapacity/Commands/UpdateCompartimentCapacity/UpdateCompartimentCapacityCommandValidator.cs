@@ -4,8 +4,9 @@ using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.CompartimentCapacity.Commands.UpdateCompartimentCapacity;
-    public class UpdateCompartimentCapacityCommandValidator : AbstractValidator<UpdateCompartimentCapacityCommand>
-    {
+
+public class UpdateCompartimentCapacityCommandValidator : AbstractValidator<UpdateCompartimentCapacityCommand>
+{
     public UpdateCompartimentCapacityCommandValidator(IRedisService redisService)
     {
         RuleFor(x => x.IdCompartiment)

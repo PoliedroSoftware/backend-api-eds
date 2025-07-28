@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Poliedro.Eds.Application.ShoppingProductInventory.Commands.UpdateShoppingProductInventory
 {
-    public class UpdateShoppingProductInventoryCommandValidator :  AbstractValidator<UpdateShoppingProductInventoryCommand>
+    public class UpdateShoppingProductInventoryCommandValidator : AbstractValidator<UpdateShoppingProductInventoryCommand>
     {
         public UpdateShoppingProductInventoryCommandValidator(IRedisService redisService)
         {

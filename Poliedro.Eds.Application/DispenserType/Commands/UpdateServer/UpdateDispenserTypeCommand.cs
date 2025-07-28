@@ -4,6 +4,6 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.DispenserType.Commands.UpdateDispenserType;
 
-    public record UpdateDispenserTypeCommand(
-    int IdType,
-    string Description) : IRequest<Result<VoidResult, Error>>;
+public record UpdateDispenserTypeCommand(
+int IdType,
+string Description) : IRequest<Result<VoidResult, Error>>;

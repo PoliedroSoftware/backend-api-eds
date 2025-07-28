@@ -16,7 +16,7 @@ public class TolgeeHealthCheckService(IHttpClientFactory httpClientFactory, ICon
             return response.IsSuccessStatusCode
                 ? HealthCheckResult.Healthy("Tolgee API is healthy.")
                 : HealthCheckResult.Unhealthy("Tolgee API is not healthy.");
-            
+
         }
         catch (Exception ex)
         {

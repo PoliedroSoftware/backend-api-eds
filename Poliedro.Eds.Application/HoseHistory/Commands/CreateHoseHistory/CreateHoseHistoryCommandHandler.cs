@@ -26,7 +26,7 @@ namespace Poliedro.Eds.Application.HoseHistory.Commands.CreateHoseHistory
             var result = await hosehistoryDomainHoseHistory.CreateAsync(hosehistoryEntity);
             if (!result.IsSuccess)
                 return result.Error!;
-            return result.Value!;    
+            return result.Value!;
         }
     }
 }

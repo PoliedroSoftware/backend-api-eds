@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.CourtDispensersInventory.DomainCourtDispensersInventor
 using Poliedro.Eds.Domain.CourtDispensersInventory.Entities;
 
 namespace Poliedro.Eds.Application.CourtDispensersInventory.Queries.GellAllCourtDispensersInventory;
+
 public class GetAllCourtDispensersInventoryQueryHandler
 (
     ICourtDispensersInventoryGetAllCourtDispensersInventory CourtDispensersInventoryGetAllService,

@@ -33,7 +33,7 @@ public class GetCourtsListQueryHandler(
         if (cachedData != null)
             return cachedData;
 
-        var entities = await courtListDomainService.GetAllAsync(paginationParams,username!, isAdmin);
+        var entities = await courtListDomainService.GetAllAsync(paginationParams, username!, isAdmin);
         var dtos = mapper.Map<IEnumerable<CourtListResponseDto>>(entities);
 
         await redisService.SetCacheAsync(cacheKey, dtos, TimeSpan.FromMinutes(5));

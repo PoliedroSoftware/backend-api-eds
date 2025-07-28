@@ -5,6 +5,7 @@ using Poliedro.Eds.Application.Dispensers.Dtos;
 using Poliedro.Eds.Domain.Dispensers.Entities;
 
 namespace Poliedro.Eds.Application.Dispensers.AutoMappers;
+
 public class DispensersMapper : Profile
 {
     public DispensersMapper()

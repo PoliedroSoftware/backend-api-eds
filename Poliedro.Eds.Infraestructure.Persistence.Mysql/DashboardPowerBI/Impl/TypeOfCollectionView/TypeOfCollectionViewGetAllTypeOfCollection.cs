@@ -24,13 +24,13 @@ public class TypeOfCollectionViewGetAllTypeOfCollection(
         string cacheKey = $"typeOfCollectionView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<TypeOfCollectionViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
-        
+
         var data = await context.TypeOfCollectionView
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
             .ToListAsync();
 
-       
+
         await redisService.SetCacheAsync(cacheKey, data, TimeSpan.FromMinutes(1440));
 
         return data;

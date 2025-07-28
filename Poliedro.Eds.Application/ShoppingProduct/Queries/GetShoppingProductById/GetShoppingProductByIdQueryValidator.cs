@@ -3,7 +3,8 @@ using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.ShoppingProduct.Queries.GetShoppingProductById;
-    public class GetShoppingProductByIdQueryValidator : AbstractValidator<GetShoppingProductByIdQuery>
+
+public class GetShoppingProductByIdQueryValidator : AbstractValidator<GetShoppingProductByIdQuery>
 {
     public GetShoppingProductByIdQueryValidator(IRedisService redisService)
     {

@@ -25,7 +25,7 @@ public class BusinessViewGetAllService(
         string cacheKey = $"businessView:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
         var cachedData = await redisService.GetCacheAsync<IEnumerable<BusinessViewEntity>>(cacheKey);
         if (cachedData is not null) return cachedData;
-        
+
         var data = await context.BusinessView
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
@@ -37,9 +37,9 @@ public class BusinessViewGetAllService(
             ["Response"] = JsonSerializer.Serialize(data),
             ["TraceId"] = cacheKey
         };
-       
+
         logger.LogInformation("Response BussinessView: {@LogData}", logData);
-       
+
         await redisService.SetCacheAsync(cacheKey, data, TimeSpan.FromMinutes(1440));
 
         return data;

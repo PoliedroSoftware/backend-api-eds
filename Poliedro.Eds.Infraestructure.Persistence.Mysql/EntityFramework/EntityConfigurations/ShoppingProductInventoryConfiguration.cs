@@ -14,7 +14,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityC
             builder.Property(x => x.IdShoppingProductInventory).HasColumnName("id_shopping_produc_inventorycol");
             builder.Property(x => x.IdShoppingProduct).HasColumnName("id_shopping_product");
             builder.Property(x => x.IdInventory).HasColumnName("idinventory");
-            
+
         }
 
     }

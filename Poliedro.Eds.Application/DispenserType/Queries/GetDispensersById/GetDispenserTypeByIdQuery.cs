@@ -5,4 +5,4 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.DispenserType.Queries.GetDispenserTypeById;
 
-public record GetDispenserTypeByIdQuery (int Id): IRequest<Result<DispenserTypeDto, Error>>;
+public record GetDispenserTypeByIdQuery(int Id) : IRequest<Result<DispenserTypeDto, Error>>;

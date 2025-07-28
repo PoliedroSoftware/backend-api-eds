@@ -9,6 +9,7 @@ using Poliedro.Eds.Domain.Island.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.Domainisland.Impl;
+
 public class IslandCreateIsland(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IIslandCreateIsland
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(IslandEntity islandEntity)

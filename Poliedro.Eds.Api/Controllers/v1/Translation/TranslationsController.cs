@@ -15,5 +15,5 @@ public class TranslationsController(IMediator _mediator) : ControllerBase
     public async Task<ActionResult<TranslationsAvailableDto>> GetAllTranslationsAsync()
     =>
         Ok(await _mediator.Send(new GetTranslationsQuery()));
-    
+
 }

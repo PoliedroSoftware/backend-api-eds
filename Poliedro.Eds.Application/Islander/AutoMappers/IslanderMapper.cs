@@ -5,6 +5,7 @@ using Poliedro.Eds.Application.Islander.Dtos;
 using Poliedro.Eds.Domain.Islander.Entities;
 
 namespace Poliedro.Eds.Application.Islander.AutoMappers;
+
 public class IslanderMapper : Profile
 {
     public IslanderMapper()

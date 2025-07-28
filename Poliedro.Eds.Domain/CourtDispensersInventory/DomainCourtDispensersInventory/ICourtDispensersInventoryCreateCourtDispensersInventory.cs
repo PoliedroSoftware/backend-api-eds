@@ -7,7 +7,7 @@ namespace Poliedro.Eds.Domain.CourtDispensersInventory.DomainCourtDispensersInve
     public interface ICourtDispensersInventoryCreateCourtDispensersInventory
     {
         Task<Result<VoidResult, Error>> CreateAsync(CourtDispensersInventoryEntity CourtDispensersInventoryEntity);
-       
+
     }
 }
 

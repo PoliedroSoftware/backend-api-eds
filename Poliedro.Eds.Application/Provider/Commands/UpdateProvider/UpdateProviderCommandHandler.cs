@@ -15,7 +15,7 @@ public class UpdateProviderCommandHandler(
     IValidator<UpdateProviderCommand> validator
     ) : IRequestHandler<UpdateProviderCommand, Result<VoidResult, Error>>
 {
-    public async Task<Result<VoidResult, Error>> Handle(UpdateProviderCommand request,CancellationToken cancellationToken)
+    public async Task<Result<VoidResult, Error>> Handle(UpdateProviderCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)

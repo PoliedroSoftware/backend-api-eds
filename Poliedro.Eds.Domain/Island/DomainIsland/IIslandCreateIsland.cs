@@ -7,7 +7,7 @@ namespace Poliedro.Eds.Domain.Island.DomainIsland
     public interface IIslandCreateIsland
     {
         Task<Result<VoidResult, Error>> CreateAsync(IslandEntity IslandEntity);
-       
+
     }
 }
 

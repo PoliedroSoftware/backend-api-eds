@@ -5,6 +5,7 @@ using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProduct.DomainShopping.Impl;
+
 public class ShoppingProductGetAllShoppingProduct(
     ITenantDbContextFactory dbContextFactory
     ) : IShoppingProductGetAllShoppingProduct

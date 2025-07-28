@@ -14,6 +14,6 @@ public class CompartimentCapacityMapper : Profile
         CreateMap<CompartimentCapacityEntity, CreateCompartimentCapacityCommand>().ReverseMap();
         CreateMap<CompartimentCapacityEntity, CreateCompartimentCapacityRequestDto>().ReverseMap();
         CreateMap<CompartimentCapacityEntity, UpdateCompartimentCapacityCommand>().ReverseMap();
-    
+
     }
 }

@@ -3,8 +3,9 @@ using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.EdsTank.Queries.GetEdsTankById;
-    public class GetEdsTankByIdQueryValidator : AbstractValidator<GetEdsTankByIdQuery>
-    {
+
+public class GetEdsTankByIdQueryValidator : AbstractValidator<GetEdsTankByIdQuery>
+{
     public GetEdsTankByIdQueryValidator(IRedisService redisService)
     {
         RuleFor(x => x.Id)

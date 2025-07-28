@@ -5,11 +5,11 @@ using Poliedro.Eds.Domain.Product.Entities;
 
 namespace Poliedro.Eds.Application.Product.AutoMappers;
 
-    public class PaginationMapper : Profile
+public class PaginationMapper : Profile
+{
+    public PaginationMapper()
     {
-        public PaginationMapper()
-        {
-            CreateMap<PaginationResponse<ProductEntity>, PaginationResponseDto<ProductDto>>().ReverseMap();
-        }
+        CreateMap<PaginationResponse<ProductEntity>, PaginationResponseDto<ProductDto>>().ReverseMap();
     }
+}
 

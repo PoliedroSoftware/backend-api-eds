@@ -72,7 +72,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 
 
                 var location = response.Headers.Location?.ToString();
-               
+
                 var userId = location?.Split('/').Last();
 
                 var resetPasswordPayload = new
@@ -95,7 +95,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 
                 }
 
-                
+
                 var groupId = _configuration["Keycloak:DefaultGroupId"];
 
                 var subgroupsUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/groups/{groupId}/children";
@@ -142,7 +142,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
                 {
                     var errorText = await assignResponse.Content.ReadAsStringAsync();
                     Console.WriteLine(errorText);
-                    
+
                     return Error.Conflict("Keycloak", $"Error assigning user to sub-group: {errorText}");
                 }
 

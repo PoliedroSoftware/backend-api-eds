@@ -9,7 +9,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProductInventory.DomainShoppingProductInventory.Impl;
 
 public class ShoppingProductCreateShoppingProductInventory(
-    ITenantDbContextFactory dbContextFactory, 
+    ITenantDbContextFactory dbContextFactory,
     IRedisService redisService) : IShoppingCreateShoppingProductInventory
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ShoppingProductInventoryEntity shoppingProductEntity)

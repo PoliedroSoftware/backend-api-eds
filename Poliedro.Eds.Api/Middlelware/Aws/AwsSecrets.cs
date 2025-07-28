@@ -30,7 +30,7 @@ public class AwsSecrets(IConfiguration config)
         catch (Exception e)
         {
 
-            throw e;
+            throw;
         }
         return JsonSerializer.Deserialize<AwsSecretsDto>(response.SecretString,
               new JsonSerializerOptions { PropertyNameCaseInsensitive = true });

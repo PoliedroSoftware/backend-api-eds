@@ -4,6 +4,7 @@ using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Domain.DashboardPowerBI.ProductView.DomainProductView;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllProduct;
+
 public class GetAllProductQueryHandler
 (
     IProductViewGetAllProduct ProductViewDomainProduct,

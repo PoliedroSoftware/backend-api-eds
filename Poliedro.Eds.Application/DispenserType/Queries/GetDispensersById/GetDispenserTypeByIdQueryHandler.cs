@@ -31,4 +31,4 @@ namespace Poliedro.Eds.Application.DispenserType.Queries.GetDispenserTypeById
             return mapper.Map<DispenserTypeDto>(result.Value);
         }
     }
-}   
+}

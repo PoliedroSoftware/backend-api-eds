@@ -7,7 +7,7 @@ public class CreateBusinessCommandValidator : AbstractValidator<CreateBusinessRe
 {
     public CreateBusinessCommandValidator(IRedisService redisService)
     {
-     
+
         RuleFor(x => x.Name)
             .NotNull().WithMessage(redisService.GetValueFromCacheAsync("NameNotNull").GetAwaiter().GetResult())
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("NameNotEmpty").GetAwaiter().GetResult())
@@ -16,4 +16,3 @@ public class CreateBusinessCommandValidator : AbstractValidator<CreateBusinessRe
     }
 }
 
-                 

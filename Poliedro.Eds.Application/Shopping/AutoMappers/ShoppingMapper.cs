@@ -9,6 +9,7 @@ using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
 namespace Poliedro.Eds.Application.Shopping.AutoMappers;
+
 public class ShoppingMapper : Profile
 {
     public ShoppingMapper()

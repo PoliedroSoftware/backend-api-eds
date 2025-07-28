@@ -15,7 +15,7 @@ public class UpdateEdsCommandHandler(
     IValidator<UpdateEdsCommand> validator
     ) : IRequestHandler<UpdateEdsCommand, Result<VoidResult, Error>>
 {
-    public async Task<Result<VoidResult, Error>> Handle(UpdateEdsCommand request,CancellationToken cancellationToken)
+    public async Task<Result<VoidResult, Error>> Handle(UpdateEdsCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)

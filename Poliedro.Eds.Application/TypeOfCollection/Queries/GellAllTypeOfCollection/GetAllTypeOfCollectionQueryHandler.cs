@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.TypeOfCollection.DomainTypeOfCollection;
 using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 
 namespace Poliedro.Eds.Application.TypeOfCollection.Queries.GellAllTypeOfCollection;
+
 public class GetAllTypeOfCollectionQueryHandler
 (
     ITypeOfCollectionGetAllTypeOfCollection TypeOfCollectionGetAllService,

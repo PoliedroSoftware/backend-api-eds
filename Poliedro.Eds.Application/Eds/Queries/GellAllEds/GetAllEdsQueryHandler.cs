@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Eds.Entities;
 
 namespace Poliedro.Eds.Application.Eds.Queries.GellAllEds;
+
 public class GetAllEdsQueryHandler
 (
     IEdsGetAllService EdsGetAllService,

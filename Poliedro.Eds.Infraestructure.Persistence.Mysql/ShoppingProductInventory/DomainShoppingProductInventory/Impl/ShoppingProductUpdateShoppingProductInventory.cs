@@ -14,7 +14,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProductInventor
 {
     public class ShoppingProductUpdateShoppingProductInventory(ITenantDbContextFactory dbContextFactory) : IShoppingUpdateShoppingProductInventory
     {
-        
+
 
         public Task<Result<VoidResult, Error>> UpdateAsync(ShoppingProductInventoryEntity shoppingProductInventory)
         {

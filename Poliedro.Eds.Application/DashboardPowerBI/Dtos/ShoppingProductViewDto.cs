@@ -7,7 +7,7 @@ public record ShoppingProductViewDto(
     string IdProduct,
     string IdBusiness,
     double Quantity,
-    double Price ,
+    double Price,
     double TotalPrice,
     string ProductName,
     int IdCompartment,
