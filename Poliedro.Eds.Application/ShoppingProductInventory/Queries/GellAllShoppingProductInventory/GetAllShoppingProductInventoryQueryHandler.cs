@@ -1,4 +1,9 @@
-﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -10,11 +15,6 @@ using Poliedro.Eds.Domain.Capacity.Entities;
 using Poliedro.Eds.Domain.ShoppingProduct.DomainShoppingProduct;
 using Poliedro.Eds.Domain.ShoppingProductInventory.DomainShoppingProductInventory;
 using Poliedro.Eds.Domain.ShoppingProductInventory.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Poliedro.Eds.Application.ShoppingProductInventory.Queries.GellAllShoppingProductInventory
 {

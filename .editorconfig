@@ -1,0 +1,33 @@
+[*.cs]
+indent_style = space
+indent_size = 4
+csharp_new_line_before_open_brace = all
+dotnet_sort_system_directives_first = true
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Solo habilitar la regla de using no utilizados
+# SA1516: Using directives must be placed correctly (no unused usings)
+dotnet_diagnostic.SA1516.severity = warning
+# Desactivar el error CS0184 (la expresión es siempre falsa)
+dotnet_diagnostic.CS0184.severity = none
+# Desactivar el error CS8622 (parámetro de referencia nulo en métodos)
+dotnet_diagnostic.CS8622.severity = none
+# Desactivar el error CS8602 (posible referencia nula al acceder a un miembro)
+dotnet_diagnostic.CS8602.severity = none
+# Desactivar el error CS8619 (posible referencia nula en una propiedad de solo lectura)
+dotnet_diagnostic.CS8619.severity = none
+# Desactivar el error CS8634 (la expresión de tipo nulo no puede usarse como argumento)
+dotnet_diagnostic.CS8634.severity = none
+# Desactivar el error CS8621 (posible referencia nula en un parámetro de método)
+dotnet_diagnostic.CS8621.severity = none
+# Desactivar el error RAZORSDK1006
+dotnet_diagnostic.RAZORSDK1006.severity = none
+
+# Desactivar todas las demás reglas de StyleCop
+[*.cs]
+dotnet_analyzer_diagnostic.severity = none

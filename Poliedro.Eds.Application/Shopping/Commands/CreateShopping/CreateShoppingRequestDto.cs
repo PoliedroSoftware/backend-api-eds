@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Application.Inventory.Commands;
+using Poliedro.Eds.Application.Inventory.Commands;
 
 namespace Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
 

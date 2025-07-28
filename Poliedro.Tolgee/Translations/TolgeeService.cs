@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Net.Http;
 using System.Text.Json;
 using Poliedro.Eds.Application.Ports.Translations;
+
 
 namespace Poliedro.Tolgee.Translations;
 
 public class TolgeeService(
-    ILogger<TolgeeService> logger,
     IHttpClientFactory httpClientFactory) : ITolgeeService
 {
     public async Task<Dictionary<string, Dictionary<string, string>>> GetAllTranslationsFromTolgee()
@@ -15,7 +13,7 @@ public class TolgeeService(
         var response = await httpClient.GetAsync("translations?size=1000");
 
         if (!response.IsSuccessStatusCode)
-            throw new Exception($"Error al consultar Tolgee: {response.StatusCode}");
+            throw new Exception($"Error al consultar Tolgee Transtalations: {response.StatusCode}");
 
         var body = await response.Content.ReadAsStringAsync();
         var data = JsonSerializer.Deserialize<RootObject>(body)

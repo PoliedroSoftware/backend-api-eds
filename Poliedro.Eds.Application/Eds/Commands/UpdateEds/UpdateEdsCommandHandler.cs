@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Eds.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Eds.Commands.UpdateEds;
 
@@ -15,7 +15,7 @@ public class UpdateEdsCommandHandler(
     IValidator<UpdateEdsCommand> validator
     ) : IRequestHandler<UpdateEdsCommand, Result<VoidResult, Error>>
 {
-    public async Task<Result<VoidResult, Error>> Handle(UpdateEdsCommand request,CancellationToken cancellationToken)
+    public async Task<Result<VoidResult, Error>> Handle(UpdateEdsCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)

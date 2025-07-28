@@ -1,3 +1,3 @@
-﻿namespace Poliedro.Eds.Application.TypeOfCollection.Dtos;
+namespace Poliedro.Eds.Application.TypeOfCollection.Dtos;
 
-public record TypeOfCollectionDto (int IdTypeOfCollection, string Description);
+public record TypeOfCollectionDto(int IdTypeOfCollection, string Description);

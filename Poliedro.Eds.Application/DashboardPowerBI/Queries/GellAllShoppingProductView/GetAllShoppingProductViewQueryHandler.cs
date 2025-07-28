@@ -1,10 +1,11 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllShoppingProductView;
 using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.DomainShoppingProductView;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllShoppingProduct;
+
 public class GetAllShoppingProductViewQueryHandler
 (
     IShoppingProductGetAllShoppingProductView shoppingProductDomainService,

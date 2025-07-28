@@ -1,5 +1,5 @@
 public class CourtViewEntity
-   {
+{
     public int Id { get; set; }
     public DateOnly DateStarttime { get; set; }
     public DateOnly DateEndtime { get; set; }
@@ -14,4 +14,3 @@ public class CourtViewEntity
     public double TotalAccumulatedAmount { get; set; }
     public double TotalAccumulatedGallons { get; set; }
 }
-   

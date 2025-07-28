@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Application.Ports.Translations;
+using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.Translations.Dtos;
 

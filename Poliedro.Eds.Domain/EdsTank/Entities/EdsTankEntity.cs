@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.EdsTank.Entities;

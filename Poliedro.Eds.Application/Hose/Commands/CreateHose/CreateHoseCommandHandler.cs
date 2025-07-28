@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Application.Hose.Errors;
@@ -7,7 +8,6 @@ using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Hose.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Hose.Commands.CreateHose
 {
@@ -17,7 +17,7 @@ namespace Poliedro.Eds.Application.Hose.Commands.CreateHose
         IRedisService redisService,
         IMapper mapper,
         IValidator<CreateHoseRequestDto> validator
-        ):  IRequestHandler<CreateHoseCommand, Result<VoidResult, Error>>
+        ) : IRequestHandler<CreateHoseCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateHoseCommand request, CancellationToken cancellationToken)
         {

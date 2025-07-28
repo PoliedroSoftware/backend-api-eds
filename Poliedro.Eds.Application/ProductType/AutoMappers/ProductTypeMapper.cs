@@ -14,6 +14,6 @@ public class ProductTypeMapper : Profile
         CreateMap<ProductTypeEntity, CreateProductTypeCommand>().ReverseMap();
         CreateMap<ProductTypeEntity, CreateProductTypeRequestDto>().ReverseMap();
         CreateMap<ProductTypeEntity, UpdateProductTypeCommand>().ReverseMap();
-    
+
     }
 }

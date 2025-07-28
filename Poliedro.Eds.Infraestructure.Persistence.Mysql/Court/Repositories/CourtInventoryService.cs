@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Court.DomainService;
@@ -7,8 +7,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class CourtInventoryService(IConfiguration config, 
-    IRedisService redisService, 
+public class CourtInventoryService(
     ITenantDbContextFactory dbContextFactory) : ICourtUpdateInventoryService
 {
     public async Task CourtUpdateInventoryAsync(IEnumerable<ICourtDispenserSaleEntity> courtDispensers)
@@ -31,10 +30,5 @@ public class CourtInventoryService(IConfiguration config,
         }
 
         await context.SaveChangesAsync();
-    }
-
-    public Task CourtUpdateInventoryAsync(IEnumerable<CourtDispenserEntity> courtDispensers)
-    {
-        throw new NotImplementedException();
     }
 }

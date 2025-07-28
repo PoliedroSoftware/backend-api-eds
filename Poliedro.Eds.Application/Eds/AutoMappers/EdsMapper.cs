@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.Eds.Commands.CreateEds;
 using Poliedro.Eds.Application.Eds.Commands.UpdateEds;
 using Poliedro.Eds.Application.Eds.Dtos;

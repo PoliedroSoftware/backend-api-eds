@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.Court.Commands.UpdateCourt;
 using Poliedro.Eds.Application.Court.Dtos;

@@ -11,7 +11,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 
-public class ProductTypeCreateProductType(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IProductTypeCreateProductType
+public class ProductTypeCreateProductType(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IProductTypeCreateProductType
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ProductTypeEntity ProductTypeEntity)
     {

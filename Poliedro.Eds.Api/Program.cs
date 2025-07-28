@@ -1,4 +1,5 @@
-﻿using Amazon.Runtime;
+using System.Net.Http.Headers;
+using Amazon.Runtime;
 using Amazon.S3.FileUploadService;
 using Amazon.Secrets;
 using AWS.Logger;
@@ -13,8 +14,8 @@ using Poliedro.Eds.Api;
 using Poliedro.Eds.Api.Common.Configurations;
 using Poliedro.Eds.Api.Middlelware.aws;
 using Poliedro.Eds.Api.Middlelware.Jwt;
-using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Api.Middlelware.NameIdentifier;
+using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.FileUploadS3.Command;
@@ -37,7 +38,6 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 using Poliedro.External.HealthCheck.Tolgee;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
-using System.Net.Http.Headers;
 using WorkerKeycloackService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,18 +64,27 @@ var httpContextAccessor = new HttpContextAccessor();
 var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
 var currentUser = httpContextAccessor.HttpContext?.Items["preferred_username"]?.ToString();
 var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? builder.Configuration["ConnectionStrings:MysqlConnection"];
-var connectionStringFactory = connectionString.Replace("{schema}", tenant);
+if (connectionString == null)
+    throw new InvalidOperationException("MYSQL_CONNECTION or ConnectionStrings:MysqlConnection is not configured.");
+var connectionStringFactory = connectionString.Replace("{schema}", tenant ?? string.Empty);
 builder.Services.AddHealthChecks()
     .AddMySql(connectionStringFactory, name: "sql", tags: ["ready"])
-    .AddRedis(builder.Configuration["Redis:ConnectionString"], name: "redis", tags: ["ready"])
-    .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee"); 
+    .AddRedis(
+        builder.Configuration["Redis:ConnectionString"] 
+            ?? throw new InvalidOperationException("Redis:ConnectionString is not configured."),
+        name: "redis", 
+        tags: ["ready"])
+    .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee");
 
 builder.Services.AddLogging();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["Keycloak:KeycloakUri"]);
+    var keycloakUri = builder.Configuration["Keycloak:KeycloakUri"];
+    if (string.IsNullOrWhiteSpace(keycloakUri))
+        throw new InvalidOperationException("Keycloak:KeycloakUri is not configured.");
+    client.BaseAddress = new Uri(keycloakUri);
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 
@@ -113,7 +122,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
-        policy.RequireRole( "Admin"));
+        policy.RequireRole("Admin"));
 });
 
 builder.Services.AddAuthorization(options =>
@@ -248,7 +257,7 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
-              
+
     });
 });
 builder.Services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();

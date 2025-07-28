@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.ProductType.DomainProductType;
 using Poliedro.Eds.Domain.ProductType.Entities;
 
 namespace Poliedro.Eds.Application.ProductType.Queries.GellAllProductType;
+
 public class GetAllProductTypeQueryHandler
 (
     IProductTypeGetAllProductType ProductTypeGetAllService,

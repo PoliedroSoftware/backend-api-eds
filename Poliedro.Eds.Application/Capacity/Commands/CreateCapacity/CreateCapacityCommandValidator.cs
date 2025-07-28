@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Poliedro.Eds.Application.Capacity.Queries.GetCapacityById;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
@@ -27,6 +27,7 @@ public class CreateCapacityCommandValidator : AbstractValidator<CreateCapacityRe
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("LitersNotEmpty").GetAwaiter().GetResult());
 
     }
+
     public class GetCapacityByIdCommandValidator : AbstractValidator<GetCapacityByIdQuery>
     {
         public GetCapacityByIdCommandValidator(IRedisService redisService)
