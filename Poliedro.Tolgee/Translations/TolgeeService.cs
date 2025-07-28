@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Net.Http;
 using System.Text.Json;
 using Poliedro.Eds.Application.Ports.Translations;
 
