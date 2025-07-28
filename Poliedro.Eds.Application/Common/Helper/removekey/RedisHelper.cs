@@ -1,20 +1,19 @@
-
-using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 
-namespace Poliedro.Eds.Application.Business.Helpers;
+namespace Poliedro.Eds.Application.Common.Helper.removekey;
 
 public static class RedisHelper
 {
-    public static async Task RemoveBusinessCacheIfSuccessAsync(
+    public static async Task RemoveCacheIfSuccessAsync(
         Result<VoidResult, Error> result,
-        IRedisService redisService)
+        IRedisService redisService,
+        string redisKeyPrefix)
     {
         if (result.IsSuccess)
         {
-            await redisService.RemoveByPrefixAsync(KeyRedisConstants.BUSINESS);
+            await redisService.RemoveByPrefixAsync(redisKeyPrefix);
         }
     }
 }

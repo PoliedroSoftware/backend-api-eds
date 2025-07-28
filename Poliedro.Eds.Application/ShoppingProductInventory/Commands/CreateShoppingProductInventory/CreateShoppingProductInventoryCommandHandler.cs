@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.ShoppingProductInventory.DomainShoppingProductInventory;
@@ -12,7 +15,8 @@ namespace Poliedro.Eds.Application.ShoppingProductInventory.Commands.CreateShopp
     public class CreateShoppingProductInventoryCommandHandler(
         IShoppingCreateShoppingProductInventory shoppingProductDomainService,
         IMapper mapper,
-        IValidator<CreateShoppingProductInventoryRequestDto> validator
+        IValidator<CreateShoppingProductInventoryRequestDto> validator,
+        IRedisService redisService
         ) : IRequestHandler<CreateShoppingProductInventoryCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateShoppingProductInventoryCommand request, CancellationToken cancellationToken)
@@ -22,12 +26,9 @@ namespace Poliedro.Eds.Application.ShoppingProductInventory.Commands.CreateShopp
                 return Result<VoidResult, Error>.Failure(
                     Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var shoppingProductEntity = mapper.Map<ShoppingProductInventoryEntity>(request.Request);
-            var result = await shoppingProductDomainService.CreateAsync(shoppingProductEntity);
-            if (!result.IsSuccess)
-                return result.Error!;
-
-            return result.Value!;
+            var result = await shoppingProductDomainService.CreateAsync(mapper.Map<ShoppingProductInventoryEntity>(request.Request));
+            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.SHOPPING_PRODUCT_INVENTORY);
+            return result.IsSuccess ? result.Value! : result.Error!;
 
         }
     }
