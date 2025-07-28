@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.Tank.Commands.CreateTank;
 using Poliedro.Eds.Application.Tank.Commands.UpdateTank;
 using Poliedro.Eds.Application.Tank.Dtos;

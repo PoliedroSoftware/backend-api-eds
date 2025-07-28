@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.HoseHistory.Commands.CreateHoseHistory;
 using Poliedro.Eds.Application.HoseHistory.Commands.UpdateHoseHistory;
 using Poliedro.Eds.Application.HoseHistory.Dtos;

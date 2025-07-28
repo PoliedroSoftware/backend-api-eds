@@ -1,3 +1,4 @@
+using System.Reflection;
 using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,7 @@ using Poliedro.Eds.Application.Compartiment.AutoMappers;
 using Poliedro.Eds.Application.CompartimentCapacity.AutoMappers;
 using Poliedro.Eds.Application.Court.AutoMappers;
 using Poliedro.Eds.Application.CourtDispensersInventory.AutoMappers;
+using Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;
 using Poliedro.Eds.Application.Dispensers.AutoMappers;
 using Poliedro.Eds.Application.DispenserType.AutoMappers;
 using Poliedro.Eds.Application.Eds.AutoMappers;
@@ -27,8 +29,6 @@ using Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProductInventory.AutoMappers;
 using Poliedro.Eds.Application.Tank.AutoMappers;
 using Poliedro.Eds.Application.TypeOfCollection.AutoMappers;
-using Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;
-using System.Reflection;
 
 namespace Poliedro.Eds.Application;
 

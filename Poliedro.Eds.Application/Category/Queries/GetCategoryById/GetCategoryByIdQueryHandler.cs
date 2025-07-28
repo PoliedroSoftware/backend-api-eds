@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Application.Business.Queries.GetBusinessById;
@@ -6,7 +7,6 @@ using Poliedro.Eds.Application.Category.Dtos;
 using Poliedro.Eds.Domain.Category.DomainCategory;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Category.Queries.GetCategoryById;
 

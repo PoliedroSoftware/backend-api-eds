@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.ShoppingProduct.Commands.CreateShoppingProduct;
 using Poliedro.Eds.Application.ShoppingProduct.Commands.UpdateShoppingProduct;
 using Poliedro.Eds.Application.ShoppingProduct.Dtos;

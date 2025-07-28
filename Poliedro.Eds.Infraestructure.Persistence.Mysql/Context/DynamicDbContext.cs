@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 

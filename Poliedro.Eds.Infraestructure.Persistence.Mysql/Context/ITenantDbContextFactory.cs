@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context
+namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context
 {
     public interface ITenantDbContextFactory
     {

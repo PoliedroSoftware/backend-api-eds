@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Tank.Commands.CreateTank;
+namespace Poliedro.Eds.Application.Tank.Commands.CreateTank;
 
 public record CreateTankRequestDto(
     string Number,

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Application.Product.Services;
@@ -7,7 +8,6 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Inventory.Entities;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
 using Poliedro.Eds.Domain.Shopping.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
 

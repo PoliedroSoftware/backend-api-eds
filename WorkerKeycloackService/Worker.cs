@@ -1,9 +1,9 @@
-﻿using Poliedro.Eds.Application.Islander.Dtos;
+using System.Text;
+using System.Text.Json;
+using Poliedro.Eds.Application.Islander.Dtos;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Islander.Entities;
 using RabbitMQ.Client;
-using System.Text;
-using System.Text.Json;
 namespace WorkerKeycloackService
 {
     public class Worker(

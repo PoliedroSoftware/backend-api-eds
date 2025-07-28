@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.Provider.Commands.CreateProvider;
 using Poliedro.Eds.Application.Provider.Commands.UpdateProvider;
 using Poliedro.Eds.Application.Provider.Dtos;

@@ -1,4 +1,4 @@
-﻿using Amazon.S3.FileUploadService;
+using Amazon.S3.FileUploadService;
 using Microsoft.Extensions.DependencyInjection;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 

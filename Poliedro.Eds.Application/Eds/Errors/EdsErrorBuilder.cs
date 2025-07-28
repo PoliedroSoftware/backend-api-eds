@@ -1,5 +1,5 @@
-﻿using Poliedro.Eds.Domain.Common.Results.Errors;
 using System.Net;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.Eds.Errors;
 

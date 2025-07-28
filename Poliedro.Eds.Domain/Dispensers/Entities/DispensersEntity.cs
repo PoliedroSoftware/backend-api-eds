@@ -1,7 +1,7 @@
-﻿using Poliedro.Eds.Domain.Audit.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
+using Poliedro.Eds.Domain.Audit.Entities;
 using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Domain.Hose.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Poliedro.Eds.Domain.Dispensers.Entities;
 

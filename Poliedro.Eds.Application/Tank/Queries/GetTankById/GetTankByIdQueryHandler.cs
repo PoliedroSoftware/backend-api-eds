@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Application.Tank.Dtos;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Tank.DomainTank;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Tank.Queries.GetTankById
 {

@@ -1,6 +1,6 @@
-﻿using Amazon.AppConfigData;
-using Amazon.AppConfigData.Model;
 using System.Text.Json;
+using Amazon.AppConfigData;
+using Amazon.AppConfigData.Model;
 
 namespace Amazon.Configurations;
 

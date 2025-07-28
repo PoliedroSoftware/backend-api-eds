@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Court.Errors;
 using Poliedro.Eds.Domain.Common.Results;

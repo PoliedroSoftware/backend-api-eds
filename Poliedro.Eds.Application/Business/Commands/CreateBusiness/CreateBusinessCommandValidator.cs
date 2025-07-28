@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Poliedro.Eds.Application.Ports.Redis;
 
 namespace Poliedro.Eds.Application.Business.Commands.CreateBusiness;

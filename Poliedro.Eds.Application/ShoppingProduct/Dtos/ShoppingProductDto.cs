@@ -1,4 +1,4 @@
-﻿
+
 namespace Poliedro.Eds.Application.ShoppingProduct.Dtos;
 
 public record ShoppingProductDto(

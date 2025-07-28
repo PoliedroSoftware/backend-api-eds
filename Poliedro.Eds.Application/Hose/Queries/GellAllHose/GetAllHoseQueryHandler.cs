@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Hose.Dtos;

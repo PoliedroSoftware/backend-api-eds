@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Secrets.Aws.Dto;
+namespace Poliedro.Eds.Application.Secrets.Aws.Dto;
 
 using System.Text.Json.Serialization;
 

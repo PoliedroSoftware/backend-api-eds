@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Islander.Dtos
+namespace Poliedro.Eds.Application.Islander.Dtos
 {
     public class PaginationResponseDto<T>
     {

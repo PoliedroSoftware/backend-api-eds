@@ -1,5 +1,5 @@
-﻿using FluentValidation.AspNetCore;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 
 namespace Poliedro.Eds.Api.Common.Configurations;
 

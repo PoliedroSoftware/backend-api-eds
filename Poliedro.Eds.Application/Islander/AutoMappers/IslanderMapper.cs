@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.Islander.Commands.CreateIslander;
 using Poliedro.Eds.Application.Islander.Commands.UpdateIslander;
 using Poliedro.Eds.Application.Islander.Dtos;

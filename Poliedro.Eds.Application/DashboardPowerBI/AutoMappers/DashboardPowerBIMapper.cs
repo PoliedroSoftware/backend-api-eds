@@ -1,24 +1,23 @@
-﻿
-using AutoMapper;
 
-using EdsDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.EdsDto;
-using TankDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.TankDto;
-using CompartmentDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.CompartmentDto;
-using Poliedro.Eds.Domain.Shopping.Entities;
-using Poliedro.Eds.Domain.TypeOfCollection.Entities;
+using AutoMapper;
 using Poliedro.Eds.Application.Court.Commands.CreateCourt;
+using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+using Poliedro.Eds.Application.DashboardPowerBI.Dtos.Court;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
-using Poliedro.Eds.Application.DashboardPowerBI.Dtos.Court;
-using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
-using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.ProductView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.ProviderView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.TypeOfCollectionView.Entities;
+using Poliedro.Eds.Domain.Shopping.Entities;
+using Poliedro.Eds.Domain.TypeOfCollection.Entities;
+using CompartmentDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.CompartmentDto;
+using EdsDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.EdsDto;
+using TankDto = Poliedro.Eds.Application.DashboardPowerBI.Dtos.TankDto;
 
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;

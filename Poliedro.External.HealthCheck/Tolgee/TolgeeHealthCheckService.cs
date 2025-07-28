@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Poliedro.External.HealthCheck.Tolgee;
 
