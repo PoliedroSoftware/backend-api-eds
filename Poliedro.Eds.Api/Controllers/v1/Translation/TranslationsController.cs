@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Application.Translations.Dtos;
@@ -15,5 +15,5 @@ public class TranslationsController(IMediator _mediator) : ControllerBase
     public async Task<ActionResult<TranslationsAvailableDto>> GetAllTranslationsAsync()
     =>
         Ok(await _mediator.Send(new GetTranslationsQuery()));
-    
+
 }

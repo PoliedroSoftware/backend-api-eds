@@ -1,9 +1,9 @@
+using System.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using System.Data;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
@@ -15,7 +15,7 @@ public class CourtListService(
     {
         try
         {
-            var courts = await GetCourtsFromViewAsync(username,isAdmin);
+            var courts = await GetCourtsFromViewAsync(username, isAdmin);
             var collections = await GetCourtCollectionsFromViewAsync();
             var dispensers = await GetCourtDispensersFromViewAsync();
             var documents = await GetCourtDocumentsFromViewAsync();
@@ -23,25 +23,25 @@ public class CourtListService(
 
             var groupedCourts = courts
                 .Select(court => new CourtListResponseEntity
-            {
-                Id = court.Id,
-                Consecutive = court.Consecutive,
-                IdEds = court.IdEds,
-                Eds = court.Eds,
-                Bussiness = court.Bussiness,
-                Islander = court.Islander,
-                DateStarttime = court.DateStarttime,
-                Starttime = court.Starttime,
-                DateEndtime = court.DateEndtime,
-                Endtime = court.Endtime,
-                Distinc = court.Distinc,
-                TotalAccumulatedAmount = court.TotalAccumulatedAmount,
-                TotalAccumulatedGallons = court.TotalAccumulatedGallons,
-                Collections = collections.Where(x => x.Court == court.Id).ToList(),
-                Dispensers = dispensers.Where(x => x.CodeCourt == court.Id).ToList(),
-                Documents = documents.Where(x => x.Court == court.Id).ToList(),
-                Expenditures = expenditures.Where(x => x.Court == court.Id).ToList()
-            });
+                {
+                    Id = court.Id,
+                    Consecutive = court.Consecutive,
+                    IdEds = court.IdEds,
+                    Eds = court.Eds,
+                    Bussiness = court.Bussiness,
+                    Islander = court.Islander,
+                    DateStarttime = court.DateStarttime,
+                    Starttime = court.Starttime,
+                    DateEndtime = court.DateEndtime,
+                    Endtime = court.Endtime,
+                    Distinc = court.Distinc,
+                    TotalAccumulatedAmount = court.TotalAccumulatedAmount,
+                    TotalAccumulatedGallons = court.TotalAccumulatedGallons,
+                    Collections = collections.Where(x => x.Court == court.Id).ToList(),
+                    Dispensers = dispensers.Where(x => x.CodeCourt == court.Id).ToList(),
+                    Documents = documents.Where(x => x.Court == court.Id).ToList(),
+                    Expenditures = expenditures.Where(x => x.Court == court.Id).ToList()
+                });
 
             var pagedCourts = groupedCourts
                 .OrderByDescending(c => c.DateStarttime)
@@ -57,7 +57,7 @@ public class CourtListService(
         }
     }
 
-    private async Task<IEnumerable<CourtViewEntity>> GetCourtsFromViewAsync(string username,bool isAdmin)
+    private async Task<IEnumerable<CourtViewEntity>> GetCourtsFromViewAsync(string username, bool isAdmin)
     {
         using var context = dbContextFactory.CreateDbContext();
         var courts = new List<CourtViewEntity>();
@@ -95,10 +95,10 @@ public class CourtListService(
                 Eds = reader.IsDBNull("eds") ? null : reader.GetString("eds"),
                 Bussiness = reader.IsDBNull("bussiness") ? string.Empty : reader.GetString("bussiness"),
                 Islander = reader.IsDBNull("islander") ? string.Empty : reader.GetString("islander"),
-                DateStarttime = reader.IsDBNull("date_starttime") ? default: DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_starttime"))),
-                Starttime = reader.IsDBNull("starttime")? default:TimeOnly.FromTimeSpan((TimeSpan)reader.GetValue(reader.GetOrdinal("starttime"))),
-                DateEndtime = reader.IsDBNull("date_endtime")? default: DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_endtime"))),
-                Endtime = reader.IsDBNull("endtime")? default: TimeOnly.FromTimeSpan((TimeSpan)reader.GetValue(reader.GetOrdinal("endtime"))),
+                DateStarttime = reader.IsDBNull("date_starttime") ? default : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_starttime"))),
+                Starttime = reader.IsDBNull("starttime") ? default : TimeOnly.FromTimeSpan((TimeSpan)reader.GetValue(reader.GetOrdinal("starttime"))),
+                DateEndtime = reader.IsDBNull("date_endtime") ? default : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date_endtime"))),
+                Endtime = reader.IsDBNull("endtime") ? default : TimeOnly.FromTimeSpan((TimeSpan)reader.GetValue(reader.GetOrdinal("endtime"))),
                 Distinc = reader.IsDBNull("distinc") ? 0.0 : reader.GetDouble("distinc"),
                 TotalAccumulatedAmount = reader.IsDBNull("total_accumulated_amount") ? 0.0 : reader.GetDouble("total_accumulated_amount"),
                 TotalAccumulatedGallons = reader.IsDBNull("total_accumulated_gallons") ? 0.0 : reader.GetDouble("total_accumulated_gallons")
@@ -118,14 +118,14 @@ public class CourtListService(
         using var command = connection.CreateCommand();
         command.CommandText = query;
         using var reader = await command.ExecuteReaderAsync();
-        
+
         while (await reader.ReadAsync())
         {
             collections.Add(new CourtCollectionViewEntity
             {
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Court = reader.IsDBNull("court") ? 0 : reader.GetInt32("court"),
-                Date = reader.IsDBNull("date") ? default: DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date"))),
+                Date = reader.IsDBNull("date") ? default : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("date"))),
                 Collection = reader.IsDBNull("collection") ? string.Empty : reader.GetString("collection"),
                 Amount = reader.IsDBNull("amount") ? 0 : reader.GetDouble("amount"),
                 Description = reader.IsDBNull("description") ? string.Empty : reader.GetString("description")
@@ -161,7 +161,7 @@ public class CourtListService(
                 LastAccumulatedGallons = reader.IsDBNull("last_accumulated_gallons") ? 0.0 : reader.GetDouble("last_accumulated_gallons"),
                 CodeCourt = reader.IsDBNull("code_court") ? 0 : reader.GetInt32("code_court"),
                 Islander = reader.IsDBNull("islander") ? string.Empty : reader.GetString("islander"),
-                DateStarttime =  reader.IsDBNull("date_starttime") ? default: DateOnly.FromDateTime(reader.GetDateTime("date_starttime")),
+                DateStarttime = reader.IsDBNull("date_starttime") ? default : DateOnly.FromDateTime(reader.GetDateTime("date_starttime")),
                 //Starttime = reader.IsDBNull("starttime") ? default : TimeOnly.FromDateTime(reader.GetDateTime("starttime")),
                 DateEndtime = reader.IsDBNull("date_endtime") ? default : DateOnly.FromDateTime(reader.GetDateTime("date_endtime")),
                 //Endtime = reader.IsDBNull("endtime") ? default: TimeOnly.FromDateTime(reader.GetDateTime("endtime")),

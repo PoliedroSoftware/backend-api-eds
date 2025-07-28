@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.CourtDispensersInventory.DomainCourtDispensersInventory;
 using Poliedro.Eds.Domain.CourtDispensersInventory.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.CourtDispensersInventory.Commands.CreateCourtDispensersInventory
 {
@@ -26,7 +26,7 @@ namespace Poliedro.Eds.Application.CourtDispensersInventory.Commands.CreateCourt
             var result = await courtdispensersinventoryDomainCourtDispensersInventory.CreateAsync(courtdispensersinventoryEntity);
             if (!result.IsSuccess)
                 return result.Error!;
-            return result.Value!;    
+            return result.Value!;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Hose.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -10,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Hose.DomainHose.Impl;
 
-public class HoseGetByIdHose(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IHoseGetByIdHose
+public class HoseGetByIdHose(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IHoseGetByIdHose
 {
     public async Task<Result<HoseEntity, Error>> GetByIdAsync(int id)
     {

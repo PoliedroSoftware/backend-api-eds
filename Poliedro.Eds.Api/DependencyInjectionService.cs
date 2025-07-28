@@ -1,4 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models;
 using Poliedro.Eds.Api.Common.Configurations;
 
 namespace Poliedro.Eds.Api;

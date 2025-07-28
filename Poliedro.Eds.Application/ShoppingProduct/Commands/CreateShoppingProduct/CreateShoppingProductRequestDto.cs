@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.ShoppingProduct.Commands.CreateShoppingProduct;
+namespace Poliedro.Eds.Application.ShoppingProduct.Commands.CreateShoppingProduct;
 
 public record CreateShoppingProductRequestDto(
     int IdShopping,

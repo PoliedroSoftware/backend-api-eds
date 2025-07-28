@@ -1,5 +1,5 @@
-﻿using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain.Provider.Entities;
 
 namespace Poliedro.Eds.Domain.Provider.DomainProvider;
 

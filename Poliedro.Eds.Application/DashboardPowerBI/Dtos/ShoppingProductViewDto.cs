@@ -1,4 +1,4 @@
-﻿
+
 namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 
 public record ShoppingProductViewDto(
@@ -7,7 +7,7 @@ public record ShoppingProductViewDto(
     string IdProduct,
     string IdBusiness,
     double Quantity,
-    double Price ,
+    double Price,
     double TotalPrice,
     string ProductName,
     int IdCompartment,

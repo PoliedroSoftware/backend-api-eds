@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.Capacity.Commands.CreateCapacity;
 using Poliedro.Eds.Application.Capacity.Commands.UpdateCapacity;
 using Poliedro.Eds.Application.Capacity.Dtos;

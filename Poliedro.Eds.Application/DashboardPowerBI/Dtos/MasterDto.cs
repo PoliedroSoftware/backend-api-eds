@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 
 public class MasterDto
 {

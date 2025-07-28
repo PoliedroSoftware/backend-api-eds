@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos.Court
+namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos.Court
 {
     public class CourtTypeOfCollectionDto
     {

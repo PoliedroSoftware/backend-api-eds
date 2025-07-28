@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 
 namespace Poliedro.Eds.Application.FileUploadS3.Command;
