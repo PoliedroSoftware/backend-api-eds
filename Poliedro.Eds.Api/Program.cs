@@ -209,6 +209,12 @@ builder.Services.AddHttpClient(nameof(TolgeeService), client =>
 });
 
 
+//Configura WhatsApp
+
+builder.Services.AddHttpClient<IWhatsAppService, WhatsAppService>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SendWhatsAppMessageCommand>());
+builder.Services.AddControllers();
+
 
 
 
