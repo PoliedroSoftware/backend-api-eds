@@ -1,7 +1,7 @@
-using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 public class ProductCompartimentGetByCompartmentId(ITenantDbContextFactory dbContextFactory) : IProductCompartimentGetByCompartmentId
 {

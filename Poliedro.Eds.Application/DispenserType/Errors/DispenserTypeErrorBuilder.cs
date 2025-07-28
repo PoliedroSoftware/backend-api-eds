@@ -1,5 +1,5 @@
-﻿using Poliedro.Eds.Domain.Common.Results.Errors;
 using System.Net;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.DispenserType.Errors;
 
@@ -7,6 +7,7 @@ public class DispenserTypeErrorBuilder : IError
 {
     public const string DISPENSERTYPE_CREATION_ERROR = "DispenserTypeCreationErrorException";
     public const string DISPENSERTYPE_NOT_FOUND_ERROR = "DispenserTypeNotFoundErrorException";
+
     public static Error DispenserTypeCreationException() => Error.CreateInstance(
         DISPENSERTYPE_CREATION_ERROR,
         "Failed to create Server due to an internal error.",
@@ -18,6 +19,7 @@ public class DispenserTypeErrorBuilder : IError
             DISPENSERTYPE_UPDATE_ERROR,
             "Failed to update Server due to an internal error.",
             HttpStatusCode.InternalServerError);
+
     public static Error DispenserTypeNotFoundException(int id) => Error.CreateInstance(
        DISPENSERTYPE_NOT_FOUND_ERROR,
        $"DispenserType with ID {id} was not found.",

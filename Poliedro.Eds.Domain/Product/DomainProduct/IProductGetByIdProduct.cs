@@ -4,7 +4,8 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Product.Entities;
 
 namespace Poliedro.Eds.Domain.Product.DomainProduct;
-    public interface IProductGetByIdProduct
-    {
-        Task<Result<ProductEntity, Error>> GetByIdAsync(int id);
-    }
+
+public interface IProductGetByIdProduct
+{
+    Task<Result<ProductEntity, Error>> GetByIdAsync(int id);
+}

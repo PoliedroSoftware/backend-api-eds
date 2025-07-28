@@ -1,9 +1,10 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.DomainCapacityView;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllCapacity;
+
 public class GetAllCapacityQueryHandler
 (
     ICapacityViewGetAllService CapacityViewGetAllService,

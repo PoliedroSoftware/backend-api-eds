@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Tank.DomainTank;
 using Poliedro.Eds.Domain.Tank.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Tank.Commands.CreateTank;
 
@@ -26,7 +26,7 @@ public class CreateTankCommandHandler(
         var result = await tankDomainTank.CreateAsync(tankEntity);
         if (!result.IsSuccess)
             return result.Error!;
-        return result.Value!;    
+        return result.Value!;
     }
 }
 

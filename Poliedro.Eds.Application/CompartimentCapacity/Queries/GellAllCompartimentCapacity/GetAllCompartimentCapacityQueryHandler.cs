@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.CompartimentCapacity.Dtos;
@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 
 namespace Poliedro.Eds.Application.CompartimentCapacity.Queries.GellAllCompartimentCapacity;
+
 public class GetAllCompartimentCapacityQueryHandler
 (
     ICompartimentCapacityGetAllService CompartimentCapacityGetAllService,

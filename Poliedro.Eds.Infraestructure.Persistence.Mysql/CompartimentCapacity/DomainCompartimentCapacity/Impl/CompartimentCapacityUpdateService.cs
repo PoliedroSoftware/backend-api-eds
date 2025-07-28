@@ -26,6 +26,7 @@ public class CompartimentCapacityUpdateService(ITenantDbContextFactory dbContext
         await redisService.RemoveByPrefixAsync("comparimentCapacity:");
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

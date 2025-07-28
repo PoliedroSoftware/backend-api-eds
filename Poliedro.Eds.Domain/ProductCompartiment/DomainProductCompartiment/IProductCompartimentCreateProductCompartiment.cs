@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.ProductCompartiment.Entities;
 
 namespace Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
 
-    public interface IProductCompartimentCreateProductCompartiment
-    {
-        Task<Result<VoidResult, Error>> CreateAsync(ProductCompartimentEntity ProductCompartimentEntity);
-    }
+public interface IProductCompartimentCreateProductCompartiment
+{
+    Task<Result<VoidResult, Error>> CreateAsync(ProductCompartimentEntity ProductCompartimentEntity);
+}

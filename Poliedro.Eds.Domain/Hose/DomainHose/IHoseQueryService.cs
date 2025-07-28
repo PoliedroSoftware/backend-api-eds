@@ -1,4 +1,4 @@
-﻿
+
 
 namespace Poliedro.Eds.Domain.Hose.DomainHose
 {

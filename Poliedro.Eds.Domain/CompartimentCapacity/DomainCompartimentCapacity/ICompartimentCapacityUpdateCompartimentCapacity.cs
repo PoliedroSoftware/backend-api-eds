@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 
 namespace Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 
-    public interface ICompartimentCapacityUpdateService
-    {
-        Task<Result<VoidResult, Error>> UpdateAsync(CompartimentCapacityEntity ServerEntity); 
-    }
+public interface ICompartimentCapacityUpdateService
+{
+    Task<Result<VoidResult, Error>> UpdateAsync(CompartimentCapacityEntity ServerEntity);
+}

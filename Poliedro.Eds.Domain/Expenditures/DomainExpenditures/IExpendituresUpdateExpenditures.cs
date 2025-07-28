@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.Expenditures.Entities;
 
 namespace Poliedro.Eds.Domain.Expenditures.DomainExpenditures;
 
-    public interface IExpendituresUpdateExpenditures
-    {
-        Task<Result<VoidResult, Error>> UpdateAsync(ExpendituresEntity ServerEntity); 
-    }
+public interface IExpendituresUpdateExpenditures
+{
+    Task<Result<VoidResult, Error>> UpdateAsync(ExpendituresEntity ServerEntity);
+}

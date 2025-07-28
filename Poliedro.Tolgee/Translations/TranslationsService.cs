@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -80,7 +80,7 @@ public class TranslationCachingService(
             return redisValue;
         }
 
-        logger.LogWarning("Traducción no encontrada: {Language}/{Key}", language, key);
+        logger.LogWarning("not found key: {Language}/{Key}", language, key);
         return null;
     }
 

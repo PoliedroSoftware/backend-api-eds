@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Category.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -32,6 +32,7 @@ public class CategoryGetByIdService(ITenantDbContextFactory dbContextFactory, IR
 
         return data;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

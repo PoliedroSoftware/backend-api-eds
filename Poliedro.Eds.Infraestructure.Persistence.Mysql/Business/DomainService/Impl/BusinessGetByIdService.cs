@@ -1,18 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Business.Errors;
-using Poliedro.Eds.Domain.Common.Results;
-using Poliedro.Eds.Domain.Common.Results.Errors;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
 using Poliedro.Eds.Domain.Business.Entities;
+using Poliedro.Eds.Domain.Common.Results;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using Poliedro.Eds.Application.Ports.Redis;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 
-public class BusinessGetByIdService(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IBusinessGetByIdService
+public class BusinessGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IBusinessGetByIdService
 
-   {
+{
     public async Task<Result<BusinessEntity, Error>> GetByIdAsync(int id)
     {
 
@@ -42,5 +42,5 @@ public class BusinessGetByIdService(ITenantDbContextFactory dbContextFactory,IRe
         return await context.Business
             .AsNoTracking()
             .AnyAsync(c => c.IdBusiness == id);
+    }
 }
-   }

@@ -1,6 +1,6 @@
 using MediatR;
-using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+using Poliedro.Eds.Domain.Common.Pagination;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GetInventoryList;
 

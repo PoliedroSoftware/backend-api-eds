@@ -1,5 +1,5 @@
-﻿using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
+using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 
 namespace Poliedro.Eds.Domain.Court.Entities;
 
