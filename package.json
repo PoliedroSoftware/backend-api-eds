@@ -27,8 +27,8 @@
     "husky": "^9.1.7"
   },
   "config": {
-  "commitizen": {
-    "path": "cz-conventional-changelog"
-  }
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
