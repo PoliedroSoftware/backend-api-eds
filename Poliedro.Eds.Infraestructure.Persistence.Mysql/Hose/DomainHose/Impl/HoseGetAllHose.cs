@@ -109,16 +109,16 @@ IHttpContextAccessor httpContextAccessor
     {
         var result = await GetAllAsync(paginationParams);
         return result.Select(h => new HoseDto(
-            h.IdHose,
-            h.Number,
-            h.IdDispenser,
-            h.AccumulatedGallons,
-            h.AccumulatedAmount,
-            h.IdProductType,
-            h.Price,
-            new DispensersEntity(), 
-            new ProductTypeEntity(),
-            new EdsEntity()
-        ));
+     Convert.ToInt32(h.IdHose),
+     Convert.ToInt32(h.Number),
+     Convert.ToInt32(h.IdDispenser),
+     Convert.ToDouble(h.AccumulatedGallons),
+     Convert.ToDouble(h.AccumulatedAmount),
+     Convert.ToInt32(h.IdProductType),
+     Convert.ToDouble(h.Price),
+     new DispensersEntity(),
+     new ProductTypeEntity(),
+     new EdsEntity()
+ ));
     }
 }
