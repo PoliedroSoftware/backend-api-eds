@@ -5,7 +5,6 @@ using Poliedro.Eds.Application.Ports.Translations;
 namespace Poliedro.Tolgee.Translations;
 
 public class TolgeeService(
-    ILogger<TolgeeService> logger,
     IHttpClientFactory httpClientFactory) : ITolgeeService
 {
     public async Task<Dictionary<string, Dictionary<string, string>>> GetAllTranslationsFromTolgee()
