@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Net.Http;
 using System.Text.Json;
 using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Tolgee.Translations;
 
 public class TolgeeService(
-    ILogger<TolgeeService> logger,
     IHttpClientFactory httpClientFactory) : ITolgeeService
 {
     public async Task<Dictionary<string, Dictionary<string, string>>> GetAllTranslationsFromTolgee()
