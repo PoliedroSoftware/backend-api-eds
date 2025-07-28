@@ -68,7 +68,7 @@ var connectionStringFactory = connectionString.Replace("{schema}", tenant);
 builder.Services.AddHealthChecks()
     .AddMySql(connectionStringFactory, name: "sql", tags: ["ready"])
     .AddRedis(builder.Configuration["Redis:ConnectionString"], name: "redis", tags: ["ready"])
-    .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee"); 
+    .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee");
 
 builder.Services.AddLogging();
 
@@ -113,7 +113,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
-        policy.RequireRole( "Admin"));
+        policy.RequireRole("Admin"));
 });
 
 builder.Services.AddAuthorization(options =>
@@ -242,7 +242,7 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
-              
+
     });
 });
 builder.Services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();

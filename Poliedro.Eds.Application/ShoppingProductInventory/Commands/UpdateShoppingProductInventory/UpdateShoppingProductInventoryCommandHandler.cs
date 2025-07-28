@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poliedro.Eds.Application.ShoppingProductInventory.Commands.UpdateShoppingProductInventory
 {
-    public class  UpdateShoppingProductInventoryCommandHandler
+    public class UpdateShoppingProductInventoryCommandHandler
     {
     }
 }

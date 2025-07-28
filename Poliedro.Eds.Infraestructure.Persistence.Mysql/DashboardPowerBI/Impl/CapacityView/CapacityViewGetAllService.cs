@@ -12,7 +12,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.C
 
 public class CapacityViewGetAllService(
     ITenantDbContextFactory dbContextFactory,
-    IRedisService redisService, 
+    IRedisService redisService,
     IHttpContextAccessor httpContextAccessor) : ICapacityViewGetAllService
 {
     public async Task<IEnumerable<CapacityViewEntity>> GetAllAsync(PaginationParams paginationParams)

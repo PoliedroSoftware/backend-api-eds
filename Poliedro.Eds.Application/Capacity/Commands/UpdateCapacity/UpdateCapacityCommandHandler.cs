@@ -15,7 +15,7 @@ public class UpdateCapacityCommandHandler(
     IValidator<UpdateCapacityCommand> validator
     ) : IRequestHandler<UpdateCapacityCommand, Result<VoidResult, Error>>
 {
-    public async Task<Result<VoidResult, Error>> Handle(UpdateCapacityCommand request,CancellationToken cancellationToken)
+    public async Task<Result<VoidResult, Error>> Handle(UpdateCapacityCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)

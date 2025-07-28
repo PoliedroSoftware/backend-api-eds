@@ -3,7 +3,7 @@
 namespace Poliedro.Eds.Api.Middlelware.Jwt
 {
     public class JwtMiddleware(
-        
+
         RequestDelegate _next)
     {
         public async Task InvokeAsync(HttpContext context)

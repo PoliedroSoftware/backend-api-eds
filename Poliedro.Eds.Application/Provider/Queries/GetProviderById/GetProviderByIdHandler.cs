@@ -8,6 +8,7 @@ using Poliedro.Eds.Domain.Provider.DomainProvider;
 using System.Net;
 
 namespace Poliedro.Eds.Application.Provider.Queries.GetProviderById;
+
 public class GetProviderByIdQueryHandler(
     IProviderGetByIdService ProviderGetByIdService,
     IMapper mapper,

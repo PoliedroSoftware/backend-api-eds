@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.ShoppingProduct.DomainShoppingProduct;
 using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
 namespace Poliedro.Eds.Application.ShoppingProduct.Queries.GellAllShoppingProduct;
+
 public class GetAllShoppingProductQueryHandler
 (
     IShoppingProductGetAllShoppingProduct ShoppingProductGetAllService,

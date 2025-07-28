@@ -1,4 +1,5 @@
 ﻿namespace Poliedro.Eds.Application.Secrets.Aws.Dto;
+
 using System.Text.Json.Serialization;
 
 public record AwsSecretsDto

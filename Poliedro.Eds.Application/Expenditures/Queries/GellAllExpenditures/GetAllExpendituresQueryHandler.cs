@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Expenditures.DomainExpenditures;
 using Poliedro.Eds.Domain.Expenditures.Entities;
 
 namespace Poliedro.Eds.Application.Expenditures.Queries.GellAllExpenditures;
+
 public class GetAllExpendituresQueryHandler
 (
     IExpendituresGetAllExpenditures ExpendituresGetAllService,

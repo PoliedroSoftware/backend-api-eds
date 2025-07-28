@@ -8,6 +8,7 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using System.Net;
 
 namespace Poliedro.Eds.Application.Capacity.Queries.GetCapacityById;
+
 public class GetCapacityByIdQueryHandler(
     ICapacityGetByIdService CapacityGetByIdService,
     IMapper mapper,

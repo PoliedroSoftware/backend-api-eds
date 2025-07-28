@@ -27,7 +27,7 @@ using Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProductInventory.AutoMappers;
 using Poliedro.Eds.Application.Tank.AutoMappers;
 using Poliedro.Eds.Application.TypeOfCollection.AutoMappers;
-using Poliedro.Eds.Application.DashboardPowerBI.AutoMappers ;
+using Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;
 using System.Reflection;
 
 namespace Poliedro.Eds.Application;
@@ -98,7 +98,7 @@ public static class DependencyInjectionService
             typeof(IPipelineBehavior<,>),
             typeof(ValidationBehaviour<,>)
         );
-        
+
         return services;
     }
 }

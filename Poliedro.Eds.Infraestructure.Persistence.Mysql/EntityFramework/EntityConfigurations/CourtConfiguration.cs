@@ -41,7 +41,7 @@ public class CourtConfiguration
         builder.HasMany(x => x.CourtTypeOfCollections)
                .WithOne()
                .HasForeignKey(x => x.IdCourt);
-        
+
 
     }
 }

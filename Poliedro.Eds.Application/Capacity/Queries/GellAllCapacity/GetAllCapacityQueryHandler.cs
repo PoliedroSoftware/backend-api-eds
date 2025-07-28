@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Capacity.DomainCapacity;
 using Poliedro.Eds.Domain.Capacity.Entities;
 
 namespace Poliedro.Eds.Application.Capacity.Queries.GellAllCapacity;
+
 public class GetAllCapacityQueryHandler
 (
     ICapacityGetAllService CapacityGetAllService,

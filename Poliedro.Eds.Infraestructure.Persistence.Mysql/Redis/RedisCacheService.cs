@@ -28,7 +28,7 @@ public class RedisCacheService : IRedisService
         try
         {
             var json = JsonSerializer.Serialize(value);
-            await _db.StringSetAsync(key , json, expiration);
+            await _db.StringSetAsync(key, json, expiration);
         }
         catch (RedisException ex)
         {
@@ -141,7 +141,7 @@ public class RedisCacheService : IRedisService
         var translations = await GetCacheAsync<Dictionary<string, string>>(cacheKey);
         if (translations != null && translations.ContainsKey(key))
         {
-            return translations[key];  
+            return translations[key];
         }
         return null;
     }

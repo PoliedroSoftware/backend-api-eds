@@ -18,12 +18,12 @@ using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllBusiness;
 using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllShoppingProductView;
 
 namespace Poliedro.Eds.Api.Controllers.v1.DashboardPowerBI;
-    
+
 [Route("api/v1/dashboard")]
 [ApiController]
 public class DashboardPowerBI(IMediator mediator) : ControllerBase
 {
-   
+
     [HttpGet("capacities")]
     public async Task<IActionResult> GetAllCapacity([FromQuery] PaginationParams paginationParams)
     {

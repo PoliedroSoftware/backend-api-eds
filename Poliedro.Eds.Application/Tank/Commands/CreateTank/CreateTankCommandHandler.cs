@@ -26,7 +26,7 @@ public class CreateTankCommandHandler(
         var result = await tankDomainTank.CreateAsync(tankEntity);
         if (!result.IsSuccess)
             return result.Error!;
-        return result.Value!;    
+        return result.Value!;
     }
 }
 

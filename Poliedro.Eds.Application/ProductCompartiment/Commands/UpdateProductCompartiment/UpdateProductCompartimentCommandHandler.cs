@@ -11,25 +11,25 @@ using System.Net;
 
 namespace Poliedro.Eds.Application.ProductCompartiment.Commands.UpdateProductCompartiment;
 
-    public class UpdateProductCompartimentCommandHandler(
-        IProductCompartimentUpdateProductCompartiment ProductCompartimentDomainProductCompartiment,
-        IMapper mapper,
-        IValidator<UpdateProductCompartimentCommand> validator
-        ) : IRequestHandler<UpdateProductCompartimentCommand, Result<VoidResult, Error>>
+public class UpdateProductCompartimentCommandHandler(
+    IProductCompartimentUpdateProductCompartiment ProductCompartimentDomainProductCompartiment,
+    IMapper mapper,
+    IValidator<UpdateProductCompartimentCommand> validator
+    ) : IRequestHandler<UpdateProductCompartimentCommand, Result<VoidResult, Error>>
+{
+    public async Task<Result<VoidResult, Error>> Handle(UpdateProductCompartimentCommand request, CancellationToken cancellationToken)
     {
-        public async Task<Result<VoidResult, Error>> Handle(UpdateProductCompartimentCommand request, CancellationToken cancellationToken)
-        {
-            var validationResult = await validator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-                return Result<VoidResult, Error>.Failure(
-                    Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+        var validationResult = await validator.ValidateAsync(request);
+        if (!validationResult.IsValid)
+            return Result<VoidResult, Error>.Failure(
+                Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var ProductCompartimentEntity = mapper.Map<ProductCompartimentEntity>(request);
-                var result = await ProductCompartimentDomainProductCompartiment.UpdateAsync(ProductCompartimentEntity);
+        var ProductCompartimentEntity = mapper.Map<ProductCompartimentEntity>(request);
+        var result = await ProductCompartimentDomainProductCompartiment.UpdateAsync(ProductCompartimentEntity);
 
-                if (!result.IsSuccess)
-                    return result.Error!;
+        if (!result.IsSuccess)
+            return result.Error!;
 
-                return result.Value!;
-        }
+        return result.Value!;
     }
+}

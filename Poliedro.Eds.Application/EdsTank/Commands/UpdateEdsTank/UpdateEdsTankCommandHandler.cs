@@ -10,25 +10,25 @@ using System.Net;
 
 namespace Poliedro.Eds.Application.EdsTank.Commands.UpdateEdsTank;
 
-    public class UpdateEdsTankCommandHandler(
-        IEdsTankUpdateEdsTank EdsTankDomainEdsTank,
-        IMapper mapper,
-        IValidator<UpdateEdsTankCommand> validator
-        ) : IRequestHandler<UpdateEdsTankCommand, Result<VoidResult, Error>>
+public class UpdateEdsTankCommandHandler(
+    IEdsTankUpdateEdsTank EdsTankDomainEdsTank,
+    IMapper mapper,
+    IValidator<UpdateEdsTankCommand> validator
+    ) : IRequestHandler<UpdateEdsTankCommand, Result<VoidResult, Error>>
+{
+    public async Task<Result<VoidResult, Error>> Handle(UpdateEdsTankCommand request, CancellationToken cancellationToken)
     {
-        public async Task<Result<VoidResult, Error>> Handle(UpdateEdsTankCommand request, CancellationToken cancellationToken)
-        {
-            var validationResult = await validator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-                return Result<VoidResult, Error>.Failure(
-                    Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+        var validationResult = await validator.ValidateAsync(request);
+        if (!validationResult.IsValid)
+            return Result<VoidResult, Error>.Failure(
+                Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var EdsTankEntity = mapper.Map<EdsTankEntity>(request);
-                var result = await EdsTankDomainEdsTank.UpdateAsync(EdsTankEntity);
+        var EdsTankEntity = mapper.Map<EdsTankEntity>(request);
+        var result = await EdsTankDomainEdsTank.UpdateAsync(EdsTankEntity);
 
-                if (!result.IsSuccess)
-                    return result.Error!;
+        if (!result.IsSuccess)
+            return result.Error!;
 
-                return result.Value!;
-        }
+        return result.Value!;
     }
+}

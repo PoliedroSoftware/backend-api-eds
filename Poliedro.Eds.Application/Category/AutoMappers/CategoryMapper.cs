@@ -5,6 +5,7 @@ using Poliedro.Eds.Application.Category.Dtos;
 using Poliedro.Eds.Domain.Category.Entities;
 
 namespace Poliedro.Eds.Application.Category.AutoMappers;
+
 public class CategoryMapper : Profile
 {
     public CategoryMapper()

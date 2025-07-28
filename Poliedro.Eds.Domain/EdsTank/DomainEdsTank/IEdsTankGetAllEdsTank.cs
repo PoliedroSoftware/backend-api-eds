@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.EdsTank.Entities;
 
 namespace Poliedro.Eds.Domain.EdsTank.DomainEdsTank;
 
-    public interface IEdsTankGetAllEdsTank
-    {
-        Task<IEnumerable<EdsTankEntity>> GetAllAsync(PaginationParams paginationParams);
-    }
+public interface IEdsTankGetAllEdsTank
+{
+    Task<IEnumerable<EdsTankEntity>> GetAllAsync(PaginationParams paginationParams);
+}

@@ -11,7 +11,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
 
-public class TypeOfCollectionGetByIdTypeOfCollection(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : ITypeOfCollectionGetByIdTypeOfCollection
+public class TypeOfCollectionGetByIdTypeOfCollection(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ITypeOfCollectionGetByIdTypeOfCollection
 {
     public async Task<Result<TypeOfCollectionEntity, Error>> GetByIdAsync(int id)
     {

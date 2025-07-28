@@ -6,6 +6,6 @@ namespace Poliedro.Eds.Domain.Hose.DomainHose;
 
 public interface IHoseGetByIdHose
 {
-    Task<Result<HoseEntity, Error>> GetByIdAsync(int id);   
+    Task<Result<HoseEntity, Error>> GetByIdAsync(int id);
 }
 

@@ -4,6 +4,7 @@ using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Hose.Dtos;
 
 namespace Poliedro.Eds.Application.Hose.Queries.GellAllHose;
+
 public class GetAllHoseQueryHandler
 (
     IHoseGetAllHose hoseDomainHose,

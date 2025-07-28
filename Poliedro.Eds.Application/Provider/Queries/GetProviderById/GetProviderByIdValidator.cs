@@ -3,6 +3,7 @@ using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.Provider.Queries.GetProviderById;
+
 public class GetProviderIdQueryValidator : AbstractValidator<GetProviderByIdQuery>
 {
     public GetProviderIdQueryValidator(IRedisService redisService)

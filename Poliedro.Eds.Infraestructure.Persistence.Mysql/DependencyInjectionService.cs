@@ -84,7 +84,7 @@ public static class DependencyInjectionService
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-       
+
         services.AddTransient<IMessageProvider, MessageProvider>();
         services.AddTransient<ICourtDomainService, CourtCreateService>();
         services.AddTransient<ICourtGetByIdDomainService, CourtGetByIDService>();
@@ -165,7 +165,7 @@ public static class DependencyInjectionService
         services.AddScoped<IShoppingGetAllShopping, ShoppingGetAllShopping>();
         services.AddScoped<IShoppingProductCreateShoppingProduct, ShoppingProductCreateShoppingProduct>();
         services.AddScoped<IShoppingProductUpdateShoppingProduct, ShoppingProductUpdateShoppingProduct>();
-        services.AddScoped<IShoppingProductGetByIdShoppingProduct,ShoppingProductGetByIdShoppingProduct>();
+        services.AddScoped<IShoppingProductGetByIdShoppingProduct, ShoppingProductGetByIdShoppingProduct>();
         services.AddScoped<IShoppingProductGetAllShoppingProduct, ShoppingProductGetAllShoppingProduct>();
         services.AddScoped<IShoppingCreateShoppingProductInventory, ShoppingProductCreateShoppingProductInventory>();
         services.AddScoped<IShoppingUpdateShoppingProductInventory, ShoppingProductUpdateShoppingProductInventory>();

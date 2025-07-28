@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 
 namespace Poliedro.Eds.Domain.TypeOfCollection.DomainTypeOfCollection;
 
-    public interface ITypeOfCollectionUpdateTypeOfCollection
-    {
-        Task<Result<VoidResult, Error>> UpdateAsync(TypeOfCollectionEntity ServerEntity); 
-    }
+public interface ITypeOfCollectionUpdateTypeOfCollection
+{
+    Task<Result<VoidResult, Error>> UpdateAsync(TypeOfCollectionEntity ServerEntity);
+}

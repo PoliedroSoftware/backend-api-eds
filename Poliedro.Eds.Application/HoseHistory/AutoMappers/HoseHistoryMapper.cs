@@ -5,6 +5,7 @@ using Poliedro.Eds.Application.HoseHistory.Dtos;
 using Poliedro.Eds.Domain.HoseHistory.Entities;
 
 namespace Poliedro.Eds.Application.HoseHistory.AutoMappers;
+
 public class HoseHistoryMapper : Profile
 {
     public HoseHistoryMapper()

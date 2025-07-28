@@ -17,7 +17,7 @@ namespace Poliedro.Eds.Application.Hose.Commands.CreateHose
         IRedisService redisService,
         IMapper mapper,
         IValidator<CreateHoseRequestDto> validator
-        ):  IRequestHandler<CreateHoseCommand, Result<VoidResult, Error>>
+        ) : IRequestHandler<CreateHoseCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateHoseCommand request, CancellationToken cancellationToken)
         {

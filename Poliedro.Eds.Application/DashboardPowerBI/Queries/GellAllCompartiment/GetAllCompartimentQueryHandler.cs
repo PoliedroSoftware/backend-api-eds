@@ -4,6 +4,7 @@ using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.DomainCompartimentView;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllCompartiment;
+
 public class GetAllCompartimentQueryHandler
 (
     ICompartimenViewGetAllService compartimentViewDomainService,

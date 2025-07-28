@@ -73,9 +73,9 @@ public class DispensersController(IMediator mediator) : ControllerBase
 
     {
         var result = await mediator.Send(createDispensersCommand);
-            return result.Match(
-                 onSuccess => TypedResults.Created()
-             );
+        return result.Match(
+             onSuccess => TypedResults.Created()
+         );
     }
 
     [SwaggerOperation(Summary = "Update an existing Dispensers")]

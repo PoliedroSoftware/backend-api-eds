@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 using Poliedro.Eds.Domain.Compartiment.Entities;
 
 namespace Poliedro.Eds.Application.Compartiment.Queries.GellAllCompartiment;
+
 public class GetAllCompartimentQueryHandler
 (
     ICompartimentGetAllService CompartimentGetAllService,

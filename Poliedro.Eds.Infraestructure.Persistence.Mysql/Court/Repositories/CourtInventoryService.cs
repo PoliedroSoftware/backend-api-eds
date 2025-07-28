@@ -7,8 +7,8 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class CourtInventoryService(IConfiguration config, 
-    IRedisService redisService, 
+public class CourtInventoryService(IConfiguration config,
+    IRedisService redisService,
     ITenantDbContextFactory dbContextFactory) : ICourtUpdateInventoryService
 {
     public async Task CourtUpdateInventoryAsync(IEnumerable<ICourtDispenserSaleEntity> courtDispensers)

@@ -9,7 +9,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Dispensers.DomainDispensers.Impl;
 
-public class DispensersCreateDispensers(ITenantDbContextFactory dbContextFactory    , IRedisService redisService) : IDispensersCreateDispensers
+public class DispensersCreateDispensers(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IDispensersCreateDispensers
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(DispensersEntity dispensersEntity)
     {

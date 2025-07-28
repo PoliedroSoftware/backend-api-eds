@@ -15,7 +15,7 @@ public class UpdateBusinessCommandHandler(
     IValidator<UpdateBusinessCommand> validator
     ) : IRequestHandler<UpdateBusinessCommand, Result<VoidResult, Error>>
 {
-    public async Task<Result<VoidResult, Error>> Handle(UpdateBusinessCommand request,CancellationToken cancellationToken)
+    public async Task<Result<VoidResult, Error>> Handle(UpdateBusinessCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)

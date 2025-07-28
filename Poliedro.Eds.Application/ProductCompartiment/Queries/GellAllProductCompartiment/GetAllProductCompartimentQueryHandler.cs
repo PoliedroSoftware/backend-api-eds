@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
 using Poliedro.Eds.Domain.ProductCompartiment.Entities;
 
 namespace Poliedro.Eds.Application.ProductCompartiment.Queries.GellAllProductCompartiment;
+
 public class GetAllProductCompartimentQueryHandler
 (
     IProductCompartimentGetAllProductCompartiment ProductCompartimentGetAllService,

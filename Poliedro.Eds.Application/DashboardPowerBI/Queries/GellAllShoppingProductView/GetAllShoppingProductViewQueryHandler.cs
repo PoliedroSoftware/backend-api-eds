@@ -5,6 +5,7 @@ using Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllShoppingProductVi
 using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.DomainShoppingProductView;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllShoppingProduct;
+
 public class GetAllShoppingProductViewQueryHandler
 (
     IShoppingProductGetAllShoppingProductView shoppingProductDomainService,

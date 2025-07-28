@@ -2,6 +2,7 @@
 using Poliedro.Eds.Domain.Ports;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Adapter;
+
 public class MessageProvider : IMessageProvider
 {
     public string ErrorValidatorFieldNotNull => MessageProviderResource.ErrorValidatorFieldNotNull;

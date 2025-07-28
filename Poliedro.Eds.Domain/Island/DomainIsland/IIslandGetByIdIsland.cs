@@ -6,7 +6,7 @@ namespace Poliedro.Eds.Domain.Island.DomainIsland
 {
     public interface IIslandGetByIdIsland
     {
-        Task<Result<IslandEntity, Error>> GetByIdAsync(int id);   
+        Task<Result<IslandEntity, Error>> GetByIdAsync(int id);
     }
 }
 

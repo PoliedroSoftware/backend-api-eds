@@ -12,7 +12,7 @@ namespace WorkerKeycloackService
         IServiceProvider _serviceProvider,
         IConfiguration _configuration) : BackgroundService
     {
-      
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var channel = _rabbitConnection.CreateModel();
@@ -29,7 +29,7 @@ namespace WorkerKeycloackService
 
             while (!stoppingToken.IsCancellationRequested)
             {
-               
+
                 var result = channel.BasicGet(queue: queueName, autoAck: false);
 
                 if (result != null)

@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 
-public class BusinessGetByIdService(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IBusinessGetByIdService
+public class BusinessGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IBusinessGetByIdService
 
-   {
+{
     public async Task<Result<BusinessEntity, Error>> GetByIdAsync(int id)
     {
 
@@ -42,5 +42,5 @@ public class BusinessGetByIdService(ITenantDbContextFactory dbContextFactory,IRe
         return await context.Business
             .AsNoTracking()
             .AnyAsync(c => c.IdBusiness == id);
+    }
 }
-   }

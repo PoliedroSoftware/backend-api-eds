@@ -55,25 +55,25 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 Password = originalPassword,
                 NameClaimToken = nameClaimToken
             };
-  
-          
+
+
             var json = JsonSerializer.Serialize(message);
             var body = Encoding.UTF8.GetBytes(json);
 
-           
+
             var properties = channel.CreateBasicProperties();
             properties.Persistent = true;
 
-            
+
             channel.BasicPublish(
-                exchange: "keycloak_exchange",     
-                routingKey: "keycloak",         
-                basicProperties: properties,        
-                body: body                         
+                exchange: "keycloak_exchange",
+                routingKey: "keycloak",
+                basicProperties: properties,
+                body: body
             );
 
             Console.WriteLine("Mensaje enviado a la cola keycloak_user");
-        
+
 
             return VoidResult.Instance;
         }

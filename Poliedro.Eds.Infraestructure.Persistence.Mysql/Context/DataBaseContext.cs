@@ -99,7 +99,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new CourtDispenserConfiguration(modelBuilder.Entity<CourtDispenserEntity>());
         new CourtExpendituresConfiguration(modelBuilder.Entity<CourtExpenditureEntity>());
         new CourtTypeOfCollectionsConfiguration(modelBuilder.Entity<CourtTypeOfCollectionEntity>());
-        new DocumentConfiguration(modelBuilder.Entity<DocumentEntity>());        
+        new DocumentConfiguration(modelBuilder.Entity<DocumentEntity>());
         new IslanderConfiguration(modelBuilder.Entity<IslanderEntity>());
         new IslandConfiguration(modelBuilder.Entity<IslandEntity>());
         new DispensersConfiguration(modelBuilder.Entity<DispensersEntity>());
@@ -109,7 +109,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new TypeOfCollectionConfiguration(modelBuilder.Entity<TypeOfCollectionEntity>());
         new ShoppingConfiguration(modelBuilder.Entity<ShoppingEntity>());
         new ShoppingProductConfiguration(modelBuilder.Entity<ShoppingProductEntity>());
-        
+
         new ShoppingProductInventoryConfiguration(modelBuilder.Entity<ShoppingProductInventoryEntity>());
         new TankConfiguration(modelBuilder.Entity<TankEntity>());
         new CompartimentConfiguration(modelBuilder.Entity<CompartimentEntity>());

@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Islander.Entities;
 
 namespace Poliedro.Eds.Application.Islander.Queries.GellAllIslander;
+
 public class GetAllIslanderQueryHandler
 (
     IIslanderGetAllIslander IslanderGetAllService,

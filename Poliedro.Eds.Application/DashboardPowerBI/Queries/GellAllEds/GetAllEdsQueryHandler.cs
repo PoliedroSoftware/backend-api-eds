@@ -4,6 +4,7 @@ using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.DomainEds;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllEds;
+
 public class GetAllEdsQueryHandler
 (
     IEdsViewGetAllService EdsViewGetAllService,

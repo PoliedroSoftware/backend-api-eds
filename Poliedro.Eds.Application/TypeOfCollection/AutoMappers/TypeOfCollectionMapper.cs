@@ -14,6 +14,6 @@ public class TypeOfCollectionMapper : Profile
         CreateMap<TypeOfCollectionEntity, CreateTypeOfCollectionCommand>().ReverseMap();
         CreateMap<TypeOfCollectionEntity, CreateTypeOfCollectionRequestDto>().ReverseMap();
         CreateMap<TypeOfCollectionEntity, UpdateTypeOfCollectionCommand>().ReverseMap();
-    
+
     }
 }

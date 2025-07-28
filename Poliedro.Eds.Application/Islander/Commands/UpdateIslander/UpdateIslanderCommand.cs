@@ -4,6 +4,7 @@ using Poliedro.Eds.Domain.Common.Results;
 
 
 namespace Poliedro.Eds.Application.Islander.Commands.UpdateIslander;
+
 public record UpdateIslanderCommand(
     int IdIslander,
     int IdEds,

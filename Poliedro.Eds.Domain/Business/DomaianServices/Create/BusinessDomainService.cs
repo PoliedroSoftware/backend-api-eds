@@ -18,8 +18,8 @@ public class BusinessDomainService(IBusinessCreateRepository repository) : IBusi
                             .Build();
         BusinessEvents.BusinessCreatedEvents.Register(async (parameter) =>
         {
-             businessSaved = await repository.CreateAsync(BussinesCreated);
+            businessSaved = await repository.CreateAsync(BussinesCreated);
         });
         return businessSaved;
-     }
+    }
 }

@@ -8,5 +8,5 @@ public record Business2Dto
     string IdTank,
     string NameEds,
     string Name,
-    DateOnly Date 
+    DateOnly Date
 );

@@ -6,7 +6,7 @@ namespace Poliedro.Eds.Domain.CourtDispensersInventory.DomainCourtDispensersInve
 {
     public interface ICourtDispensersInventoryGetByIdCourtDispensersInventory
     {
-        Task<Result<CourtDispensersInventoryEntity, Error>> GetByIdAsync(int id);   
+        Task<Result<CourtDispensersInventoryEntity, Error>> GetByIdAsync(int id);
     }
 }
 

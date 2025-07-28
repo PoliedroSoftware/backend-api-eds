@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Category.DomainCategory;
 using Poliedro.Eds.Domain.Category.Entities;
 
 namespace Poliedro.Eds.Application.Category.Queries.GellAllCategory;
+
 public class GetAllCategoryQueryHandler
 (
     ICategoryGetAllService CategoryGetAllService,

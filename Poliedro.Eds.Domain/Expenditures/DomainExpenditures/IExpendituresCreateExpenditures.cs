@@ -4,7 +4,8 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Expenditures.Entities;
 
 namespace Poliedro.Eds.Domain.Expenditures.DomainExpenditures;
-    public interface IExpendituresCreateExpenditures
-    {
-        Task<Result<VoidResult, Error>> CreateAsync(ExpendituresEntity ExpendituresEntity);
-    }
+
+public interface IExpendituresCreateExpenditures
+{
+    Task<Result<VoidResult, Error>> CreateAsync(ExpendituresEntity ExpendituresEntity);
+}

@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.HoseHistory.DomainHoseHistory;
 using Poliedro.Eds.Domain.HoseHistory.Entities;
 
 namespace Poliedro.Eds.Application.HoseHistory.Queries.GellAllHoseHistory;
+
 public class GetAllHoseHistoryQueryHandler
 (
     IHoseHistoryGetAllHoseHistory HoseHistoryGetAllService,

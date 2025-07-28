@@ -10,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Hose.DomainHose.Impl;
 
-public class HoseGetByIdHose(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IHoseGetByIdHose
+public class HoseGetByIdHose(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IHoseGetByIdHose
 {
     public async Task<Result<HoseEntity, Error>> GetByIdAsync(int id)
     {

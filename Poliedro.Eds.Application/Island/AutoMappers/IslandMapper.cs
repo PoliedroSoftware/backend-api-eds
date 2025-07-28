@@ -6,6 +6,7 @@ using Poliedro.Eds.Domain.Island.Entities;
 
 
 namespace Poliedro.Eds.Application.Island.AutoMappers;
+
 public class IslandMapper : Profile
 {
     public IslandMapper()

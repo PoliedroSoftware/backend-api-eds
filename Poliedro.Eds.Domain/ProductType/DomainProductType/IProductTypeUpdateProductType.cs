@@ -7,6 +7,6 @@ namespace Poliedro.Eds.Domain.ProductType.DomainProductType
 {
     public interface IProductTypeUpdateProductType
     {
-        Task<Result<VoidResult, Error>> UpdateAsync(ProductTypeEntity ServerEntity); 
+        Task<Result<VoidResult, Error>> UpdateAsync(ProductTypeEntity ServerEntity);
     }
 }

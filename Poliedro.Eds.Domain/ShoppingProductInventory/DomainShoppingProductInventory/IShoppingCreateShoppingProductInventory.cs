@@ -12,6 +12,6 @@ namespace Poliedro.Eds.Domain.ShoppingProductInventory.DomainShoppingProductInve
 {
     public interface IShoppingCreateShoppingProductInventory
     {
-             Task<Result<VoidResult, Error>> CreateAsync(ShoppingProductInventoryEntity shoppingProductInventoryEntity);
+        Task<Result<VoidResult, Error>> CreateAsync(ShoppingProductInventoryEntity shoppingProductInventoryEntity);
     }
 }

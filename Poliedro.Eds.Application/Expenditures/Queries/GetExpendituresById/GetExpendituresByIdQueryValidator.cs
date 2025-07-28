@@ -3,8 +3,9 @@ using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.Expenditures.Queries.GetExpendituresById;
-    public class GetExpendituresByIdQueryValidator : AbstractValidator<GetExpendituresByIdQuery>
-    {
+
+public class GetExpendituresByIdQueryValidator : AbstractValidator<GetExpendituresByIdQuery>
+{
     public GetExpendituresByIdQueryValidator(IRedisService redisService)
     {
         RuleFor(x => x.Id)

@@ -9,6 +9,6 @@ namespace Poliedro.Eds.Domain.Court.DomainService
 
         Task<Result<VoidResult, Error>> UpdateAsync(CourtEntity courtEntity);
 
-        
+
     }
 }

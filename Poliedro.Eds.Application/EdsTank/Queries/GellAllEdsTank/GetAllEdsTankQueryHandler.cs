@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.EdsTank.DomainEdsTank;
 using Poliedro.Eds.Domain.EdsTank.Entities;
 
 namespace Poliedro.Eds.Application.EdsTank.Queries.GellAllEdsTank;
+
 public class GetAllEdsTankQueryHandler
 (
     IEdsTankGetAllEdsTank EdsTankGetAllService,
