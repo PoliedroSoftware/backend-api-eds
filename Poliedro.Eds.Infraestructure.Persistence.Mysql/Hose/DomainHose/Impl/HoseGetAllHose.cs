@@ -11,10 +11,9 @@ using Poliedro.Eds.Domain.Hose.Dtos;
 using Poliedro.Eds.Domain.ProductType.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using System.Data;
+using System.Linq;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Hose.DomainHose.Impl;
-
-
 
 public class HoseGetAllHose(
 ITenantDbContextFactory dbContextFactory,
@@ -105,6 +104,7 @@ IHttpContextAccessor httpContextAccessor
             throw;
         }
     }
+
     async Task<IEnumerable<HoseDto>> IHoseGetAllHose.GetAllAsync(PaginationParams paginationParams)
     {
         var result = await GetAllAsync(paginationParams);
@@ -121,6 +121,4 @@ IHttpContextAccessor httpContextAccessor
             new EdsEntity()
         ));
     }
-
-
 }
