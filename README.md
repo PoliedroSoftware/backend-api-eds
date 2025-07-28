@@ -1,5 +1,13 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+### 🧩 Commit format obligatorio
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) and automatic validation with Husky.
+
+#### Pasos para configurar localmente:
+
+```bash
+npm install
+npm run prepare
 
 # Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
