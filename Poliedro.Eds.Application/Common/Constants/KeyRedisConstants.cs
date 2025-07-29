@@ -26,6 +26,7 @@ public static class KeyRedisConstants
     public const string SHOPPING_PRODUCT = "shoppingProduct:";
     public const string SHOPPING_PRODUCT_INVENTORY = "shoppingProductInventory:";
     public const string TANK = "tank:";
+    public const string TRANSLATION = "translation:";
     public const string TYPE_OF_COLLECTION = "typeOfCollection:";
 }
 

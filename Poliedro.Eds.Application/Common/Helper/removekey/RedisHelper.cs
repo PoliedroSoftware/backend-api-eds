@@ -6,14 +6,13 @@ namespace Poliedro.Eds.Application.Common.Helper.removekey;
 
 public static class RedisHelper
 {
-    public static async Task RemoveCacheIfSuccessAsync(
-        Result<VoidResult, Error> result,
+    public static async Task RemoveCacheIfSuccessAsync<T>(
+        Result<T, Error> result,
         IRedisService redisService,
-        string redisKeyPrefix)
+        params string[] keys)
     {
-        if (result.IsSuccess)
-        {
-            await redisService.RemoveByPrefixAsync(redisKeyPrefix);
-        }
+        if (result.IsSuccess && keys.Length > 0)
+            await redisService.RemoveByPrefixAsync(keys);
     }
 }
+
