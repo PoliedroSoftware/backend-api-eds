@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Translations.Dtos;

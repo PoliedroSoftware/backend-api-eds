@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.ShoppingProduct.Errors;
@@ -26,6 +26,7 @@ public class ShoppingProductUpdateShoppingProduct(ITenantDbContextFactory dbCont
 
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

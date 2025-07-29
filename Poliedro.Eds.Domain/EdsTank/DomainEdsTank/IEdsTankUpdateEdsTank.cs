@@ -4,7 +4,8 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.EdsTank.Entities;
 
 namespace Poliedro.Eds.Domain.EdsTank.DomainEdsTank;
-    public interface IEdsTankUpdateEdsTank
-    {
-        Task<Result<VoidResult, Error>> UpdateAsync(EdsTankEntity ServerEntity); 
-    }
+
+public interface IEdsTankUpdateEdsTank
+{
+    Task<Result<VoidResult, Error>> UpdateAsync(EdsTankEntity ServerEntity);
+}

@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Audit.Entities;
+using Poliedro.Eds.Domain.Audit.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
 
 namespace Poliedro.Eds.Domain.Court.Entities;

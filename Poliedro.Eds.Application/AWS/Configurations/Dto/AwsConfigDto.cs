@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.AWS.Configurations.Dto;
+namespace Poliedro.Eds.Application.AWS.Configurations.Dto;
 
 public class AwsConfigDto
 {

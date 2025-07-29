@@ -1,8 +1,8 @@
-﻿using FluentValidation;
+using System.Net;
+using FluentValidation;
 using Poliedro.Eds.Application.Eds.Queries.GetEdsById;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Eds.Commands.CreateEds;
 
@@ -36,6 +36,7 @@ public class CreateEdsCommandValidator : AbstractValidator<CreateEdsRequestDto>
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdBusinessNotEmpty").GetAwaiter().GetResult());
 
     }
+
     public class GetEdsByIdCommandValidator : AbstractValidator<GetEdsByIdQuery>
     {
         public GetEdsByIdCommandValidator(IRedisService redisService)

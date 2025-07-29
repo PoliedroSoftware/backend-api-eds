@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Api.Common.Extensions;
@@ -22,7 +22,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var data = await mediator.Send(new GellAllCompartimentCapacityQuery (new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+            var data = await mediator.Send(new GellAllCompartimentCapacityQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
             if (data is null)
             {
                 return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
@@ -40,7 +40,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [HttpGet("{id}")]
         public async Task<IResult> GetById([FromRoute] int id)
         {
-            var getCompartimentCapacityQuery = new GetCompartimentCapacityByIdQuery(Id : id );
+            var getCompartimentCapacityQuery = new GetCompartimentCapacityByIdQuery(Id: id);
 
             var result = await mediator.Send(getCompartimentCapacityQuery);
 

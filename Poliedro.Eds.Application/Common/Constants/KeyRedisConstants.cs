@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Common.Constants;
+namespace Poliedro.Eds.Application.Common.Constants;
 
 public static class KeyRedisConstants
 {

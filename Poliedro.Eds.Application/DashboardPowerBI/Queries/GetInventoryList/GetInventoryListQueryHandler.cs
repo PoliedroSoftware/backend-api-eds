@@ -1,7 +1,7 @@
-using MediatR;
-using Poliedro.Eds.Domain.Inventory.DomainService;
-using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using AutoMapper;
+using MediatR;
+using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+using Poliedro.Eds.Domain.Inventory.DomainService;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GetInventoryList;
 

@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Domain.Court.Entities;
+namespace Poliedro.Eds.Domain.Court.Entities;
 
 public class DocumentEntity
 {

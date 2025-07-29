@@ -11,7 +11,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Expenditures.DomainExpenditures.Impl;
 
-public class ExpendituresGetByIdExpenditures(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IExpendituresGetByIdExpenditures
+public class ExpendituresGetByIdExpenditures(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IExpendituresGetByIdExpenditures
 {
     public async Task<Result<ExpendituresEntity, Error>> GetByIdAsync(int id)
     {

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.DispenserType.DomainDispenserType;
 using Poliedro.Eds.Domain.DispenserType.Entities;

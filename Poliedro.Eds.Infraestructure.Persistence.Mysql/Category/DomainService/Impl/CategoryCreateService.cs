@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Application.Category.Errors;
+using Poliedro.Eds.Application.Category.Errors;
 using Poliedro.Eds.Domain.Category.DomainCategory;
 using Poliedro.Eds.Domain.Category.Entities;
 using Poliedro.Eds.Domain.Common.Results;

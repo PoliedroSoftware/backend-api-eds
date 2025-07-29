@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.Inventory.Commands;
 using Poliedro.Eds.Application.Inventory.Dtos;
 using Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
@@ -9,6 +9,7 @@ using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
 namespace Poliedro.Eds.Application.Shopping.AutoMappers;
+
 public class ShoppingMapper : Profile
 {
     public ShoppingMapper()

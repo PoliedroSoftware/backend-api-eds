@@ -1,10 +1,10 @@
-﻿using Amazon.S3;
+using System.IO;
+using System.Threading.Tasks;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Amazon.S3.FileUploadService
 {

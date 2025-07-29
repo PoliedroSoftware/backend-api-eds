@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.HoseHistory.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -26,6 +26,7 @@ public class HoseHistoryUpdateHoseHistory(ITenantDbContextFactory dbContextFacto
 
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();
