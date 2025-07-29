@@ -1,8 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.ProductCompartiment.Errors;
-using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
@@ -11,7 +7,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductCompartiment.DomainProductCompartiment.Impl;
 
-public class ProductCompartimentCreateProductCompartiment(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IProductCompartimentCreateProductCompartiment
+public class ProductCompartimentCreateProductCompartiment(ITenantDbContextFactory dbContextFactory) : IProductCompartimentCreateProductCompartiment
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ProductCompartimentEntity ProductCompartimentEntity)
     {
@@ -20,7 +16,6 @@ public class ProductCompartimentCreateProductCompartiment(ITenantDbContextFactor
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return ProductCompartimentErrorBuilder.ProductCompartimentCreationException();
-        await redisService.RemoveByPrefixAsync("productCompartiment:");
         return VoidResult.Instance;
     }
 }
