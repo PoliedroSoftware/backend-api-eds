@@ -23,7 +23,6 @@ public class HoseHistoryCreateHoseHistory(
 
         if (saveResult <= 0)
             return HoseHistoryErrorBuilder.HoseHistoryCreationException();
-        await redisService.RemoveByPrefixAsync("hoseHistory:");
         await UpdateHoseWithLatestAccumulated(hoseHistoryEntity);
         await ClearHoseHistoryCache();
 

@@ -1,6 +1,4 @@
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Compartiment.Errors;
-using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
@@ -9,7 +7,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Compartiment.DomainCompartiment.Impl;
 
-public class CompartimentCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentCreateService
+public class CompartimentCreateService(ITenantDbContextFactory dbContextFactory) : ICompartimentCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CompartimentEntity compartimentEntity)
     {
@@ -18,8 +16,6 @@ public class CompartimentCreateService(ITenantDbContextFactory dbContextFactory,
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return CompartimentErrorBuilder.CompartimentCreationException();
-        await redisService.RemoveByPrefixAsync("compartiment:");
-
         return VoidResult.Instance;
     }
 }
