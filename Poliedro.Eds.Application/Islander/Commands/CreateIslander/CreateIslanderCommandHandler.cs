@@ -4,6 +4,9 @@ using System.Text.Json;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
@@ -16,6 +19,7 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
         IIslanderCreateIslander islanderDomainIslander,
         IMapper mapper,
         IValidator<CreateIslanderRequestDto> validator,
+        IRedisService redisService,
         IConnection rabbitConnection) : IRequestHandler<CreateIslanderCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateIslanderCommand request, CancellationToken cancellationToken)
@@ -35,15 +39,16 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
 
             islanderEntity.Password = BCrypt.Net.BCrypt.HashPassword(islanderEntity.Password);
 
-            var dbResult = await islanderDomainIslander.CreateAsync(islanderEntity);
-            if (!dbResult.IsSuccess)
-                return dbResult.Error!;
+            var result = await islanderDomainIslander.CreateAsync(islanderEntity);
+            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.ISLANDER);
+
+            if (!result.IsSuccess)
+                return result.Error!;
 
             using var channel = rabbitConnection.CreateModel();
-
-            channel.ExchangeDeclare(exchange: "keycloak_exchange", type: ExchangeType.Direct);
-            channel.QueueDeclare(queue: "keycloak", durable: true, exclusive: false, autoDelete: false, arguments: null);
-            channel.QueueBind(queue: "keycloak", exchange: "keycloak_exchange", routingKey: "keycloak");
+            channel.ExchangeDeclare("keycloak_exchange", ExchangeType.Direct);
+            channel.QueueDeclare("keycloak", true, false, false, null);
+            channel.QueueBind("keycloak", "keycloak_exchange", "keycloak");
 
             var message = new
             {
@@ -56,26 +61,14 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 NameClaimToken = nameClaimToken
             };
 
-
-            var json = JsonSerializer.Serialize(message);
-            var body = Encoding.UTF8.GetBytes(json);
-
-
+            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
             var properties = channel.CreateBasicProperties();
             properties.Persistent = true;
 
-
-            channel.BasicPublish(
-                exchange: "keycloak_exchange",
-                routingKey: "keycloak",
-                basicProperties: properties,
-                body: body
-            );
-
+            channel.BasicPublish("keycloak_exchange", "keycloak", properties, body);
             Console.WriteLine("Mensaje enviado a la cola keycloak_user");
 
-
-            return VoidResult.Instance;
+            return result.Value!;
         }
     }
 }

@@ -1,5 +1,8 @@
 using AutoMapper;
 using MediatR;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
@@ -13,6 +16,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         IGetProductAndCompartiment getProductAndCompartiment,
         IGetExpenditureId getExpenditureId,
         IGetTypeOfCollectionId getTypeOfCollectionId,
+        IRedisService redisService,
         ICourtUpdateInventoryService courtUpdateInventoryService
         ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
@@ -78,8 +82,22 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 
 
             var result = await courtDomainService.CreateAsync(courtEntity);
+
+            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService,
+            KeyRedisConstants.BUSINESS,
+            KeyRedisConstants.COMPARTIMENT,
+            KeyRedisConstants.DISPENSERS,
+            KeyRedisConstants.EDS,
+            KeyRedisConstants.EXPENDITURES,
+            KeyRedisConstants.HOSE,
+            KeyRedisConstants.ISLANDER,
+            KeyRedisConstants.PRODUCT,
+            KeyRedisConstants.TRANSLATION,
+            KeyRedisConstants.TYPE_OF_COLLECTION);
+
             if (!result.IsSuccess)
                 return result.Error!;
+
             if (result.IsSuccess)
             {
                 List<ICourtDispenserSaleEntity> courtDispenserSaleEntities = [];

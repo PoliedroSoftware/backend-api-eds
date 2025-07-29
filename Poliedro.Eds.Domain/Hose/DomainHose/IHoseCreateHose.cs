@@ -6,7 +6,7 @@ namespace Poliedro.Eds.Domain.Hose.DomainHose
 {
     public interface IHoseCreateHose
     {
-        Task<bool> CreateAsync(HoseEntity HoseEntity);
+        Task<Result<VoidResult, Error>> CreateAsync(HoseEntity HoseEntity);
 
     }
 }

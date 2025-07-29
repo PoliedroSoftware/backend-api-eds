@@ -9,7 +9,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Eds.DomainEds.Impl;
 
-public class EdsCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IEdsCreateService
+public class EdsCreateService(ITenantDbContextFactory dbContextFactory) : IEdsCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(EdsEntity EdsEntity)
     {
@@ -18,7 +18,6 @@ public class EdsCreateService(ITenantDbContextFactory dbContextFactory, IRedisSe
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return EdsErrorBuilder.EdsCreationException();
-        await redisService.RemoveByPrefixAsync("eds:");
         return VoidResult.Instance;
     }
 }
