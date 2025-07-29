@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 
 public class SendWhatsAppMessageCommand : IRequest<Unit>
 {

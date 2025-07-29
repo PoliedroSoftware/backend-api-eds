@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Poliedro.Eds.Domain\Poliedro.Eds.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
