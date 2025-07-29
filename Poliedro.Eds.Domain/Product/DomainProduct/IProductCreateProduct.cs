@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.Product.Entities;
 
 namespace Poliedro.Eds.Domain.Product.DomainProduct;
 
-    public interface IProductCreateProduct
-    {
-        Task<Result<VoidResult, Error>> CreateAsync(ProductEntity ProductEntity);
-    }
+public interface IProductCreateProduct
+{
+    Task<Result<VoidResult, Error>> CreateAsync(ProductEntity ProductEntity);
+}

@@ -25,7 +25,7 @@ public class ProductPriceUpdateService : IProductPriceUpdateService
         {
             var product = await _context.Product.FirstOrDefaultAsync(p => p.IdProduct == item.IdProduct);
             if (product == null)
-                return Result<VoidResult, Error>.Failure(Error.BadRequest("ProductNotFound", $"No se encontró el producto con Id {item.IdProduct}").Error!);
+                return Result<VoidResult, Error>.Failure(Error.BadRequest("ProductNotFound", $"No se encontrÃ³ el producto con Id {item.IdProduct}").Error!);
 
             product.Price = item.Price;
         }

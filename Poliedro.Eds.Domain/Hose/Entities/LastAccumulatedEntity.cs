@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Domain.Hose.Entities;
+namespace Poliedro.Eds.Domain.Hose.Entities;
 
 public class LastAccumulatedEntity
 {

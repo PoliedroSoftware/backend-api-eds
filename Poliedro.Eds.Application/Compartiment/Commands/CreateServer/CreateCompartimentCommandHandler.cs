@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Application.Common.Constants;
@@ -8,7 +9,6 @@ using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 using Poliedro.Eds.Domain.Compartiment.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment
 {

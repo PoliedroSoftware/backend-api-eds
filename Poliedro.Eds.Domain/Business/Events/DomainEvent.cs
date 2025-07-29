@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Domain.Business.Events;
+namespace Poliedro.Eds.Domain.Business.Events;
 
 public class DomainEvent<T>
 {

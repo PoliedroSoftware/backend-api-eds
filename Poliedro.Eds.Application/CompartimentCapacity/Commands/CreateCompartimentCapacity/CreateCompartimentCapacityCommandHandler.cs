@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Application.Common.Constants;
@@ -8,25 +9,25 @@ using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.CompartimentCapacity.Commands.CreateCompartimentCapacity;
-    public class CreateCompartimentCapacityCommandHandler(
-        ICompartimentCapacityCreateService CompartimentCapacityDomainCompartimentCapacity,
-        IMapper mapper,
+
+public class CreateCompartimentCapacityCommandHandler(
+    ICompartimentCapacityCreateService CompartimentCapacityDomainCompartimentCapacity,
+    IMapper mapper,
         IValidator<CreateCompartimentCapacityRequestDto> validator,
         IRedisService redisService
-        ) : IRequestHandler<CreateCompartimentCapacityCommand, Result<VoidResult, Error>>
+    ) : IRequestHandler<CreateCompartimentCapacityCommand, Result<VoidResult, Error>>
+{
+    public async Task<Result<VoidResult, Error>> Handle(CreateCompartimentCapacityCommand request, CancellationToken cancellationToken)
     {
-        public async Task<Result<VoidResult, Error>> Handle(CreateCompartimentCapacityCommand request, CancellationToken cancellationToken)
-        {
-            var validationResult = await validator.ValidateAsync(request.Request);
-            if (!validationResult.IsValid)
+        var validationResult = await validator.ValidateAsync(request.Request);
+        if (!validationResult.IsValid)
             return Result<VoidResult, Error>.Failure(
-                    Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+                Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
         var result = await CompartimentCapacityDomainCompartimentCapacity.CreateAsync(mapper.Map<CompartimentCapacityEntity>(request.Request));
         await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.COMPARTIMENT_CAPACITY);
         return result.IsSuccess ? result.Value! : result.Error!;
     }
-    }
+}

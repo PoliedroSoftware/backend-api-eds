@@ -14,6 +14,6 @@ public class ExpendituresMapper : Profile
         CreateMap<ExpendituresEntity, CreateExpendituresCommand>().ReverseMap();
         CreateMap<ExpendituresEntity, CreateExpendituresRequestDto>().ReverseMap();
         CreateMap<ExpendituresEntity, UpdateExpendituresCommand>().ReverseMap();
-    
+
     }
 }

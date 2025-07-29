@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Eds.Dtos;
@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Eds.Entities;
 
 namespace Poliedro.Eds.Application.Eds.Queries.GellAllEds;
+
 public class GetAllEdsQueryHandler
 (
     IEdsGetAllService EdsGetAllService,

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using System.Text.Json;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -6,9 +7,9 @@ using Poliedro.Eds.Application.Business.Dtos;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
 using Poliedro.Eds.Domain.Business.Entities;
-using System.Text.Json;
 
 namespace Poliedro.Eds.Application.Business.Queries.GellAllBusiness;
+
 public class GetAllBusinessQueryHandler
 (
     IBusinessGetAllService businessGetAllService,

@@ -1,9 +1,10 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Domain.DashboardPowerBI.ProviderView.DomainProviderView;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllProvider;
+
 public class GetAllProviderQueryHandler
 (
     IProviderViewGetAllService ProviderViewGetAllService,

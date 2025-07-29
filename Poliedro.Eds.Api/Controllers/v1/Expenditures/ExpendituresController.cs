@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var data = await mediator.Send(new GellAllExpendituresQuery (new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+            var data = await mediator.Send(new GellAllExpendituresQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
             if (data is null)
             {
                 return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
@@ -41,7 +41,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [HttpGet("{id}")]
         public async Task<IResult> GetById([FromRoute] int id)
         {
-            var getExpendituresQuery = new GetExpendituresByIdQuery(Id : id );
+            var getExpendituresQuery = new GetExpendituresByIdQuery(Id: id);
 
             var result = await mediator.Send(getExpendituresQuery);
 
@@ -61,7 +61,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [HttpPost]
 
         public async Task<IResult> Create(
-            [FromBody] CreateExpendituresCommand createExpendituresCommand, 
+            [FromBody] CreateExpendituresCommand createExpendituresCommand,
             [FromServices] IValidator<CreateExpendituresRequestDto> validator)
         {
             //var validationResult = await validator.ValidateAsync(createExpendituresCommand.Request);

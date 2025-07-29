@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Provider.Queries.GetProviderById;
@@ -14,6 +14,7 @@ public class CreateProviderCommandValidator : AbstractValidator<CreateProviderRe
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("NameNotEmpty").GetAwaiter().GetResult())
             .NotEqual("string").WithMessage(redisService.GetValueFromCacheAsync("NameNotEqual").GetAwaiter().GetResult());
     }
+
     public class GetProviderByIdCommandValidator : AbstractValidator<GetProviderByIdQuery>
     {
         public GetProviderByIdCommandValidator(IRedisService redisService)

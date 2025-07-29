@@ -1,9 +1,9 @@
-﻿using MediatR;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Poliedro.Eds.Application.Inventory.Queries.GetInventoryList;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
-using Poliedro.Eds.Application.Inventory.Queries.GetInventoryList;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Poliedro.Eds.Api.Controllers.v1.Inventory;
 

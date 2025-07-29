@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Hose.Dtos;
 

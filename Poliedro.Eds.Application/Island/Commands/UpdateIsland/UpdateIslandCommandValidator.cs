@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
@@ -16,4 +16,4 @@ namespace Poliedro.Eds.Application.Island.Commands.UpdateIsland
                  .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdEdsGreaterThan").GetAwaiter().GetResult());
         }
     }
-} 
+}

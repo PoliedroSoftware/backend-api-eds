@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 
 public record Business2Dto
 (
@@ -8,5 +8,5 @@ public record Business2Dto
     string IdTank,
     string NameEds,
     string Name,
-    DateOnly Date 
+    DateOnly Date
 );

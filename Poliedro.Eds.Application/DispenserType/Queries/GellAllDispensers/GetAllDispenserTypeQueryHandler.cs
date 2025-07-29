@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.DispenserType.Dtos;
@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.DispenserType.DomainDispenserType;
 using Poliedro.Eds.Domain.DispenserType.Entities;
 
 namespace Poliedro.Eds.Application.DispenserType.Queries.GellAllDispenserType;
+
 public class GetAllDispenserTypeQueryHandler
 (
     IDispenserTypeGetAllDispenserType DispenserTypeGetAllService,

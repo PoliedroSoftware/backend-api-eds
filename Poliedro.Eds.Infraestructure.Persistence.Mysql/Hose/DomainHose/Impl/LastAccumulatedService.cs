@@ -1,4 +1,4 @@
-﻿using System.Net.NetworkInformation;
+using System.Net.NetworkInformation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +17,7 @@ public class LastAccumulatedService(
     ITenantDbContextFactory dbContextFactory,
     IRedisService redisService,
     IHttpContextAccessor httpContextAccessor
-    , IConfiguration config) : ILastAccumulatedService
+    ) : ILastAccumulatedService
 {
     public async Task<Result<LastAccumulatedEntity, Error>> GetLastAccumulatedAsync(int idDispenser, int idHose)
     {

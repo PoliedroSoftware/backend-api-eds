@@ -1,4 +1,4 @@
-﻿
+
 namespace Poliedro.Eds.Application.ShoppingProduct.Dtos;
 
 public record ShoppingProductDto(
@@ -6,6 +6,6 @@ public record ShoppingProductDto(
     int IdShopping,
     int IdProduct,
     double Quantity,
-    double Price ,
+    double Price,
     int IdCompartment
     );

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Application.DispenserType.Commands.UpdateDispenserType;
@@ -6,7 +7,6 @@ using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.DispenserType.DomainDispenserType;
 using Poliedro.Eds.Domain.DispenserType.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.DispenserType.Commands.UpdateDispneserType
 {
@@ -25,7 +25,7 @@ namespace Poliedro.Eds.Application.DispenserType.Commands.UpdateDispneserType
 
             var dispenserTypeEntity = mapper.Map<DispenserTypeEntity>(request);
             var result = await dispenserTypeDomainDispenserType.UpdateAsync(dispenserTypeEntity);
-        
+
             if (!result.IsSuccess)
                 return result.Error!;
             return result.Value!;
