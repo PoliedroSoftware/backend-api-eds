@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Poliedor.External.WhatsApp.SendMessage;
 using Poliedro.Eds.Api;
 using Poliedro.Eds.Api.Common.Configurations;
 using Poliedro.Eds.Api.Middlelware.aws;
@@ -29,6 +30,7 @@ using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
+using Poliedro.Eds.Domain.SendMessage;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
@@ -220,7 +222,7 @@ builder.Services.AddHttpClient(nameof(TolgeeService), client =>
 
 //Configura WhatsApp
 
-builder.Services.AddHttpClient<IWhatsAppService, WhatsAppService>();
+builder.Services.AddHttpClient<ISendMessage, WhatsAppService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SendWhatsAppMessageCommand>());
 builder.Services.AddControllers();
 

@@ -54,6 +54,8 @@
 	  <ProjectReference Include="..\Poliedro.External.HealthCheck\Poliedro.External.HealthCheck.csproj" />
 	 
     <ProjectReference Include="..\Poliedro.Tolgee\Poliedro.Tolgee.csproj" />
+	 
+    <ProjectReference Include="..\WhatsApp\Poliedor.External.WhatsApp.csproj" />
     <ProjectReference Include="..\WorkerKeycloackService\WorkerKeycloackService.csproj" />
   </ItemGroup>
 
