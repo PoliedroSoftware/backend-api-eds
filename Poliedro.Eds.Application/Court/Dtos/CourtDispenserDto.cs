@@ -15,8 +15,6 @@ namespace Poliedro.Eds.Application.Court.Dtos
         public int IdCompartiment { get; set; }
 
         public int IdHose { get; set; }
-        //public ICollection<CourtEntity> Courts { get; set; }
-        //public ICollection<ProductEntity> Products { get; set; }
-        //public ICollection<CompartimentEntity> Compartiments { get; set; }
+
     }
 }
