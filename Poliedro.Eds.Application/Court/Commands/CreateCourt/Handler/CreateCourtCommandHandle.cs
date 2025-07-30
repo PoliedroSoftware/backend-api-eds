@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Court.Dtos;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
@@ -17,7 +18,8 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         IGetExpenditureId getExpenditureId,
         IGetTypeOfCollectionId getTypeOfCollectionId,
         IRedisService redisService,
-        ICourtUpdateInventoryService courtUpdateInventoryService
+        ICourtUpdateInventoryService courtUpdateInventoryService,
+        IMediator mediator
         ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
@@ -118,6 +120,21 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 
                 await courtUpdateInventoryService.CourtUpdateInventoryAsync(courtDispenserSaleEntities);
             }
+
+
+            //ACA VA LA LOGICA PARA ENVIAR EL MENSAJE DE WHATSAPP
+
+            if (result.IsSuccess)
+            {
+                var courtDto = mapper.Map<CourtDto>(courtEntity); // Asegúrate de que el mapeo esté bien
+
+                await mediator.Send(new SendWhatsAppMessageCommand
+                {
+                    PhoneNumber = "573182989981", // lo puedes traer del request u otra lógica
+                    Court = courtDto
+                });
+            }
+
             return result.Value!;
         }
 

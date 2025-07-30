@@ -8,16 +8,11 @@ public class WhatsAppController (IMediator mediator) : ControllerBase
 {
 
     [HttpPost("send")]
-    public async Task<IActionResult> SendMessage([FromBody] SendMessageRequest request)
+    public async Task<IActionResult> SendMessage()
     {
-        var command = new SendWhatsAppMessageCommand(request.PhoneNumber, request.Message);
+        var command = new SendWhatsAppMessageCommand();
         await mediator.Send(command);
 
         return Ok("Message sent successfully.");
     }
-}
-public class SendMessageRequest
-{
-    public string PhoneNumber { get; set; }
-    public string Message { get; set; }
 }

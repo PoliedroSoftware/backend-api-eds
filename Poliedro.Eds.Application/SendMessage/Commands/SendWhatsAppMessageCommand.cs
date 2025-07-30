@@ -1,13 +1,9 @@
 using MediatR;
+using Poliedro.Eds.Application.Court.Dtos;
 
 public class SendWhatsAppMessageCommand : IRequest<Unit>
 {
-    public string PhoneNumber { get; set; }
-    public string Message { get; set; }
+    public string PhoneNumber { get; init; }
+    public CourtDto Court { get; init; }
 
-    public SendWhatsAppMessageCommand(string phoneNumber, string message)
-    {
-        PhoneNumber = phoneNumber;
-        Message = message;
-    }
 }
