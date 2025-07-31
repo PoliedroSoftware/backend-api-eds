@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.Entities;
 
@@ -21,4 +21,3 @@ public class CapacityViewConfiguration
     }
 }
 
- 

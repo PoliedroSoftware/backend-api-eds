@@ -1,10 +1,10 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.EdsTank.Commands.UpdateEdsTank;
 
-    public class UpdateEdsTankCommandValidator : AbstractValidator<UpdateEdsTankCommand>
+public class UpdateEdsTankCommandValidator : AbstractValidator<UpdateEdsTankCommand>
 {
     public UpdateEdsTankCommandValidator(IRedisService redisService)
     {

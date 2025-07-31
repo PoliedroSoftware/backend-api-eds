@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Common.Models;
+using Poliedro.Eds.Domain.Common.Models;
 
 namespace Poliedro.Eds.Application.Common.Features;
 

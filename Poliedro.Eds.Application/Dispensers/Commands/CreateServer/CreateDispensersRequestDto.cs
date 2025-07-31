@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Dispensers.Commands.CreateDispensers;
+namespace Poliedro.Eds.Application.Dispensers.Commands.CreateDispensers;
 
 public record CreateDispensersRequestDto(
     string Code,

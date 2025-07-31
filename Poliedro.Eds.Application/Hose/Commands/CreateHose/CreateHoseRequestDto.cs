@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Hose.Commands.CreateHose;
+namespace Poliedro.Eds.Application.Hose.Commands.CreateHose;
 
 public record CreateHoseRequestDto(
     int Number,

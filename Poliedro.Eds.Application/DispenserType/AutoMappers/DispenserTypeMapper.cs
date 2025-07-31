@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Poliedro.Eds.Application.DispenserType.Commands.CreateDispenserType;
 using Poliedro.Eds.Application.DispenserType.Commands.UpdateDispenserType;
 using Poliedro.Eds.Application.DispenserType.Dtos;

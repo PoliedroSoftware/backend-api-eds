@@ -11,7 +11,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
 
-public class TypeOfCollectionCreateTypeOfCollection(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ITypeOfCollectionCreateTypeOfCollection
+public class TypeOfCollectionCreateTypeOfCollection(ITenantDbContextFactory dbContextFactory) : ITypeOfCollectionCreateTypeOfCollection
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(TypeOfCollectionEntity TypeOfCollectionEntity)
     {
@@ -20,7 +20,6 @@ public class TypeOfCollectionCreateTypeOfCollection(ITenantDbContextFactory dbCo
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return TypeOfCollectionErrorBuilder.TypeOfCollectionCreationException();
-        await redisService.RemoveByPrefixAsync("typeOfCollection:");
         return VoidResult.Instance;
     }
 }

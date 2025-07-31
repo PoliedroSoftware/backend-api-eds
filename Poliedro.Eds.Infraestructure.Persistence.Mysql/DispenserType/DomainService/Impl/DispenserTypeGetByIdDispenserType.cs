@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.DispenserType.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -31,6 +31,7 @@ public class DispenserTypeGetByIdDispenserType(ITenantDbContextFactory dbContext
 
         return data;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

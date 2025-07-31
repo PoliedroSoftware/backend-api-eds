@@ -1,4 +1,4 @@
-﻿
+
 namespace Poliedro.Eds.Application.Category.Dtos;
 
 public record CategoryDto(

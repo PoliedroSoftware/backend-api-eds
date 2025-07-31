@@ -1,9 +1,10 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.DomainBusinessView;
 
 namespace Poliedro.Eds.Application.DashboardPowerBI.Queries.GellAllBusiness;
+
 public class GetAllBusinessQueryHandler
 (
     IBusinessViewGetAllService BusinessViewGetAllService,

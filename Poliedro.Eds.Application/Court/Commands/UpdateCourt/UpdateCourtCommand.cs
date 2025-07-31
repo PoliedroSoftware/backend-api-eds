@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Poliedro.Eds.Application.Court.Dtos;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
@@ -20,5 +20,6 @@ namespace Poliedro.Eds.Application.Court.Commands.UpdateCourt
     IEnumerable<CourtExpenditureDto> CourtExpenditures,
     IEnumerable<CourtTypeOfCollectionDto> CourtTypeOfCollections
     ) : IRequest<Result<VoidResult, Error>>;
+
     public record GetCourtByIdCommand(int Id) : IRequest<Result<CourtDto, Error>>;
 }

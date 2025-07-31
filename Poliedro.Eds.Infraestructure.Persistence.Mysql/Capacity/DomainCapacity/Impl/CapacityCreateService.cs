@@ -1,15 +1,15 @@
-﻿using Poliedro.Eds.Application.Capacity.Errors;
+using Microsoft.EntityFrameworkCore.Internal;
+using Poliedro.Eds.Application.Capacity.Errors;
 using Poliedro.Eds.Domain.Common.Results;
-using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Capacity.DomainCapacity;
 using Poliedro.Eds.Domain.Capacity.Entities;
+using Poliedro.Eds.Domain.Common.Results;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using Poliedro.Eds.Application.Ports.Redis;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Capacity.DomainCapacity.Impl;
 
-public class CapacityCreateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICapacityCreateService
+public class CapacityCreateService(ITenantDbContextFactory dbContextFactory) : ICapacityCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CapacityEntity CapacityEntity)
     {
@@ -18,7 +18,6 @@ public class CapacityCreateService(ITenantDbContextFactory dbContextFactory, IRe
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return CapacityErrorBuilder.CapacityCreationException();
-        await redisService.RemoveByPrefixAsync("capacity:");
         return VoidResult.Instance;
     }
 }

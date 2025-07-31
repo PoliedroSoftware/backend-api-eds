@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
 namespace Poliedro.Eds.Api.Middlelware.Tenant;
 
@@ -19,7 +19,7 @@ public class TenantMiddleware(
             if (!string.IsNullOrWhiteSpace(tenantClaim))
             {
                 context.Items["tenant"] = tenantClaim;
-              
+
             }
         }
 

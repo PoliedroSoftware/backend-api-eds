@@ -1,0 +1,3 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+# dotnet format --verify-no-changes Poliedro.EDS.sln || exit 1

@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Api.Common.Extensions;
@@ -60,11 +60,18 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOrIslander")]
         [HttpGet("last-accumulated")]
-        public async Task<IActionResult> GetLastAccumulated([FromQuery] int idDispenser,[FromQuery] int idHose)
+        public async Task<IActionResult> GetLastAccumulated([FromQuery] int idDispenser, [FromQuery] int idHose)
         {
             var getLastAccumulatedQuery = new GetLastAccumulatedQuery(idDispenser, idHose);
             var result = await mediator.Send(getLastAccumulatedQuery);
-            if (!result.IsSuccess) return StatusCode((int)result.Error.HttpStatusCode, result.Error);
+            if (!result.IsSuccess)
+            {
+                if (result.Error != null)
+                {
+                    return StatusCode((int)result.Error.HttpStatusCode, result.Error);
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error occurred.");
+            }
             return Ok(result.Value);
         }
 

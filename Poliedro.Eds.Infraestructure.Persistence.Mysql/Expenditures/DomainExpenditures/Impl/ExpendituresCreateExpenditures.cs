@@ -1,8 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Expenditures.Errors;
-using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Expenditures.DomainExpenditures;
@@ -11,7 +7,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Expenditures.DomainExpenditures.Impl;
 
-public class ExpendituresCreateExpenditures(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IExpendituresCreateExpenditures
+public class ExpendituresCreateExpenditures(ITenantDbContextFactory dbContextFactory) : IExpendituresCreateExpenditures
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ExpendituresEntity ExpendituresEntity)
     {
@@ -20,7 +16,6 @@ public class ExpendituresCreateExpenditures(ITenantDbContextFactory dbContextFac
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return ExpendituresErrorBuilder.ExpendituresCreationException();
-        await redisService.RemoveByPrefixAsync("expenditures:");
         return VoidResult.Instance;
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Island.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -10,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.Domainisland.Impl;
 
-public class IslandGetByIdIsland(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IIslandGetByIdIsland
+public class IslandGetByIdIsland(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IIslandGetByIdIsland
 {
     public async Task<Result<IslandEntity, Error>> GetByIdAsync(int id)
     {

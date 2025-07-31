@@ -38,6 +38,7 @@ public class DispensersController(IMediator mediator) : ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
     }
+
     [SwaggerOperation(Summary = "Get Dispensers")]
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(DispensersDto))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
@@ -73,9 +74,9 @@ public class DispensersController(IMediator mediator) : ControllerBase
 
     {
         var result = await mediator.Send(createDispensersCommand);
-            return result.Match(
-                 onSuccess => TypedResults.Created()
-             );
+        return result.Match(
+             onSuccess => TypedResults.Created()
+         );
     }
 
     [SwaggerOperation(Summary = "Update an existing Dispensers")]

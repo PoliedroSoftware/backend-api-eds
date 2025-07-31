@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.Product.Entities;
 
 namespace Poliedro.Eds.Domain.Product.DomainProduct;
 
-    public interface IProductGetAllProduct
-    {
-        Task<IEnumerable<ProductEntity>> GetAllAsync(PaginationParams paginationParams);
-    }
+public interface IProductGetAllProduct
+{
+    Task<IEnumerable<ProductEntity>> GetAllAsync(PaginationParams paginationParams);
+}

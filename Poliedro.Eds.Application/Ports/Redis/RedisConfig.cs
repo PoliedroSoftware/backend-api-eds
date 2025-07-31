@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Ports.Redis;
+namespace Poliedro.Eds.Application.Ports.Redis;
 
 public class RedisConfig
 {

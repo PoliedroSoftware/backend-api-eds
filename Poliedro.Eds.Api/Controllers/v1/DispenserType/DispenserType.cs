@@ -37,6 +37,7 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
     }
+
     [SwaggerOperation(Summary = "Get DispenserType")]
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(DispenserTypeDto))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
@@ -59,8 +60,8 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
         );
     }
 
-        [SwaggerOperation(
-        Summary = "Create new DispenserType")]
+    [SwaggerOperation(
+    Summary = "Create new DispenserType")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "The operation was successful.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
@@ -72,9 +73,9 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
 
     {
         var result = await mediator.Send(createDispenserTypeCommand);
-            return result.Match(
-                 onSuccess => TypedResults.Created()
-             );
+        return result.Match(
+             onSuccess => TypedResults.Created()
+         );
     }
 
     [SwaggerOperation(Summary = "Update an existing DispenserType")]

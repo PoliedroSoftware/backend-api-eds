@@ -1,8 +1,9 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
 namespace Poliedro.Eds.Application.Compartiment.Commands.UpdateCompartiment
 {
     public class UpdateCompartimentCommandValidator : AbstractValidator<UpdateCompartimentCommand>

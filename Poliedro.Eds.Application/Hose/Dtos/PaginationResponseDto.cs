@@ -1,9 +1,11 @@
-﻿namespace Poliedro.Eds.Application.Hose.Dtos
+namespace Poliedro.Eds.Application.Hose.Dtos
 {
     public class PaginationResponseDto<T>
     {
         public List<T> Data { get; set; }
+
         public int TotalPages { get; set; }
+
         public int TotalRows { get; set; }
     }
 }

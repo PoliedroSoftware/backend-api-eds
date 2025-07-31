@@ -1,7 +1,10 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
 using AutoMapper;
 using MediatR;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
@@ -11,17 +14,18 @@ using Poliedro.Eds.Domain.Inventory.Entities;
 namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 {
     public class CreateCourtCommandHandle(IMapper mapper,
-        ICourtDomainService courtDomainService, 
-        IGetProductAndCompartiment  getProductAndCompartiment,
+        ICourtDomainService courtDomainService,
+        IGetProductAndCompartiment getProductAndCompartiment,
         IGetExpenditureId getExpenditureId,
         IGetTypeOfCollectionId getTypeOfCollectionId,
+        IRedisService redisService,
         ICourtUpdateInventoryService courtUpdateInventoryService
         ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
         {
             var courtEntity = mapper.Map<CourtEntity>(request);
-           
+
             var TotalAccumulatedAmount = GetTotalAccumulatedAmount(request);
 
             var TotalAccumulatedGallons = GetTotalAccumulatedGallons(request);
@@ -44,7 +48,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             {
                 throw new InvalidOperationException("Error, El total de efectivo no puede ser negativo");
             }
-            if(courtEntity.CourtExpenditures.Count() > 0)
+            if (courtEntity.CourtExpenditures.Count() > 0)
             {
                 foreach (var item in courtEntity.CourtExpenditures)
                 {
@@ -62,7 +66,8 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                 }
             }
 
-            if (courtEntity.CourtTypeOfCollections.Count() > 0) {
+            if (courtEntity.CourtTypeOfCollections.Count() > 0)
+            {
                 foreach (var item in courtEntity.CourtDispensers)
                 {
                     ProductAndCompartimentEntity productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(item.IdHose);
@@ -78,8 +83,22 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             };
 
             var result = await courtDomainService.CreateAsync(courtEntity);
+
+            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService,
+            KeyRedisConstants.BUSINESS,
+            KeyRedisConstants.COMPARTIMENT,
+            KeyRedisConstants.DISPENSERS,
+            KeyRedisConstants.EDS,
+            KeyRedisConstants.EXPENDITURES,
+            KeyRedisConstants.HOSE,
+            KeyRedisConstants.ISLANDER,
+            KeyRedisConstants.PRODUCT,
+            KeyRedisConstants.TRANSLATION,
+            KeyRedisConstants.TYPE_OF_COLLECTION);
+
             if (!result.IsSuccess)
                 return result.Error!;
+
             if (result.IsSuccess)
             {
                 List<CourtDispenserSaleEntity> courtDispenserSaleEntities = [];
@@ -119,10 +138,10 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 
         private double GetTotalExpenditures(CreateCourtCommand command)
         {
-            if(command.CourtExpenditures == null || !command.CourtExpenditures.Any())
+            if (command.CourtExpenditures == null || !command.CourtExpenditures.Any())
             {
                 return 0;
-            }   
+            }
             return command.CourtExpenditures.Sum(d => d.Amount);
         }
 

@@ -12,7 +12,7 @@ public class EdsTankGetAllEdsTank(
 {
     public async Task<IEnumerable<EdsTankEntity>> GetAllAsync(PaginationParams paginationParams)
     {
-        using var context = dbContextFactory.CreateDbContext();        
+        using var context = dbContextFactory.CreateDbContext();
         var data = await context.EdsTank
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
