@@ -197,6 +197,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IGetExpenditureId, GetIdAuxService>();
 builder.Services.AddScoped<IGetTypeOfCollectionId, GetIdAuxService>();
 builder.Services.AddScoped<IGetProductAndCompartiment, GetIdAuxService>();
+builder.Services.AddScoped<IGetExpenditureName, GetIdAuxService>();
+builder.Services.AddScoped<IGetPaymentMethodName, GetIdAuxService>();
+
 builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompartimentGetByCompartmentId>();
 
 builder.Services.AddScoped<ICourtListDomainService, CourtListService>();

@@ -1,7 +1,10 @@
 using MediatR;
+using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.SendMessage;
 
-public class SendWhatsAppMessageCommandHandler (ISendMessage sendMessage) : IRequestHandler<SendWhatsAppMessageCommand, Unit>
+public class SendWhatsAppMessageCommandHandler(
+    ISendMessage sendMessage,
+    IGetPaymentMethodName getPaymentMethodName) : IRequestHandler<SendWhatsAppMessageCommand, Unit>
 
 {
 
@@ -9,16 +12,20 @@ public class SendWhatsAppMessageCommandHandler (ISendMessage sendMessage) : IReq
     {
         var court = request.Court;
 
-        var totalGallons = court.CourtDispensers?.Sum(d => d.AccumulatedGallons) ?? 0; //ACA VAN TOTAL DE GALONES VENDIDOS 
+        var totalGallons = court.CourtDispensers?.Sum(d => d.AccumulatedGallons) ?? 0; 
         var totalAmount = court.CourtDispensers?.Sum(d => d.AccumulatedAmount) ?? 0;
         var totalExpenditures = court.CourtExpenditures?.Sum(e => e?.Amount ?? 0) ?? 0;
 
-        var paymentSummary = string.Join("\n", court.CourtTypeOfCollections.Select(p =>
-            $"- {p.Description}: ${p.Amount:N2}"
+       
+        var paymentSummary = string.Join("\n", court.CourtTypeOfCollections.Select(async p =>
+            $"- { await getPaymentMethodName.GetPaymentMethodNameAsync(p.IdTypeOfCollection)} : ${p.Amount:N2}"
         ));
 
         var message = $"""
         📋 Corte #{court.Consecutive} finalizado
+
+        🏪 Dispensadores: {string.Empty}
+            mangueras: {string.Join(", ", court.CourtDispensers.Select(d => $"#{d.IdHose}"))}
 
         🕐 Desde: {court.DateStarttime} {court.Starttime}
         🕐 Hasta: {court.DateEndtime} {court.Endtime}
