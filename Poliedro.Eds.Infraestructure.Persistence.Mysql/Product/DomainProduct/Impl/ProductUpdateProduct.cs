@@ -25,6 +25,7 @@ public class ProductUpdateProduct(ITenantDbContextFactory dbContextFactory, IRed
         await redisService.RemoveByPrefixAsync("product:");
         return VoidResult.Instance;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

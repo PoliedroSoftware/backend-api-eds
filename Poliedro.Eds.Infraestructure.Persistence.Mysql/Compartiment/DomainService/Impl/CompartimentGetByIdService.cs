@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Compartiment.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -33,6 +33,7 @@ public class CompartimentGetByIdService(ITenantDbContextFactory dbContextFactory
 
         return data;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

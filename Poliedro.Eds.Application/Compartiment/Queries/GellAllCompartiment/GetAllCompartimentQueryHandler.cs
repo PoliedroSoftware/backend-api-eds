@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Compartiment.Dtos;
@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 using Poliedro.Eds.Domain.Compartiment.Entities;
 
 namespace Poliedro.Eds.Application.Compartiment.Queries.GellAllCompartiment;
+
 public class GetAllCompartimentQueryHandler
 (
     ICompartimentGetAllService CompartimentGetAllService,

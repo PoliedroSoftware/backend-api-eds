@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
 using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
+
 public class ShoppingGetAllShopping(
     ITenantDbContextFactory dbContextFactory
     ) : IShoppingGetAllShopping

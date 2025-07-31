@@ -1,18 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Poliedro.Eds.Domain.Common.Pagination;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using Poliedro.Eds.Application.Ports.Redis;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.AspNetCore.Http;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.DomainCapacityView;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.Entities;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CapacityView;
 
 public class CapacityViewGetAllService(
     ITenantDbContextFactory dbContextFactory,
-    IRedisService redisService, 
+    IRedisService redisService,
     IHttpContextAccessor httpContextAccessor) : ICapacityViewGetAllService
 {
     public async Task<IEnumerable<CapacityViewEntity>> GetAllAsync(PaginationParams paginationParams)

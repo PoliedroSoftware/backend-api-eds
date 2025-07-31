@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.ShoppingProduct.Errors;
 using Poliedro.Eds.Domain.Common.Results;
@@ -10,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProduct.DomainShoppingProduct.Impl;
 
-public class ShoppingProductCreateShoppingProduct(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IShoppingProductCreateShoppingProduct
+public class ShoppingProductCreateShoppingProduct(ITenantDbContextFactory dbContextFactory) : IShoppingProductCreateShoppingProduct
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ShoppingProductEntity shoppingProductEntity)
     {
@@ -19,7 +19,6 @@ public class ShoppingProductCreateShoppingProduct(ITenantDbContextFactory dbCont
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return ShoppingProductErrorBuilder.ShoppingProductCreationException();
-        await redisService.RemoveByPrefixAsync("shoppingproduct:");
 
         return VoidResult.Instance;
     }

@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
 using Poliedro.Eds.Domain.Shopping.Entities;
-using System.Net;
 
 namespace Poliedro.Eds.Application.Shopping.Commands.UpdateShopping
 {
@@ -20,7 +20,7 @@ namespace Poliedro.Eds.Application.Shopping.Commands.UpdateShopping
             var validationResult = await validator.ValidateAsync(request);
             if (!validationResult.IsValid)
                 return Result<VoidResult, Error>.Failure(
-                    Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+                    Error.CreateInstance("ValidationFailed", string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)), HttpStatusCode.BadRequest));
 
             var shoppingEntity = mapper.Map<ShoppingEntity>(request);
             var result = await shoppingDomainShopping.UpdateAsync(shoppingEntity);

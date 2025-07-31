@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.ShoppingProduct.Errors;
@@ -10,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProduct.DomainShopping.Impl;
 
-public class ShoppingProductGetByIdShoppingProduct(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IShoppingProductGetByIdShoppingProduct
+public class ShoppingProductGetByIdShoppingProduct(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IShoppingProductGetByIdShoppingProduct
 {
     public async Task<Result<ShoppingProductEntity, Error>> GetByIdAsync(int id)
     {
@@ -31,6 +31,7 @@ public class ShoppingProductGetByIdShoppingProduct(ITenantDbContextFactory dbCon
 
         return data;
     }
+
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();

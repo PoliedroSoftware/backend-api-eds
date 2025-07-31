@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Tank.Dtos;
+namespace Poliedro.Eds.Application.Tank.Dtos;
 
 public record TankDto(
    int IdTank,

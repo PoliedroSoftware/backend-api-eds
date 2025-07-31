@@ -18,6 +18,6 @@ public class ProductTypeGetAllProductType(
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
             .ToListAsync();
-        return data;    
+        return data;
     }
 }

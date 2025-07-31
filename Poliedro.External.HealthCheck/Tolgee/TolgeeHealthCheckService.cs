@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Poliedro.External.HealthCheck.Tolgee;
 
@@ -16,7 +16,7 @@ public class TolgeeHealthCheckService(IHttpClientFactory httpClientFactory, ICon
             return response.IsSuccessStatusCode
                 ? HealthCheckResult.Healthy("Tolgee API is healthy.")
                 : HealthCheckResult.Unhealthy("Tolgee API is not healthy.");
-            
+
         }
         catch (Exception ex)
         {

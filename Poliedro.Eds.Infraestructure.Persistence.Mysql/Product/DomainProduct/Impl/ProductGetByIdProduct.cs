@@ -12,7 +12,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.DomainProduct.Impl;
 
-public class ProductGetByIdProduct(ITenantDbContextFactory dbContextFactory,IRedisService redisService) : IProductGetByIdProduct
+public class ProductGetByIdProduct(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IProductGetByIdProduct
 {
     public async Task<Result<ProductEntity, Error>> GetByIdAsync(int id)
     {

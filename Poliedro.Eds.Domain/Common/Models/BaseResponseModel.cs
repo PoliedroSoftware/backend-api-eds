@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Domain.Common.Models;
+namespace Poliedro.Eds.Domain.Common.Models;
 
 public class BaseResponseModel
 {
