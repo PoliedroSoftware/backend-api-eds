@@ -5,7 +5,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetProductAndCompartiment, IGetExpenditureId, IGetTypeOfCollectionId
+public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetProductAndCompartiment, IGetExpenditureId, IGetTypeOfCollectionId, IGetExpenditureName, IGetPaymentMethodName
 {
     public async Task<ProductAndCompartimentEntity> GetProductAndCompartimentAsync(int hoseId)
     {
@@ -53,5 +53,24 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
             .Where(tc => tc.Description == typeOfCollectionName)
             .Select(tc => (int?)tc.IdTypeOfCollection)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<string> GetExpenditureIdAsync(int id)
+    {
+        using var context = dbContextFactory.CreateDbContext();
+        return await context.Expenditures
+            .Where(e => e.IdExpenditures == id)
+            .Select(e => e.Description)
+            .FirstOrDefaultAsync() ?? string.Empty;
+    }
+
+    public async Task<string> GetPaymentMethodNameAsync(int id)
+    {
+        using var context = dbContextFactory.CreateDbContext();
+        var zzzz = await context.TypeOfCollection
+            .Where(tc => tc.IdTypeOfCollection == id)
+            .Select(tc => tc.Description)
+            .FirstOrDefaultAsync() ?? string.Empty;
+        return zzzz;
     }
 }

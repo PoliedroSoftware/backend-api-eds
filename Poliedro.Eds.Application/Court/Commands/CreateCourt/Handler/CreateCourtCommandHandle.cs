@@ -122,15 +122,15 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             }
 
 
-            //ACA VA LA LOGICA PARA ENVIAR EL MENSAJE DE WHATSAPP
+            
 
             if (result.IsSuccess)
             {
-                var courtDto = mapper.Map<CourtDto>(courtEntity); // Asegúrate de que el mapeo esté bien
+                var courtDto = mapper.Map<CourtDto>(courtEntity); 
 
                 await mediator.Send(new SendWhatsAppMessageCommand
                 {
-                    PhoneNumber = "573182989981", // lo puedes traer del request u otra lógica
+                    PhoneNumber = "573182989981", 
                     Court = courtDto
                 });
             }
