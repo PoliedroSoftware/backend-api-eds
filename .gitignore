@@ -481,4 +481,3 @@ global.json
 /.sonarqube/**
 /sonarqubecoverage/*
 *.http
-/Poliedro.Eds.Api/.env
