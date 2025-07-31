@@ -3,6 +3,7 @@ using Amazon.Runtime;
 using Amazon.S3.FileUploadService;
 using Amazon.Secrets;
 using AWS.Logger;
+using DotNetEnv;
 using FluentValidation;
 using HealthChecks.UI.Client;
 using MediatR;
@@ -43,7 +44,8 @@ using WorkerKeycloackService;
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
-
+Env.Load();
+builder.Configuration.AddEnvironmentVariables();
 // Configura el logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
