@@ -12,25 +12,37 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness
 
 public class BusinessUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IBusinessUpdateService
 {
-    public async Task<Result<VoidResult, Error>> UpdateAsync(BusinessEntity BusinessEntity)
+    public async Task<Result<VoidResult, Error>> UpdateAsync(BusinessEntity businessEntity)
     {
-        if (!await EntityExists(BusinessEntity.IdBusiness))
-            return BusinessErrorBuilder.BusinessNotFoundException(BusinessEntity.IdBusiness);
+        if (!await EntityExists(businessEntity.IdBusiness))
+            return BusinessErrorBuilder.BusinessNotFoundException(businessEntity.IdBusiness);
 
         using var context = dbContextFactory.CreateDbContext();
-        context.Business.Update(BusinessEntity);
+        context.Business.Update(businessEntity);
 
         if (await context.SaveChangesAsync() <= 0)
             return BusinessErrorBuilder.BusinessUpdateException();
+
         await redisService.RemoveByPrefixAsync("business:");
         return VoidResult.Instance;
+    }
+
+    public async Task<BusinessEntity?> GetByIdAsync(int id)
+    {
+        using var context = dbContextFactory.CreateDbContext();
+
+        return await context.Business
+            .AsNoTracking()
+            .FirstOrDefaultAsync(b => b.IdBusiness == id);
     }
 
     private async Task<bool> EntityExists(int id)
     {
         using var context = dbContextFactory.CreateDbContext();
+
         return await context.Business
             .AsNoTracking()
             .AnyAsync(c => c.IdBusiness == id);
     }
+
 }
