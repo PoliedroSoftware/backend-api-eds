@@ -481,3 +481,4 @@ global.json
 /.sonarqube/**
 /sonarqubecoverage/*
 *.http
+.env
