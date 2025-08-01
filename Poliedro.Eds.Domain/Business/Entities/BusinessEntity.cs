@@ -9,7 +9,7 @@ public class BusinessEntity : AuditableEntity
 {
     [Key]
     public int IdBusiness { get; private set; }
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
     public string Context { get; private set; }
 
     private BusinessEntity(string name, string context)
@@ -18,6 +18,13 @@ public class BusinessEntity : AuditableEntity
 
         Name = name;
         Context = context;
+    }
+
+    public void Update(string name, string? context)
+    {
+        Name = name;
+        Context = context;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public static BusinessEntity Create(string name, string context)
@@ -45,3 +52,5 @@ public class BusinessEntity : AuditableEntity
 
     protected BusinessEntity() { }
 }
+
+

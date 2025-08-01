@@ -6,5 +6,7 @@ namespace Poliedro.Eds.Domain.Business.DomainBusiness;
 
 public interface IBusinessUpdateService
 {
-    Task<Result<VoidResult, Error>> UpdateAsync(BusinessEntity BusinessEntity);
+    Task<Result<VoidResult, Error>> UpdateAsync(BusinessEntity businessEntity);
+    Task<BusinessEntity?> GetByIdAsync(int id); 
 }
+
