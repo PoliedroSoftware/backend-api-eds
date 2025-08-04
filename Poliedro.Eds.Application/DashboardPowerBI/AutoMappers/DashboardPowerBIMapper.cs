@@ -144,10 +144,10 @@ public class DashboardPowerBIMapper : Profile
         CreateMap<DocumentEntity, DocumentDto>().ReverseMap();
         CreateMap<CourtExpenditureEntity, CourtExpenditureDto>().ReverseMap();
         CreateMap<CourtTypeOfCollectionEntity, CourtTypeOfCollectionDto>().ReverseMap();
-        CreateMap<CourtDispenserEntity, ICourtDispenserSaleEntity>()
+        CreateMap<CourtDispenserEntity, CourtDispenserSaleEntity>()
          .ForMember(dest => dest.IdCompartiment, opt => opt.MapFrom(src => src.IdCompartiment))
          .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct));
-        CreateMap<CourtDispenserCommand, ICourtDispenserSaleEntity>()
+        CreateMap<CourtDispenserCommand, CourtDispenserSaleEntity>()
          .ForMember(dest => dest.GallonsDifferenceResult, opt => opt.MapFrom(src => src.GallonsDifferenceResult));
 
 
