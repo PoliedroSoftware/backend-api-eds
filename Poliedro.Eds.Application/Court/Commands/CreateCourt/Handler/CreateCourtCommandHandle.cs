@@ -1,3 +1,5 @@
+using System.Net;
+using System.Text.Json;
 using AutoMapper;
 using MediatR;
 using Poliedro.Eds.Application.Common.Constants;
@@ -80,7 +82,6 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                 ReferenceType = "court",
             };
 
-
             var result = await courtDomainService.CreateAsync(courtEntity);
 
             await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService,
@@ -100,23 +101,22 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 
             if (result.IsSuccess)
             {
-                List<ICourtDispenserSaleEntity> courtDispenserSaleEntities = [];
-                ICourtDispenserSaleEntity courtDispenserSaleEntity = new();
+                List<CourtDispenserSaleEntity> courtDispenserSaleEntities = [];
+                CourtDispenserSaleEntity courtDispenserSaleEntity = new();
                 foreach (var item in courtEntity.CourtDispensers)
                 {
-                    courtDispenserSaleEntity = mapper.Map<ICourtDispenserSaleEntity>(item);
+                    courtDispenserSaleEntity = mapper.Map<CourtDispenserSaleEntity>(item);
                     courtDispenserSaleEntities.Add(courtDispenserSaleEntity);
                     courtDispenserSaleEntities = courtDispenserSaleEntities
                         .Select((entity, index) =>
                         {
-
                             mapper.Map(request.CourtDispensers.ElementAt(index), entity);
                             return entity;
                         }).ToList();
-
                 }
-
-                await courtUpdateInventoryService.CourtUpdateInventoryAsync(courtDispenserSaleEntities);
+                var inventoryResult = await courtUpdateInventoryService.CourtUpdateInventoryAsync(courtDispenserSaleEntities);
+                if (!inventoryResult.IsSuccess)
+                    return inventoryResult;
             }
             return result.Value!;
         }

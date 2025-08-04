@@ -1259,7 +1259,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `v_court_expenditure` AS select `ce`.`id_court_expenditure` AS `id`,`c`.`id_court` AS `court`,`c`.`date_starttime` AS `date`,`e`.`description` AS `expenditure`,`ce`.`amount` AS `amount`,`ce`.`decription` AS `description` from ((`court_expenditures` `ce` left join `court` `c` on((`c`.`id_court` = `ce`.`id_court`))) left join `expenditures` `e` on((`e`.`id_expenditures` = `ce`.`id_expenditures`))) order by `c`.`id_court` desc */;
+/*!50001 VIEW `v_court_expenditure` AS select `ce`.`id_court_expenditure` AS `id`,`c`.`id_court` AS `court`,`c`.`date_starttime` AS `date`,`e`.`description` AS `expenditure`,`ce`.`amount` AS `amount`,`ce`.`description` AS `description` from ((`court_expenditures` `ce` left join `court` `c` on((`c`.`id_court` = `ce`.`id_court`))) left join `expenditures` `e` on((`e`.`id_expenditures` = `ce`.`id_expenditures`))) order by `c`.`id_court` desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
