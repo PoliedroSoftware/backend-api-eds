@@ -1,7 +1,7 @@
 DELIMITER $$
-DROP TRIGGER after_delete_product_compartiment
-DROP TRIGGER after_insert_product_compartiment
-DROP TRIGGER after_update_product_compartiment
+DROP TRIGGER after_delete_product_compartiment $$
+DROP TRIGGER after_insert_product_compartiment $$
+DROP TRIGGER after_update_product_compartiment $$
 
 
 CREATE TRIGGER trg_product_compartiment_after_insert_update_stock_consistency
