@@ -66,7 +66,6 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.DomainIsland.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.Domainislander.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.DomainIslander.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.DomainProduct.Impl;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.Services;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductCompartiment.DomainProductCompartiment.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Provider.DomainProvider.Impl;
