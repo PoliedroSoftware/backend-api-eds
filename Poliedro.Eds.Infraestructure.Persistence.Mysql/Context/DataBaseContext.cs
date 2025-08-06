@@ -24,6 +24,7 @@ using Poliedro.Eds.Domain.HoseHistory.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
 using Poliedro.Eds.Domain.Island.Entities;
 using Poliedro.Eds.Domain.Islander.Entities;
+using Poliedro.Eds.Domain.Phone.Entities;
 using Poliedro.Eds.Domain.Product.Entities;
 using Poliedro.Eds.Domain.ProductCompartiment.Entities;
 using Poliedro.Eds.Domain.ProductType.Entities;
@@ -46,6 +47,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<CourtEntity> Court { get; set; }
 
     public DbSet<BusinessEntity> Business { get; set; }
+
+    public DbSet<PhoneEntity> Phone { get; set; }
 
     public DbSet<CapacityEntity> Capacity { get; set; }
 
@@ -127,6 +130,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new CompartimentCapacityConfiguration(modelBuilder.Entity<CompartimentCapacityEntity>());
         new CourtConfiguration(modelBuilder.Entity<CourtEntity>());
         new BusinessConfiguration(modelBuilder.Entity<BusinessEntity>());
+        new PhoneConfiguration(modelBuilder.Entity<PhoneEntity>());
         new CapacityConfiguration(modelBuilder.Entity<CapacityEntity>());
         new EdsConfiguration(modelBuilder.Entity<EdsEntity>());
         new ProviderConfiguration(modelBuilder.Entity<ProviderEntity>());
