@@ -126,7 +126,22 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 
             if (result.IsSuccess)
             {
-                var courtDto = mapper.Map<CourtDto>(courtEntity); 
+                var courtDto = mapper.Map<CourtDto>(courtEntity);
+                
+                
+                if (courtDto.CourtDispensers != null && request.CourtDispensers != null)
+                {
+                    var courtDispensersList = courtDto.CourtDispensers.ToList();
+                    var requestDispensersList = request.CourtDispensers.ToList();
+
+                    for (int i = 0; i < courtDispensersList.Count && i < requestDispensersList.Count; i++)
+                    {
+                        courtDispensersList[i].AmountDifferenceResult = requestDispensersList[i].AmountDifferenceResult;
+                        courtDispensersList[i].GallonsDifferenceResult = requestDispensersList[i].GallonsDifferenceResult;
+                    }
+
+                    courtDto.CourtDispensers = courtDispensersList;
+                }
 
                 await mediator.Send(new SendWhatsAppMessageCommand
                 {
