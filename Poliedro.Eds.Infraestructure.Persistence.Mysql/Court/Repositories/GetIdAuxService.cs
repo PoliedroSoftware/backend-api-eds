@@ -5,7 +5,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetProductAndCompartiment, IGetExpenditureId, IGetTypeOfCollectionId, IGetExpenditureName, IGetPaymentMethodName
+public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetProductAndCompartiment, IGetExpenditureId, IGetTypeOfCollectionId, IGetExpenditureName, IGetDispenserNumber, IGetHoseNumber, IGetPaymentMethodName
 {
     public async Task<ProductAndCompartimentEntity> GetProductAndCompartimentAsync(int hoseId)
     {
@@ -72,5 +72,23 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
             .Select(tc => tc.Description)
             .FirstOrDefaultAsync() ?? string.Empty;
         return zzzz;
+    }
+
+    public async Task<int> GetHoseNumberAsync(int id)
+    {
+        using var context = dbContextFactory.CreateDbContext();
+        return await context.Hose
+            .Where(h => h.IdHose == id)
+            .Select(h => h.Number)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<int> GetDispenserNumberAsync(int id)
+    {
+        using var context = dbContextFactory.CreateDbContext();
+        return await context.Hose
+            .Where(d => d.IdHose == id)
+            .Select(d => d.IdDispensers)
+            .FirstOrDefaultAsync();
     }
 }

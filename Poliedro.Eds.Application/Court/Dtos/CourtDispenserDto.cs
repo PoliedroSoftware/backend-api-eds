@@ -8,7 +8,11 @@ namespace Poliedro.Eds.Application.Court.Dtos
 
         public double AccumulatedAmount { get; set; }
 
+        public double AmountDifferenceResult { get; set; }
+
         public double AccumulatedGallons { get; set; }
+
+        public double GallonsDifferenceResult { get; set; }
 
         public int IdProduct { get; set; }
 
