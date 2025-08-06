@@ -20,6 +20,7 @@ using Poliedro.Eds.Application.Hose.AutoMappers;
 using Poliedro.Eds.Application.HoseHistory.AutoMappers;
 using Poliedro.Eds.Application.Island.AutoMappers;
 using Poliedro.Eds.Application.Islander.AutoMappers;
+using Poliedro.Eds.Application.Phone.AutoMappers;
 using Poliedro.Eds.Application.Product.AutoMappers;
 using Poliedro.Eds.Application.ProductCompartiment.AutoMappers;
 using Poliedro.Eds.Application.ProductType.AutoMappers;
@@ -41,6 +42,7 @@ public static class DependencyInjectionService
         {
             config.AddProfile(new CourtMapper());
             config.AddProfile(new BusinessMapper());
+            config.AddProfile(new PhoneMapper());
             config.AddProfile(new PaginationBusinessMapper());
             config.AddProfile(new CapacityMapper());
             config.AddProfile(new PaginationCapacityMapper());
