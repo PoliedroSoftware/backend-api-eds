@@ -39,6 +39,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductCompartiment.DomainProductCompartiment.Impl;
 using Poliedro.External.HealthCheck.Tolgee;
+using Poliedro.External.HealthCheck.Keycloak;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
 using WorkerKeycloackService;
@@ -78,7 +79,8 @@ builder.Services.AddHealthChecks()
             ?? throw new InvalidOperationException("Redis:ConnectionString is not configured."),
         name: "redis", 
         tags: ["ready"])
-    .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee");
+    .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee")
+    .AddCheck<KeycloakHealthCheckService>("Service Health Check Keycloak");
 
 builder.Services.AddLogging();
 
@@ -89,6 +91,13 @@ builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
     if (string.IsNullOrWhiteSpace(keycloakUri))
         throw new InvalidOperationException("Keycloak:KeycloakUri is not configured.");
     client.BaseAddress = new Uri(keycloakUri);
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+});
+
+// Configure HTTP client for Keycloak health check
+builder.Services.AddHttpClient("KeycloakHealthCheck", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 
