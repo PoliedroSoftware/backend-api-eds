@@ -9,5 +9,4 @@ public class SendWhatsAppMessageCommand : IRequest<Unit>
 
     public CourtDto Court { get; init; }
 
-
 }
