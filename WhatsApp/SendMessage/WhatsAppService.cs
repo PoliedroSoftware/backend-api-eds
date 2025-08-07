@@ -7,10 +7,22 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Poliedro.Eds.Domain.SendMessage;
 
-namespace Poliedor.External.WhatsApp.SendMessage;
+namespace Poliedro.External.WhatsApp.SendMessage;
 
-public class WhatsAppService (HttpClient httpClient, IConfiguration config)  : ISendMessage
+public class WhatsAppService : ISendMessage
 {
+    private readonly HttpClient _httpClient;
+    private readonly IConfiguration _config;
+
+    public WhatsAppService(HttpClient httpClient, IConfiguration config)
+    {
+        _httpClient = httpClient;
+        _config = config;
+
+        // Configura el encabezado Authorization solo una vez al crear el servicio
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_config["WhatsApp:Token"]}");
+    }
+
     public async Task SendMessageAsync(string phoneNumber, string message)
     {
         var requestPayload = new
@@ -29,9 +41,7 @@ public class WhatsAppService (HttpClient httpClient, IConfiguration config)  : I
         var jsonPayload = JsonConvert.SerializeObject(requestPayload);
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {config["WhatsApp:Token"]}");
-
-        var response = await httpClient.PostAsync(config["WhatsApp:Url"], content);
+        var response = await _httpClient.PostAsync(_config["WhatsApp:Url"], content);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -39,3 +49,4 @@ public class WhatsAppService (HttpClient httpClient, IConfiguration config)  : I
         }
     }
 }
+

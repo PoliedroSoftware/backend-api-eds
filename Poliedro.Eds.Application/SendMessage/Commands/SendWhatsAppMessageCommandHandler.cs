@@ -3,6 +3,7 @@ using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
+using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
 using Poliedro.Eds.Domain.SendMessage;
 
 public class SendWhatsAppMessageCommandHandler(
@@ -11,16 +12,19 @@ public class SendWhatsAppMessageCommandHandler(
     IGetExpenditureName getExpenditure,
     IIslanderGetAllIslander getIsleros,
     IGetHoseNumber getHose,
-    IGetDispenserNumber getdispenserNumber
+    IGetDispenserNumber getdispenserNumber,
+    IPhoneGetAllService getPhone
     ) : IRequestHandler<SendWhatsAppMessageCommand, Unit>
 {
     public async Task<Unit> Handle(SendWhatsAppMessageCommand request, CancellationToken cancellationToken)
     {
         var court = request.Court;
 
+        // Obtener todos los números de teléfono usando el servicio IPhoneGetAllService
+        var phoneNumbers = await getPhone.GetAllAsync(new PaginationParams { PageNumber = 1, PageSize = 1000 });
 
-        var totalGallons = court.CourtDispensers?.Sum(d => d.AccumulatedGallons) ?? 0;
-
+        // Convertir los números de teléfono en una lista de strings
+        var phoneNumbersList = phoneNumbers.Select(p => p.Number).ToList();
 
         // Gastos
         var ExpenseSummary = string.Join("\n", await Task.WhenAll(
@@ -43,7 +47,12 @@ public class SendWhatsAppMessageCommandHandler(
         })
          ));
 
-        var totalpagos = court.CourtTypeOfCollections?.Sum(p => p.Amount) ?? 0;
+        // Sumar solo los montos con el método de pago "Efectivo"
+        var sumEfectivo = court.CourtTypeOfCollections?
+            .Where(p => getPaymentMethodName.GetPaymentMethodNameAsync(p.IdTypeOfCollection).Result == "Efectivo") // Filtrar por "Efectivo"
+            .Sum(p => p.Amount) ?? 0;
+
+        var totalVentas = court.CourtTypeOfCollections?.Sum(p => p.Amount) ?? 0;
 
         // Obtener todos los isleros usando GetAllAsync
         var isleros = await getIsleros.GetAllAsync(new PaginationParams { PageNumber = 1, PageSize = 1000 });
@@ -95,38 +104,40 @@ public class SendWhatsAppMessageCommandHandler(
     """;
         }));
 
-
+        var totalGallons = court.CourtDispensers?.Sum(d => d.GallonsDifferenceResult) ?? 0;
 
         var message = $"""
-                📋 Corte #{court.Consecutive} finalizado
+                📋 Corte Finalizado
 
                 🧑‍🔧 Islero: {isleroName}
 
                 🕐 Inicio Turno:  {court.Starttime} {court.DateStarttime}
-                🕐 Fin Turno: {court.Endtime} {court.DateEndtime} 
-
+                🕐 Fin Turno: {court.Endtime} {court.DateEndtime}
                 
-                  {hoseDetailString}
+                   {hoseDetailString}
                    
 
-                
                 ⛽ Total Galones Vendidos: {totalGallons:N2}
-                💰 Total Dinero Recibido: ${totalpagos:N2}
-                gastos desc:
+                💰 Total Ventas: ${totalVentas:N2}
+
+                Gastos Detallados:
                 {ExpenseSummary}
 
-                💸 Gastos: ${totalExpenditures:N2}
+                💸 Total En Gastos: ${totalExpenditures:N2}
 
                 💳 Medios de pago:
                 {paymentSummary}
 
-                💰 Total Paggos: ${totalpagos:N2}
+                💰 Total A Recibir En Efectivo: ${sumEfectivo:N2}
 
                 📎 Documentos cargados: {court.CourtDocuments?.Count() ?? 0}
-                🛢️ Compartimentos: 
                 """;
 
-        await sendMessage.SendMessageAsync(request.PhoneNumber, message);
+        // Enviar mensaje a cada número de teléfono
+        foreach (var phoneNumber in phoneNumbersList)
+        {
+            await sendMessage.SendMessageAsync(phoneNumber, message);
+        }
 
         return Unit.Value;
     }
