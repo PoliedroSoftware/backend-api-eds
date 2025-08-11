@@ -10,9 +10,13 @@ namespace Poliedro.Eds.Domain.Business.DomaianServices.Create;
 public class BusinessDomainService(IBusinessCreateRepository repository) : IBusinessCreateDomianService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(BusinessEntity business)
-        => await repository.CreateAsync(new BusinessBuilder()
+    { 
+      
+    BusinessEntity BussinesCreated = new BusinessBuilder()
                             .WithName(business.Name)
                             .WithContext(business.Context)
-                            .Build());
-    
+                            .Build();
+
+        return await repository.CreateAsync(BussinesCreated);
+    }
 }
