@@ -38,8 +38,8 @@ public class UpdateBusinessCommandHandler(
 
         try
         {
-            existingBusiness.Update(request.Name, request.Context);
-            var result = await businessUpdateService.UpdateAsync(existingBusiness);
+            existingBusiness.Value.Update(request.Name, request.Context);
+            var result = await businessUpdateService.UpdateAsync(existingBusiness.Value);
             return result;
         }
         catch (BusinessDomainException ex)
