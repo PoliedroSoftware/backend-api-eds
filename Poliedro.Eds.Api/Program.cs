@@ -41,6 +41,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductCompartiment.DomainProductCompartiment.Impl;
 using Poliedro.External.HealthCheck.Tolgee;
+using Poliedro.External.HealthCheck.WhatsApp;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
 using WorkerKeycloackService;
@@ -80,7 +81,8 @@ builder.Services.AddHealthChecks()
             ?? throw new InvalidOperationException("Redis:ConnectionString is not configured."),
         name: "redis", 
         tags: ["ready"])
-    .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee");
+    .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee")
+    .AddCheck<WhatsAppHealthCheckService>("Service Health Check WhatsApp");
 
 builder.Services.AddLogging();
 
