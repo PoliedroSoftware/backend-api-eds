@@ -106,6 +106,7 @@ public class SendWhatsAppMessageCommandHandler(
 
         var totalGallons = court.CourtDispensers?.Sum(d => d.GallonsDifferenceResult) ?? 0;
 
+        // Construir el mensaje final
         var message = $"""
                 📋 Corte Finalizado
 
