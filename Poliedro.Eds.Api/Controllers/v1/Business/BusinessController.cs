@@ -10,6 +10,7 @@ using Poliedro.Eds.Application.Business.Errors;
 using Poliedro.Eds.Application.Business.Queries.GellAllBusiness;
 using Poliedro.Eds.Application.Business.Queries.GetBusinessById;
 using Poliedro.Eds.Application.Common.Features;
+using Poliedro.Eds.Domain.Business.Exepction;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -85,23 +86,46 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The requested Business was not found.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
-    [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
-    [FromBody] UpdateBusinessCommand updateBusinessCommand)
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<IActionResult> Update([FromBody] UpdateBusinessCommand updateBusinessCommand)
     {
-        var result = await mediator.Send(updateBusinessCommand);
-
-        if (!result.IsSuccess)
+        try
         {
-            if (result.Error is BusinessErrorBuilder)
+            var result = await mediator.Send(updateBusinessCommand);
+
+            if (!result.IsSuccess)
             {
-                return NotFound(ResponseApiService.Response(StatusCodes.Status404NotFound));
+                var errorMessage = result.Error?.Description ?? "Unknown error";
+                var errorType = result.Error?.GetType().Name;
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    status = 500,
+                    type = errorType,
+                    message = errorMessage
+                });
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError, ResponseApiService.Response(StatusCodes.Status500InternalServerError, result.Error));
+            return NoContent();
         }
-
-        return NoContent();
+        catch (BusinessDomainException ex)
+        {
+            return BadRequest(new
+            {
+                status = 400,
+                type = "BusinessDomainException",
+                message = ex.Message
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                status = 500,
+                type = "UnhandledException",
+                message = ex.Message
+            });
+        }
     }
 }

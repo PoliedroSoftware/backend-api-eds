@@ -6,7 +6,6 @@ using AWS.Logger;
 using DotNetEnv;
 using FluentValidation;
 using HealthChecks.UI.Client;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
@@ -19,6 +18,7 @@ using Poliedro.Eds.Api.Middlelware.Jwt;
 using Poliedro.Eds.Api.Middlelware.NameIdentifier;
 using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
+using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -36,6 +36,7 @@ using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
@@ -66,6 +67,11 @@ builder.Services
 
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
+
+builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
+//builder.Services.AddScoped<IBusinessQueryService, BusinessQueryService>();
+
+builder.Services.AddScoped<IValidator<UpdateBusinessCommand>, UpdateBusinessCommandValidator>();
 
 var httpContextAccessor = new HttpContextAccessor();
 var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
