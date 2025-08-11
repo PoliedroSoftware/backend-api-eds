@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Product.Services;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
@@ -39,6 +40,7 @@ using Poliedro.Eds.Domain.Tank.DomainTank;
 using Poliedro.Eds.Domain.TypeOfCollection.DomainTypeOfCollection;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Adapter;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainService.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Capacity.DomainCapacity.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Category.DomainCategory.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Compartiment.DomainCompartiment.Impl;
@@ -200,6 +202,7 @@ public static class DependencyInjectionService
         services.AddScoped<IProviderViewGetAllService, ProviderViewGetAllService>();
         services.AddScoped<IShoppingProductGetAllShoppingProductView, ShoppingProductGetAllShoppingProductView>();
         services.AddScoped<ITypeOfCollectionViewGetAllTypeOfCollection, TypeOfCollectionViewGetAllTypeOfCollection>();
+        services.AddTransient<IBusinessUpdateService, BusinessUpdateService>();
         return services;
     }
 }

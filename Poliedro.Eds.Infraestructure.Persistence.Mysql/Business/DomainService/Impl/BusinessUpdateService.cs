@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 using Poliedro.Eds.Application.Business.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
