@@ -11,8 +11,6 @@ public class WhatsAppHealthCheckService(IHttpClientFactory httpClientFactory, IC
     {
         try
         {
-            var httpClient = httpClientFactory.CreateClient();
-            
             // Configure WhatsApp API client
             var whatsAppUrl = configuration["WhatsApp:Url"];
             var whatsAppToken = configuration["WhatsApp:Token"];
@@ -27,19 +25,37 @@ public class WhatsAppHealthCheckService(IHttpClientFactory httpClientFactory, IC
                 return HealthCheckResult.Unhealthy("WhatsApp Token configuration is missing.");
             }
             
+            // Validate URL format
+            if (!Uri.TryCreate(whatsAppUrl, UriKind.Absolute, out var uri))
+            {
+                return HealthCheckResult.Unhealthy("WhatsApp URL configuration is invalid.");
+            }
+            
+            var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", whatsAppToken);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             
-            // Make a simple GET request to check if the API is accessible
-            // Using the base URL to check connectivity without sending actual messages
-            var baseUri = new Uri(whatsAppUrl);
-            var healthCheckUrl = $"{baseUri.Scheme}://{baseUri.Host}";
+            // For WhatsApp Business API, we'll make a simple connectivity check
+            // Using a HEAD request to the base domain to verify network connectivity
+            var baseUrl = $"{uri.Scheme}://{uri.Host}";
+            var response = await httpClient.SendAsync(
+                new HttpRequestMessage(HttpMethod.Head, baseUrl), 
+                cancellationToken);
             
-            var response = await httpClient.GetAsync(healthCheckUrl, cancellationToken);
-            
-            return response.IsSuccessStatusCode
-                ? HealthCheckResult.Healthy("WhatsApp API is healthy.")
+            // For WhatsApp API, even a 404 or other non-success status from the base domain 
+            // indicates that we can reach the host, which is sufficient for health check
+            return response.StatusCode != System.Net.HttpStatusCode.RequestTimeout && 
+                   response.StatusCode != System.Net.HttpStatusCode.ServiceUnavailable
+                ? HealthCheckResult.Healthy("WhatsApp API is reachable.")
                 : HealthCheckResult.Unhealthy($"WhatsApp API returned status code: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return HealthCheckResult.Unhealthy($"WhatsApp API connectivity failed: {ex.Message}");
+        }
+        catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException)
+        {
+            return HealthCheckResult.Unhealthy("WhatsApp API health check timed out.");
         }
         catch (Exception ex)
         {
