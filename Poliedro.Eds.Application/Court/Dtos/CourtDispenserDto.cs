@@ -8,15 +8,17 @@ namespace Poliedro.Eds.Application.Court.Dtos
 
         public double AccumulatedAmount { get; set; }
 
+        public double AmountDifferenceResult { get; set; }
+
         public double AccumulatedGallons { get; set; }
+
+        public double GallonsDifferenceResult { get; set; }
 
         public int IdProduct { get; set; }
 
         public int IdCompartiment { get; set; }
 
         public int IdHose { get; set; }
-        //public ICollection<CourtEntity> Courts { get; set; }
-        //public ICollection<ProductEntity> Products { get; set; }
-        //public ICollection<CompartimentEntity> Compartiments { get; set; }
+
     }
 }

@@ -1,4 +1,6 @@
 using Poliedro.Eds.Application.Inventory.Dtos;
+using Poliedro.Eds.Application.Islander.Dtos;
+using Poliedro.Eds.Domain.Hose.Dtos;
 
 namespace Poliedro.Eds.Application.Court.Dtos
 {
@@ -33,6 +35,7 @@ namespace Poliedro.Eds.Application.Court.Dtos
         public IEnumerable<CourtTypeOfCollectionDto> CourtTypeOfCollections { get; set; }
 
         public InventoryDto? CourtInventory { get; set; }
+
 
     }
 }
