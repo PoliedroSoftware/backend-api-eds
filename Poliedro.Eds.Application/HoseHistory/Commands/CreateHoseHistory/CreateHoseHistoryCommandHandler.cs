@@ -26,7 +26,13 @@ namespace Poliedro.Eds.Application.HoseHistory.Commands.CreateHoseHistory
                 return Result<VoidResult, Error>.Failure(
                     Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var result = await hosehistoryDomainHoseHistory.CreateAsync(mapper.Map<HoseHistoryEntity>(request.Request));
+            // Round accumulated gallons to 2 decimal places for precision
+            var requestWithRoundedGallons = request.Request with 
+            { 
+                AccumulatedGallons = Math.Round(request.Request.AccumulatedGallons, 2) 
+            };
+
+            var result = await hosehistoryDomainHoseHistory.CreateAsync(mapper.Map<HoseHistoryEntity>(requestWithRoundedGallons));
             await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.HOSE_HISTORY);
             return result.IsSuccess ? result.Value! : result.Error!;
         }

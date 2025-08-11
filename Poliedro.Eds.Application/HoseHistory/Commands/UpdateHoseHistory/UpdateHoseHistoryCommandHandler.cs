@@ -22,7 +22,13 @@ namespace Poliedro.Eds.Application.HoseHistory.Commands.UpdateHoseHistory
                 return Result<VoidResult, Error>.Failure(
                     Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var hosehistoryEntity = mapper.Map<HoseHistoryEntity>(request);
+            // Round accumulated gallons to 2 decimal places for precision
+            var requestWithRoundedGallons = request with 
+            { 
+                AccumulatedGallons = Math.Round(request.AccumulatedGallons, 2) 
+            };
+
+            var hosehistoryEntity = mapper.Map<HoseHistoryEntity>(requestWithRoundedGallons);
             var result = await hosehistoryDomainHoseHistory.UpdateAsync(hosehistoryEntity);
 
             if (!result.IsSuccess)
