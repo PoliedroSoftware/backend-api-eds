@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
@@ -40,12 +39,10 @@ using Poliedro.Eds.Domain.Tank.DomainTank;
 using Poliedro.Eds.Domain.TypeOfCollection.DomainTypeOfCollection;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Adapter;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainService.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Capacity.DomainCapacity.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Category.DomainCategory.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Compartiment.DomainCompartiment.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.CompartimentCapacity.DomainCompartimentCapacity.Impl;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.CourtDispensersInventory.DomainCourtDispensersInventory.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.BusinessView;
