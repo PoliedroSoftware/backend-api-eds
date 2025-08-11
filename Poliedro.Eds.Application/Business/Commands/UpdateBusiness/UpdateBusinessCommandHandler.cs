@@ -13,12 +13,11 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 namespace Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 
 public class UpdateBusinessCommandHandler(
-    IBusinessUpdateService BusinessUpdateService,
-    IMapper mapper,
+    IBusinessUpdateService businessUpdateService,
+    IBusinessGetByIdService BusinessGetByIdService,
     IValidator<UpdateBusinessCommand> validator
     ) : IRequestHandler<UpdateBusinessCommand, Result<VoidResult, Error>>
 {
-
     public async Task<Result<VoidResult, Error>> Handle(UpdateBusinessCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -29,7 +28,7 @@ public class UpdateBusinessCommandHandler(
                 Error.CreateInstance("ValidationFailed", errorMessages, HttpStatusCode.BadRequest));
         }
 
-        var existingBusiness = await BusinessUpdateService.GetByIdAsync(request.IdBusiness); 
+        var existingBusiness = await BusinessGetByIdService.GetByIdAsync(request.IdBusiness);
 
         if (existingBusiness == null)
         {
@@ -39,10 +38,8 @@ public class UpdateBusinessCommandHandler(
 
         try
         {
-
-            existingBusiness.Update(request.Name, request.Context); 
-
-            var result = await BusinessUpdateService.UpdateAsync(existingBusiness);
+            existingBusiness.Update(request.Name, request.Context);
+            var result = await businessUpdateService.UpdateAsync(existingBusiness);
             return result;
         }
         catch (BusinessDomainException ex)
@@ -50,11 +47,5 @@ public class UpdateBusinessCommandHandler(
             return Result<VoidResult, Error>.Failure(
                 Error.CreateInstance("BusinessValidationError", ex.Message, HttpStatusCode.BadRequest));
         }
-        catch (Exception ex)
-        {
-            return Result<VoidResult, Error>.Failure(
-                Error.CreateInstance("UnexpectedError", ex.Message, HttpStatusCode.InternalServerError));
-        }
     }
-
 }
