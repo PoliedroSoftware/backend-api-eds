@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Poliedro.External.WhatsApp.SendMessage;
 using Poliedro.Eds.Api;
 using Poliedro.Eds.Api.Common.Configurations;
 using Poliedro.Eds.Api.Middlelware.aws;
@@ -30,6 +31,7 @@ using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
+using Poliedro.Eds.Domain.SendMessage;
 using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
@@ -199,6 +201,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IGetExpenditureId, GetIdAuxService>();
 builder.Services.AddScoped<IGetTypeOfCollectionId, GetIdAuxService>();
 builder.Services.AddScoped<IGetProductAndCompartiment, GetIdAuxService>();
+builder.Services.AddScoped<IGetExpenditureName, GetIdAuxService>();
+builder.Services.AddScoped<IGetPaymentMethodName, GetIdAuxService>();
+builder.Services.AddScoped<IGetHoseNumber, GetIdAuxService>();
+builder.Services.AddScoped<IGetDispenserNumber, GetIdAuxService>();
+
 builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompartimentGetByCompartmentId>();
 builder.Services.AddScoped<IProductCompartimentStockUpdate, ProductCompartimentStockUpdateService>();
 
@@ -222,6 +229,12 @@ builder.Services.AddHttpClient(nameof(TolgeeService), client =>
         client.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
 });
 
+
+//Configura WhatsApp
+
+builder.Services.AddHttpClient<ISendMessage, WhatsAppService>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SendWhatsAppMessageCommand>());
+builder.Services.AddControllers();
 
 
 
