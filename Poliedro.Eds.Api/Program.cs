@@ -27,6 +27,7 @@ using Poliedro.Eds.Application.Secrets.Aws.Dto;
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
 using Poliedro.Eds.Domain.Business.DomaianServices.Create;
+using Poliedro.Eds.Domain.Business.Extensions;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
@@ -63,7 +64,8 @@ builder.Services
     .AddExternalPlemsi(builder.Configuration)
     .AddPersistence(builder.Configuration)
     .AddExternalAmazon()
-    .AddExternalTolgee();
+    .AddExternalTolgee()
+    .AddBusinessDomainEvents();
 
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
