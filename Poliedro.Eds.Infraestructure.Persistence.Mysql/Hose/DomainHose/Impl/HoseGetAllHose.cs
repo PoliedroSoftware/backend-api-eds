@@ -26,29 +26,36 @@ public class HoseGetAllHose(
 
         using var context = dbContextFactory.CreateDbContext();
 
+        var validIds = await context.Hose.Select(h => h.IdHose).ToListAsync();
+
         var query = from hose in context.Hose
+                    where validIds.Contains(hose.IdHose)
                     join dispenser in context.Dispensers on hose.IdDispensers equals dispenser.Id
                     join productType in context.ProductTypes on hose.IdProductType equals productType.IdProductType
                     join eds in context.Eds on dispenser.EdsId equals eds.IdEds
                     join product in context.Product on hose.IdProductType equals product.IdProductType
-
+                    group new { hose, dispenser, productType, eds, product } by hose.IdHose into g
                     select new HoseDto(
-                        hose.IdHose,
-                        hose.Number,
-                        hose.IdDispensers,
-                        hose.AccumulatedGallons,
-                        hose.AccumulatedAmount,
-                        hose.IdProductType,
-                        product.Price,
-                        dispenser,
-                        productType,
-                        eds
+                        g.First().hose.IdHose,
+                        g.First().hose.Number,
+                        g.First().hose.IdDispensers,
+                        g.First().hose.AccumulatedGallons,
+                        g.First().hose.AccumulatedAmount,
+                        g.First().hose.IdProductType,
+                        g.First().product.Price,
+                        g.First().dispenser,
+                        g.First().productType,
+                        g.First().eds
                     );
 
-        var hoseDtos = await query
+        var hoseDtos = (await query
+            .ToListAsync())
+            .GroupBy(h => h.IdHose)
+            .Select(g => g.First())
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
-            .ToListAsync();
+            .ToList();
+
 
         await redisService.SetCacheAsync(cacheKey, hoseDtos, TimeSpan.FromMinutes(1440));
 
