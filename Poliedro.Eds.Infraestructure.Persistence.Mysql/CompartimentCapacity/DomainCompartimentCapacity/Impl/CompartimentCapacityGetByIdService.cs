@@ -38,9 +38,9 @@ public class CompartimentCapacityGetByIdService(ITenantDbContextFactory dbContex
     {
         using var context = dbContextFactory.CreateDbContext();
 
-        return await context.Tank
+        return await context.CompartimentCapacity
             .AsNoTracking()
-            .AnyAsync(c => c.IdTank == id);
+            .AnyAsync(c => c.IdCompartimentCapacity == id);
     }
 
 }
