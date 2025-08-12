@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WhatsApp", "WhatsApp", "{FA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poliedor.External.WhatsApp", "WhatsApp\Poliedor.External.WhatsApp.csproj", "{5C7DD05F-8A07-4C9C-8DA6-A0284232FE55}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poliedro.Eds.Architecture.Tests", "Poliedro.Eds.Architecture.Tests\Poliedro.Eds.Architecture.Tests.csproj", "{A662ED38-3479-4A7A-91E0-D29E254D9C88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{5C7DD05F-8A07-4C9C-8DA6-A0284232FE55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C7DD05F-8A07-4C9C-8DA6-A0284232FE55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C7DD05F-8A07-4C9C-8DA6-A0284232FE55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A662ED38-3479-4A7A-91E0-D29E254D9C88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A662ED38-3479-4A7A-91E0-D29E254D9C88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A662ED38-3479-4A7A-91E0-D29E254D9C88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A662ED38-3479-4A7A-91E0-D29E254D9C88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
