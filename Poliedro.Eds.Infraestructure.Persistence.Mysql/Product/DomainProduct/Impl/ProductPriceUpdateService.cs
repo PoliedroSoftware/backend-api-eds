@@ -43,8 +43,8 @@ public class ProductPriceUpdateService(ITenantDbContextFactory dbContextFactory,
         try
         {
             var saveResult = await context.SaveChangesAsync();
-            if (saveResult <= 0)
-                return ShoppingErrorBuilder.ShoppingCreationException();
+            //if (saveResult <= 0)
+            //    return ShoppingErrorBuilder.ShoppingCreationException();
 
             var result = Result<VoidResult, Error>.Success(VoidResult.Instance);
             await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.PRODUCT);
