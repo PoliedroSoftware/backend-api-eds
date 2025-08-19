@@ -12,6 +12,7 @@ public class ShoppingProductEntity : AuditableEntity
     public double Quantity { get; set; }
     public double Price { get; set; }
     public int IdCompartment { get; set; }
+    public double? SellPrice { get; set; }
 }
 
 
