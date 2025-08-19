@@ -13,7 +13,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Common.Constants;
 
-namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductCompartiment.DomainProductCompartiment.Impl;
+namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
 
 public class ProductCompartimentStockUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IProductCompartimentStockUpdate
 {

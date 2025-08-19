@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Application.Product.Services;
 using Poliedro.Eds.Application.Shopping.Errors;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Product.Entities;
+using Poliedro.Eds.Domain.Shopping.DomainShopping;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
-namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.DomainProduct.Impl;
+namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
 
 public class ProductPriceUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IProductPriceUpdateService
 {

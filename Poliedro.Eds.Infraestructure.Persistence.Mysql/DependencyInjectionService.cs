@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Application.Product.Services;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
 using Poliedro.Eds.Domain.Capacity.DomainCapacity;
 using Poliedro.Eds.Domain.Category.DomainCategory;

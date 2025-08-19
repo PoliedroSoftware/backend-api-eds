@@ -5,7 +5,6 @@ using MediatR;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Application.Product.Services;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Inventory.Entities;
@@ -59,6 +58,7 @@ public class CreateShoppingCommandHandler(
         var result = await shoppingDomainService.CreateAsync(shoppingEntity);
 
         await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService,KeyRedisConstants.SHOPPING);
+        await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.PRODUCT);
 
         return result.IsSuccess ? result.Value! : result.Error!;
     }
