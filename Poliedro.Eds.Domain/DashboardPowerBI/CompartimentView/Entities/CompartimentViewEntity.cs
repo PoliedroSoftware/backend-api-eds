@@ -18,5 +18,3 @@ public class CompartimentViewEntity
     public int? IdBusiness { get; set; }    
     public DateOnly Date { get; set; }
 }
-
-
