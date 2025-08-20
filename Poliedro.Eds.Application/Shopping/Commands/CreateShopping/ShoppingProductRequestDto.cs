@@ -4,5 +4,6 @@ public record ShoppingProductRequestDto(
     int IdProduct,
     double Quantity,
     double Price,
-    int IdCompartment
+    int IdCompartment,
+    double? SellPrice
 );

@@ -41,12 +41,12 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Imp
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductCompartiment.DomainProductCompartiment.Impl;
 using Poliedro.External.HealthCheck.Tolgee;
 using Poliedro.External.HealthCheck.WhatsApp;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
 using WorkerKeycloackService;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -217,7 +217,6 @@ builder.Services.AddScoped<IGetHoseNumber, GetIdAuxService>();
 builder.Services.AddScoped<IGetDispenserNumber, GetIdAuxService>();
 
 builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompartimentGetByCompartmentId>();
-builder.Services.AddScoped<IProductCompartimentStockUpdate, ProductCompartimentStockUpdateService>();
 
 builder.Services.AddScoped<ICourtListDomainService, CourtListService>();
 builder.Services.AddScoped<IInventoryListDomainService, InventoryListService>();

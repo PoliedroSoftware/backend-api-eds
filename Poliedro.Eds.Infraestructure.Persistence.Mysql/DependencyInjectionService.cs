@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Application.Product.Services;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
 using Poliedro.Eds.Domain.Capacity.DomainCapacity;
 using Poliedro.Eds.Domain.Category.DomainCategory;
@@ -118,7 +117,6 @@ public static class DependencyInjectionService
         services.AddScoped<IProductGetAllProduct, ProductGetAllProduct>();
         services.AddScoped<IProductGetByIdProduct, ProductGetByIdProduct>();
         services.AddScoped<IProductUpdateProduct, ProductUpdateProduct>();
-        services.AddScoped<IProductPriceUpdateService, ProductPriceUpdateService>();
         services.AddScoped<IProductCompartimentCreateProductCompartiment, ProductCompartimentCreateProductCompartiment>();
         services.AddScoped<IProductCompartimentGetAllProductCompartiment, ProductCompartimentGetAllProductCompartiment>();
         services.AddScoped<IProductCompartimentGetByIdProductCompartiment, ProductCompartimentGetByIdProductCompartiment>();
@@ -165,6 +163,7 @@ public static class DependencyInjectionService
         services.AddScoped<IHoseHistoryGetByIdHoseHistory, HoseHistoryGetByIdHoseHistory>();
         services.AddScoped<IHoseHistoryGetAllHoseHistory, HoseHistoryGetAllHoseHistory>();
         services.AddScoped<IShoppingCreateShopping, ShoppingCreateShopping>();
+        services.AddScoped<IShoppingTransactionalService, ShoppingTransactionalService>();
         services.AddScoped<IShoppingUpdateShopping, ShoppingUpdateShopping>();
         services.AddScoped<IShoppingGetByIdShopping, ShoppingGetByIdShopping>();
         services.AddScoped<IShoppingGetAllShopping, ShoppingGetAllShopping>();
