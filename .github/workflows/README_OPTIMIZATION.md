@@ -10,11 +10,13 @@ This repository has been optimized to use reusable GitHub Actions workflows, pro
 |--------|--------|-------|-------------|
 | Main workflow lines | 259 | 95 | 63% reduction |
 | Job definitions | 7 monolithic jobs | 4 orchestrated jobs | Cleaner structure |
-| Reusable workflows | 0 | 5 | ✅ Fully reusable |
+| Reusable workflows | 0 | 6 | ✅ Fully reusable |
 | Code duplication | High | Eliminated | ✅ DRY principle |
 | GitHub Actions versions | v1-v2 | v4+ | ✅ Latest security & features |
 | Caching | None | Full | ✅ Faster builds |
 | Error handling | Basic | Enhanced | ✅ Better reliability |
+| **Cost optimization** | **None** | **Smart cancellation** | **✅ Reduced CI/CD costs** |
+| **Workflow cancellation** | **Basic concurrency** | **Advanced cancellation logic** | **✅ Automatic cleanup** |
 
 ## 🔧 Reusable Workflows Created
 
@@ -52,6 +54,13 @@ This repository has been optimized to use reusable GitHub Actions workflows, pro
 - ✅ Error analysis and reporting
 - ✅ Test result artifacts
 
+### 6. `reusable-cancel-workflows.yml` 🆕
+**Purpose**: Smart workflow cancellation for cost optimization
+- ✅ Cancel workflows by branch pattern
+- ✅ Age-based cancellation filtering
+- ✅ Selective workflow name filtering
+- ✅ Skip current run protection
+
 ## 🚀 Key Improvements
 
 ### Performance
@@ -73,6 +82,13 @@ This repository has been optimized to use reusable GitHub Actions workflows, pro
 - **Cross-Repository**: Other repositories can now use these workflows
 - **Organization-wide**: Standardized CI/CD patterns across all projects
 - **Versioning**: Workflows can be pinned to specific versions
+
+### 💰 Cost Optimization (NEW)
+- **Smart Cancellation**: Automatically cancel redundant workflow runs
+- **Branch-Aware**: Cancel workflows when PRs are merged to `releasecandidate/*` branches
+- **Age-Based Filtering**: Only cancel workflows older than specified thresholds
+- **Conditional Execution**: Skip expensive operations for closed/unmerged PRs
+- **Resource Conservation**: Reduce compute time and CI/CD costs
 
 ## 📋 Usage Examples
 
@@ -111,6 +127,8 @@ The main workflow (`aws.yml`) has been automatically updated to use the new reus
 ```
 .github/workflows/
 ├── aws.yml                           # Main optimized workflow
+├── cancel-redundant-workflows.yml    # 🆕 Cost optimization workflow  
+├── reusable-cancel-workflows.yml     # 🆕 Reusable cancellation logic
 ├── reusable-dotnet-build.yml         # .NET build and test
 ├── reusable-sonar.yml                # SonarCloud analysis  
 ├── reusable-docker-build.yml         # Docker build and push
@@ -118,6 +136,44 @@ The main workflow (`aws.yml`) has been automatically updated to use the new reus
 ├── reusable-jmeter.yml               # Load testing
 ├── REUSABLE_WORKFLOWS_EXAMPLE.md     # Usage examples
 └── README_OPTIMIZATION.md            # This file
+```
+
+## 💰 Cost Optimization Features
+
+### Automatic Workflow Cancellation
+The repository now includes intelligent workflow cancellation to reduce CI/CD costs:
+
+#### When Workflows Are Cancelled:
+1. **PR Closed/Merged**: When a PR is closed (merged or not), all running workflows for the source branch are cancelled
+2. **Release Branch Integration**: When code is pushed to `releasecandidate/*` or `release/*` branches, older workflows are cancelled
+3. **Superseded Commits**: When new commits are pushed, older workflow runs for the same branch are cancelled after 1 minute
+
+#### Smart Filtering:
+- **Age-Based**: Only cancels workflows older than specified thresholds (2-10 minutes)
+- **Current Run Protection**: Never cancels the current workflow run
+- **Branch Pattern Matching**: Supports wildcards for branch patterns (`releasecandidate/*`)
+- **Selective Cancellation**: Can target specific workflow names or cancel all workflows
+
+#### Cost Benefits:
+- **Reduced Compute Time**: Eliminates unnecessary workflow execution minutes
+- **Resource Conservation**: Frees up GitHub Actions runners for active work
+- **Cleaner History**: Reduces clutter in workflow run history
+- **Developer Experience**: Faster feedback cycles with fewer queued jobs
+
+### Conditional Job Execution
+Additional cost optimizations through smart job conditioning:
+
+```yaml
+# Skip expensive builds for closed, unmerged PRs
+if: >
+  github.event_name != 'pull_request' || 
+  github.event.action != 'closed' ||
+  github.event.pull_request.merged == true
+
+# Only run SonarCloud for merged PRs or main/release branches
+if: >
+  (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+  (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releasecandidate/')))
 ```
 
 ## 🎯 Benefits for Organization
