@@ -1,3 +1,4 @@
+using Amazon.Rekognition;
 using Amazon.S3.FileUploadService;
 using Microsoft.Extensions.DependencyInjection;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
@@ -9,6 +10,7 @@ public static class DependencyInjectionService
     public static IServiceCollection AddExternalAmazon(this IServiceCollection services)
     {
         services.AddTransient<IFileUploadService, FileUploadService>();
+        services.AddTransient<IImageDescriptionService, ImageDescriptionService>();
         return services;
     }
 }

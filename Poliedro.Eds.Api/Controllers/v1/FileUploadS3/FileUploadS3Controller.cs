@@ -24,4 +24,14 @@ public class UploadController(IMediator mediator) : ControllerBase
         }
         return Ok(new { Urls = results });
     }
+
+    [Authorize(Policy = "AdminOrIslander")]
+    [HttpPost("describe")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> DescribeImage(IFormFile image)
+    {
+        var command = new DescribeImageCommand(image);
+        var result = await mediator.Send(command);
+        return Ok(new { Description = result });
+    }
 }
