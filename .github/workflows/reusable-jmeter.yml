@@ -1,0 +1,162 @@
+name: Reusable JMeter Load Testing
+
+on:
+  workflow_call:
+    inputs:
+      test-plan-path:
+        description: 'Path to JMeter test plan (.jmx file)'
+        required: true
+        type: string
+      results-path:
+        description: 'Path for test results'
+        required: false
+        type: string
+        default: 'jmeter-results'
+      test-timeout:
+        description: 'Test timeout in minutes'
+        required: false
+        type: string
+        default: '30'
+      jmeter-version:
+        description: 'JMeter version to use'
+        required: false
+        type: string
+        default: '5.6.3'
+      generate-html-report:
+        description: 'Generate HTML report'
+        required: false
+        type: boolean
+        default: true
+      fail-on-error:
+        description: 'Fail build if errors found in results'
+        required: false
+        type: boolean
+        default: true
+      additional-jmeter-args:
+        description: 'Additional JMeter command line arguments'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  load-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: Cache JMeter installation
+        uses: actions/cache@v4
+        with:
+          path: apache-jmeter-${{ inputs.jmeter-version }}
+          key: jmeter-${{ inputs.jmeter-version }}
+          
+      - name: Install JMeter
+        run: |
+          if [ ! -d "apache-jmeter-${{ inputs.jmeter-version }}" ]; then
+            echo "Downloading JMeter ${{ inputs.jmeter-version }}..."
+            wget -q https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${{ inputs.jmeter-version }}.tgz
+            tar -xzf apache-jmeter-${{ inputs.jmeter-version }}.tgz
+            rm apache-jmeter-${{ inputs.jmeter-version }}.tgz
+          else
+            echo "Using cached JMeter installation"
+          fi
+          
+          export JMETER_HOME=$PWD/apache-jmeter-${{ inputs.jmeter-version }}
+          echo "JMETER_HOME=$JMETER_HOME" >> $GITHUB_ENV
+          echo "$JMETER_HOME/bin" >> $GITHUB_PATH
+          
+      - name: Validate test plan
+        run: |
+          if [ ! -f "${{ inputs.test-plan-path }}" ]; then
+            echo "❌ Test plan file not found: ${{ inputs.test-plan-path }}"
+            exit 1
+          fi
+          echo "✅ Test plan found: ${{ inputs.test-plan-path }}"
+          
+      - name: Create results directory
+        run: mkdir -p ${{ inputs.results-path }}
+        
+      - name: Run JMeter Load Test
+        run: |
+          echo "Running JMeter load test..."
+          echo "Test plan: ${{ inputs.test-plan-path }}"
+          echo "Results path: ${{ inputs.results-path }}"
+          
+          # Set timeout for the test
+          timeout ${{ inputs.test-timeout }}m $JMETER_HOME/bin/jmeter \
+            -n \
+            -t ${{ inputs.test-plan-path }} \
+            -l ${{ inputs.results-path }}/results.jtl \
+            -j ${{ inputs.results-path }}/jmeter.log \
+            $(if [ "${{ inputs.generate-html-report }}" = "true" ]; then echo "-e -o ${{ inputs.results-path }}/html-report"; fi) \
+            ${{ inputs.additional-jmeter-args }} || {
+              echo "JMeter test failed or timed out"
+              exit 1
+            }
+            
+      - name: Check for test errors
+        if: ${{ inputs.fail-on-error }}
+        run: |
+          echo "Analyzing test results for errors..."
+          
+          if [ ! -f "${{ inputs.results-path }}/results.jtl" ]; then
+            echo "❌ Results file not found"
+            exit 1
+          fi
+          
+          # Check for HTTP 5xx errors
+          error_count=$(grep -c "false" ${{ inputs.results-path }}/results.jtl || true)
+          total_count=$(tail -n +2 ${{ inputs.results-path }}/results.jtl | wc -l)
+          
+          echo "Total requests: $total_count"
+          echo "Failed requests: $error_count"
+          
+          if [ "$error_count" -gt 0 ]; then
+            error_rate=$(awk "BEGIN {printf \"%.2f\", ($error_count/$total_count)*100}")
+            echo "❌ Error rate: ${error_rate}%"
+            
+            # Show sample of errors
+            echo "Sample errors:"
+            grep "false" ${{ inputs.results-path }}/results.jtl | head -5
+            
+            exit 1
+          else
+            echo "✅ No errors found in test results"
+          fi
+          
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "## JMeter Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "${{ inputs.results-path }}/results.jtl" ]; then
+            total_requests=$(tail -n +2 ${{ inputs.results-path }}/results.jtl | wc -l)
+            failed_requests=$(grep -c "false" ${{ inputs.results-path }}/results.jtl || echo "0")
+            success_rate=$(awk "BEGIN {printf \"%.2f\", (($total_requests-$failed_requests)/$total_requests)*100}")
+            
+            echo "- **Test Plan**: ${{ inputs.test-plan-path }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Total Requests**: $total_requests" >> $GITHUB_STEP_SUMMARY
+            echo "- **Failed Requests**: $failed_requests" >> $GITHUB_STEP_SUMMARY
+            echo "- **Success Rate**: ${success_rate}%" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **Status**: Test results not available" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: Upload JMeter Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-results
+          path: ${{ inputs.results-path }}/**/*
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 6

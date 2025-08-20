@@ -1,0 +1,77 @@
+name: Reusable .NET Build and Test
+
+on:
+  workflow_call:
+    inputs:
+      dotnet-version:
+        description: '.NET version to use'
+        required: false
+        type: string
+        default: '8.0.x'
+      configuration:
+        description: 'Build configuration'
+        required: false
+        type: string
+        default: 'Release'
+      solution-path:
+        description: 'Path to the solution file'
+        required: false
+        type: string
+        default: '.'
+      run-tests:
+        description: 'Whether to run tests'
+        required: false
+        type: boolean
+        default: true
+      cache-key-suffix:
+        description: 'Suffix for cache keys to make them unique'
+        required: false
+        type: string
+        default: 'default'
+    outputs:
+      build-succeeded:
+        description: 'Whether the build succeeded'
+        value: ${{ jobs.build.outputs.succeeded }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      succeeded: ${{ steps.build.outcome == 'success' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+          
+      - name: Cache .NET packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ inputs.cache-key-suffix }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-${{ inputs.cache-key-suffix }}-
+            ${{ runner.os }}-nuget-
+            
+      - name: Restore dependencies
+        run: dotnet restore ${{ inputs.solution-path }}
+        
+      - name: Build
+        id: build
+        run: dotnet build ${{ inputs.solution-path }} --configuration ${{ inputs.configuration }} --no-restore
+        
+      - name: Run Tests
+        if: ${{ inputs.run-tests }}
+        run: dotnet test ${{ inputs.solution-path }} --configuration ${{ inputs.configuration }} --no-build --verbosity normal --logger trx --results-directory TestResults
+        
+      - name: Upload test results
+        if: ${{ inputs.run-tests && always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ inputs.cache-key-suffix }}
+          path: TestResults/*.trx
+          retention-days: 5

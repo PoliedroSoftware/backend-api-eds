@@ -12,248 +12,83 @@ on:
       - 'release/*'
       - 'releasecandidate/*'
 
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-
+  # Build and test .NET application
   dotnet:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    uses: ./.github/workflows/reusable-dotnet-build.yml
+    with:
+      dotnet-version: '8.0.x'
+      configuration: 'Release'
+      solution-path: 'Poliedro.EDS.sln'
+      run-tests: true
+      cache-key-suffix: ${{ github.sha }}
 
-      - name: Setup .NET & Restore
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '8.0.x'
-      - run: dotnet restore
-
-      - name: Build
-        run: dotnet build --configuration Release
-
-      - name: Unit Tests
-        run: dotnet test --configuration Release --no-build
-
-
+  # Run SonarCloud analysis
   sonar:
     needs: dotnet
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    uses: ./.github/workflows/reusable-sonar.yml
+    with:
+      project-key: 'PoliedroSoftware_backend-api-eds'
+      organization: 'poliedro-software-sonarqube'
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          args: >
-            -Dsonar.projectKey=PoliedroSoftware_backend-api-eds
-            -Dsonar.organization=poliedro-software-sonarqube
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
+  # Run JMeter load tests (optional, can be enabled when needed)
   jmeter:
+    if: false # Disabled for now - enable when needed
     needs: dotnet
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    uses: ./.github/workflows/reusable-jmeter.yml
+    with:
+      test-plan-path: 'LoadTest/EDS.jmx'
+      results-path: 'LoadTest/results'
+      generate-html-report: true
+      fail-on-error: true
 
-      - name: Install JMeter
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-17-jre-headless
-          wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
-          tar -xzf apache-jmeter-5.6.3.tgz
-          export JMETER_HOME=$PWD/apache-jmeter-5.6.3
-          echo "$JMETER_HOME/bin" >> $GITHUB_PATH
-
-      #- name: Run JMeter Load Test
-      # run: |
-      #   ./apache-jmeter-5.6.3/bin/jmeter -n -t LoadTest/EDS.jmx -l LoadTest/results.jtl -e -o LoadTest/report > jmeter_output.log 2>&1
-      
-      - name: Check for errors in JMeter results
-        if: false
-        run: |
-          echo "Checking JMeter results for errors..."
-          # Buscar errores HTTP 500 en los resultados (.jtl)
-          if grep -q "500" LoadTest/results.jtl; then
-            echo "JMeter test failed due to 500 Internal Server Error in results.jtl. Exiting pipeline."
-            exit 1
-          fi
-
-      - name: Upload JMeter HTML Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: jmeter-reports
-          path: LoadTest/report/*
-          if-no-files-found: warn
-          compression-level: 6
-          overwrite: false
-          include-hidden-files: false
-
+  # Build and push Docker images
   docker:
     if: github.event.pull_request.merged == true
-    needs: [dotnet, sonar, jmeter]
-    runs-on: ubuntu-latest
-    environment: QA
+    needs: [dotnet, sonar]
+    uses: ./.github/workflows/reusable-docker-build.yml
+    with:
+      image-name: ${{ vars.DOCKERHUB_REPOSITORY_EDS || 'backend-api-eds' }}
+      image-tag: 'latest'
+      registry-type: 'both'  # Push to both ECR and Docker Hub
+      aws-region: ${{ vars.AWS_REGION || 'us-east-2' }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME_EDS }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}               
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
- 
-      - name: Set AWS region
-        run: |
-          echo "Configurando región AWS..."
-          aws configure set region ${{ secrets.AWS_REGION }}
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build Docker image
-        run: |
-          echo "Construyendo imagen Docker..."
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest .
-
-      - name: Tag Docker image
-        run: |
-          echo "Etiquetando imagen Docker..."
-          docker tag ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
-
-      - name: Push Docker image to ECR
-        run: |
-          echo "Subiendo imagen Docker a ECR..."
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest    
-
-  docker-hub:
-    if: github.event.pull_request.merged == true
-    needs: [dotnet, sonar, jmeter]
-    runs-on: ubuntu-latest
-    environment: QA
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME_EDS }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push Docker image to Docker Hub
-        uses: docker/build-push-action@v5
-        with:
-          context: .                          
-          push: true                          
-          tags: ${{ secrets.DOCKERHUB_USERNAME_EDS }}/${{ secrets.DOCKERHUB_REPOSITORY_EDS }}:latest  
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME_EDS }}/${{ secrets.DOCKERHUB_REPOSITORY_EDS }}:buildcache  
-          cache-to: type=inline               
-
-  deploy_Dev:
+  # Deploy to multiple environments using matrix strategy
+  deploy:
     if: github.event.pull_request.merged == true
     needs: docker
-    runs-on: ubuntu-latest
-    environment: QA
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Deploy to Amazon ECS
-        run: |
-          # Usar el ARN de la task definition desde Secrets
-          ecs_task_definition_arn="${{ secrets.TASK_DEFINITION_ARN }}"
-          echo "Usando el ARN de la task definition: $ecs_task_definition_arn"
-          
-          # Forzar la actualización del servicio con la task definition existente
-          ecs_deploy=$(aws ecs update-service \
-            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
-            --service ${{ secrets.AWS_ECS_SERVICE }} \
-            --task-definition $ecs_task_definition_arn \
-            --force-new-deployment)
-          
-          echo "Resultado del despliegue en ECS: $ecs_deploy"
-
-      - name: Check ECS Service Status
-        run: |
-          echo "Verificando estado del servicio ECS..."
-          service_status=$(aws ecs describe-services \
-            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
-            --services ${{ secrets.AWS_ECS_SERVICE }} \
-            --query 'services[0].status' --output text)
-          
-          echo "Estado del servicio: $service_status"
-
-      - name: Check ECS Task Definition
-        run: |
-          echo "Verificando imagen de la task definition..."
-          task_definition_image=$(aws ecs describe-task-definition \
-            --task-definition ${{ secrets.TASK_DEFINITION_ARN }} \
-            --query 'taskDefinition.containerDefinitions[0].image' --output text)
-          
-          echo "Imagen de la task definition: $task_definition_image"
-
-  deploy_QA:
-    if: github.event.pull_request.merged == true
-    needs: docker
-    runs-on: ubuntu-latest
-    environment: QA
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Deploy to Amazon ECS
-        run: |
-          # Usar el ARN de la task definition desde Secrets
-          ecs_task_definition_arn="${{ secrets.TASK_DEFINITION_ARN_EDS_QA }}"
-          echo "Usando el ARN de la task definition: $ecs_task_definition_arn"
-          
-          # Forzar la actualización del servicio con la task definition existente
-          ecs_deploy=$(aws ecs update-service \
-            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
-            --service ${{ secrets.AWS_ECS_SERVICE_EDS_QA }} \
-            --task-definition $ecs_task_definition_arn \
-            --force-new-deployment)
-          
-          echo "Resultado del despliegue en ECS: $ecs_deploy"
-
-      - name: Check ECS Service Status
-        run: |
-          echo "Verificando estado del servicio ECS..."
-          service_status=$(aws ecs describe-services \
-            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
-            --services ${{ secrets.AWS_ECS_SERVICE_EDS_QA }} \
-            --query 'services[0].status' --output text)
-          
-          echo "Estado del servicio: $service_status"
-
-      - name: Check ECS Task Definition
-        run: |
-          echo "Verificando imagen de la task definition..."
-          task_definition_image=$(aws ecs describe-task-definition \
-            --task-definition ${{ secrets.TASK_DEFINITION_ARN_EDS_QA }} \
-            --query 'taskDefinition.containerDefinitions[0].image' --output text)
-          
-          echo "Imagen de la task definition: $task_definition_image"        
+    strategy:
+      matrix:
+        environment: [dev, qa]
+        include:
+          - environment: dev
+            service_secret: AWS_ECS_SERVICE
+            task_definition_secret: TASK_DEFINITION_ARN
+          - environment: qa
+            service_secret: AWS_ECS_SERVICE_EDS_QA
+            task_definition_secret: TASK_DEFINITION_ARN_EDS_QA
+    uses: ./.github/workflows/reusable-aws-deploy.yml
+    with:
+      environment: ${{ matrix.environment }}
+      aws-region: ${{ vars.AWS_REGION || 'us-east-2' }}
+      wait-for-deployment: true
+      deployment-timeout: '10'
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ECS_CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
+      AWS_ECS_SERVICE: ${{ secrets[matrix.service_secret] }}
+      TASK_DEFINITION_ARN: ${{ secrets[matrix.task_definition_secret] }}        
