@@ -13,12 +13,36 @@ on:
       - 'releasecandidate/*'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Enhanced concurrency control for cost optimization
+  group: >-
+    ${{ github.workflow }}-
+    ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref }}-
+    ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
 jobs:
+  # Cancel redundant workflows when merging to releasecandidate branches
+  cancel-redundant-workflows:
+    if: >
+      github.event_name == 'pull_request' && 
+      (github.event.action == 'closed' || github.event.action == 'synchronize') &&
+      (startsWith(github.event.pull_request.base.ref, 'releasecandidate/') || 
+       contains(github.event.pull_request.base.ref, 'release/'))
+    uses: ./.github/workflows/reusable-cancel-workflows.yml
+    with:
+      target-branch: ${{ github.event.pull_request.head.ref }}
+      skip-current: true
+      max-age-minutes: 2
+      workflow-names: 'Build, Test, Deploy to ECS'
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # Build and test .NET application
   dotnet:
+    # Skip expensive build operations if this is a closed/merged PR to save costs
+    if: >
+      github.event_name != 'pull_request' || 
+      github.event.action != 'closed' ||
+      github.event.pull_request.merged == true
     uses: ./.github/workflows/reusable-dotnet-build.yml
     with:
       dotnet-version: '8.0.x'
@@ -29,6 +53,10 @@ jobs:
 
   # Run SonarCloud analysis
   sonar:
+    # Only run SonarCloud analysis for merged PRs or main branch pushes
+    if: >
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+      (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releasecandidate/')))
     needs: dotnet
     uses: ./.github/workflows/reusable-sonar.yml
     with:

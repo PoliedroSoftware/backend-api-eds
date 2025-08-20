@@ -1,0 +1,127 @@
+name: Cancel Running Workflows
+
+on:
+  workflow_call:
+    inputs:
+      target-branch:
+        description: 'Target branch for cancellation (e.g., main, releasecandidate/*)'
+        required: false
+        type: string
+        default: ''
+      skip-current:
+        description: 'Skip cancelling the current workflow run'
+        required: false
+        type: boolean
+        default: true
+      workflow-names:
+        description: 'Comma-separated list of workflow names to cancel (empty = all workflows)'
+        required: false
+        type: string
+        default: ''
+      max-age-minutes:
+        description: 'Only cancel workflows older than this many minutes'
+        required: false
+        type: number
+        default: 5
+    secrets:
+      GITHUB_TOKEN:
+        description: 'GitHub token for API access'
+        required: false
+
+jobs:
+  cancel-workflows:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Cancel Running Workflows
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN || github.token }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const currentRunId = context.runId;
+            const targetBranch = '${{ inputs.target-branch }}';
+            const skipCurrent = ${{ inputs.skip-current }};
+            const workflowNames = '${{ inputs.workflow-names }}'.split(',').map(s => s.trim()).filter(s => s);
+            const maxAgeMinutes = ${{ inputs.max-age-minutes }};
+            const maxAgeMs = maxAgeMinutes * 60 * 1000;
+            
+            console.log(`🔍 Looking for workflows to cancel...`);
+            console.log(`Target branch pattern: ${targetBranch || 'any'}`);
+            console.log(`Workflow names filter: ${workflowNames.length > 0 ? workflowNames.join(', ') : 'all'}`);
+            console.log(`Max age: ${maxAgeMinutes} minutes`);
+            console.log(`Skip current run (${currentRunId}): ${skipCurrent}`);
+            
+            try {
+              // Get all workflow runs
+              const { data: workflowRuns } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner,
+                repo,
+                status: 'in_progress',
+                per_page: 100
+              });
+              
+              let cancelledCount = 0;
+              const now = new Date();
+              
+              for (const run of workflowRuns.workflow_runs) {
+                // Skip the current run if requested
+                if (skipCurrent && run.id === currentRunId) {
+                  console.log(`⏭️  Skipping current run: ${run.name} (#${run.run_number})`);
+                  continue;
+                }
+                
+                // Check if workflow matches name filter
+                if (workflowNames.length > 0 && !workflowNames.includes(run.name)) {
+                  console.log(`🔇 Skipping ${run.name} (not in filter)`);
+                  continue;
+                }
+                
+                // Check age limit
+                const runAge = now - new Date(run.created_at);
+                if (runAge < maxAgeMs) {
+                  console.log(`⏰ Skipping ${run.name} (#${run.run_number}) - too recent (${Math.round(runAge/60000)}m old)`);
+                  continue;
+                }
+                
+                // Check target branch pattern
+                if (targetBranch) {
+                  const branchMatches = targetBranch.includes('*') 
+                    ? new RegExp(targetBranch.replace(/\*/g, '.*')).test(run.head_branch)
+                    : run.head_branch === targetBranch;
+                    
+                  if (!branchMatches) {
+                    console.log(`🌿 Skipping ${run.name} (#${run.run_number}) on ${run.head_branch} (doesn't match pattern)`);
+                    continue;
+                  }
+                }
+                
+                // Cancel the workflow run
+                try {
+                  await github.rest.actions.cancelWorkflowRun({
+                    owner,
+                    repo,
+                    run_id: run.id
+                  });
+                  
+                  console.log(`❌ Cancelled: ${run.name} (#${run.run_number}) on ${run.head_branch} - Age: ${Math.round(runAge/60000)}m`);
+                  cancelledCount++;
+                } catch (cancelError) {
+                  console.log(`⚠️  Failed to cancel ${run.name} (#${run.run_number}): ${cancelError.message}`);
+                }
+              }
+              
+              if (cancelledCount === 0) {
+                console.log(`✅ No workflows needed cancellation`);
+              } else {
+                console.log(`🎯 Successfully cancelled ${cancelledCount} workflow run(s)`);
+              }
+              
+              // Set output for potential use in subsequent steps
+              core.setOutput('cancelled-count', cancelledCount.toString());
+              
+            } catch (error) {
+              console.error(`❌ Error during workflow cancellation: ${error.message}`);
+              core.setFailed(`Failed to cancel workflows: ${error.message}`);
+            }
