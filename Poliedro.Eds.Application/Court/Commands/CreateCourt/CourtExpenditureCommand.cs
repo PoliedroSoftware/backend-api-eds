@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.Court.Commands.CreateCourt;
+namespace Poliedro.Eds.Application.Court.Commands.CreateCourt;
 
 public record CourtExpenditureCommand(
     int IdExpenditures,

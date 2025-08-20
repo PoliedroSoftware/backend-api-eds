@@ -1,11 +1,9 @@
-﻿using Poliedro.Eds.Domain.Dispensers.Entities;
-using Poliedro.Eds.Domain.ProductType.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.Hose.Entities;
 
-public class HoseEntity
+public class HoseEntity : AuditableEntity
 {
     [Key]
     public int IdHose { get; set; }

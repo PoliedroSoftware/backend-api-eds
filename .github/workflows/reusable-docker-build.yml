@@ -1,0 +1,114 @@
+name: Reusable Docker Build and Push
+
+on:
+  workflow_call:
+    inputs:
+      context:
+        description: 'Build context path'
+        required: false
+        type: string
+        default: '.'
+      dockerfile:
+        description: 'Path to Dockerfile'
+        required: false
+        type: string
+        default: 'Dockerfile'
+      image-name:
+        description: 'Docker image name (without registry)'
+        required: true
+        type: string
+      image-tag:
+        description: 'Docker image tag'
+        required: false
+        type: string
+        default: 'latest'
+      registry-type:
+        description: 'Registry type: ecr, dockerhub, or both'
+        required: false
+        type: string
+        default: 'dockerhub'
+      aws-region:
+        description: 'AWS region for ECR'
+        required: false
+        type: string
+        default: 'us-east-2'
+      platforms:
+        description: 'Target platforms for multi-arch builds'
+        required: false
+        type: string
+        default: 'linux/amd64'
+    secrets:
+      # Docker Hub credentials
+      DOCKERHUB_USERNAME:
+        description: 'Docker Hub username'
+        required: false
+      DOCKERHUB_TOKEN:
+        description: 'Docker Hub access token'
+        required: false
+      # AWS credentials for ECR
+      AWS_ACCESS_KEY_ID:
+        description: 'AWS access key ID'
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS secret access key'
+        required: false
+      AWS_ACCOUNT_ID:
+        description: 'AWS account ID'
+        required: false
+      ECR_REPOSITORY:
+        description: 'ECR repository name'
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Log in to Docker Hub
+        if: ${{ contains(inputs.registry-type, 'dockerhub') || contains(inputs.registry-type, 'both') }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: Configure AWS credentials
+        if: ${{ contains(inputs.registry-type, 'ecr') || contains(inputs.registry-type, 'both') }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.aws-region }}
+          
+      - name: Login to Amazon ECR
+        if: ${{ contains(inputs.registry-type, 'ecr') || contains(inputs.registry-type, 'both') }}
+        uses: aws-actions/amazon-ecr-login@v2
+        
+      - name: Build and push to Docker Hub
+        if: ${{ contains(inputs.registry-type, 'dockerhub') || contains(inputs.registry-type, 'both') }}
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.dockerfile }}
+          push: true
+          platforms: ${{ inputs.platforms }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:${{ inputs.image-tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          
+      - name: Build and push to Amazon ECR
+        if: ${{ contains(inputs.registry-type, 'ecr') || contains(inputs.registry-type, 'both') }}
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.dockerfile }}
+          push: true
+          platforms: ${{ inputs.platforms }}
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ inputs.aws-region }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ inputs.image-tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

@@ -1,9 +1,9 @@
-﻿namespace Poliedro.Eds.Application.Court.Commands.CreateCourt
+namespace Poliedro.Eds.Application.Court.Commands.CreateCourt
 {
     public record CourtTypeOfCollectionCommand(
         int IdTypeOfCollection,
         double Amount,
-        string Description,
+        string? Description,
         string TypeOfCollectionName
         );
 }

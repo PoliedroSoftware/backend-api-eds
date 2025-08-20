@@ -1,10 +1,14 @@
-﻿namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
+namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 
 public record CapacityDto
 (
-     string IdCapacity ,
-     string Code ,
+     string IdCapacity,
+     string IdProduct,
+     string IdBusiness,
+     string Code,
      double Height,
      double Gallon,
-     int Liters
+     int Liters,
+     DateOnly Date
+
 );

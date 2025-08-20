@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
+using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 
 namespace Poliedro.Eds.Infraestructure.External.Keycloak;
 

@@ -1,25 +1,34 @@
-﻿using AutoMapper;
+using System.Net;
+using System.Text.Json;
+using AutoMapper;
 using MediatR;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Court.Dtos;
+using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Domain.Common.Enums;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
-using Poliedro.Eds.Domain.Court.Dto;
 using Poliedro.Eds.Domain.Court.Entities;
-using System.Text.Json;
+using Poliedro.Eds.Domain.Inventory.Entities;
 
 namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 {
     public class CreateCourtCommandHandle(IMapper mapper,
-        ICourtDomainService courtDomainService, 
-        IGetProductAndCompartiment  getProductAndCompartiment,
+        ICourtDomainService courtDomainService,
+        IGetProductAndCompartiment getProductAndCompartiment,
         IGetExpenditureId getExpenditureId,
         IGetTypeOfCollectionId getTypeOfCollectionId,
-        ICourtUpdateInventoryService courtUpdateInventoryService) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
+        IRedisService redisService,
+        ICourtUpdateInventoryService courtUpdateInventoryService,
+        IMediator mediator
+        ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
         {
             var courtEntity = mapper.Map<CourtEntity>(request);
-           
+
             var TotalAccumulatedAmount = GetTotalAccumulatedAmount(request);
 
             var TotalAccumulatedGallons = GetTotalAccumulatedGallons(request);
@@ -42,7 +51,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             {
                 throw new InvalidOperationException("Error, El total de efectivo no puede ser negativo");
             }
-            if(courtEntity.CourtExpenditures.Count() > 0)
+            if (courtEntity.CourtExpenditures.Count() > 0)
             {
                 foreach (var item in courtEntity.CourtExpenditures)
                 {
@@ -60,39 +69,88 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                 }
             }
 
-            if (courtEntity.CourtTypeOfCollections.Count() > 0) {
+            if (courtEntity.CourtTypeOfCollections.Count() > 0)
+            {
                 foreach (var item in courtEntity.CourtDispensers)
                 {
-                    ProductAndCompartimentDto productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(item.IdHose);
+                    ProductAndCompartimentEntity productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(item.IdHose);
                     item.IdProduct = productAndCompartiment.IdProduct;
                     item.IdCompartiment = productAndCompartiment.IdCompartiment;
                 }
             }
 
+            courtEntity.CourtInventory = new InventoryEntity
+            {
+                Date = courtEntity.DateStarttime,
+                ReferenceType = ReferenceType.Court,
+            };
 
             var result = await courtDomainService.CreateAsync(courtEntity);
+
+            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService,
+            KeyRedisConstants.BUSINESS,
+            KeyRedisConstants.COMPARTIMENT,
+            KeyRedisConstants.DISPENSERS,
+            KeyRedisConstants.EDS,
+            KeyRedisConstants.EXPENDITURES,
+            KeyRedisConstants.HOSE,
+            KeyRedisConstants.ISLANDER,
+            KeyRedisConstants.PRODUCT,
+            KeyRedisConstants.TRANSLATION,
+            KeyRedisConstants.TYPE_OF_COLLECTION);
+
             if (!result.IsSuccess)
                 return result.Error!;
+
             if (result.IsSuccess)
             {
-                List<ICourtDispenserSaleEntity> courtDispenserSaleEntities = [];
-                ICourtDispenserSaleEntity courtDispenserSaleEntity = new();
+                List<CourtDispenserSaleEntity> courtDispenserSaleEntities = [];
+                CourtDispenserSaleEntity courtDispenserSaleEntity = new();
                 foreach (var item in courtEntity.CourtDispensers)
                 {
-                    courtDispenserSaleEntity = mapper.Map<ICourtDispenserSaleEntity>(item);
+                    courtDispenserSaleEntity = mapper.Map<CourtDispenserSaleEntity>(item);
                     courtDispenserSaleEntities.Add(courtDispenserSaleEntity);
                     courtDispenserSaleEntities = courtDispenserSaleEntities
                         .Select((entity, index) =>
                         {
-
                             mapper.Map(request.CourtDispensers.ElementAt(index), entity);
                             return entity;
                         }).ToList();
+                }
+                var inventoryResult = await courtUpdateInventoryService.CourtUpdateInventoryAsync(courtDispenserSaleEntities);
+                if (!inventoryResult.IsSuccess)
+                    return inventoryResult;
+            }
 
+
+            
+
+            if (result.IsSuccess)
+            {
+                var courtDto = mapper.Map<CourtDto>(courtEntity);
+                
+                
+                if (courtDto.CourtDispensers != null && request.CourtDispensers != null)
+                {
+                    var courtDispensersList = courtDto.CourtDispensers.ToList();
+                    var requestDispensersList = request.CourtDispensers.ToList();
+
+                    for (int i = 0; i < courtDispensersList.Count && i < requestDispensersList.Count; i++)
+                    {
+                        courtDispensersList[i].AmountDifferenceResult = requestDispensersList[i].AmountDifferenceResult;
+                        courtDispensersList[i].GallonsDifferenceResult = requestDispensersList[i].GallonsDifferenceResult;
+                    }
+
+                    courtDto.CourtDispensers = courtDispensersList;
                 }
 
-                await courtUpdateInventoryService.CourtUpdateInventoryAsync(courtDispenserSaleEntities);
+                await mediator.Send(new SendWhatsAppMessageCommand
+                {
+                    PhoneNumber = "573182989981", 
+                    Court = courtDto
+                });
             }
+
             return result.Value!;
         }
 
@@ -113,6 +171,10 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 
         private double GetTotalExpenditures(CreateCourtCommand command)
         {
+            if (command.CourtExpenditures == null || !command.CourtExpenditures.Any())
+            {
+                return 0;
+            }
             return command.CourtExpenditures.Sum(d => d.Amount);
         }
 

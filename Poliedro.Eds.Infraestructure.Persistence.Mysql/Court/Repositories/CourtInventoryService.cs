@@ -1,46 +1,45 @@
-﻿using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Court.DomainService;
-using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Poliedro.Eds.Domain.Court.Entities;
+using Poliedro.Eds.Domain.Common.Results;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 
-public class CourtInventoryService : ICourtUpdateInventoryService
+public class CourtInventoryService(IConfiguration config,
+    IRedisService redisService,
+    ITenantDbContextFactory dbContextFactory) : ICourtUpdateInventoryService
 {
-    private readonly string _connectionString;
-    private readonly IRedisService _redisService;
-    private readonly DataBaseContext _context;
+    private readonly string _connectionString = config["ConnectionStrings:MysqlConnection"];
 
-    public CourtInventoryService(IConfiguration config, IRedisService redisService, DataBaseContext context)
+    public async Task<Result<VoidResult, Error>> CourtUpdateInventoryAsync(IEnumerable<CourtDispenserSaleEntity> courtDispensers)
     {
-        _connectionString = config["ConnectionStrings:MysqlConnection"];
-        _redisService = redisService;
-        _context = context;
-    }
+        using var context = dbContextFactory.CreateDbContext();
 
-    public async Task CourtUpdateInventoryAsync(IEnumerable<ICourtDispenserSaleEntity> courtDispensers)
-    {
         foreach (var dispenser in courtDispensers)
         {
-            var compartment = await _context.Compartiment
-                .FirstOrDefaultAsync(c => c.IdCompartment == dispenser.IdCompartiment);
+            var productCompartiment = await context.ProductCompartiment
+                .FirstOrDefaultAsync(pc => pc.IdProduct == dispenser.IdProduct && pc.IdCompartiment == dispenser.IdCompartiment);
 
-            if (compartment != null)
+            if (productCompartiment != null)
             {
-                Console.WriteLine($"Actualizando compartimiento {compartment.IdCompartment}: Stock antes: {compartment.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
 
-                compartment.Stock -= dispenser.GallonsDifferenceResult;
-                _context.Compartiment.Update(compartment);
+                Console.WriteLine($"Actualizando product_compartiment {productCompartiment.IdProductCompartiment}: Stock antes: {productCompartiment.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
+
+                var nuevoStock = productCompartiment.Stock - dispenser.GallonsDifferenceResult;
+                if (nuevoStock < 0)
+                {
+                    throw new InvalidOperationException(
+                        $"El stock no puede ser negativo para el producto {dispenser.IdProduct} en el compartimento {dispenser.IdCompartiment}.");
+                }
+                productCompartiment.Stock = nuevoStock;
+                context.ProductCompartiment.Update(productCompartiment);
             }
         }
-
-        await _context.SaveChangesAsync();
-    }
-
-    public Task CourtUpdateInventoryAsync(IEnumerable<CourtDispenserEntity> courtDispensers)
-    {
-        throw new NotImplementedException();
+        await context.SaveChangesAsync();
+        return Result<VoidResult, Error>.Success(VoidResult.Instance);
     }
 }

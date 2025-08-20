@@ -4,7 +4,8 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 
 namespace Poliedro.Eds.Domain.TypeOfCollection.DomainTypeOfCollection;
-    public interface ITypeOfCollectionGetByIdTypeOfCollection
-    {
-        Task<Result<TypeOfCollectionEntity, Error>> GetByIdAsync(int id);
-    }
+
+public interface ITypeOfCollectionGetByIdTypeOfCollection
+{
+    Task<Result<TypeOfCollectionEntity, Error>> GetByIdAsync(int id);
+}

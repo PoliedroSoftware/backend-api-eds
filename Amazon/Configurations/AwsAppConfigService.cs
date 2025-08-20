@@ -1,6 +1,6 @@
-﻿using Amazon.AppConfigData;
-using Amazon.AppConfigData.Model;
 using System.Text.Json;
+using Amazon.AppConfigData;
+using Amazon.AppConfigData.Model;
 
 namespace Amazon.Configurations;
 
@@ -14,7 +14,7 @@ public class AwsAppConfigService(
 
     public async Task<T> GetConfigurationAsync<T>()
     {
-      
+
         var startResponse = await _client.StartConfigurationSessionAsync(new StartConfigurationSessionRequest
         {
             ApplicationIdentifier = applicationId,

@@ -1,0 +1,177 @@
+name: Cost Optimization - Cancel Redundant Workflows
+
+on:
+  pull_request:
+    types: [closed, synchronize]
+    branches:
+      - 'main'
+      - 'release/*'
+      - 'releasecandidate/*'
+  
+  # Also trigger when branches are merged (push event to release branches)
+  push:
+    branches:
+      - 'releasecandidate/*'
+      - 'release/*'
+
+# Ensure only one instance of this workflow runs at a time per branch
+concurrency:
+  group: cancel-workflows-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  cancel-redundant-workflows:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Cancel workflows for closed/merged PRs
+        if: github.event_name == 'pull_request' && github.event.action == 'closed'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN || github.token }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prHeadRef = '${{ github.event.pull_request.head.ref }}';
+            const prBaseRef = '${{ github.event.pull_request.base.ref }}';
+            const prMerged = ${{ github.event.pull_request.merged }};
+            const prNumber = ${{ github.event.pull_request.number }};
+            
+            console.log(`🔍 PR #${prNumber}: ${prHeadRef} -> ${prBaseRef} (merged: ${prMerged})`);
+            
+            try {
+              // Get all in-progress workflow runs for the source branch
+              const { data: workflowRuns } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner,
+                repo,
+                branch: prHeadRef,
+                status: 'in_progress',
+                per_page: 50
+              });
+              
+              let cancelledCount = 0;
+              
+              for (const run of workflowRuns.workflow_runs) {
+                // Skip the current workflow run
+                if (run.id === context.runId) {
+                  continue;
+                }
+                
+                // Cancel workflows for the source branch since PR is closed
+                try {
+                  await github.rest.actions.cancelWorkflowRun({
+                    owner,
+                    repo,
+                    run_id: run.id
+                  });
+                  
+                  console.log(`❌ Cancelled: ${run.name} (#${run.run_number}) on ${run.head_branch}`);
+                  cancelledCount++;
+                } catch (error) {
+                  console.log(`⚠️  Could not cancel ${run.name}: ${error.message}`);
+                }
+              }
+              
+              if (prMerged && prBaseRef.startsWith('releasecandidate/')) {
+                // Also cancel any old workflows running on the release candidate branch
+                console.log(`🚀 PR merged to ${prBaseRef}, checking for old workflows to cancel...`);
+                
+                const { data: releaseCandidateRuns } = await github.rest.actions.listWorkflowRunsForRepo({
+                  owner,
+                  repo,
+                  branch: prBaseRef,
+                  status: 'in_progress',
+                  per_page: 20
+                });
+                
+                const now = new Date();
+                const maxAge = 10 * 60 * 1000; // 10 minutes
+                
+                for (const run of releaseCandidateRuns.workflow_runs) {
+                  if (run.id === context.runId) continue;
+                  
+                  const runAge = now - new Date(run.created_at);
+                  if (runAge > maxAge) {
+                    try {
+                      await github.rest.actions.cancelWorkflowRun({
+                        owner,
+                        repo,
+                        run_id: run.id
+                      });
+                      
+                      console.log(`❌ Cancelled old workflow: ${run.name} (#${run.run_number}) - Age: ${Math.round(runAge/60000)}m`);
+                      cancelledCount++;
+                    } catch (error) {
+                      console.log(`⚠️  Could not cancel old workflow ${run.name}: ${error.message}`);
+                    }
+                  }
+                }
+              }
+              
+              console.log(`✅ Optimization complete. Cancelled ${cancelledCount} redundant workflow(s)`);
+              
+            } catch (error) {
+              console.error(`❌ Error during workflow optimization: ${error.message}`);
+              // Don't fail the workflow if cancellation fails
+            }
+            
+      - name: Cancel redundant workflows on push to release branches
+        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/releasecandidate/') || startsWith(github.ref, 'refs/heads/release/'))
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN || github.token }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const branch = context.ref.replace('refs/heads/', '');
+            
+            console.log(`🔍 Checking for redundant workflows on ${branch} after push...`);
+            
+            try {
+              // Get all in-progress workflow runs for this branch
+              const { data: workflowRuns } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner,
+                repo,
+                branch: branch,
+                status: 'in_progress',
+                per_page: 30
+              });
+              
+              let cancelledCount = 0;
+              const now = new Date();
+              const currentCommit = context.sha;
+              
+              for (const run of workflowRuns.workflow_runs) {
+                // Skip the current workflow run
+                if (run.id === context.runId) {
+                  continue;
+                }
+                
+                // Cancel workflows from older commits (superseded by current push)
+                if (run.head_sha !== currentCommit) {
+                  const runAge = now - new Date(run.created_at);
+                  
+                  // Only cancel if it's not too recent (avoid race conditions)
+                  if (runAge > 60000) { // 1 minute
+                    try {
+                      await github.rest.actions.cancelWorkflowRun({
+                        owner,
+                        repo,
+                        run_id: run.id
+                      });
+                      
+                      console.log(`❌ Cancelled superseded workflow: ${run.name} (#${run.run_number}) from ${run.head_sha.substring(0,7)}`);
+                      cancelledCount++;
+                    } catch (error) {
+                      console.log(`⚠️  Could not cancel workflow ${run.name}: ${error.message}`);
+                    }
+                  }
+                }
+              }
+              
+              console.log(`✅ Branch optimization complete. Cancelled ${cancelledCount} superseded workflow(s)`);
+              
+            } catch (error) {
+              console.error(`❌ Error during branch workflow optimization: ${error.message}`);
+              // Don't fail the workflow if cancellation fails
+            }

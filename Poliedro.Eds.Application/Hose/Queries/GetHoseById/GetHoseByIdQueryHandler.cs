@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+using System.Net;
+using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
@@ -9,11 +11,18 @@ namespace Poliedro.Eds.Application.Hose.Queries.GetHoseById
 {
     public class GetHoseByIdQueryHandler(
         IHoseGetByIdHose hoseDomainHose,
-        IMapper mapper)
+        IMapper mapper,
+        IValidator<GetHoseByIdQuery> validator)
         : IRequestHandler<GetHoseByIdQuery, Result<HoseDto, Error>>
     {
         public async Task<Result<HoseDto, Error>> Handle(GetHoseByIdQuery request, CancellationToken cancellationToken)
         {
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                return Result<HoseDto, Error>.Failure(
+                Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+            }
             var result = await hoseDomainHose.GetByIdAsync(request.Id);
             if (!result.IsSuccess)
                 return result.Error!;

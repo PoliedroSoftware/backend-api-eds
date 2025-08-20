@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Common.Results;
+using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Api.Common.Extensions;
@@ -7,7 +7,8 @@ public static class ResultExtension
 {
     public static IResult Match<TValue, TError>(
         this Result<TValue, TError> result,
-        Func<TValue, IResult> onSuccess)
+        Func<TValue, IResult> onSuccess,
+        Func<TError, IResult> onFailure = null)
         where TError : Error
     {
         return result.IsSuccess ? onSuccess(result.Value!) : result.ToErrorResult();

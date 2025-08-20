@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 
-public class CompartimentCapacityEntity
+public class CompartimentCapacityEntity : AuditableEntity
 {
     [Key]
     public int IdCompartimentCapacity { get; set; } = default!;

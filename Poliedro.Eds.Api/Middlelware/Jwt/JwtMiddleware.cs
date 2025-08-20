@@ -1,9 +1,9 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
 namespace Poliedro.Eds.Api.Middlelware.Jwt
 {
     public class JwtMiddleware(
-        
+
         RequestDelegate _next)
     {
         public async Task InvokeAsync(HttpContext context)
@@ -23,9 +23,10 @@ namespace Poliedro.Eds.Api.Middlelware.Jwt
                     {
                         foreach (var role in roles.EnumerateArray())
                         {
-                            if (!identity.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == role.GetString()))
+                            var roleValue = role.GetString();
+                            if (identity != null && roleValue != null && !identity.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == roleValue))
                             {
-                                identity.AddClaim(new Claim(ClaimTypes.Role, role.GetString()));
+                                identity.AddClaim(new Claim(ClaimTypes.Role, roleValue));
                             }
                         }
                     }

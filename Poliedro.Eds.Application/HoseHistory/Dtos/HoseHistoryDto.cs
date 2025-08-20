@@ -1,4 +1,4 @@
-﻿namespace Poliedro.Eds.Application.HoseHistory.Dtos;
+namespace Poliedro.Eds.Application.HoseHistory.Dtos;
 
 public record HoseHistoryDto(
    int IdHoseHistory,

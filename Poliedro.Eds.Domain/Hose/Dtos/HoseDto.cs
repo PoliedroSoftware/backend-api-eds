@@ -1,4 +1,4 @@
-﻿using Poliedro.Eds.Domain.Dispensers.Entities;
+using Poliedro.Eds.Domain.Dispensers.Entities;
 using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Domain.ProductType.Entities;
 
@@ -11,6 +11,7 @@ public record HoseDto(
     double AccumulatedGallons,
     double AccumulatedAmount,
     int IdProductType,
+    double Price,
     DispensersEntity dispensersEntity,
     ProductTypeEntity productTypeEntity,
     EdsEntity edsEntity

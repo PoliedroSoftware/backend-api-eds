@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +25,7 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     /// <response code="200">Returns the list of client billing electronic records.</response>
     /// <response code="404">Returns when there are no client billing electronic records found.</response>
     /// <response code="500">Returns when there is an Internal Server Error.</response>
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CompartimentDto>>> GetAll([FromQuery] PaginationParams paginationParams)
     {
@@ -38,6 +37,7 @@ public class CompartimentController(IMediator mediator) : ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
     }
+
     [SwaggerOperation(Summary = "Get Compartiment")]
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(CompartimentDto))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
@@ -46,21 +46,16 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetCompartimentByIdQuery> validator)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
         var getCompartimentQuery = new GetCompartimentByIdQuery(Id: id);
-
-        //var validationResult = await validator.ValidateAsync(getCompartimentQuery);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
 
         var result = await mediator.Send(getCompartimentQuery);
 
         return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
+
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
         );
     }
 
@@ -73,13 +68,9 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-            [FromBody] CreateCompartimentCommand createCompartimentCommand,
-            [FromServices] IValidator<CreateCompartimentRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateCompartimentCommand createCompartimentCommand)
 
     {
-        //var validationResult = await validator.ValidateAsync(createCompartimentCommand.Request);
-        //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createCompartimentCommand);
         return result.Match(
              onSuccess => TypedResults.Created()
@@ -94,16 +85,8 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
- [FromBody] UpdateCompartimentCommand updateCompartimentCommand,
- [FromServices] IValidator<UpdateCompartimentCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateCompartimentCommand updateCompartimentCommand)
     {
-        //var validationResult = await validator.ValidateAsync(updateCompartimentCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
-
         var result = await mediator.Send(updateCompartimentCommand);
 
         if (!result.IsSuccess)

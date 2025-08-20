@@ -1,26 +1,27 @@
-﻿using FluentValidation;
+using FluentValidation;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Application.Tank.Commands.UpdateTank;
 
 public class UpdateTankCommandValidator : AbstractValidator<UpdateTankCommand>
 {
-    //public UpdateTankCommandValidator(ITranslationService translationService)
-    //{
-    //    RuleFor(x => x.Number)
-    //    .NotNull().WithMessage(translationService.GetTranslationByKey("NumberNotNull").GetAwaiter().GetResult())
-    //    .NotEmpty().WithMessage(translationService.GetTranslationByKey("NumberNotEmpty").GetAwaiter().GetResult());
+    public UpdateTankCommandValidator(IRedisService redisService)
+    {
+        RuleFor(x => x.Number)
+        .NotNull().WithMessage(redisService.GetValueFromCacheAsync("NumberNotNull").GetAwaiter().GetResult())
+        .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("NumberNotEmpty").GetAwaiter().GetResult());
 
-    //    RuleFor(x => x.Compartment)
-    //        .NotNull().WithMessage(translationService.GetTranslationByKey("CompartmentNotNull").GetAwaiter().GetResult())
-    //        .GreaterThan(0).WithMessage(translationService.GetTranslationByKey("CompartmentGreaterThan").GetAwaiter().GetResult());
+        RuleFor(x => x.Compartment)
+            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("CompartmentNotNull").GetAwaiter().GetResult())
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("CompartmentGreaterThan").GetAwaiter().GetResult());
 
-    //    RuleFor(x => x.Ability)
-    //        .NotNull().WithMessage(translationService.GetTranslationByKey("AbilityNotNull").GetAwaiter().GetResult())
-    //        .GreaterThan(0.0).WithMessage(translationService.GetTranslationByKey("AbilityGreaterThan").GetAwaiter().GetResult());
+        RuleFor(x => x.Ability)
+            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("AbilityNotNull").GetAwaiter().GetResult())
+            .GreaterThan(0.0).WithMessage(redisService.GetValueFromCacheAsync("AbilityGreaterThan").GetAwaiter().GetResult());
 
-    //    RuleFor(x => x.Stock)
-    //        .NotNull().WithMessage(translationService.GetTranslationByKey("StockNotNull").GetAwaiter().GetResult())
-    //        .GreaterThan(0.0).WithMessage(translationService.GetTranslationByKey("StockGreaterThan").GetAwaiter().GetResult());
-    //}
+        RuleFor(x => x.Stock)
+            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("StockNotNull").GetAwaiter().GetResult())
+            .GreaterThan(0.0).WithMessage(redisService.GetValueFromCacheAsync("StockGreaterThan").GetAwaiter().GetResult());
+    }
 }

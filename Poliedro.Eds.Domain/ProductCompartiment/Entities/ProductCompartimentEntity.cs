@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.ProductCompartiment.Entities;
 
-public class ProductCompartimentEntity
+public class ProductCompartimentEntity : AuditableEntity
 {
     [Key]
     public int IdProductCompartiment { get; set; } = default!;
     public int IdProduct { get; set; } = default!;
-    public int IdCompartiment { get; init; }
-    public double Stock { get; init; }
+    public int IdCompartiment { get; set; }
+    public double Stock { get; set; }
 }

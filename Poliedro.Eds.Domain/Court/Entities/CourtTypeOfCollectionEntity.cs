@@ -1,5 +1,5 @@
-﻿using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
+using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 
 namespace Poliedro.Eds.Domain.Court.Entities;
 
@@ -11,6 +11,6 @@ public class CourtTypeOfCollectionEntity
     public double Amount { get; set; }
     [NotMapped]
     public string TypeOfCollectionName { get; set; }
-    public string Description { get; set; }
+    public string? Description { get; set; }
     public TypeOfCollectionEntity TypeOfCollection { get; set; }
 }

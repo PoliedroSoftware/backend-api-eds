@@ -1,9 +1,9 @@
-﻿using Poliedro.Eds.Application.Islander.Dtos;
+using System.Text;
+using System.Text.Json;
+using Poliedro.Eds.Application.Islander.Dtos;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Islander.Entities;
 using RabbitMQ.Client;
-using System.Text;
-using System.Text.Json;
 namespace WorkerKeycloackService
 {
     public class Worker(
@@ -12,7 +12,7 @@ namespace WorkerKeycloackService
         IServiceProvider _serviceProvider,
         IConfiguration _configuration) : BackgroundService
     {
-      
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var channel = _rabbitConnection.CreateModel();
@@ -29,7 +29,7 @@ namespace WorkerKeycloackService
 
             while (!stoppingToken.IsCancellationRequested)
             {
-               
+
                 var result = channel.BasicGet(queue: queueName, autoAck: false);
 
                 if (result != null)
@@ -48,21 +48,19 @@ namespace WorkerKeycloackService
                         Password = islanderDto.Password,
                     };
 
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        var keycloakUserService = scope.ServiceProvider.GetRequiredService<IKeycloakUserService>();
-                        var resultService = await keycloakUserService.CreateUserAsync(islanderEntity, islanderDto.Password);
+                    using var scope = _serviceProvider.CreateScope();
+                    var keycloakUserService = scope.ServiceProvider.GetRequiredService<IKeycloakUserService>();
+                    var resultService = await keycloakUserService.CreateUserAsync(islanderEntity, islanderDto.Password, islanderDto.NameClaimToken);
 
-                        if (resultService.IsSuccess)
-                        {
-                            _logger.LogInformation($"Usuario creado en Keycloak: {islanderDto.Email}");
-                            channel.BasicAck(result.DeliveryTag, false);
-                        }
-                        else
-                        {
-                            _logger.LogError($"Error creando usuario: {resultService.Error}");
-                            channel.BasicNack(result.DeliveryTag, false, true);
-                        }
+                    if (resultService.IsSuccess)
+                    {
+                        _logger.LogInformation($"Usuario creado en Keycloak: {islanderDto.Email}");
+                        channel.BasicAck(result.DeliveryTag, false);
+                    }
+                    else
+                    {
+                        _logger.LogError($"Error creando usuario: {resultService.Error}");
+                        channel.BasicNack(result.DeliveryTag, false, requeue: true);
                     }
                 }
                 else

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.CourtDispensersInventory.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Results;
@@ -9,7 +10,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.CourtDispensersInventory.DomainCourtDispensersInventory.Impl;
 
-public class CourtDispensersInventoryGetByIdCourtDispensersInventory(DataBaseContext context, IRedisService redisService) : ICourtDispensersInventoryGetByIdCourtDispensersInventory
+public class CourtDispensersInventoryGetByIdCourtDispensersInventory(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICourtDispensersInventoryGetByIdCourtDispensersInventory
 {
     public async Task<Result<CourtDispensersInventoryEntity, Error>> GetByIdAsync(int id)
     {
@@ -21,6 +22,7 @@ public class CourtDispensersInventoryGetByIdCourtDispensersInventory(DataBaseCon
 
         if (!await EntityExists(id))
             return CourtDispensersInventoryErrorBuilder.CourtDispensersInventoryNotFoundException(id);
+        using var context = dbContextFactory.CreateDbContext();
         var data = await context.CourtDispensersInventory
             .FirstAsync(c => c.IdCourtDispensersInventory == id);
 
@@ -31,6 +33,7 @@ public class CourtDispensersInventoryGetByIdCourtDispensersInventory(DataBaseCon
 
     private async Task<bool> EntityExists(int id)
     {
+        using var context = dbContextFactory.CreateDbContext();
         return await context.CourtDispensersInventory
             .AsNoTracking()
             .AnyAsync(c => c.IdCourtDispensersInventory == id);

@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.EdsTank.Entities;
 
 namespace Poliedro.Eds.Domain.EdsTank.DomainEdsTank;
 
-    public interface IEdsTankCreateEdsTank
-    {
-        Task<Result<VoidResult, Error>> CreateAsync(EdsTankEntity EdsTankEntity);
-    }
+public interface IEdsTankCreateEdsTank
+{
+    Task<Result<VoidResult, Error>> CreateAsync(EdsTankEntity EdsTankEntity);
+}

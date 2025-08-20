@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,21 +40,15 @@ namespace Poliedro.Eds.Api.Controllers.v1.Island
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetIslandByIdQuery> validator)
+        public async Task<IResult> GetById([FromRoute] int id)
         {
             var getIslandQuery = new GetIslandByIdQuery(Id: id);
-
-            //var validationResult = await validator.ValidateAsync(getIslandQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
 
             var result = await mediator.Send(getIslandQuery);
 
             return result.Match(
-                onSuccess => TypedResults.Ok(result.Value)
+                onSuccess => TypedResults.Ok(result.Value),
+                onFailure => TypedResults.BadRequest(onFailure)
             );
         }
 
@@ -66,13 +60,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.Island
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
-        public async Task<IResult> Create(
-           [FromBody] CreateIslandCommand createIslandCommand,
-           [FromServices] IValidator<CreateIslandRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateIslandCommand createIslandCommand)
 
         {
-            //var validationResult = await validator.ValidateAsync(createIslandCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createIslandCommand);
             return result.Match(
                  onSuccess => TypedResults.Created()
@@ -87,16 +77,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Island
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-     [FromBody] UpdateIslandCommand updateIslandCommand,
-     [FromServices] IValidator<UpdateIslandCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateIslandCommand updateIslandCommand)
         {
-            var validationResult = await validator.ValidateAsync(updateIslandCommand);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            }
-
             var result = await mediator.Send(updateIslandCommand);
 
             if (!result.IsSuccess)
