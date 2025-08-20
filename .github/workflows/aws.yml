@@ -3,8 +3,8 @@ name: Build, Test, Deploy to ECS
 on:
   push:
     branches:
-      - feature/test-checklist
       - feature/pipeline
+      
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
