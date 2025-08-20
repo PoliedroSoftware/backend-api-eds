@@ -5,6 +5,7 @@ using MediatR;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Domain.Common.Enums;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Inventory.Entities;
@@ -32,7 +33,7 @@ public class CreateShoppingCommandHandler(
         shoppingEntity.ShoppingInventory = new InventoryEntity
         {
             Date = DateOnly.FromDateTime(shoppingEntity.Date),
-            ReferenceType = "shopping",
+            ReferenceType = ReferenceType.Shopping,
         };
 
         var productsToUpdatePrice = request.Request.ShoppingProducts

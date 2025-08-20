@@ -6,6 +6,7 @@ using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Court.Dtos;
 using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Domain.Common.Enums;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
@@ -81,7 +82,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             courtEntity.CourtInventory = new InventoryEntity
             {
                 Date = courtEntity.DateStarttime,
-                ReferenceType = "court",
+                ReferenceType = ReferenceType.Court,
             };
 
             var result = await courtDomainService.CreateAsync(courtEntity);
