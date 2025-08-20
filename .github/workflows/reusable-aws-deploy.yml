@@ -1,0 +1,132 @@
+name: Reusable AWS ECS Deployment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Deployment environment (dev, qa, prod)'
+        required: true
+        type: string
+      aws-region:
+        description: 'AWS region'
+        required: false
+        type: string
+        default: 'us-east-2'
+      wait-for-deployment:
+        description: 'Wait for deployment to complete'
+        required: false
+        type: boolean
+        default: true
+      deployment-timeout:
+        description: 'Deployment timeout in minutes'
+        required: false
+        type: string
+        default: '10'
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description: 'AWS access key ID'
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS secret access key'
+        required: true
+      AWS_ECS_CLUSTER:
+        description: 'ECS cluster name'
+        required: true
+      AWS_ECS_SERVICE:
+        description: 'ECS service name'
+        required: true
+      TASK_DEFINITION_ARN:
+        description: 'Task definition ARN'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.aws-region }}
+          
+      - name: Deploy to Amazon ECS
+        id: deploy
+        run: |
+          echo "Deploying to ECS cluster: ${{ secrets.AWS_ECS_CLUSTER }}"
+          echo "Service: ${{ secrets.AWS_ECS_SERVICE }}"
+          echo "Task Definition: ${{ secrets.TASK_DEFINITION_ARN }}"
+          echo "Environment: ${{ inputs.environment }}"
+          
+          # Update the service with force new deployment
+          ecs_deploy_result=$(aws ecs update-service \
+            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+            --service ${{ secrets.AWS_ECS_SERVICE }} \
+            --task-definition ${{ secrets.TASK_DEFINITION_ARN }} \
+            --force-new-deployment \
+            --output json)
+          
+          echo "ECS deployment initiated successfully"
+          echo "deployment_result<<EOF" >> $GITHUB_OUTPUT
+          echo "$ecs_deploy_result" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+      - name: Wait for deployment to complete
+        if: ${{ inputs.wait-for-deployment }}
+        run: |
+          echo "Waiting for deployment to complete..."
+          aws ecs wait services-stable \
+            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+            --services ${{ secrets.AWS_ECS_SERVICE }} \
+            --cli-read-timeout ${{ inputs.deployment-timeout }}
+            
+          echo "Deployment completed successfully"
+          
+      - name: Verify deployment
+        run: |
+          echo "Verifying deployment status..."
+          
+          # Check service status
+          service_status=$(aws ecs describe-services \
+            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+            --services ${{ secrets.AWS_ECS_SERVICE }} \
+            --query 'services[0].status' \
+            --output text)
+          
+          echo "Service Status: $service_status"
+          
+          # Check running task count
+          running_count=$(aws ecs describe-services \
+            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+            --services ${{ secrets.AWS_ECS_SERVICE }} \
+            --query 'services[0].runningCount' \
+            --output text)
+          
+          echo "Running Tasks: $running_count"
+          
+          # Check desired count
+          desired_count=$(aws ecs describe-services \
+            --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+            --services ${{ secrets.AWS_ECS_SERVICE }} \
+            --query 'services[0].desiredCount' \
+            --output text)
+          
+          echo "Desired Tasks: $desired_count"
+          
+          # Verify task definition image
+          task_definition_image=$(aws ecs describe-task-definition \
+            --task-definition ${{ secrets.TASK_DEFINITION_ARN }} \
+            --query 'taskDefinition.containerDefinitions[0].image' \
+            --output text)
+          
+          echo "Task Definition Image: $task_definition_image"
+          
+          # Check if service is active and running desired number of tasks
+          if [ "$service_status" = "ACTIVE" ] && [ "$running_count" = "$desired_count" ]; then
+            echo "✅ Deployment verified successfully!"
+          else
+            echo "❌ Deployment verification failed!"
+            exit 1
+          fi
