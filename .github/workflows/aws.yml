@@ -3,8 +3,8 @@ name: Build, Test, Deploy to ECS
 on:
   push:
     branches:
-      - feature/test-checklist
-  
+      - feature/pipeline
+
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
@@ -17,7 +17,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Build and test .NET application
   dotnet:
     uses: ./.github/workflows/reusable-dotnet-build.yml
     with:
@@ -27,7 +26,6 @@ jobs:
       run-tests: true
       cache-key-suffix: ${{ github.sha }}
 
-  # Run SonarCloud analysis
   sonar:
     needs: dotnet
     uses: ./.github/workflows/reusable-sonar.yml
@@ -37,7 +35,6 @@ jobs:
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # Run JMeter load tests (optional, can be enabled when needed)
   jmeter:
     if: false # Disabled for now - enable when needed
     needs: dotnet
@@ -48,7 +45,6 @@ jobs:
       generate-html-report: true
       fail-on-error: true
 
-  # Build and push Docker images
   docker:
     if: github.event.pull_request.merged == true
     needs: [dotnet, sonar]
@@ -64,9 +60,8 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}               
-
-  # Deploy to multiple environments using matrix strategy
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}             
+      
   deploy:
     if: github.event.pull_request.merged == true
     needs: docker
