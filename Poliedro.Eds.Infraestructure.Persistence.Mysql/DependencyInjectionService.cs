@@ -117,7 +117,6 @@ public static class DependencyInjectionService
         services.AddScoped<IProductGetAllProduct, ProductGetAllProduct>();
         services.AddScoped<IProductGetByIdProduct, ProductGetByIdProduct>();
         services.AddScoped<IProductUpdateProduct, ProductUpdateProduct>();
-        services.AddScoped<IProductPriceUpdateService, ProductPriceUpdateService>();
         services.AddScoped<IProductCompartimentCreateProductCompartiment, ProductCompartimentCreateProductCompartiment>();
         services.AddScoped<IProductCompartimentGetAllProductCompartiment, ProductCompartimentGetAllProductCompartiment>();
         services.AddScoped<IProductCompartimentGetByIdProductCompartiment, ProductCompartimentGetByIdProductCompartiment>();
@@ -164,6 +163,7 @@ public static class DependencyInjectionService
         services.AddScoped<IHoseHistoryGetByIdHoseHistory, HoseHistoryGetByIdHoseHistory>();
         services.AddScoped<IHoseHistoryGetAllHoseHistory, HoseHistoryGetAllHoseHistory>();
         services.AddScoped<IShoppingCreateShopping, ShoppingCreateShopping>();
+        services.AddScoped<IShoppingTransactionalService, ShoppingTransactionalService>();
         services.AddScoped<IShoppingUpdateShopping, ShoppingUpdateShopping>();
         services.AddScoped<IShoppingGetByIdShopping, ShoppingGetByIdShopping>();
         services.AddScoped<IShoppingGetAllShopping, ShoppingGetAllShopping>();
