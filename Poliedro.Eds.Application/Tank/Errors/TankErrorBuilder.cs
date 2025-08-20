@@ -1,5 +1,5 @@
-﻿using Poliedro.Eds.Domain.Common.Results.Errors;
 using System.Net;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.Tank.Errors;
 
@@ -7,6 +7,7 @@ public class TankErrorBuilder : IError
 {
     public const string TANK_CREATION_ERROR = "TankCreationErrorException";
     public const string TANK_NOT_FOUND_ERROR = "TankNotFoundErrorException";
+
     public static Error TankCreationException() => Error.CreateInstance(
        TANK_CREATION_ERROR,
         "Failed to create Tank due to an internal error.",
@@ -18,6 +19,7 @@ public class TankErrorBuilder : IError
        TANK_UPDATE_ERROR,
        "Failed to update Tank due to an internal error.",
        HttpStatusCode.InternalServerError);
+
     public static Error TankNotFoundException(int id) => Error.CreateInstance(
       TANK_NOT_FOUND_ERROR,
        $"Tank with ID {id} was not found.",

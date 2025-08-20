@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Poliedro.Eds.Domain.HoseHistory.Entities;
 
@@ -13,7 +13,7 @@ public class HoseHistoryConfiguration
         builder.Property(x => x.IdHoseHistory).HasColumnName("id_hose_hose_history");
         builder.Property(x => x.IdHose).HasColumnName("id_hose");
         builder.Property(x => x.AccumulatedAmount).HasColumnName("accumulated_amount");
-        builder.Property(x => x.AccumulatedGallons).HasColumnName("accumulatd_gallons");
+        builder.Property(x => x.AccumulatedGallons).HasColumnName("accumulated_gallons");
         builder.Property(x => x.IdDispensers).HasColumnName("id_dispensers");
         builder.Property(x => x.Date).HasColumnName("date");
     }

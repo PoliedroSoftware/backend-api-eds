@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +25,7 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     /// <response code="200">Returns the list of client billing electronic records.</response>
     /// <response code="404">Returns when there are no client billing electronic records found.</response>
     /// <response code="500">Returns when there is an Internal Server Error.</response>
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DispenserTypeDto>>> GetAll([FromQuery] PaginationParams paginationParams)
     {
@@ -38,6 +37,7 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
     }
+
     [SwaggerOperation(Summary = "Get DispenserType")]
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(DispenserTypeDto))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
@@ -46,26 +46,22 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetDispenserTypeByIdQuery> validator)
+
+    public async Task<IResult> GetById([FromRoute] int id)
     {
-        var getDispenserTypeQuery = new GetDispenserTypeByIdQuery(Id: id);
+        var getDyspenserTypeQuery = new GetDispenserTypeByIdQuery(Id: id);
 
-        //var validationResult = await validator.ValidateAsync(getDispenserTypeQuery);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
-
-        var result = await mediator.Send(getDispenserTypeQuery);
+        var result = await mediator.Send(getDyspenserTypeQuery);
 
         return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
+
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
         );
     }
 
     [SwaggerOperation(
-        Summary = "Create new DispenserType")]
+    Summary = "Create new DispenserType")]
     [SwaggerResponse(StatusCodes.Status204NoContent, "The operation was successful.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
@@ -73,17 +69,13 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-            [FromBody] CreateDispenserTypeCommand createDispenserTypeCommand,
-            [FromServices] IValidator<CreateDispenserTypeRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateDispenserTypeCommand createDispenserTypeCommand)
 
     {
-            //var validationResult = await validator.ValidateAsync(createDispenserTypeCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createDispenserTypeCommand);
-            return result.Match(
-                 onSuccess => TypedResults.Created()
-             );
+        return result.Match(
+             onSuccess => TypedResults.Created()
+         );
     }
 
     [SwaggerOperation(Summary = "Update an existing DispenserType")]
@@ -94,15 +86,8 @@ public class DispenserTypeController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
- [FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand,
- [FromServices] IValidator<UpdateDispenserTypeCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateDispenserTypeCommand updateDispenserTypeCommand)
     {
-        //var validationResult = await validator.ValidateAsync(updateDispenserTypeCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
 
         var result = await mediator.Send(updateDispenserTypeCommand);
 

@@ -1,7 +1,9 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Api.Common.Extensions;
+using Poliedro.Eds.Application.Capacity.Commands.CreateCapacity;
 using Poliedro.Eds.Application.Common.Features;
 using Poliedro.Eds.Application.Provider.Commands.CreateProvider;
 using Poliedro.Eds.Application.Provider.Commands.UpdateProvider;
@@ -11,8 +13,6 @@ using Poliedro.Eds.Application.Provider.Queries.GellAllProvider;
 using Poliedro.Eds.Application.Provider.Queries.GetProviderById;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
-using Poliedro.Eds.Application.Capacity.Commands.CreateCapacity;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Poliedro.Eds.Api.Controllers.v1.Provider;
 
@@ -40,21 +40,15 @@ public class ProviderController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetProviderByIdQuery> validator)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
         var getProviderQuery = new GetProviderByIdQuery(Id: id);
-
-        //var validationResult = await validator.ValidateAsync(getProviderQuery);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
 
         var result = await mediator.Send(getProviderQuery);
 
         return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
         );
     }
 
@@ -67,12 +61,8 @@ public class ProviderController(IMediator mediator) : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-    public async Task<IResult> Create(
-        [FromBody] CreateProviderCommand createProviderCommand,
-        [FromServices] IValidator<CreateProviderRequestDto> validator)
+    public async Task<IResult> Create([FromBody] CreateProviderCommand createProviderCommand)
     {
-        //var validationResult = await validator.ValidateAsync(createProviderCommand.Request);
-        //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
         var result = await mediator.Send(createProviderCommand);
         return result.Match(onSuccess => TypedResults.Created());
     }
@@ -85,16 +75,8 @@ public class ProviderController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-    public async Task<IActionResult> Update(
-    [FromBody] UpdateProviderCommand updateProviderCommand,
-    [FromServices] IValidator<UpdateProviderCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateProviderCommand updateProviderCommand)
     {
-        //var validationResult = await validator.ValidateAsync(updateProviderCommand);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-        //}
-
         var result = await mediator.Send(updateProviderCommand);
 
         if (!result.IsSuccess)

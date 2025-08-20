@@ -1,4 +1,4 @@
-﻿
+
 namespace Poliedro.Eds.Application.Compartiment.Dtos;
 
 public record CompartimentDto(

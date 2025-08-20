@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 using StackExchange.Redis;
-using System.Text.Json;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Redis;
 
@@ -15,7 +14,10 @@ public class RedisCacheService : IRedisService
 
     public ILogger<BusinessGetAllService> Logger { get; }
 
-    public RedisCacheService(IOptions<RedisConfig> config, ILogger<BusinessGetAllService> logger)
+    public RedisCacheService(
+        IOptions<RedisConfig> config,
+        ILogger<BusinessGetAllService> logger
+       )
     {
         _redis = ConnectionMultiplexer.Connect(config.Value.ConnectionString);
         _db = _redis.GetDatabase();
@@ -106,6 +108,13 @@ public class RedisCacheService : IRedisService
             Console.WriteLine($"[Error] removing cache keys by prefix '{prefix}': {ex.Message}");
         }
     }
+
+    public async Task RemoveByPrefixAsync(IEnumerable<string> prefixes)
+    {
+        var tasks = prefixes.Select(prefix => RemoveByPrefixAsync(prefix));
+        await Task.WhenAll(tasks);
+    }
+
     public async Task<List<string>> GetKeysByPatternAsync(string pattern)
     {
         try
@@ -133,7 +142,7 @@ public class RedisCacheService : IRedisService
         var translations = await GetCacheAsync<Dictionary<string, string>>(cacheKey);
         if (translations != null && translations.ContainsKey(key))
         {
-            return translations[key];  
+            return translations[key];
         }
         return null;
     }

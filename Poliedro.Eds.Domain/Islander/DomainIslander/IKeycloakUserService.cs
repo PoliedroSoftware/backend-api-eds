@@ -1,4 +1,4 @@
-﻿
+
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Islander.Entities;
@@ -7,6 +7,6 @@ namespace Poliedro.Eds.Domain.Islander.DomainIslander
 {
     public interface IKeycloakUserService
     {
-        Task<Result<VoidResult, Error>> CreateUserAsync(IslanderEntity IslanderEntity, string plainPassword);
+        Task<Result<VoidResult, Error>> CreateUserAsync(IslanderEntity IslanderEntity, string plainPassword, string? nameClaimToken);
     }
 }

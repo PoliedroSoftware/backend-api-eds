@@ -1,10 +1,10 @@
-﻿using System.Text;
+using System.Text;
 
 public class LoggingMiddleware(RequestDelegate next, ILogger<LoggingMiddleware> logger)
 {
     public async Task InvokeAsync(HttpContext context)
     {
-       
+
         var requestLog = await FormatRequest(context.Request);
         var originalBodyStream = context.Response.Body;
         await using var responseBody = new MemoryStream();

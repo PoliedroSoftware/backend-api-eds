@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var data = await mediator.Send(new GellAllProductCompartimentQuery (new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+            var data = await mediator.Send(new GellAllProductCompartimentQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
             if (data is null)
             {
                 return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
@@ -39,21 +39,15 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetProductCompartimentByIdQuery> validator)
+        public async Task<IResult> GetById([FromRoute] int id)
         {
-            var getProductCompartimentQuery = new GetProductCompartimentByIdQuery(Id : id );
-
-            //var validationResult = await validator.ValidateAsync(getProductCompartimentQuery);
-
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
+            var getProductCompartimentQuery = new GetProductCompartimentByIdQuery(Id: id);
 
             var result = await mediator.Send(getProductCompartimentQuery);
 
             return result.Match(
-                onSuccess => TypedResults.Ok(result.Value)
+                onSuccess => TypedResults.Ok(result.Value),
+                onFailure => TypedResults.BadRequest(onFailure)
             );
         }
 
@@ -66,12 +60,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
 
-        public async Task<IResult> Create(
-            [FromBody] CreateProductCompartimentCommand createProductCompartimentCommand, 
-            [FromServices] IValidator<CreateProductCompartimentRequestDto> validator)
+        public async Task<IResult> Create([FromBody] CreateProductCompartimentCommand createProductCompartimentCommand)
         {
-            var validationResult = await validator.ValidateAsync(createProductCompartimentCommand.Request);
-            if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
             var result = await mediator.Send(createProductCompartimentCommand);
             return result.Match(onSuccess => TypedResults.Created());
         }
@@ -84,16 +74,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPut]
-        public async Task<IActionResult> Update(
-     [FromBody] UpdateProductCompartimentCommand updateProductCompartimentCommand,
-     [FromServices] IValidator<UpdateProductCompartimentCommand> validator)
+        public async Task<IActionResult> Update([FromBody] UpdateProductCompartimentCommand updateProductCompartimentCommand)
         {
-            var validationResult = await validator.ValidateAsync(updateProductCompartimentCommand);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            }
-
             var result = await mediator.Send(updateProductCompartimentCommand);
 
             if (!result.IsSuccess)

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,99 +15,82 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Poliedro.Eds.Api.Controllers.v1.Islender;
 
-    [Route("api/v1/eds-tank")]
-    [ApiController]
-    public class EdsTankController(IMediator mediator) : ControllerBase
-    {
+[Route("api/v1/eds-tank")]
+[ApiController]
+public class EdsTankController(IMediator mediator) : ControllerBase
+{
     [Authorize(Policy = "AdminOnly")]
     [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
+    public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
+    {
+        var data = await mediator.Send(new GellAllEdsTankQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+        if (data is null)
         {
-            var data = await mediator.Send(new GellAllEdsTankQuery (new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
-            if (data is null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
-            }
-            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
+            return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
         }
+        return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
+    }
 
-        [SwaggerOperation(Summary = "Get eds-tankt")]
-        [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(EdsTankDto))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "The specified EdsTank does not exist.", typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
+    [SwaggerOperation(Summary = "Get eds-tankt")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(EdsTankDto))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The specified EdsTank does not exist.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-        public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetEdsTankByIdQuery> validator)
-        {
-            var getEdsTankQuery = new GetEdsTankByIdQuery(Id : id );
+    public async Task<IResult> GetById([FromRoute] int id)
+    {
+        var getEdsTankQuery = new GetEdsTankByIdQuery(Id: id);
 
-            //var validationResult = await validator.ValidateAsync(getEdsTankQuery);
+        var result = await mediator.Send(getEdsTankQuery);
 
-            //if (!validationResult.IsValid)
-            //{
-            //    return TypedResults.BadRequest(validationResult.Errors);
-            //}
+        return result.Match(
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
+        );
+    }
 
-            var result = await mediator.Send(getEdsTankQuery);
-
-            return result.Match(
-                onSuccess => TypedResults.Ok(result.Value)
-            );
-        }
-
-        [SwaggerOperation(
-            Summary = "Create new eds-tankt")]
-        [SwaggerResponse(StatusCodes.Status201Created, "The operation was successful.")]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
+    [SwaggerOperation(
+        Summary = "Create new eds-tankt")]
+    [SwaggerResponse(StatusCodes.Status201Created, "The operation was successful.")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
 
-        public async Task<IResult> Create(
-            [FromBody] CreateEdsTankCommand createEdsTankCommand, 
-            [FromServices] IValidator<CreateEdsTankRequestDto> validator)
-        {
-            //var validationResult = await validator.ValidateAsync(createEdsTankCommand.Request);
-            //if (!validationResult.IsValid) return TypedResults.BadRequest(validationResult.Errors);
-            var result = await mediator.Send(createEdsTankCommand);
-            return result.Match(onSuccess => TypedResults.Created());
-        }
+    public async Task<IResult> Create([FromBody] CreateEdsTankCommand createEdsTankCommand)
+    {
+        var result = await mediator.Send(createEdsTankCommand);
+        return result.Match(onSuccess => TypedResults.Created());
+    }
 
-        [SwaggerOperation(Summary = "Update an existing eds-tankt")]
-        [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.")]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "The requested EdsTank was not found.", typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
+    [SwaggerOperation(Summary = "Update an existing eds-tankt")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The requested EdsTank was not found.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPut]
-        public async Task<IActionResult> Update(
-        [FromBody] UpdateEdsTankCommand updateEdsTankCommand,
-        [FromServices] IValidator<UpdateEdsTankCommand> validator)
+    public async Task<IActionResult> Update([FromBody] UpdateEdsTankCommand updateEdsTankCommand)
+    {
+
+        var result = await mediator.Send(updateEdsTankCommand);
+
+        if (!result.IsSuccess)
         {
-            //var validationResult = await validator.ValidateAsync(updateEdsTankCommand);
-            //if (!validationResult.IsValid)
-            //{
-            //    return BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, validationResult.Errors));
-            //}
-
-            var result = await mediator.Send(updateEdsTankCommand);
-
-            if (!result.IsSuccess)
+            if (result.Error is EdsTankErrorBuilder)
             {
-                if (result.Error is EdsTankErrorBuilder)
-                {
-                    return NotFound(ResponseApiService.Response(StatusCodes.Status404NotFound));
-                }
-
-                return StatusCode(StatusCodes.Status500InternalServerError, ResponseApiService.Response(StatusCodes.Status500InternalServerError, result.Error));
+                return NotFound(ResponseApiService.Response(StatusCodes.Status404NotFound));
             }
 
-            return NoContent();
+            return StatusCode(StatusCodes.Status500InternalServerError, ResponseApiService.Response(StatusCodes.Status500InternalServerError, result.Error));
         }
+
+        return NoContent();
     }
+}
 
 

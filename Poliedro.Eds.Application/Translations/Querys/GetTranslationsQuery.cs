@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Poliedro.Eds.Application.Translations.Dtos;
 
 namespace Poliedro.Eds.Application.Translations.Querys;

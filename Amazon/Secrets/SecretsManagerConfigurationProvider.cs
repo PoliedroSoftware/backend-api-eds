@@ -1,6 +1,6 @@
-﻿using Amazon.SecretsManager;
-using Microsoft.Extensions.Configuration;
 using System.Text.Json;
+using Amazon.SecretsManager;
+using Microsoft.Extensions.Configuration;
 
 namespace Amazon.Secrets;
 

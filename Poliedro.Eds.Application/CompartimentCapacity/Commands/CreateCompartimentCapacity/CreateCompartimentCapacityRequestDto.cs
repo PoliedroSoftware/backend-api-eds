@@ -1,3 +1,3 @@
-﻿namespace Poliedro.Eds.Application.CompartimentCapacity.Commands.CreateCompartimentCapacity;
+namespace Poliedro.Eds.Application.CompartimentCapacity.Commands.CreateCompartimentCapacity;
 
-public record CreateCompartimentCapacityRequestDto(int IdCompartiment, int IdCapacity,byte Default);
+public record CreateCompartimentCapacityRequestDto(int IdCompartiment, int IdCapacity, byte Default);

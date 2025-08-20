@@ -481,3 +481,5 @@ global.json
 /.sonarqube/**
 /sonarqubecoverage/*
 *.http
+.env
+/Poliedro.Eds.Api/Properties/launchSettings.json

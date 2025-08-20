@@ -1,3 +1,3 @@
-﻿namespace Poliedro.Eds.Application.Business.Commands.CreateBusiness;
+namespace Poliedro.Eds.Application.Business.Commands.CreateBusiness;
 
-public record CreateBusinessRequestDto(string Name);
+public record CreateBusinessRequestDto(string Name, string Context);

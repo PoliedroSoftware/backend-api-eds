@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +7,7 @@ using Poliedro.Eds.Application.Common.Features;
 using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.Court.Commands.UpdateCourt;
 using Poliedro.Eds.Application.Court.Dtos;
+using Poliedro.Eds.Application.Court.Dtos.View;
 using Poliedro.Eds.Application.Court.Errors;
 using Poliedro.Eds.Application.Court.Queris.GetCourtById;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
@@ -23,26 +24,24 @@ public class CourtController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(CourtDto))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<IResult> GetById([FromRoute] int id, [FromServices] IValidator<GetCourtByIdQuery> validator)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
         var getCourtQuery = new GetCourtByIdQuery(Id: id);
-
-        //var validationResult = await validator.ValidateAsync(getCourtQuery);
-
-        //if (!validationResult.IsValid)
-        //{
-        //    return TypedResults.BadRequest(validationResult.Errors);
-        //}
 
         var result = await mediator.Send(getCourtQuery);
 
         return result.Match(
-            onSuccess => TypedResults.Ok(result.Value)
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
         );
     }
 
     [SwaggerOperation(Summary = "Create new Court")]
-    [Authorize(Policy = "AdminOnly")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, "The operation was successful.")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpPost]
     public async Task<IResult> Create(
         [FromBody] CreateCourtCommand createCourtCommand)
@@ -81,19 +80,27 @@ public class CourtController(IMediator mediator) : ControllerBase
 
     [SwaggerOperation(Summary = "Get all Courts")]
     [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.", typeof(IEnumerable<CourtListResponseDto>))]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOrIslander")]
     [HttpGet]
-    public async Task<IEnumerable<CourtListResponseDto>> GetAll([FromQuery] PaginationParams paginationParams, [FromServices] IValidator<GetCourtsListQuery> validator)
+    public async Task<IResult> GetAll(
+    [FromQuery] PaginationParams paginationParams,
+    [FromServices] IValidator<GetCourtsListQuery> validator)
     {
-        var getCourtsQuery = new GetCourtsListQuery(paginationParams);
+        try
+        {
+            var query = new GetCourtsListQuery(paginationParams);
 
-        //var validationResult = await validator.ValidateAsync(getCourtsQuery);
+            var validation = await validator.ValidateAsync(query);
+            if (!validation.IsValid)
+                return TypedResults.BadRequest(validation.Errors);
 
-        //if (!validationResult.IsValid)
-        //{
-        //    return [];
-        //}
-
-        return await mediator.Send(getCourtsQuery);
+            var result = await mediator.Send(query);
+            return TypedResults.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return TypedResults.Problem($"Error interno del servidor: {ex.Message}");
+        }
     }
+
 }

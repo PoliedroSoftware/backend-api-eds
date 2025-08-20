@@ -1,6 +1,9 @@
-﻿namespace Poliedro.Eds.Domain.Court.Entities;
+using Poliedro.Eds.Domain.Audit.Entities;
+using Poliedro.Eds.Domain.Inventory.Entities;
 
-public class CourtEntity
+namespace Poliedro.Eds.Domain.Court.Entities;
+
+public class CourtEntity : AuditableEntity
 {
     public int IdCourt { get; set; }
     public int IdIslander { get; set; }
@@ -13,7 +16,8 @@ public class CourtEntity
     public string? Descripcion { get; set; }
     public double Distintic { get; set; }
     public IEnumerable<CourtDispenserEntity> CourtDispensers { get; set; }
-    public IEnumerable<DocumentEntity> CourtDocuments { get; set; }
-    public IEnumerable<CourtExpenditureEntity> CourtExpenditures { get; set; }
+    public IEnumerable<DocumentEntity?>? CourtDocuments { get; set; }
+    public IEnumerable<CourtExpenditureEntity?>? CourtExpenditures { get; set; }
     public IEnumerable<CourtTypeOfCollectionEntity> CourtTypeOfCollections { get; set; }
+    public InventoryEntity CourtInventory { get; set; }
 }

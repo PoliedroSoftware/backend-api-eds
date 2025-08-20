@@ -1,3 +1,4 @@
+using System.Reflection;
 using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,7 @@ using Poliedro.Eds.Application.Compartiment.AutoMappers;
 using Poliedro.Eds.Application.CompartimentCapacity.AutoMappers;
 using Poliedro.Eds.Application.Court.AutoMappers;
 using Poliedro.Eds.Application.CourtDispensersInventory.AutoMappers;
+using Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;
 using Poliedro.Eds.Application.Dispensers.AutoMappers;
 using Poliedro.Eds.Application.DispenserType.AutoMappers;
 using Poliedro.Eds.Application.Eds.AutoMappers;
@@ -18,6 +20,7 @@ using Poliedro.Eds.Application.Hose.AutoMappers;
 using Poliedro.Eds.Application.HoseHistory.AutoMappers;
 using Poliedro.Eds.Application.Island.AutoMappers;
 using Poliedro.Eds.Application.Islander.AutoMappers;
+using Poliedro.Eds.Application.Phone.AutoMappers;
 using Poliedro.Eds.Application.Product.AutoMappers;
 using Poliedro.Eds.Application.ProductCompartiment.AutoMappers;
 using Poliedro.Eds.Application.ProductType.AutoMappers;
@@ -27,8 +30,6 @@ using Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProductInventory.AutoMappers;
 using Poliedro.Eds.Application.Tank.AutoMappers;
 using Poliedro.Eds.Application.TypeOfCollection.AutoMappers;
-using Poliedro.Eds.Application.DashboardPowerBI.AutoMappers ;
-using System.Reflection;
 
 namespace Poliedro.Eds.Application;
 
@@ -41,6 +42,7 @@ public static class DependencyInjectionService
         {
             config.AddProfile(new CourtMapper());
             config.AddProfile(new BusinessMapper());
+            config.AddProfile(new PhoneMapper());
             config.AddProfile(new PaginationBusinessMapper());
             config.AddProfile(new CapacityMapper());
             config.AddProfile(new PaginationCapacityMapper());
@@ -98,7 +100,7 @@ public static class DependencyInjectionService
             typeof(IPipelineBehavior<,>),
             typeof(ValidationBehaviour<,>)
         );
-        
+
         return services;
     }
 }

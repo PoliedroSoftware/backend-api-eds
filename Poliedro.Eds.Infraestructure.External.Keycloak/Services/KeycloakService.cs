@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -21,7 +21,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
             _configuration = configuration;
         }
 
-        public async Task<Result<VoidResult, Error>> CreateUserAsync(IslanderEntity islander, string plainPassword)
+        public async Task<Result<VoidResult, Error>> CreateUserAsync(IslanderEntity islander, string plainPassword, string? nameClaimToken)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 
 
                 var location = response.Headers.Location?.ToString();
-               
+
                 var userId = location?.Split('/').Last();
 
                 var resetPasswordPayload = new
@@ -92,22 +92,59 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
                 {
                     var pwdError = await resetPasswordResponse.Content.ReadAsStringAsync();
                     return Error.Conflict("Keycloak", $"Error setting user password: {pwdError}");
+
                 }
 
 
                 var groupId = _configuration["Keycloak:DefaultGroupId"];
 
-                var groupUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/users/{userId}/groups/{groupId}";
+                var subgroupsUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/groups/{groupId}/children";
+                var groupResponse = await _httpClient.GetAsync(subgroupsUrl);
 
-                var addGroupResponse = await _httpClient.PutAsync(groupUrl, null);
-
-                if (!addGroupResponse.IsSuccessStatusCode)
+                if (!groupResponse.IsSuccessStatusCode)
                 {
-                    var groupError = await addGroupResponse.Content.ReadAsStringAsync();
-                    return Error.Conflict("Keycloak", $"Error adding user to group: {groupError}");
+                    var errorText = await groupResponse.Content.ReadAsStringAsync();
+                    return Error.Conflict("Keycloak", $"Error getting subgroups: {errorText}");
                 }
 
+                var groupContent = await groupResponse.Content.ReadAsStringAsync();
+                using var jsonDoc = JsonDocument.Parse(groupContent);
 
+
+                var subGroups = jsonDoc.RootElement.EnumerateArray();
+
+                string? subGroupId = null;
+
+                string Normalize(string? input) =>
+                    string.Join(" ", (input ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries));
+
+
+                foreach (var subgroup in subGroups)
+                {
+                    if (Normalize(subgroup.GetProperty("name").GetString()) == Normalize(nameClaimToken))
+                    {
+                        subGroupId = subgroup.GetProperty("id").GetString();
+                        break;
+                    }
+                }
+
+                if (subGroupId == null)
+                {
+                    Console.WriteLine("Keycloak", $"No se encontró subgrupo con nombre: {nameClaimToken}");
+
+                    return Error.Conflict("Keycloak", $"No se encontró subgrupo con nombre: {nameClaimToken}");
+                }
+
+                var assignUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/users/{userId}/groups/{subGroupId}";
+                var assignResponse = await _httpClient.PutAsync(assignUrl, null);
+
+                if (!assignResponse.IsSuccessStatusCode)
+                {
+                    var errorText = await assignResponse.Content.ReadAsStringAsync();
+                    Console.WriteLine(errorText);
+
+                    return Error.Conflict("Keycloak", $"Error assigning user to sub-group: {errorText}");
+                }
 
                 return VoidResult.Instance;
             }
