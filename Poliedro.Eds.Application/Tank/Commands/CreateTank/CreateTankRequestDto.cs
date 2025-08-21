@@ -4,6 +4,6 @@ public record CreateTankRequestDto(
     string Number,
     int Compartment,
     double Ability,
-    double Stock);
+    double? Stock);
 
 
