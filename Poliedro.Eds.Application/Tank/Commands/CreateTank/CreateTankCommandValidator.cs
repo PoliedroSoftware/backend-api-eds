@@ -13,8 +13,8 @@ public class CreateTankCommandValidator : AbstractValidator<CreateTankRequestDto
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("NumberNotEmpty").GetAwaiter().GetResult());
 
         RuleFor(x => x.Compartment)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("CompartmentNotNull").GetAwaiter().GetResult())
-            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("CompartmentGreaterThan").GetAwaiter().GetResult());
+            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("CompartmentNotNull").GetAwaiter().GetResult());
+
 
         RuleFor(x => x.Ability)
             .NotNull().WithMessage(redisService.GetValueFromCacheAsync("AbilityNotNull").GetAwaiter().GetResult())
