@@ -12,9 +12,7 @@ public class GetAllHoseQueryHandler
     : IRequestHandler<GellAllHoseQuery, IEnumerable<HoseDto>>
 {
     public async Task<IEnumerable<HoseDto>> Handle(GellAllHoseQuery request, CancellationToken cancellationToken)
-    {
-        var result = await hoseDomainHose.GetAllAsync(request.PaginationParams);
-        return mapper.Map<List<HoseDto>>(result);
-    }
+        => mapper.Map<List<HoseDto>>(await hoseDomainHose.GetAllAsync(request.PaginationParams));
+    
 }
 

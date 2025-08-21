@@ -17,5 +17,6 @@ public class HoseConfiguration
         builder.Property(x => x.AccumulatedGallons).HasColumnName("accumulated_gallons");
         builder.Property(x => x.IdDispensers).HasColumnName("id_dispensers");
         builder.Property(x => x.IdProductType).HasColumnName("id_product_type");
+        builder.Property(x => x.IdCompartiment).HasColumnName("id_compartiment");
     }
 }

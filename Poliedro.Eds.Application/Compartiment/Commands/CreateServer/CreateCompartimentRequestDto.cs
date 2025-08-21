@@ -6,6 +6,8 @@ public record CreateCompartimentRequestDto(
     double Operative,
     double? Stock,
     double Height,
-    int IdTank);
+    int IdTank,
+    int IdProduct
+);
 
 

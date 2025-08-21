@@ -17,5 +17,6 @@ public class CompartimentConfiguration
         builder.Property(x => x.Stock).HasColumnName("stock");
         builder.Property(x => x.Height).HasColumnName("height");
         builder.Property(x => x.IdTank).HasColumnName("id_tank");
+        builder.Property(x => x.IdProduct).HasColumnName("id_product");
     }
 }

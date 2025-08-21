@@ -124,7 +124,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     {
         new ProductTypeConfiguration(modelBuilder.Entity<ProductTypeEntity>());
         new ProductConfiguration(modelBuilder.Entity<ProductEntity>());
-        new ProductCompartimentConfiguration(modelBuilder.Entity<ProductCompartimentEntity>());
+       
         new EdsTankConfiguration(modelBuilder.Entity<EdsTankEntity>());
         new ExpendituresConfiguration(modelBuilder.Entity<ExpendituresEntity>());
         new CompartimentCapacityConfiguration(modelBuilder.Entity<CompartimentCapacityEntity>());

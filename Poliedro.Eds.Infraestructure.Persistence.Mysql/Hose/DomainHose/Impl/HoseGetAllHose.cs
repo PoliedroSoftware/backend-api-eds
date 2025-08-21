@@ -34,7 +34,8 @@ public class HoseGetAllHose(
                     join productType in context.ProductTypes on hose.IdProductType equals productType.IdProductType
                     join eds in context.Eds on dispenser.EdsId equals eds.IdEds
                     join product in context.Product on hose.IdProductType equals product.IdProductType
-                    group new { hose, dispenser, productType, eds, product } by hose.IdHose into g
+                    join compartiment in context.Compartiment on hose.IdCompartiment equals compartiment.IdCompartment
+                    group new { hose, dispenser, productType, eds, product, compartiment } by hose.IdHose into g
                     select new HoseDto(
                         g.First().hose.IdHose,
                         g.First().hose.Number,
@@ -43,6 +44,7 @@ public class HoseGetAllHose(
                         g.First().hose.AccumulatedAmount,
                         g.First().hose.IdProductType,
                         g.First().product.Price,
+                        g.First().hose.IdCompartiment,
                         g.First().dispenser,
                         g.First().productType,
                         g.First().eds

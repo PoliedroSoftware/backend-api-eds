@@ -8,5 +8,6 @@ public record CompartimentDto(
     double Operative,
     double Stock,
     double Height,
-    int IdTank
+    int IdTank,
+    int IdProduct
     );

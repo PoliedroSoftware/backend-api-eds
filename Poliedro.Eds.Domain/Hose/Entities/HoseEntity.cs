@@ -12,4 +12,5 @@ public class HoseEntity : AuditableEntity
     public double AccumulatedGallons { get; set; }
     public double AccumulatedAmount { get; set; }
     public int IdProductType { get; set; }
+    public int IdCompartiment { get; set; }
 }
