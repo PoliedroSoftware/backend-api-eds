@@ -20,9 +20,5 @@ public class CreateTankCommandValidator : AbstractValidator<CreateTankRequestDto
             .NotNull().WithMessage(redisService.GetValueFromCacheAsync("AbilityNotNull").GetAwaiter().GetResult())
             .GreaterThan(0.0).WithMessage(redisService.GetValueFromCacheAsync("AbilityGreaterThan").GetAwaiter().GetResult());
 
-        RuleFor(x => x.Stock)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("StockNotNull").GetAwaiter().GetResult())
-            .GreaterThan(0.0).WithMessage(redisService.GetValueFromCacheAsync("StockGreaterThan").GetAwaiter().GetResult());
-
     }
 }
