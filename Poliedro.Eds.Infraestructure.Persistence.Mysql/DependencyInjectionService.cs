@@ -18,6 +18,7 @@ using Poliedro.Eds.Domain.DashboardPowerBI.ProviderView.DomainProviderView;
 using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.DomainShoppingProductView;
 using Poliedro.Eds.Domain.DashboardPowerBI.TypeOfCollectionView.DomainTypeOfCollectionView;
 using Poliedro.Eds.Domain.Dispensers.DomainDispensers;
+using Poliedro.Eds.Domain.OpenAI.DomainOpenAI;
 using Poliedro.Eds.Domain.DispenserType.DomainDispenserType;
 using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.EdsTank.DomainEdsTank;
@@ -205,6 +206,12 @@ public static class DependencyInjectionService
         services.AddScoped<IShoppingProductGetAllShoppingProductView, ShoppingProductGetAllShoppingProductView>();
         services.AddScoped<ITypeOfCollectionViewGetAllTypeOfCollection, TypeOfCollectionViewGetAllTypeOfCollection>();
         services.AddTransient<IBusinessUpdateService, BusinessUpdateService>();
+        
+        // OpenAI Services
+        services.AddScoped<IOpenAIChatService, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.DomainOpenAI.Impl.OpenAIChatService>();
+        services.AddScoped<IOpenAIRequestRepository, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Repositories.OpenAIRequestRepository>();
+        services.AddScoped<IOpenAIResponseRepository, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Repositories.OpenAIResponseRepository>();
+        
         return services;
     }
 }
