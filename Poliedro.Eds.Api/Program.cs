@@ -261,7 +261,7 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<GetCourtsListQueryValidator>();
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly);
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<FileUploadOperationFilter>();
