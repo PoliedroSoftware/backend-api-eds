@@ -75,6 +75,18 @@ builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
 
 builder.Services.AddScoped<IValidator<UpdateBusinessCommand>, UpdateBusinessCommandValidator>();
 
+// Configure OpenAI
+builder.Services.AddScoped(provider =>
+{
+    var apiKey = builder.Configuration["OpenAI:ApiKey"] ?? 
+                 Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+    
+    if (string.IsNullOrWhiteSpace(apiKey))
+        throw new InvalidOperationException("OpenAI API key is not configured. Set OpenAI:ApiKey in configuration or OPENAI_API_KEY environment variable.");
+    
+    return new OpenAI.OpenAIClient(apiKey);
+});
+
 var httpContextAccessor = new HttpContextAccessor();
 var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
 var currentUser = httpContextAccessor.HttpContext?.Items["preferred_username"]?.ToString();

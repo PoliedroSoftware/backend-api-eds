@@ -34,8 +34,10 @@ using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 using Poliedro.Eds.Domain.ShoppingProductInventory.Entities;
 using Poliedro.Eds.Domain.Tank.Entities;
 using Poliedro.Eds.Domain.TypeOfCollection.Entities;
+using Poliedro.Eds.Domain.OpenAI.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Configuration;
 
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
@@ -114,6 +116,10 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<TypeOfCollectionViewEntity> TypeOfCollectionView { get; set; }
 
+    public DbSet<OpenAIRequestEntity> OpenAIRequest { get; set; }
+
+    public DbSet<OpenAIResponseEntity> OpenAIResponse { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -162,5 +168,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new CompartimentViewConfiguration(modelBuilder.Entity<CompartimentViewEntity>());
         new TypeOfCollectionViewConfiguration(modelBuilder.Entity<TypeOfCollectionViewEntity>());
         new ShoppingProductViewConfiguration(modelBuilder.Entity<ShoppingProductViewEntity>());
+        new OpenAIRequestConfiguration(modelBuilder.Entity<OpenAIRequestEntity>());
+        new OpenAIResponseConfiguration(modelBuilder.Entity<OpenAIResponseEntity>());
     }
 }
