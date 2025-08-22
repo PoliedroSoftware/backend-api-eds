@@ -1,5 +1,8 @@
 name: Build, Test, Deploy to ECS
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
