@@ -1,5 +1,8 @@
 name: Build, Test, Deploy to ECS
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -62,22 +65,12 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}             
       
-  deploy:
+  deploy-dev:
     if: github.event.pull_request.merged == true
     needs: docker
-    strategy:
-      matrix:
-        environment: [dev, qa]
-        include:
-          - environment: dev
-            service_secret: AWS_ECS_SERVICE
-            task_definition_secret: TASK_DEFINITION_ARN
-          - environment: qa
-            service_secret: AWS_ECS_SERVICE_EDS_QA
-            task_definition_secret: TASK_DEFINITION_ARN_EDS_QA
     uses: ./.github/workflows/reusable-aws-deploy.yml
     with:
-      environment: ${{ matrix.environment }}
+      environment: dev
       aws-region: ${{ vars.AWS_REGION || 'us-east-2' }}
       wait-for-deployment: true
       deployment-timeout: '10'
@@ -85,5 +78,21 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ECS_CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
-      AWS_ECS_SERVICE: ${{ secrets[matrix.service_secret] }}
-      TASK_DEFINITION_ARN: ${{ secrets[matrix.task_definition_secret] }}        
+      AWS_ECS_SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
+      TASK_DEFINITION_ARN: ${{ secrets.TASK_DEFINITION_ARN }}
+
+  deploy-qa:
+    if: github.event.pull_request.merged == true
+    needs: docker
+    uses: ./.github/workflows/reusable-aws-deploy.yml
+    with:
+      environment: qa
+      aws-region: ${{ vars.AWS_REGION || 'us-east-2' }}
+      wait-for-deployment: true
+      deployment-timeout: '10'
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ECS_CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
+      AWS_ECS_SERVICE: ${{ secrets.AWS_ECS_SERVICE_EDS_QA }}
+      TASK_DEFINITION_ARN: ${{ secrets.TASK_DEFINITION_ARN_EDS_QA }}
