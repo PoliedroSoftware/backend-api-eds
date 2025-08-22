@@ -5,6 +5,9 @@ using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
 using Poliedro.Eds.Domain.SendMessage;
+using Poliedro.Eds.Domain.ProductType.DomainServices;
+using Poliedro.Eds.Domain.Product.DomainServices;
+using Poliedro.Eds.Domain.Eds.DomainEds;
 
 public class SendWhatsAppMessageCommandHandler(
     ISendMessage sendMessage,
@@ -13,17 +16,22 @@ public class SendWhatsAppMessageCommandHandler(
     IIslanderGetAllIslander getIsleros,
     IGetHoseNumber getHose,
     IGetDispenserNumber getdispenserNumber,
-    IPhoneGetAllService getPhone
+    IGetProductTypeName getProductName,
+    IPhoneGetAllService getPhone,
+    IGetProductCostPrice getProductCostPrice,
+    IGetEdsName getEdsName
     ) : IRequestHandler<SendWhatsAppMessageCommand, Unit>
 {
     public async Task<Unit> Handle(SendWhatsAppMessageCommand request, CancellationToken cancellationToken)
     {
         var court = request.Court;
 
-        // Obtener todos los números de teléfono usando el servicio IPhoneGetAllService
+        // Obtener el nombre de la EDS
+        var edsName = await getEdsName.GetEdsNameAsync(court.IdEds);
+
+        // Obtener todos los números de teléfono
         var phoneNumbers = await getPhone.GetAllAsync(new PaginationParams { PageNumber = 1, PageSize = 1000 });
 
-        // Convertir los números de teléfono en una lista de strings
         var phoneNumbersList = phoneNumbers.Select(p => p.Number).ToList();
 
         // Gastos
@@ -49,8 +57,8 @@ public class SendWhatsAppMessageCommandHandler(
 
         // Sumar solo los montos con el método de pago "Efectivo"
         var sumEfectivo = court.CourtTypeOfCollections?
-            .Where(p => getPaymentMethodName.GetPaymentMethodNameAsync(p.IdTypeOfCollection).Result == "Efectivo") // Filtrar por "Efectivo"
-            .Sum(p => p.Amount) ?? 0;
+            .Where(p => string.Equals(getPaymentMethodName.GetPaymentMethodNameAsync(p.IdTypeOfCollection).Result,"Efectivo",StringComparison.OrdinalIgnoreCase))
+            .Sum(p => p.Amount- totalExpenditures) ?? 0;
 
         var totalVentas = court.CourtTypeOfCollections?.Sum(p => p.Amount) ?? 0;
 
@@ -62,19 +70,28 @@ public class SendWhatsAppMessageCommandHandler(
         var isleroName = islero?.Name ?? "Desconocido";
 
         //Mangueras y Dispensadores
-
-        // Agrupar por DispensadorId, luego construir el mensaje agrupado
         var hosesGrouped = await Task.WhenAll(
             court.CourtDispensers.Select(async d =>
             {
                 var hoseNumber = await getHose.GetHoseNumberAsync(d.IdHose);
                 var idDispenser = await getdispenserNumber.GetDispenserNumberAsync(d.IdHose);
+                var productName = await getProductName.GetProductTypeNameAsync(d.IdProduct);
+                var costPrice = await getProductCostPrice.GetProductCostPriceAsync(d.IdProduct) ?? 0;
+                var salesPrice = d.AmountDifferenceResult / d.GallonsDifferenceResult; // Precio de venta por galón
+                var profitPerGallon = salesPrice - costPrice;
+                var totalProfit = profitPerGallon * d.GallonsDifferenceResult;
+
                 return new
                 {
                     Dispenser = idDispenser,
                     Hose = hoseNumber,
                     Amount = d.AmountDifferenceResult,
-                    Gallons = d.GallonsDifferenceResult
+                    Gallons = d.GallonsDifferenceResult,
+                    ProductName = productName,
+                    ProfitPerGallon = profitPerGallon,
+                    TotalProfit = totalProfit,
+                    CostPrice = costPrice,
+                    SalesPrice = salesPrice
                 };
             })
         );
@@ -92,9 +109,13 @@ public class SendWhatsAppMessageCommandHandler(
                 .Select(h =>
                     $"""
 
-            🧯 Manguera: {h.Hose}
+            🧯 Manguera {h.Hose} - {h.ProductName}
             💵 Venta En Dinero: ${h.Amount:N2}
                 Venta En Galones: {h.Gallons:N2} gal
+                Precio Costo: ${h.CostPrice:N2}/gal
+                Precio Venta: ${h.SalesPrice:N2}/gal
+                Utilidad por Galón: ${h.ProfitPerGallon:N2}
+                Utilidad Total: ${h.TotalProfit:N2}
             """));
 
             return $"""
@@ -104,11 +125,12 @@ public class SendWhatsAppMessageCommandHandler(
     """;
         }));
 
+        var totalProfit = hosesGrouped.Sum(h => h.TotalProfit);
         var totalGallons = court.CourtDispensers?.Sum(d => d.GallonsDifferenceResult) ?? 0;
 
         // Construir el mensaje final
         var message = $"""
-                📋 Corte Finalizado
+                📋 Corte {edsName} Finalizado
 
                 🧑‍🔧 Islero: {isleroName}
 
@@ -120,6 +142,7 @@ public class SendWhatsAppMessageCommandHandler(
 
                 ⛽ Total Galones Vendidos: {totalGallons:N2}
                 💰 Total Ventas: ${totalVentas:N2}
+                💎 Utilidad Total: ${totalProfit:N2}
 
                 Gastos Detallados:
                 {ExpenseSummary}

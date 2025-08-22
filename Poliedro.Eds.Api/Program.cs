@@ -29,17 +29,20 @@ using Poliedro.Eds.Application.Translations.Handle;
 using Poliedro.Eds.Domain.Business.DomaianServices.Create;
 using Poliedro.Eds.Domain.Business.Extensions;
 using Poliedro.Eds.Domain.Court.DomainService;
+using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.SendMessage;
 using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
+using Poliedro.Eds.Domain.ProductType.DomainServices;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Eds.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 using Poliedro.External.HealthCheck.Tolgee;
 using Poliedro.External.HealthCheck.WhatsApp;
@@ -47,6 +50,8 @@ using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
 using WorkerKeycloackService;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
+using Poliedro.Eds.Domain.Product.DomainServices;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -215,7 +220,9 @@ builder.Services.AddScoped<IGetExpenditureName, GetIdAuxService>();
 builder.Services.AddScoped<IGetPaymentMethodName, GetIdAuxService>();
 builder.Services.AddScoped<IGetHoseNumber, GetIdAuxService>();
 builder.Services.AddScoped<IGetDispenserNumber, GetIdAuxService>();
-
+builder.Services.AddScoped<IGetProductTypeName, GetProductTypeService>();
+builder.Services.AddScoped<IGetProductCostPrice, GetProductCostPriceService>();
+builder.Services.AddScoped<IGetEdsName, GetEdsNameService>();
 builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompartimentGetByCompartmentId>();
 
 builder.Services.AddScoped<ICourtListDomainService, CourtListService>();

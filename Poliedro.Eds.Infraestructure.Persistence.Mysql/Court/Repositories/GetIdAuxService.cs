@@ -86,9 +86,14 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
     public async Task<int> GetDispenserNumberAsync(int id)
     {
         using var context = dbContextFactory.CreateDbContext();
-        return await context.Hose
+        var idDispenser = await context.Hose
             .Where(d => d.IdHose == id)
             .Select(d => d.IdDispensers)
             .FirstOrDefaultAsync();
+        return await context.Dispensers
+            .Where(d => d.Id == idDispenser)
+            .Select(d => d.Number)
+            .FirstOrDefaultAsync();
+        
     }
 }
