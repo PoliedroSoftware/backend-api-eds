@@ -19,27 +19,27 @@ public class CreateShoppingProductCommandValidator : AbstractValidator<CreateSho
         _compartimentService = compartimentService;
         _productCompartimentService = productCompartimentService;
 
-        RuleFor(x => x)
-            .MustAsync(async (dto, cancellation) =>
-            {
-                var compartimentResult = await _compartimentService.GetByIdAsync(dto.IdCompartment);
-                if (!compartimentResult.IsSuccess || compartimentResult.Value == null)
-                    return false;
+        //RuleFor(x => x)
+        //    .MustAsync(async (dto, cancellation) =>
+        //    {
+        //        var compartimentResult = await _compartimentService.GetByIdAsync(dto.IdCompartment);
+        //        if (!compartimentResult.IsSuccess || compartimentResult.Value == null)
+        //            return false;
 
-                var compartiment = compartimentResult.Value;
-                return dto.Quantity + compartiment.Stock < compartiment.Operative;
-            })
-            .WithMessage((dto, context) =>
-            {
-                var compartimentResult = _compartimentService.GetByIdAsync(dto.IdCompartment).Result;
-                if (compartimentResult.IsSuccess && compartimentResult.Value != null)
-                {
-                    var compartiment = compartimentResult.Value;
-                    var suma = dto.Quantity + compartiment.Stock;
-                    return $"Hay {compartiment.Stock} gls en el Tanque, esta compra de {dto.Quantity} gls supera la capacidad operativa del Tanque ({compartiment.Operative} gls.)";
-                }
-                return "La suma de la compra más el stock actual supera la capacidad operativa del compartimento.";
-            });
+        //        var compartiment = compartimentResult.Value;
+        //        return dto.Quantity + compartiment.Stock < compartiment.Operative;
+        //    })
+        //    .WithMessage((dto, context) =>
+        //    {
+        //        var compartimentResult = _compartimentService.GetByIdAsync(dto.IdCompartment).Result;
+        //        if (compartimentResult.IsSuccess && compartimentResult.Value != null)
+        //        {
+        //            var compartiment = compartimentResult.Value;
+        //            var suma = dto.Quantity + compartiment.Stock;
+        //            return $"Hay {compartiment.Stock} gls en el Tanque, esta compra de {dto.Quantity} gls supera la capacidad operativa del Tanque ({compartiment.Operative} gls.)";
+        //        }
+        //        return "La suma de la compra más el stock actual supera la capacidad operativa del compartimento.";
+        //    });
 
         RuleFor(x => x)
             .MustAsync(async (dto, cancellation) =>
