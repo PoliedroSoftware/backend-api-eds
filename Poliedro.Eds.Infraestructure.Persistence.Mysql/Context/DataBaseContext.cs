@@ -38,6 +38,7 @@ using Poliedro.Eds.Domain.OpenAI.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Configuration;
+using Poliedro.Eds.Domain.StrongBox.Entities;
 
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
@@ -170,5 +171,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new ShoppingProductViewConfiguration(modelBuilder.Entity<ShoppingProductViewEntity>());
         new OpenAIRequestConfiguration(modelBuilder.Entity<OpenAIRequestEntity>());
         new OpenAIResponseConfiguration(modelBuilder.Entity<OpenAIResponseEntity>());
+        new StrongBoxConfiguration(modelBuilder.Entity<StrongBoxEntity>());
     }
 }

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Poliedro.External.WhatsApp.SendMessage;
 using Poliedro.Eds.Api;
 using Poliedro.Eds.Api.Common.Configurations;
 using Poliedro.Eds.Api.Middlelware.aws;
@@ -24,6 +23,9 @@ using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
+using Poliedro.Eds.Application.StrongBox.AutoMapper;
+using Poliedro.Eds.Application.StrongBox.Commands;
+using Poliedro.Eds.Application.StrongBox.Validation;
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
 using Poliedro.Eds.Domain.Business.DomaianServices.Create;
@@ -32,8 +34,10 @@ using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
-using Poliedro.Eds.Domain.SendMessage;
 using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
+using Poliedro.Eds.Domain.SendMessage;
+using Poliedro.Eds.Domain.StrongBox.Repositories;
+using Poliedro.Eds.Domain.StrongBox.Services;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
@@ -41,12 +45,14 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Imp
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.Repositories;
 using Poliedro.External.HealthCheck.Tolgee;
 using Poliedro.External.HealthCheck.WhatsApp;
+using Poliedro.External.WhatsApp.SendMessage;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
 using WorkerKeycloackService;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +75,8 @@ builder.Services
 
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
+builder.Services.AddScoped<IStrongBoxRepository, StrongBoxRepository>();
+builder.Services.AddScoped<IStrongBoxService, StrongBoxService>();
 
 builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
 //builder.Services.AddScoped<IBusinessQueryService, BusinessQueryService>();
@@ -196,6 +204,7 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining<GetTranslationsHandler>();
     cfg.RegisterServicesFromAssemblyContaining<GetCourtsListQueryHandler>();
+    cfg.RegisterServicesFromAssemblyContaining<StrongBoxCreateCommandHandler>();
 });
 
 builder.Services.AddMemoryCache();
@@ -261,7 +270,9 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<GetCourtsListQueryValidator>();
-builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly);
+builder.Services.AddValidatorsFromAssemblyContaining<StrongBoxCreateValidator>();
+builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly,
+    typeof(StrongBoxFile).Assembly);
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<FileUploadOperationFilter>();
