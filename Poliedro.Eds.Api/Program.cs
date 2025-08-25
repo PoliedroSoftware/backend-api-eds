@@ -271,8 +271,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddValidatorsFromAssemblyContaining<GetCourtsListQueryValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<StrongBoxCreateValidator>();
-builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly,
-    typeof(StrongBoxProFile).Assembly);
+builder.Services.AddAutoMapper(typeof(Program).Assembly, 
+    typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly,
+    typeof(Poliedro.Eds.Application.StrongBox.AutoMapper.StrongBoxProfile).Assembly);
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<FileUploadOperationFilter>();

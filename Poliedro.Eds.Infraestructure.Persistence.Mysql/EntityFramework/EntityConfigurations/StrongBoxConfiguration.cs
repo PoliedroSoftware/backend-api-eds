@@ -23,10 +23,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityC
             entity.Property(x => x.Ammount).HasColumnName("ammount").HasPrecision(18, 2);
             entity.Property(x => x.Saldo).HasColumnName("saldo").HasPrecision(18, 2);
             entity.Property(x => x.Note).HasColumnName("note").HasMaxLength(500);
-            entity.Property(x => x.CreatedBy).HasColumnName("createdBy").HasMaxLength(50);
-            entity.Property(x => x.CreatedAt).HasColumnName("createdAt");
-            entity.Property(x => x.UpdatedBy).HasColumnName("updatedBy").HasMaxLength(100);
-            entity.Property(x => x.UpdatedAt).HasColumnName("updatedAt");
+          
 
             entity.HasIndex(x => x.DateTime);
         }

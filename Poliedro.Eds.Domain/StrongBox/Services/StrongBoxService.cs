@@ -54,7 +54,7 @@ namespace Poliedro.Eds.Domain.StrongBox.Services
                 );
 
             await _strongBoxRepositoryCreate.CreateAsync(entity, cancellationToken);
-            await _strongBoxRepositorySaveChanges.SaveChangesAsync(cancellationToken);
+            
 
             return entity;
         }

@@ -1,36 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac.Core;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Poliedro.Eds.Application.StrongBox.Dtos;
 using Poliedro.Eds.Application.StrongBox.Validation;
 using Poliedro.Eds.Domain.StrongBox.Services;
 
 namespace Poliedro.Eds.Application.StrongBox.Commands
 {
-    public class StrongBoxCreateCommandHandler : IRequestHandler<StrongBoxCreateCommand, StrongBoxDto>
+    public class StrongBoxCreateCommandHandler(
+        IStrongBoxService strongBoxService,
+        IMapper mapper,
+        StrongBoxCreateValidator validator) : IRequestHandler<StrongBoxCreateCommand, Unit>
     {
-        private readonly IStrongBoxService _service;
-        private readonly IMapper _mapper;
-        private readonly IValidator<StrongBoxDtoCreateRequest> _validator;
-
-        public StrongBoxCreateCommandHandler(IStrongBoxService strongBoxService, IMapper mapper, StrongBoxCreateValidator validator)
+        async Task<Unit> IRequestHandler<StrongBoxCreateCommand, Unit>.Handle(StrongBoxCreateCommand request, CancellationToken cancellationToken)
         {
-            _service = strongBoxService;
-            _mapper = mapper;
-            _validator = validator;
-        }
+            await validator.ValidateAndThrowAsync(request.Request, cancellationToken);
 
-        public async Task<StrongBoxDto> Handle(StrongBoxCreateCommand request, CancellationToken cancellationToken)
-        {
-            await _validator.ValidateAndThrowAsync(request.Request, cancellationToken);
-
-            var created = await _service.CreateAsync(
+            var created = await strongBoxService.CreateAsync(
                 request.Request.DateTime,
                 request.Request.IdCorte,
                 request.Request.Type,
@@ -38,7 +23,7 @@ namespace Poliedro.Eds.Application.StrongBox.Commands
                 request.Request.Note,
                 cancellationToken);
 
-            return _mapper.Map<StrongBoxDto>(created);
+            return Unit.Value;
         }
     }
 }
