@@ -7,10 +7,8 @@ using Poliedro.Eds.Domain.StrongBox.Entities;
 
 namespace Poliedro.Eds.Domain.StrongBox.Repositories
 {
-    public interface IStrongBoxRepository
+    public interface IStrongBoxRepositoryGetAll
     {
-        Task<StrongBoxEntity> GetByIdAsync(long id ,CancellationToken cancellationToken);
-        Task<StrongBoxEntity> GetLastAsync(CancellationToken cancellationToken);
         Task<List<StrongBoxEntity>> GetListAsync(
             int skip,
             int take,
@@ -19,8 +17,5 @@ namespace Poliedro.Eds.Domain.StrongBox.Repositories
             DateTime? from,
             DateTime? to,
             CancellationToken cancellationToken);
-
-        Task AddAsync(StrongBoxEntity entity, CancellationToken cancellationToken);
-        Task<bool> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

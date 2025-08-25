@@ -75,7 +75,7 @@ builder.Services
 
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
-builder.Services.AddScoped<IStrongBoxRepository, StrongBoxRepository>();
+builder.Services.AddScoped<IStrongBoxRepositoryCreate, StrongBoxCreateService>();
 builder.Services.AddScoped<IStrongBoxService, StrongBoxService>();
 
 builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
@@ -272,7 +272,7 @@ builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<GetCourtsListQueryValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<StrongBoxCreateValidator>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly,
-    typeof(StrongBoxFile).Assembly);
+    typeof(StrongBoxProFile).Assembly);
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<FileUploadOperationFilter>();

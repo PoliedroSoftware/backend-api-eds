@@ -11,31 +11,50 @@ namespace Poliedro.Eds.Domain.StrongBox.Services
 {
     public class StrongBoxService : IStrongBoxService
     {
-        private readonly IStrongBoxRepository _strongBoxRepository;
-        public StrongBoxService(IStrongBoxRepository repo)
+        private readonly IStrongBoxRepositoryGetLast _strongBoxRepositoryGetLast;
+        private readonly IStrongBoxRepositoryCreate _strongBoxRepositoryCreate;
+        private readonly IStrongBoxRepositorySaveChanges _strongBoxRepositorySaveChanges;
+        public StrongBoxService(IStrongBoxRepositoryGetLast repo,
+            IStrongBoxRepositoryCreate repoCreate,
+            IStrongBoxRepositorySaveChanges repoSaveChanges)
         {
-            _strongBoxRepository = repo;
+            _strongBoxRepositoryGetLast = repo;
+            _strongBoxRepositoryCreate = repoCreate;
+            _strongBoxRepositorySaveChanges = repoSaveChanges;
         }
-        public async Task<StrongBoxEntity> CreateAsync(DateTime dateTime, long? idCorte, string type, decimal ammount, string? note, string createdBy, CancellationToken cancellationToken)
+        public async Task<StrongBoxEntity> CreateAsync(DateTime dateTime, long? idCorte, string type, decimal ammount, string? note, CancellationToken cancellationToken)
         {
-            var entity = await _strongBoxRepository.GetLastAsync(cancellationToken);
-            var last = await _strongBoxRepository.GetLastAsync(cancellationToken);
+            var last = await _strongBoxRepositoryGetLast.GetLastAsync(cancellationToken);
             var previousBalance = last?.Saldo ?? 0;
 
-            decimal newBalance = entity.Type switch
+            type = type.Trim().ToUpperInvariant();
+
+            decimal newBalance = 0;
+
+            if (type == StrongBoxType.CORTE)
             {
-                StrongBoxType.CORTE => previousBalance + entity.Ammount,
-                StrongBoxType.RETIRO => previousBalance + entity.Ammount,
-                _ => throw new InvalidOperationException("Tipo Invalido")
-            };
-            if (newBalance < 0)
+                newBalance = previousBalance + ammount;
+            }
+            else if (type == StrongBoxType.RETIRO)
             {
-                throw new InvalidOperationException("No se puede hacer el retiro, esta en negativo!!!");
+                newBalance = previousBalance - ammount;
+                if (newBalance < 0)
+                {
+                    throw new InvalidOperationException("No se puede hacer el retiro, esta en negativo!!!");
+                }
             }
 
-            entity.SetSaldo(newBalance, createdBy);
-            await _strongBoxRepository.AddAsync(entity, cancellationToken);
-            await _strongBoxRepository.SaveChangesAsync(cancellationToken);
+            var entity = new StrongBoxEntity(
+                dateTime: dateTime,
+                idCorte: idCorte,
+                type: type,
+                ammount: ammount,
+                saldo: newBalance,
+                note: note
+                );
+
+            await _strongBoxRepositoryCreate.CreateAsync(entity, cancellationToken);
+            await _strongBoxRepositorySaveChanges.SaveChangesAsync(cancellationToken);
 
             return entity;
         }

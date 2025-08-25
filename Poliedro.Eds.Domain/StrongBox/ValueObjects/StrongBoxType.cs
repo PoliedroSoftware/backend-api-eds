@@ -11,6 +11,6 @@ namespace Poliedro.Eds.Domain.StrongBox.ValueObjects
         public const string CORTE = "CORTE";
         public const string RETIRO = "RETIRO";
 
-        public static bool IsValid(string value) => value is CORTE or RETIRO;
+        public static bool IsValid(string value) => !string.IsNullOrWhiteSpace(value) && (value.Trim().ToUpperInvariant() is CORTE or RETIRO);
     }
 }

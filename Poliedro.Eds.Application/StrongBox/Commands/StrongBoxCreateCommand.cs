@@ -8,5 +8,5 @@ using Poliedro.Eds.Application.StrongBox.Dtos;
 
 namespace Poliedro.Eds.Application.StrongBox.Commands
 {
-    public record StrongBoxCreateCommand(StrongBoxCreateRequest Request) : IRequest<StrongBoxDto>;
+    public record StrongBoxCreateCommand(StrongBoxDtoCreateRequest Request) : IRequest<StrongBoxDto>;
 }

@@ -1,0 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Poliedro.Eds.Domain.StrongBox.Entities;
+
+namespace Poliedro.Eds.Domain.StrongBox.Repositories
+{
+    public interface IStrongBoxRepositoryCreate
+    {
+        Task CreateAsync(StrongBoxEntity entity, CancellationToken cancellationToken);
+    }
+}

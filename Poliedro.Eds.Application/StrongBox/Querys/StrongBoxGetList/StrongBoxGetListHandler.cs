@@ -12,7 +12,7 @@ namespace Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetList
 {
     public class StrongBoxGetListHandler : IRequestHandler<StrongBoxGetList, List<StrongBoxDto>>
     {
-        private readonly IStrongBoxRepository _repo;
+        private readonly IStrongBoxRepositoryGetAll _repo;
         private readonly IMapper _mapper;
 
         public async Task<List<StrongBoxDto>> Handle(StrongBoxGetList request, CancellationToken cancellationToken)

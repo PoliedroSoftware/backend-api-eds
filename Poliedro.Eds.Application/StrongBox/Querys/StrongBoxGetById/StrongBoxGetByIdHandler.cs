@@ -13,8 +13,14 @@ namespace Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetById
 {
     public class StrongBoxGetByIdHandler : IRequestHandler<StrongBoxGetId, StrongBoxDto?>
     {
-        public readonly IStrongBoxRepository _repo;
+        private readonly IStrongBoxRepositoryGetById _repo;
         private readonly IMapper _mapper;
+
+        public StrongBoxGetByIdHandler(IStrongBoxRepositoryGetById repo, IMapper mapper)
+        {
+            _repo = repo;
+            _mapper = mapper;
+        }
 
         public async Task<StrongBoxDto?> Handle(StrongBoxGetId request, CancellationToken cancellationToken)
         {

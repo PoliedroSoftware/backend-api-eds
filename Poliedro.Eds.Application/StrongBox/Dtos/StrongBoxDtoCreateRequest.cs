@@ -6,17 +6,12 @@ using System.Threading.Tasks;
 
 namespace Poliedro.Eds.Application.StrongBox.Dtos
 {
-    public record StrongBoxDto(
-        long Id,
+    public record StrongBoxDtoCreateRequest(
         DateTime DateTime,
         long? IdCorte,
         string Type,
         decimal Ammount,
-        decimal Saldo,
         string? Note,
-        string CreatedBy,
-        DateTime CreatedAt,
-        string? UpdatedBy,
-        DateTime? UpdatedAt
-    );  
+        decimal Saldo = 0m
+    );
 }

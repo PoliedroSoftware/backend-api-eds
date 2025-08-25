@@ -53,7 +53,7 @@ namespace Poliedro.Eds.Domain.StrongBox.Entities
 
         private StrongBoxEntity() { }
 
-        public StrongBoxEntity(DateTime dateTime, long? idCorte, string type, decimal ammount, decimal saldo, string? note, string createdBy)
+        public StrongBoxEntity(DateTime dateTime, long? idCorte, string type, decimal ammount, decimal saldo, string? note)
         {
             if (string.IsNullOrWhiteSpace(type))
             { 
@@ -77,15 +77,14 @@ namespace Poliedro.Eds.Domain.StrongBox.Entities
             Ammount = decimal.Round(ammount, 2);
             Saldo = 0m;
             Note = note?.Trim();
-            CreatedBy = createdBy;
             CreatedAt = DateTime.UtcNow;
         }
 
-        public void SetSaldo(decimal nuevoSaldo, string updateBy)
+        public void SetSaldo(decimal nuevoSaldo)
         {
             Saldo = decimal.Round(nuevoSaldo, 2);
             UpdatedAt = DateTime.UtcNow;
-            UpdatedBy = updateBy;
+            
         }
 
     }

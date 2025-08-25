@@ -17,7 +17,7 @@ namespace Poliedro.Eds.Application.StrongBox.Commands
     {
         private readonly IStrongBoxService _service;
         private readonly IMapper _mapper;
-        private readonly IValidator<StrongBoxCreateRequest> _validator;
+        private readonly IValidator<StrongBoxDtoCreateRequest> _validator;
 
         public StrongBoxCreateCommandHandler(IStrongBoxService strongBoxService, IMapper mapper, StrongBoxCreateValidator validator)
         {
@@ -36,7 +36,6 @@ namespace Poliedro.Eds.Application.StrongBox.Commands
                 request.Request.Type,
                 request.Request.Ammount,
                 request.Request.Note,
-                request.Request.CreatedBy,
                 cancellationToken);
 
             return _mapper.Map<StrongBoxDto>(created);

@@ -9,7 +9,7 @@ using Poliedro.Eds.Domain.StrongBox.ValueObjects;
 
 namespace Poliedro.Eds.Application.StrongBox.Validation
 {
-    public class StrongBoxCreateValidator : AbstractValidator<StrongBoxCreateRequest>
+    public class StrongBoxCreateValidator : AbstractValidator<StrongBoxDtoCreateRequest>
     {
         public StrongBoxCreateValidator()
         {
@@ -21,6 +21,10 @@ namespace Poliedro.Eds.Application.StrongBox.Validation
             RuleFor(x => x.Note)
                 .MaximumLength(500)
                 .WithMessage("El campo Nota no debe exceder los 500 caracteres.");
+
+            RuleFor(x => x.Ammount)
+                .NotEmpty().WithMessage("El campo Monto es obligatorio.")
+                .GreaterThan(0).WithMessage("El campo Monto debe ser mayor que 0.");
         }
     }
 }

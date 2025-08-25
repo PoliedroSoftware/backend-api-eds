@@ -79,6 +79,10 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProduct.DomainShopp
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProductInventory.DomainShoppingProductInventory.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Tank.DomainTank.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
+using Poliedro.Eds.Domain.StrongBox.Repositories;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.Repositories;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongBox;
+using Poliedro.Eds.Domain.StrongBox.Services;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -206,7 +210,16 @@ public static class DependencyInjectionService
         services.AddScoped<IShoppingProductGetAllShoppingProductView, ShoppingProductGetAllShoppingProductView>();
         services.AddScoped<ITypeOfCollectionViewGetAllTypeOfCollection, TypeOfCollectionViewGetAllTypeOfCollection>();
         services.AddTransient<IBusinessUpdateService, BusinessUpdateService>();
-        
+
+        // New Service StronBox
+        services.AddScoped<IStrongBoxRepositoryCreate, StrongBoxCreateService>();
+        services.AddScoped<IStrongBoxRepositoryGetLast, StrongBoxGetLastService>();
+        services.AddScoped<IStrongBoxRepositorySaveChanges, StrongBoxSaveChangesService>();
+        services.AddScoped<IStrongBoxService, StrongBoxService>();
+        services.AddScoped<IStrongBoxRepositoryGetById, StrongBoxGetByIdService>();
+        services.AddScoped<IStrongBoxRepositoryGetAll, StrongBoxGetAllService>();
+
+
         // OpenAI Services
         services.AddScoped<IOpenAIChatService, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.DomainOpenAI.Impl.OpenAIChatService>();
         services.AddScoped<IOpenAIRequestRepository, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Repositories.OpenAIRequestRepository>();

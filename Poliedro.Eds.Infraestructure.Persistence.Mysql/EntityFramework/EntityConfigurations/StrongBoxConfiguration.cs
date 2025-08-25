@@ -27,6 +27,8 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityC
             entity.Property(x => x.CreatedAt).HasColumnName("createdAt");
             entity.Property(x => x.UpdatedBy).HasColumnName("updatedBy").HasMaxLength(100);
             entity.Property(x => x.UpdatedAt).HasColumnName("updatedAt");
+
+            entity.HasIndex(x => x.DateTime);
         }
     }
 }
