@@ -484,3 +484,8 @@ global.json
 .env
 /Poliedro.Eds.Api/Properties
 launchSettings.json
+Poliedro.Eds.Api/Properties/launchSettings.json
+appsettings.Development.json
+.env
+*.pem
+*.key
