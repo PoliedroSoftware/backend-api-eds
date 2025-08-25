@@ -3,15 +3,20 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poliedro.Eds.Application.Common.Features;
+using Poliedro.Eds.Application.StrongBox.Commands;
+using Poliedro.Eds.Application.StrongBox.Dtos;
+using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetById;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetList;
+using Poliedro.Eds.Domain.Common.Models;
 using Poliedro.Eds.Domain.Common.Pagination;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Poliedro.Eds.Api.Controllers.v1.StrongBox
 {
     [Route("api/v1/strongbox")]
     [ApiController]
     [Authorize(Policy = "AdminOnly")]
-    public class  StrongBoxController(IMediator mediator) : ControllerBase
+    public class StrongBoxController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetAll(
@@ -38,7 +43,61 @@ namespace Poliedro.Eds.Api.Controllers.v1.StrongBox
             return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
 
         }
-        
+
+        [SwaggerOperation(Summary = "Get StrongBox record by id")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Successful", typeof(StrongBoxDto))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Not Found", typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request", typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal Server Error", typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status503ServiceUnavailable, "Service Unavailable", typeof(ProblemDetails))]
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("{id:long}")]
+        public async Task<IActionResult> GetById([FromRoute] long id)
+        {
+            var dto = await mediator.Send(new StrongBoxGetId(id));
+
+            if (dto is null)
+            {
+                return StatusCode(StatusCodes.Status404NotFound,
+                        ResponseApiService.Response(StatusCodes.Status404NotFound));
+            }
+
+            return StatusCode(StatusCodes.Status200OK,
+                        ResponseApiService.Response(StatusCodes.Status200OK, dto));
+        }
+
+        [SwaggerOperation(Summary = "Create a new Record (Corte o Retiro)")]
+        [SwaggerResponse(StatusCodes.Status201Created, "Successful", typeof(StrongBoxDto))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request", typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status409Conflict, "Conflict", typeof(ProblemDetails))]
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] StrongBoxCreateCommand command)
+        {
+            try
+            {
+                var created = await mediator.Send(command);
+                return StatusCode(StatusCodes.Status201Created,
+                    ResponseApiService.Response(StatusCodes.Status201Created, created));
+            }
+            catch (FluentValidation.ValidationException ex)
+            {
+                var errors = ex.Errors
+                    .GroupBy(e => e.PropertyName)
+                    .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+
+                return BadRequest(new ValidationProblemDetails(errors));
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return Problem(title: "Invalid Cast Exception",
+                    detail: ex.Message,
+                    statusCode: 500);
+            }
+        }
     }
 }
 

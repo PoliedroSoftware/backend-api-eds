@@ -19,7 +19,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityC
             entity.Property(x => x.Id).HasColumnName("id");
             entity.Property(x => x.DateTime).HasColumnName("datetime");
             entity.Property(x => x.IdCorte).HasColumnName("id_corte");
-            entity.Property(x => x.Type).HasColumnName("movimient").HasMaxLength(10);
+            entity.Property(x => x.Type).HasColumnName("moviment").HasMaxLength(10);
             entity.Property(x => x.Ammount).HasColumnName("ammount").HasPrecision(18, 2);
             entity.Property(x => x.Saldo).HasColumnName("saldo").HasPrecision(18, 2);
             entity.Property(x => x.Note).HasColumnName("note").HasMaxLength(500);

@@ -9,7 +9,7 @@ using Poliedro.Eds.Domain.StrongBox.ValueObjects;
 
 namespace Poliedro.Eds.Domain.StrongBox.Entities
 {
-    [Table("strongBox")]
+    [Table("strongbox")]
     public class StrongBoxEntity
     {
         [Key]
@@ -23,7 +23,7 @@ namespace Poliedro.Eds.Domain.StrongBox.Entities
         [Column("id_corte")]
         public long? IdCorte { get; private set; }
 
-        [Column("movimient")]
+        [Column("moviment")]
         [MaxLength(10)]
         public string Type { get; private set; } = null!;
 
