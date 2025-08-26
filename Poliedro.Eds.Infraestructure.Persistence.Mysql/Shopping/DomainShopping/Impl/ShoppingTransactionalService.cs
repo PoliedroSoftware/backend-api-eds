@@ -102,7 +102,7 @@ public class ShoppingTransactionalService(
             
             if (product != null)
             {
-                product.Price = productToUpdate.Price;
+                product.SellPrice = productToUpdate.SellPrice;
                 context.Product.Update(product);
             }
         }

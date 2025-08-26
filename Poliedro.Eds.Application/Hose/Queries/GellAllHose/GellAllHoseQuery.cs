@@ -1,7 +1,9 @@
 using MediatR;
 using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain.Common.Results;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Hose.Dtos;
 
 namespace Poliedro.Eds.Application.Hose.Queries.GellAllHose;
 
-public record GellAllHoseQuery(PaginationParams PaginationParams) : IRequest<IEnumerable<HoseDto>>;
+public record GellAllHoseQuery(PaginationParams PaginationParams) : IRequest<Result<IEnumerable<HoseDto>, Error>>;

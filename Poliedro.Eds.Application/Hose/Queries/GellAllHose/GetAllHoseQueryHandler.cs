@@ -1,5 +1,7 @@
 using AutoMapper;
 using MediatR;
+using Poliedro.Eds.Domain.Common.Results;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Hose.Dtos;
 
@@ -9,12 +11,16 @@ public class GetAllHoseQueryHandler
 (
     IHoseGetAllHose hoseDomainHose,
     IMapper mapper)
-    : IRequestHandler<GellAllHoseQuery, IEnumerable<HoseDto>>
+    : IRequestHandler<GellAllHoseQuery, Result<IEnumerable<HoseDto>, Error>>
 {
-    public async Task<IEnumerable<HoseDto>> Handle(GellAllHoseQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<HoseDto>, Error>> Handle(GellAllHoseQuery request, CancellationToken cancellationToken)
     {
         var result = await hoseDomainHose.GetAllAsync(request.PaginationParams);
-        return mapper.Map<List<HoseDto>>(result);
+        
+        if (!result.IsSuccess)
+            return result.Error!;
+
+        return Result<IEnumerable<HoseDto>, Error>.Success(result.Value!);
     }
 }
 

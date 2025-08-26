@@ -24,12 +24,18 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var data = await mediator.Send(new GellAllHoseQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
-            if (data is null)
+            var result = await mediator.Send(new GellAllHoseQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+            
+            if (!result.IsSuccess)
             {
-                return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
+                if (result.Error != null)
+                {
+                    return StatusCode((int)result.Error.HttpStatusCode, ResponseApiService.Response((int)result.Error.HttpStatusCode, result.Error.Description));
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, ResponseApiService.Response(StatusCodes.Status500InternalServerError));
             }
-            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
+
+            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, result.Value));
         }
 
         [SwaggerOperation(Summary = "Get Hose")]
