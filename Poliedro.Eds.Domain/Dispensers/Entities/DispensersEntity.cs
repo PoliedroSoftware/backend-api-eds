@@ -14,6 +14,8 @@ public class DispensersEntity : AuditableEntity
     public int EdsId { get; set; }
     public int IdIsland { get; set; }
     public int HoseNumber { get; set; }
+
+    public virtual EdsEntity? Eds { get; set; }
 }
 
 

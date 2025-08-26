@@ -13,5 +13,10 @@ public class ProductTypeConfiguration
         builder.Property(x => x.IdProductType).HasColumnName("id_product_type");
         builder.Property(x => x.Description).HasColumnName("description");
 
+        // Configure relationship with Products
+        builder.HasMany(pt => pt.Products)
+            .WithOne(p => p.ProductType)
+            .HasForeignKey(p => p.IdProductType)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
