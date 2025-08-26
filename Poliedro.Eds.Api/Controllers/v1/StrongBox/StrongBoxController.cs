@@ -19,6 +19,9 @@ namespace Poliedro.Eds.Api.Controllers.v1.StrongBox
     public class StrongBoxController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
+        [SwaggerOperation(Summary = "Get all StrongBox records")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Successful", typeof(List<StrongBoxDto>))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Not Found", typeof(ProblemDetails))]
         public async Task<IActionResult> GetAll(
             [FromQuery] PaginationParams paginationParams,
             [FromQuery] long? idCorte = null,
@@ -34,14 +37,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.StrongBox
                 To: to);
 
             var data = await mediator.Send(query);
-
-            if (data is null || data.Count == 0)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
-            }
-
-            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
-
+            return ApiResponse(data, StatusCodes.Status200OK, StatusCodes.Status404NotFound);
         }
 
         [SwaggerOperation(Summary = "Get StrongBox record by id")]
@@ -51,52 +47,48 @@ namespace Poliedro.Eds.Api.Controllers.v1.StrongBox
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal Server Error", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status503ServiceUnavailable, "Service Unavailable", typeof(ProblemDetails))]
-        [Authorize(Policy = "AdminOnly")]
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetById([FromRoute] long id)
         {
             var dto = await mediator.Send(new StrongBoxGetId(id));
-
-            if (dto is null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound,
-                        ResponseApiService.Response(StatusCodes.Status404NotFound));
-            }
-
-            return StatusCode(StatusCodes.Status200OK,
-                        ResponseApiService.Response(StatusCodes.Status200OK, dto));
+            return ApiResponse(dto, StatusCodes.Status200OK, StatusCodes.Status404NotFound);
         }
 
-        [SwaggerOperation(Summary = "Create a new Record (Corte o Retiro)")]
+        [SwaggerOperation(Summary = "Create a new Record (CORTE o RETIRO)")]
         [SwaggerResponse(StatusCodes.Status201Created, "Successful", typeof(StrongBoxDto))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status409Conflict, "Conflict", typeof(ProblemDetails))]
-        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] StrongBoxCreateCommand command)
         {
             try
             {
                 var created = await mediator.Send(command);
-                return StatusCode(StatusCodes.Status201Created,
-                    ResponseApiService.Response(StatusCodes.Status201Created, created));
+                return ApiResponse(created, StatusCodes.Status201Created, StatusCodes.Status400BadRequest);
             }
             catch (FluentValidation.ValidationException ex)
             {
                 var errors = ex.Errors
                     .GroupBy(e => e.PropertyName)
                     .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
-
                 return BadRequest(new ValidationProblemDetails(errors));
             }
             catch (InvalidCastException ex)
             {
-                Console.WriteLine(ex.ToString());
                 return Problem(title: "Invalid Cast Exception",
                     detail: ex.Message,
                     statusCode: 500);
             }
+        }
+
+        private IActionResult ApiResponse<T>(T? data, int successStatus, int notFoundStatus)
+        {
+            if (data == null || (data is ICollection<StrongBoxDto> list && list.Count == 0))
+            {
+                return StatusCode(notFoundStatus, ResponseApiService.Response(notFoundStatus));
+            }
+            return StatusCode(successStatus, ResponseApiService.Response(successStatus, data));
         }
     }
 }
