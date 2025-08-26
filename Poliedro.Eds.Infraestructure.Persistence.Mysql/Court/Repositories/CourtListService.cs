@@ -202,6 +202,7 @@ public class CourtListService(
         return documents;
     }
 
+
     private async Task<IEnumerable<CourtExpenditureViewEntity>> GetCourtExpendituresFromViewAsync()
     {
         var expenditures = new List<CourtExpenditureViewEntity>();
