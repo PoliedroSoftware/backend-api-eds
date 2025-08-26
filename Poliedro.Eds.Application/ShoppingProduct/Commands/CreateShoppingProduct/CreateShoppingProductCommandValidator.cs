@@ -9,15 +9,12 @@ namespace Poliedro.Eds.Application.ShoppingProduct.Shopping.CreateShoppingProduc
 public class CreateShoppingProductCommandValidator : AbstractValidator<CreateShoppingProductRequestDto>
 {
     private readonly ICompartimentGetByIdService _compartimentService;
-    private readonly IProductCompartimentGetByCompartmentId _productCompartimentService;
 
     public CreateShoppingProductCommandValidator(
         ICompartimentGetByIdService compartimentService,
-        IRedisService redisService,
-        IProductCompartimentGetByCompartmentId productCompartimentService)
+        IRedisService redisService)
     {
         _compartimentService = compartimentService;
-        _productCompartimentService = productCompartimentService;
 
         RuleFor(x => x)
             .MustAsync(async (dto, cancellation) =>

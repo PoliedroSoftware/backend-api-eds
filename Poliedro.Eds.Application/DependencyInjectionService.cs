@@ -22,7 +22,6 @@ using Poliedro.Eds.Application.Island.AutoMappers;
 using Poliedro.Eds.Application.Islander.AutoMappers;
 using Poliedro.Eds.Application.Phone.AutoMappers;
 using Poliedro.Eds.Application.Product.AutoMappers;
-using Poliedro.Eds.Application.ProductCompartiment.AutoMappers;
 using Poliedro.Eds.Application.ProductType.AutoMappers;
 using Poliedro.Eds.Application.Provider.AutoMappers;
 using Poliedro.Eds.Application.Shopping.AutoMappers;
@@ -62,8 +61,6 @@ public static class DependencyInjectionService
             config.AddProfile(new DispenserTypeMapper());
             config.AddProfile(new Product.AutoMappers.PaginationMapper());
             config.AddProfile(new ProductMapper());
-            config.AddProfile(new ProductCompartiment.AutoMappers.PaginationMapper());
-            config.AddProfile(new ProductCompartimentMapper());
             config.AddProfile(new EdsTank.AutoMappers.PaginationMapper());
             config.AddProfile(new EdsTankMapper());
             config.AddProfile(new CompartimentCapacity.AutoMappers.PaginationMapper());

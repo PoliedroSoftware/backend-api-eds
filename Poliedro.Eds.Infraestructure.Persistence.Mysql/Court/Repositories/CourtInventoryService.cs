@@ -21,22 +21,21 @@ public class CourtInventoryService(IConfiguration config,
 
         foreach (var dispenser in courtDispensers)
         {
-            var productCompartiment = await context.ProductCompartiment
-                .FirstOrDefaultAsync(pc => pc.IdProduct == dispenser.IdProduct && pc.IdCompartiment == dispenser.IdCompartiment);
+            var product = await context.Product
+                .FirstOrDefaultAsync(p => p.IdProduct == dispenser.IdProduct);
 
-            if (productCompartiment != null)
+            if (product != null)
             {
+                Console.WriteLine($"Actualizando producto {product.IdProduct}: Stock antes: {product.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
 
-                Console.WriteLine($"Actualizando product_compartiment {productCompartiment.IdProductCompartiment}: Stock antes: {productCompartiment.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
-
-                var nuevoStock = productCompartiment.Stock - dispenser.GallonsDifferenceResult;
+                var nuevoStock = product.Stock - dispenser.GallonsDifferenceResult;
                 if (nuevoStock < 0)
                 {
                     throw new InvalidOperationException(
-                        $"El stock no puede ser negativo para el producto {dispenser.IdProduct} en el compartimento {dispenser.IdCompartiment}.");
+                        $"El stock no puede ser negativo para el producto {dispenser.IdProduct}.");
                 }
-                productCompartiment.Stock = nuevoStock;
-                context.ProductCompartiment.Update(productCompartiment);
+                product.Stock = nuevoStock;
+                context.Product.Update(product);
             }
         }
         await context.SaveChangesAsync();
