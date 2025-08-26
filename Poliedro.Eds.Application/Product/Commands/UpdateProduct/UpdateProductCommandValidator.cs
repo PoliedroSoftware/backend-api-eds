@@ -16,7 +16,7 @@ namespace Poliedro.Eds.Application.Product.Commands.UpdateProduct
                 .NotNull().WithMessage(redisService.GetValueFromCacheAsync("IdProductTypeNotNull").GetAwaiter().GetResult())
                 .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdProductTypeNotEmpty").GetAwaiter().GetResult());
 
-            RuleFor(x => x.Price)
+            RuleFor(x => x.SellPrice)
                 .NotNull().WithMessage(redisService.GetValueFromCacheAsync("PriceNotNull").GetAwaiter().GetResult())
                 .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PriceNotEmpty").GetAwaiter().GetResult());
 
