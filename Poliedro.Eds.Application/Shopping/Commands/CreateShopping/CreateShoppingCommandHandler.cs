@@ -41,7 +41,7 @@ public class CreateShoppingCommandHandler(
             .Select(sp => new ProductEntity
             {
                 IdProduct = sp.IdProduct,
-                Price = sp.SellPrice.Value
+                SellPrice = sp.SellPrice.Value
             })
             .ToList();
 
