@@ -23,18 +23,10 @@ namespace Poliedro.Eds.Api.Controllers.v1.StrongBox
         [SwaggerResponse(StatusCodes.Status200OK, "Successful", typeof(List<StrongBoxDto>))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Not Found", typeof(ProblemDetails))]
         public async Task<IActionResult> GetAll(
-            [FromQuery] PaginationParams paginationParams,
-            [FromQuery] long? idCorte = null,
-            [FromQuery] string? type = null,
-            [FromQuery] DateTime? from = null,
-            [FromQuery] DateTime? to = null)
+            [FromQuery] PaginationParams paginationParams)
         {
             var query = new StrongBoxGetList(Page: paginationParams.PageNumber,
-                PageSize: paginationParams.PageSize,
-                IdCorte: idCorte,
-                Type: type,
-                From: from,
-                To: to);
+                PageSize: paginationParams.PageSize);
 
             var data = await mediator.Send(query);
             return ApiResponse(data, StatusCodes.Status200OK, StatusCodes.Status404NotFound);

@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace Poliedro.Eds.Application.StrongBox.Dtos;
 
-public record StrongBoxDtoCreateRequest(
-    DateTime DateTime,
-    long? IdCorte,
-    string Type,
-    decimal Ammount,
-    string? Note
-);
+public class StrongBoxDtoCreateRequest
+{
+    public DateTime DateTime { get; set; }
+
+    public long? IdCorte { get; set; }
+
+    public string Type { get; set; }
+
+    public decimal Ammount { get; set; }
+
+    public string? Note { get; set; }
+}
