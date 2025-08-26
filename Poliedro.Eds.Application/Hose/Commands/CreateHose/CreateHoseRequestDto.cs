@@ -1,10 +1,11 @@
 namespace Poliedro.Eds.Application.Hose.Commands.CreateHose;
 
 public record CreateHoseRequestDto(
-    int Number,
     int IdDispensers,
-    double AccumulatedGallons,
+    int Number,    
     double AccumulatedAmount,
-    int IdProductType);
+    double AccumulatedGallons,
+    int IdProductType,
+    int IdCompartiment);
 
 

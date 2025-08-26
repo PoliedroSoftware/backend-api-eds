@@ -7,8 +7,9 @@ namespace Poliedro.Eds.Application.Hose.Commands.UpdateHose;
 
 public record UpdateHoseCommand(
     int IdHose,
-    int Number,
     int IdDispensers,
-    double AccumulatedGallons,
+    int Number,    
     double AccumulatedAmount,
-    int IdProductType) : IRequest<Result<VoidResult, Error>>;
+    double AccumulatedGallons,
+    int IdProductType,
+    int IdCompartiment) : IRequest<Result<VoidResult, Error>>;
