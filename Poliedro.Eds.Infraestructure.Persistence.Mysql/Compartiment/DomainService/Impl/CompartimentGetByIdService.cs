@@ -27,7 +27,7 @@ public class CompartimentGetByIdService(ITenantDbContextFactory dbContextFactory
         using var context = dbContextFactory.CreateDbContext();
 
         var data = await context.Compartiment
-            .FirstAsync(c => c.IdCompartment == id);
+            .FirstAsync(c => c.IdCompartiment == id);
 
         await redisService.SetCacheAsync(cacheKey, data, TimeSpan.FromMinutes(1440));
 
@@ -39,6 +39,6 @@ public class CompartimentGetByIdService(ITenantDbContextFactory dbContextFactory
         using var context = dbContextFactory.CreateDbContext();
         return await context.Compartiment
             .AsNoTracking()
-            .AnyAsync(c => c.IdCompartment == id);
+            .AnyAsync(c => c.IdCompartiment == id);
     }
 }

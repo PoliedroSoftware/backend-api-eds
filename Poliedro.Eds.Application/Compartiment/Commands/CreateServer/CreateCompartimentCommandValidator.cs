@@ -18,8 +18,9 @@ public class CreateCompartimentCommandValidator : AbstractValidator<CreateCompar
 
         RuleFor(x => x.Operative)
             .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("OperativeGreaterThanOrEqualTo").GetAwaiter().GetResult());
-            
 
+        RuleFor(x => x.IdProduct)
+            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdProductGreaterThan").GetAwaiter().GetResult());
 
         RuleFor(x => x.Height)
             .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("HeightGreaterThanOrEqualTo").GetAwaiter().GetResult());
