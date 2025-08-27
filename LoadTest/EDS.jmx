@@ -2486,7 +2486,7 @@ log.info(&quot;📌 Variables globales JSR223 General inicializadas&quot;)
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds GET GetByID" enabled="false">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Eds GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -2624,7 +2624,7 @@ log.info(&quot;📌 Variables globales JSR223 General inicializadas&quot;)
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET GetByID" enabled="false">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Hose GET GetByID" enabled="true">
             <stringProp name="HTTPSampler.domain">${server}</stringProp>
             <stringProp name="HTTPSampler.port">${port}</stringProp>
             <stringProp name="HTTPSampler.protocol">${protocolo}</stringProp>
@@ -7336,7 +7336,7 @@ vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;));
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -7373,7 +7373,7 @@ vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;));
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="MySQL QA" enabled="true">
+        <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="MySQL QA">
           <boolProp name="autocommit">true</boolProp>
           <stringProp name="checkQuery"></stringProp>
           <stringProp name="connectionAge">5000</stringProp>
@@ -7392,7 +7392,7 @@ vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;));
           <stringProp name="username">root</stringProp>
         </JDBCDataSource>
         <hashTree/>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_EDS" enabled="true">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_EDS">
           <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">true</boolProp>
         </TransactionController>
@@ -7575,10 +7575,9 @@ LIMIT 1
           <hashTree>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_COMPARTIMENT" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">SELECT id_compartiment, number, nominal, operative, stock, height, id_tank, createdBy, createdAt, updatedBy, updatedAt 
+              <stringProp name="query">SELECT id_compartiment, number, nominal, operative, height, id_product, id_tank, date, createdBy, createdAt, updatedBy, updatedAt 
 
-FROM compartiment
-</stringProp>
+FROM compartiment;</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -7590,13 +7589,9 @@ FROM compartiment
               <stringProp name="TestPlan.comments">Ver todos los registros de la tabla.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_COMPARTIMENT_FOR_UPDATE" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Product ID for Compartment" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">SELECT number
-FROM compartiment
-ORDER BY RAND()
-LIMIT 1
-</stringProp>
+              <stringProp name="query">SELECT id_product FROM product ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -7604,37 +7599,11 @@ LIMIT 1
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">update_compartment_id</stringProp>
-              <stringProp name="TestPlan.comments">Obtener la descripción de un registro aleatorio exclusivamente para la actualización.</stringProp>
+              <stringProp name="variableNames">insert_comp_id_product</stringProp>
+              <stringProp name="TestPlan.comments"> Obtiene un id_product aleatorio, que ahora es una clave foránea necesaria.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" GET_RANDOM_COMPARTIMENT_FOR_DELETE" enabled="true">
-              <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">SELECT c.number
-FROM compartiment c
-LEFT JOIN compartiment_capacity cc ON c.id_compartiment = cc.id_compartiment
-LEFT JOIN court_dispensers cd ON c.id_compartiment = cd.id_compartiment
-LEFT JOIN product_compartiment pc ON c.id_compartiment = pc.id_compartiment
-LEFT JOIN shopping_product sp ON c.id_compartiment = sp.id_compartiment
-WHERE cc.id_compartiment IS NULL
-  AND cd.id_compartiment IS NULL
-  AND pc.id_compartiment IS NULL
-  AND sp.id_compartiment IS NULL
-ORDER BY RAND()
-LIMIT 1
-</stringProp>
-              <stringProp name="queryArguments"></stringProp>
-              <stringProp name="queryArgumentsTypes"></stringProp>
-              <stringProp name="queryTimeout"></stringProp>
-              <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="resultSetHandler">Store as String</stringProp>
-              <stringProp name="resultSetMaxRows"></stringProp>
-              <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">delete_compartment_number</stringProp>
-              <stringProp name="TestPlan.comments">Obtener el number de un registro aleatorio que sea seguro de eliminar.</stringProp>
-            </JDBCSampler>
-            <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_TANK_ID (para el INSERT)" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Tank ID for Compartment" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_tank FROM tank ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -7644,8 +7613,47 @@ LIMIT 1
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">tank_id_for_insert</stringProp>
-              <stringProp name="TestPlan.comments">Obtener un id_tank aleatorio, que es necesario para poder crear un nuevo compartiment.</stringProp>
+              <stringProp name="variableNames">insert_comp_id_tank</stringProp>
+              <stringProp name="TestPlan.comments"> Obtiene un id_tank aleatorio, necesario para la clave foránea y la clave única.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_COMPARTIMENT_FOR_UPDATE" enabled="true">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">SELECT id_compartiment FROM compartiment ORDER BY RAND() LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">update_compartment_id</stringProp>
+              <stringProp name="TestPlan.comments"> Selecciona un id_compartiment aleatorio para usarlo en la operación de UPDATE.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" GET_RANDOM_COMPARTIMENT_FOR_DELETE" enabled="true">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">SELECT c.id_compartiment
+FROM compartiment c
+LEFT JOIN compartiment_capacity cc ON c.id_compartiment = cc.id_compartiment
+LEFT JOIN court_dispensers cd ON c.id_compartiment = cd.id_compartiment
+LEFT JOIN hose h ON c.id_compartiment = h.id_compartiment
+LEFT JOIN shopping_product sp ON c.id_compartiment = sp.id_compartiment
+WHERE cc.id_compartiment IS NULL
+  AND cd.id_compartiment IS NULL
+  AND h.id_compartiment IS NULL
+  AND sp.id_compartiment IS NULL
+ORDER BY RAND()
+LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">delete_compartment_id</stringProp>
+              <stringProp name="TestPlan.comments">Obtiene un id_compartiment que es seguro de eliminar, verificando que no esté siendo usado en ninguna de las tablas dependientes (compartiment_capacity, court_dispensers, hose, shopping_product).</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
@@ -7825,22 +7833,22 @@ LIMIT 1</stringProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Dispensers" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_court_dispensers">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="query">SELECT id_court_dispensers, id_court, accumulated_amount, accumulated_gallons, id_product, id_compartiment, id_hose, createdBy, createdAt, updatedBy, updatedAt 
+              <stringProp name="query">SELECT id_court_dispensers, id_court, accumulated_amount, accumulated_gallons, id_product, id_compartiment, id_hose, createdBy, createdAt, updatedBy, updatedAt
 FROM court_dispensers;</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="resultVariable">court_dispensers_vars</stringProp>
+              <stringProp name="resultVariable"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
               <stringProp name="resultSetMaxRows">10</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="TestPlan.comments">Ver todos los registros de la tabla.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Court ID for Dispenser" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Court ID for CD">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_court FROM court ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -7850,11 +7858,11 @@ FROM court_dispensers;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_court_id</stringProp>
+              <stringProp name="variableNames">insert_cd_court_id</stringProp>
               <stringProp name="TestPlan.comments"> Obtiene un id_court aleatorio para asegurar la integridad referencial al crear un nuevo registro</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Product ID for Dispenser" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Product ID for CD">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_product FROM product ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -7864,11 +7872,11 @@ FROM court_dispensers;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_product_id</stringProp>
+              <stringProp name="variableNames">insert_cd_product_id</stringProp>
               <stringProp name="TestPlan.comments"> Obtiene un id_product aleatorio, que es una clave foránea necesaria.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Compartiment ID for Dispenser" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Compartment ID for CD">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_compartiment FROM compartiment ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -7878,11 +7886,11 @@ FROM court_dispensers;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_courtdisp_compartiment_id </stringProp>
+              <stringProp name="variableNames">insert_cd_compartment_id</stringProp>
               <stringProp name="TestPlan.comments">Obtiene un id_compartiment aleatorio para cumplir con las dependencias de la tabla.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Hose ID for Dispenser" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Hose ID for CD">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_hose FROM hose ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -7892,11 +7900,11 @@ FROM court_dispensers;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_hose_id</stringProp>
+              <stringProp name="variableNames">insert_cd_hose_id</stringProp>
               <stringProp name="TestPlan.comments">Obtiene un id_hose aleatorio, el último ID necesario para el INSERT.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_COURT_DISPENSER_ID_FOR_UPDATE" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_COURT_DISPENSER_ID_FOR_UPDATE">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_court_dispensers FROM court_dispensers ORDER BY RAND() </stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -7910,7 +7918,7 @@ FROM court_dispensers;</stringProp>
               <stringProp name="TestPlan.comments">: Selecciona un ID aleatorio de un registro existente en court_dispensers para identificar cuál modificar.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_COURT_DISPENSER_ID_FOR_DELETE" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_COURT_DISPENSER_ID_FOR_DELETE">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT cd.id_court_dispensers
 FROM court_dispensers cd
@@ -7926,16 +7934,16 @@ LIMIT 1</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames">delete_courtdisp_id</stringProp>
-              <stringProp name="TestPlan.comments">Obtiene un ID que es seguro de eliminar, verificando que no esté siendo usado en la tabla court_dispensers_inventory para evitar errores de clave foránea.</stringProp>
+              <stringProp name="TestPlan.comments">Obtiene un ID que es seguro de eliminar, verificando que no esté siendo usado en la tabla court_dispensers_inventory.</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Court_dispensers_inventory" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Court_dispensers_inventory">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Dispensers_Inventorycol" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Court_Dispensers_Inventorycol">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
               <stringProp name="query">SELECT id_court_dispensers_inventorycol, id_court_dispensers, id_inventory, createdBy, createdAt, updatedBy, updatedAt 
@@ -7950,7 +7958,7 @@ FROM court_dispensers_inventory;</stringProp>
               <stringProp name="TestPlan.comments">Ver todos los registros de la tabla.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Court Dispenser ID for Inventory" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Court Dispenser ID for Inventory">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_court_dispensers FROM court_dispensers ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -7960,11 +7968,11 @@ FROM court_dispensers_inventory;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_courtdisp_id</stringProp>
+              <stringProp name="variableNames">insert_cdi_courtdisp_id</stringProp>
               <stringProp name="TestPlan.comments"> Obtiene un id_court_dispensers aleatorio para crear la nueva relación.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Inventory ID for Dispenser" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Inventory ID for CD">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_inventory FROM inventory ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -7974,15 +7982,13 @@ FROM court_dispensers_inventory;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_inventory_id</stringProp>
+              <stringProp name="variableNames">insert_cdi_inventory_id</stringProp>
               <stringProp name="TestPlan.comments">Obtiene un id_inventory aleatorio para completar la relación.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_COURT_DISP_INV_ID" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_COURT_DISP_INV_ID">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query"> SELECT id_court_dispensers_inventorycol 
- FROM court_dispensers_inventory
- ORDER BY RAND() LIMIT 1</stringProp>
+              <stringProp name="query">SELECT id_court_dispensers_inventorycol FROM court_dispensers_inventory ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -7990,7 +7996,7 @@ FROM court_dispensers_inventory;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">random_courtdispinv_id</stringProp>
+              <stringProp name="variableNames">random_cdi_id</stringProp>
               <stringProp name="TestPlan.comments">Selecciona un ID de registro aleatorio de esta misma tabla para ser usado en las operaciones de actualización y borrado.</stringProp>
             </JDBCSampler>
             <hashTree/>
@@ -8228,7 +8234,7 @@ LIMIT 1</stringProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Dispenser" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Dispenser">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
               <stringProp name="query">SELECT id_dispensers, code, `number`, id_dispenser_type, id_eds, idisland, number_hose, createdBy, createdAt, updatedBy, updatedAt 
@@ -8271,7 +8277,7 @@ FROM dispensers;</stringProp>
               <stringProp name="TestPlan.comments">Obtiene un id_eds aleatorio de la tabla eds.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Island ID for Dispenser  " enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Island ID for Dispenser  ">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT idisland FROM island ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -8325,7 +8331,7 @@ LIMIT 1</stringProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Eds" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Eds">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
               <stringProp name="query">SELECT id_eds, name, nit, address, sicom, idbusiness, createdBy, createdAt, updatedBy, updatedAt 
@@ -8510,7 +8516,7 @@ LIMIT 1</stringProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_hose" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_hose">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
               <stringProp name="query">SELECT id_hose, id_dispensers, `number`, accumulated_amount, accumulated_gallons, id_product_type, createdBy, createdAt, updatedBy, updatedAt 
@@ -8527,33 +8533,42 @@ FROM hose;</stringProp>
             <hashTree/>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Dispenser ID for Hose" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">SELECT id_dispensers FROM dispensers ORDER BY RAND() LIMIT 1</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">SELECT id_dispensers FROM dispensers ORDER BY RAND() LIMIT 1;</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
-              <stringProp name="queryTimeout"></stringProp>
-              <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="resultSetHandler">Store as String</stringProp>
-              <stringProp name="resultSetMaxRows"></stringProp>
-              <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames">insert_dispenser_id</stringProp>
-              <stringProp name="TestPlan.comments">Obtiene un id_dispensers aleatorio de la tabla padre dispensers.
-
-</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
             </JDBCSampler>
             <hashTree/>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Product Type ID for Hose" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">SELECT id_product_type FROM product_type ORDER BY RAND() LIMIT 1</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">SELECT id_product_type FROM product_type ORDER BY RAND() LIMIT 1;</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
-              <stringProp name="queryTimeout"></stringProp>
-              <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="resultSetHandler">Store as String</stringProp>
-              <stringProp name="resultSetMaxRows"></stringProp>
-              <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames">insert_prodtype_id</stringProp>
-              <stringProp name="TestPlan.comments">Obtiene un id_product_type aleatorio de la tabla padre product_type.
-</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Compartiment ID for Hose" enabled="true">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">SELECT id_compartiment FROM compartiment ORDER BY RAND() LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames">insert_hose_compartiment_id</stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="TestPlan.comments">Obtener un id_compartiment aleatorio, la clave que nos faltaba.</stringProp>
             </JDBCSampler>
             <hashTree/>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_HOSE_ID_FOR_UPDATE" enabled="true">
@@ -8596,7 +8611,7 @@ LIMIT 1</stringProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_hose_history">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_hose_history" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
               <stringProp name="query">SELECT id_hose_hose_history, id_hose, id_dispensers, accumulated_amount, accumulated_gallons, `date`, createdBy, createdAt, updatedBy, updatedAt 
@@ -8611,7 +8626,7 @@ FROM hose_history;</stringProp>
               <stringProp name="TestPlan.comments">Ver todos los registros de la tabla.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Hose and Dispenser ID for History">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Hose and Dispenser ID for History" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_hose, id_dispensers FROM hose ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -8825,7 +8840,11 @@ LIMIT 1</stringProp>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Product" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="query">SELECT id_phone, number FROM phone;</stringProp>
+              <stringProp name="query">SELECT id_phone, number,  createdBy, createdAt, updatedBy, updatedAt 
+FROM phone;
+
+
+</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="variableNames"></stringProp>
@@ -8874,7 +8893,7 @@ LIMIT 1</stringProp>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Product" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="query">SELECT id_product, name, id_product_type, price, createdBy, createdAt, updatedBy, updatedAt 
+              <stringProp name="query">SELECT id_product, name, id_product_type, purchase_price, sell_price, stock, date, createdBy, createdAt, updatedBy, updatedAt 
 FROM product;</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
@@ -8896,8 +8915,8 @@ FROM product;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_prodtype_id</stringProp>
-              <stringProp name="TestPlan.comments">Obtiene un id_product_type aleatorio de la tabla product_type para poder crear un nuevo producto.</stringProp>
+              <stringProp name="variableNames">insert_prod_id_type</stringProp>
+              <stringProp name="TestPlan.comments"> Obtiene un id_product_type aleatorio para poder crear un nuevo producto.</stringProp>
             </JDBCSampler>
             <hashTree/>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_PRODUCT_ID_FOR_UPDATE" enabled="true">
@@ -8918,11 +8937,13 @@ FROM product;</stringProp>
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT p.id_product
 FROM product p
+LEFT JOIN compartiment c ON p.id_product = c.id_product
 LEFT JOIN court_dispensers cd ON p.id_product = cd.id_product
-LEFT JOIN product_compartiment pc ON p.id_product = pc.id_product
+LEFT JOIN product_history ph ON p.id_product = ph.id_product
 LEFT JOIN shopping_product sp ON p.id_product = sp.id_product
-WHERE cd.id_product IS NULL
-  AND pc.id_product IS NULL
+WHERE c.id_product IS NULL
+  AND cd.id_product IS NULL
+  AND ph.id_product IS NULL
   AND sp.id_product IS NULL
 ORDER BY RAND()
 LIMIT 1</stringProp>
@@ -8934,21 +8955,21 @@ LIMIT 1</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames">delete_product_id</stringProp>
-              <stringProp name="TestPlan.comments">Obtiene un id_product que es seguro de eliminar, verificando que no esté siendo usado en las tablas court_dispensers, product_compartiment y shopping_product.</stringProp>
+              <stringProp name="TestPlan.comments"> Obtiene un id_product que es seguro de eliminar, verificando que no esté siendo usado en ninguna de las tablas dependientes (compartiment, court_dispensers,product_history y shopping_product).</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_product_compartimen" enabled="true">
-            <stringProp name="TestPlan.comments">UNIQUE KEY) en id_compartiment, lo que significa que un compartimento solo puede estar asociado a un producto. La consulta para el</stringProp>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_product_history" enabled="true">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_product_compartimen" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Product_history">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="query">SELECT id_product_compartiment, id_product, id_compartiment, stock, createdBy, createdAt, updatedBy, updatedAt 
-FROM product_compartiment;</stringProp>
+              <stringProp name="query">SELECT id_product_history, id_product, old_sell_price, new_sell_price, old_stock, new_stock, old_purchase_price, new_purchase_price, 
+date,  createdBy, createdAt, updatedBy, updatedAt 
+FROM product_history;</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="variableNames"></stringProp>
@@ -8959,7 +8980,7 @@ FROM product_compartiment;</stringProp>
               <stringProp name="TestPlan.comments">Ver todos los registros de la tabla.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Product ID for Compartiment" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Product ID for History">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_product FROM product ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -8970,17 +8991,12 @@ FROM product_compartiment;</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames">insert_product_id</stringProp>
-              <stringProp name="TestPlan.comments"> Obtiene un id_product aleatorio de la tabla product para crear la nueva relación.</stringProp>
+              <stringProp name="TestPlan.comments">Obtiene un id_product aleatorio de la tabla product para poder crear un nuevo registro de histórico.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Unused Compartiment ID" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_PROD_HISTORY_ID">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">SELECT c.id_compartiment
-FROM compartiment c
-LEFT JOIN product_compartiment pc ON c.id_compartiment = pc.id_compartiment
-WHERE pc.id_compartiment IS NULL
-ORDER BY RAND()
-LIMIT 1</stringProp>
+              <stringProp name="query">SELECT id_product_history FROM product_history ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -8988,22 +9004,8 @@ LIMIT 1</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_prodcomp_compartiment_id</stringProp>
-              <stringProp name="TestPlan.comments"> Obtiene un id_compartiment aleatorio que aún no esté en uso en esta tabla para cumplir con la restricción de clave única.</stringProp>
-            </JDBCSampler>
-            <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_PROD_COMP_ID" enabled="true">
-              <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">SELECT id_product_compartiment FROM product_compartiment ORDER BY RAND() LIMIT 1</stringProp>
-              <stringProp name="queryArguments"></stringProp>
-              <stringProp name="queryArgumentsTypes"></stringProp>
-              <stringProp name="queryTimeout"></stringProp>
-              <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="resultSetHandler">Store as String</stringProp>
-              <stringProp name="resultSetMaxRows"></stringProp>
-              <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">random_prodcomp_id</stringProp>
-              <stringProp name="TestPlan.comments"> Selecciona un id_product_compartiment aleatorio de esta tabla para ser usado en las operaciones de actualización y borrado.</stringProp>
+              <stringProp name="variableNames">random_prodhist_id</stringProp>
+              <stringProp name="TestPlan.comments">Selecciona un id_product_history aleatorio de esta misma tabla para ser usado en las operaciones de actualización y borrado.</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
@@ -9062,7 +9064,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_provider">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_provider" enabled="true">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -9208,7 +9210,8 @@ LIMIT 1</stringProp>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_shopping_produc_inventory" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="query">SELECT id_shopping_produc_inventorycol, id_shopping_product, idinventory, createdBy, createdAt, updatedBy, updatedAt 
+              <stringProp name="query">SELECT id_shopping_produc_inventorycol, id_shopping_product, idinventory, createdBy, createdAt, updatedBy, updatedAt
+
 FROM shopping_produc_inventory;</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
@@ -9271,7 +9274,7 @@ FROM shopping_produc_inventory;</stringProp>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Shopping_product" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="query">SELECT id_shopping_product, id_shopping, id_product, quantity, price, id_compartiment, createdBy, createdAt, updatedBy, updatedAt 
+              <stringProp name="query">SELECT id_shopping_product, id_shopping, id_product, quantity, purchase_price, sell_price, id_compartiment, date, createdBy, createdAt, updatedBy, updatedAt
 FROM shopping_product;</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
@@ -9293,11 +9296,11 @@ FROM shopping_product;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_shopping_id</stringProp>
+              <stringProp name="variableNames">insert_shopprod_shopping_id</stringProp>
               <stringProp name="TestPlan.comments">Obtiene un id_shopping aleatorio para asociar el producto a una compra.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Product ID for Shopping" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Product ID for ShopProd" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_product FROM product ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -9307,11 +9310,11 @@ FROM shopping_product;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_product_id</stringProp>
+              <stringProp name="variableNames">insert_shopprod_product_id</stringProp>
               <stringProp name="TestPlan.comments">Obtiene un id_product aleatorio para definir qué producto se está comprando.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Compartiment ID for Shopping" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Random Compartiment ID for ShopProd" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">SELECT id_compartiment FROM compartiment ORDER BY RAND() LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -9321,7 +9324,7 @@ FROM shopping_product;</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames">insert_shopprod_compartiment_id</stringProp>
+              <stringProp name="variableNames">insert_shopprod_compartment_id</stringProp>
               <stringProp name="TestPlan.comments">Obtiene un id_compartiment aleatorio para definir dónde se almacenará el producto.</stringProp>
             </JDBCSampler>
             <hashTree/>
@@ -9359,6 +9362,40 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_strongbox" enabled="true">
+            <boolProp name="TransactionController.parent">true</boolProp>
+            <boolProp name="TransactionController.includeTimers">false</boolProp>
+          </TransactionController>
+          <hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_strongbox" enabled="true">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">SELECT id, datetime, moviment, ammount, note, saldo, createdBy, createdAt, updatedBy, updatedAt FROM strongbox;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows">10</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="TestPlan.comments">Ver todos los registros de la tabla.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_STRONGBOX_ID" enabled="true">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">SELECT id FROM strongbox ORDER BY RAND() LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">random_strongbox_id</stringProp>
+              <stringProp name="TestPlan.comments">Selecciona un id de registro aleatorio de esta misma tabla para ser usado en las operaciones de actualización y borrado.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+          </hashTree>
           <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_tank" enabled="true">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
@@ -9367,8 +9404,10 @@ LIMIT 1</stringProp>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Tank" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="query">SELECT id_tank, `number`, ability, compartment, stock, createdBy, createdAt, updatedBy, updatedAt 
-FROM tank;</stringProp>
+              <stringProp name="query">SELECT id_tank, number, ability, compartment, createdBy, createdAt, updatedBy, updatedAt
+FROM tank;
+
+</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="variableNames"></stringProp>
@@ -9399,7 +9438,10 @@ FROM tank;</stringProp>
 FROM tank t
 LEFT JOIN compartiment c ON t.id_tank = c.id_tank
 LEFT JOIN eds_tank et ON t.id_tank = et.id_tank
-WHERE c.id_tank IS NULL AND et.id_tank IS NULL
+LEFT JOIN tank_history th ON t.id_tank = th.id_tank
+WHERE c.id_tank IS NULL 
+  AND et.id_tank IS NULL 
+  AND th.id_tank IS NULL
 ORDER BY RAND()
 LIMIT 1</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -9410,7 +9452,56 @@ LIMIT 1</stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames">delete_tank_id</stringProp>
-              <stringProp name="TestPlan.comments"> Obtiene un id_tank que es seguro de eliminar, verificando que no esté siendo usado en las tablas compartment y eds_tank.</stringProp>
+              <stringProp name="TestPlan.comments">Obtiene un id_tank que es seguro de eliminar, verificando que no esté siendo usado en compartiment, eds_tank, ni en tank_history.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+          </hashTree>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_tank_history" enabled="true">
+            <boolProp name="TransactionController.parent">true</boolProp>
+            <boolProp name="TransactionController.includeTimers">false</boolProp>
+          </TransactionController>
+          <hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_tank_history" enabled="true">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="query">SELECT id_tank_history, id_tank, old_stock, new_stock,  createdBy, createdAt, updatedBy, updatedAt 
+FROM tank_history;</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="resultSetMaxRows">10</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="TestPlan.comments">Ver todos los registros de la tabla.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Random Tank ID for History" enabled="true">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">SELECT id_tank FROM tank ORDER BY RAND() LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">insert_tank_id</stringProp>
+              <stringProp name="TestPlan.comments">Obtiene un id_tank aleatorio de la tabla tank para poder crear un nuevo registro de histórico.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="GET_RANDOM_TANK_HISTORY_ID" enabled="true">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">SELECT id_tank_history FROM tank_history ORDER BY RAND() LIMIT 1</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Select Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames">random_tankhist_id</stringProp>
+              <stringProp name="TestPlan.comments"> Selecciona un id_tank_history aleatorio de esta misma tabla para ser usado en las operaciones de actualización y borrado.</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
@@ -9468,7 +9559,7 @@ LIMIT 1</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="INSERT_UPDATE_DELETE">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="INSERT_UPDATE_DELETE" enabled="true">
           <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">true</boolProp>
         </TransactionController>
@@ -9498,7 +9589,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crear un nuevo registro en la tabla business.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_BUSINESS_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_BUSINESS_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE business
 SET
@@ -9563,7 +9654,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crear un nuevo registro en la tabla capacity.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_CAPACITY_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_CAPACITY_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE capacity
 SET
@@ -9627,7 +9718,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crear una nueva categoría con datos aleatorios.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_CATEGORY_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_CATEGORY_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE category
 SET
@@ -9670,17 +9761,40 @@ WHERE idcategory = ${delete_category_id_1}</stringProp>
           <hashTree>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" INSERT_COMPARTIMENT" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">INSERT INTO compartiment (number, nominal, operative, stock, height, id_tank, createdBy, createdAt)
+              <stringProp name="query">INSERT INTO compartiment (number, nominal, operative, height, id_product, id_tank, date, createdBy, createdAt)
 VALUES (
-    ${__Random(10000, 99999,)},
-    ${__Random(100, 500,)},
-    ${__Random(100, 500,)},
-    ${__Random(50, 200,)},
-    ${__Random(1, 5,)},
-    ${tank_id_for_insert_1},
-    &apos;userQA_${__Random(1, 999,)}&apos;,
+    ${__Random(100, 200,)},
+    ${__Random(100, 500,)}.0,
+    ${__Random(100, 500,)}.0,
+    ${__Random(1, 5,)}.0,
+    ${insert_comp_id_product_1},
+    ${insert_comp_id_tank_1},
+    CURDATE(),
+    &apos;userQA_${__RandomString(5,ABC,)}&apos;,
     NOW()
-)
+)</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="TestPlan.comments"> Crea un nuevo compartimento. Usamos un number aleatorio alto para evitar colisiones con la UNIQUE KEY.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_COMPARTIMENT_RANDOM" enabled="false">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">UPDATE compartiment
+SET
+    nominal = ${__Random(501, 999,)}.0,
+    operative = ${__Random(501, 999,)},
+    updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
+    updatedAt = NOW()
+WHERE
+    id_compartiment = ${update_compartment_id_1}
+
 </stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
@@ -9690,37 +9804,13 @@ VALUES (
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments">Crear un nuevo compartimento usando un id_tank obtenido aleatoriamente.</stringProp>
-            </JDBCSampler>
-            <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_COMPARTIMENT_RANDOM" enabled="true">
-              <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">UPDATE compartiment
-SET
-    nominal = ${__Random(100, 500,)},
-    operative = ${__Random(100, 500,)},
-    stock = ${__Random(50, 200,)},
-    height = ${__Random(1, 5,)},
-    updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
-    updatedAt = NOW()
-WHERE
-    id_compartiment = ${update_compartment_id_1}</stringProp>
-              <stringProp name="queryArguments"></stringProp>
-              <stringProp name="queryArgumentsTypes"></stringProp>
-              <stringProp name="queryTimeout"></stringProp>
-              <stringProp name="queryType">Update Statement</stringProp>
-              <stringProp name="resultSetHandler">Store as String</stringProp>
-              <stringProp name="resultSetMaxRows"></stringProp>
-              <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments"> Actualizar un registro aleatorio usando la variable obtenida </stringProp>
+              <stringProp name="TestPlan.comments">Actualiza los valores de un compartimento aleatorio.</stringProp>
             </JDBCSampler>
             <hashTree/>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_COMPARTIMENT_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">DELETE FROM compartiment
-WHERE number = ${delete_compartment_number_1}
-</stringProp>
+WHERE id_compartiment = ${delete_compartment_id_1}</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -9729,7 +9819,7 @@ WHERE number = ${delete_compartment_number_1}
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments">Borrar un registro aleatorio diferente, usando la variable obtenida</stringProp>
+              <stringProp name="TestPlan.comments">Borra un compartimento aleatorio que fue verificado como seguro.</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
@@ -9760,7 +9850,7 @@ VALUES (
               <stringProp name="TestPlan.comments"> Crear una nueva relación entre un compartimento y una capacidad usando los IDs obtenidos </stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_COMPARTIMENT_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_COMPARTIMENT_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE compartiment_capacity
 SET
@@ -9834,7 +9924,7 @@ VALUES(
               <stringProp name="TestPlan.comments">Crear un nuevo registro en court usando los IDs de las tablas padre obtenidos previamente.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" UPDATE_COURT_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" UPDATE_COURT_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE court
 SET
@@ -9877,17 +9967,20 @@ WHERE id_court = ${delete_court_id_1}</stringProp>
           <hashTree>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_court_dispensers" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">INSERT INTO court_dispensers (id_court, accumulated_amount, accumulated_gallons, id_product, id_compartiment, id_hose, createdBy, createdAt)
-VALUES(
-    ${insert_court_id_1},
+              <stringProp name="query">INSERT INTO court_dispensers 
+(id_court, accumulated_amount, accumulated_gallons, id_product, id_compartiment, id_hose, createdBy, createdAt) 
+VALUES (
+    ${insert_cd_court_id_1},
     ${__Random(1000, 5000,)}.0,
     ${__Random(100, 500,)}.0,
-    ${insert_product_id_1},
-    ${insert_courtdisp_compartiment_id_1},
-    ${insert_hose_id_1},
-    &apos;userQA_${__RandomString(5,ABC,)}&apos;,
+    ${insert_cd_product_id_1},
+    ${insert_cd_compartment_id_1},
+    ${insert_cd_hose_id_1}, 
+   &apos;userQA_${__Random(1, 999,)}&apos;,
     NOW()
-)</stringProp>
+);
+
+</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -9899,15 +9992,16 @@ VALUES(
               <stringProp name="TestPlan.comments">Crea un nuevo registro en la tabla usando los IDs de las tablas padre obtenidos previamente y llenando los demás campos con datos aleatorios.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_dispensers_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_dispensers_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE court_dispensers
 SET
-    accumulated_amount=${__Random(5000,9999,)}.0,
-    accumulated_gallons=${__Random(500,999,)}.0,
-    updatedBy=&apos;updater_${__Random(1,100,)}&apos;,
-    updatedAt=NOW()
-WHERE id_court_dispensers=${update_courtdisp_id_1}</stringProp>
+    accumulated_amount = ${__Random(5001, 9999,)}.0,
+    accumulated_gallons = ${__Random(501, 999,)}.0,
+    updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
+    updatedAt = NOW()
+WHERE
+    id_court_dispensers = ${update_courtdisp_id_1};</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -9934,20 +10028,20 @@ WHERE id_court_dispensers=${update_courtdisp_id_1}</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_DISPENSERS_INVENTORY_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_DISPENSERS_INVENTORY_EDS">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_court_dispensers_inventory" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_court_dispensers_inventory">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">INSERT INTO court_dispensers_inventory (id_court_dispensers, id_inventory, createdBy, createdAt)
 VALUES (
-    ${insert_courtdisp_id_1},
-    ${insert_inventory_id_1},
-    &apos;userQA_${__RandomString(5,ABC,)}&apos;,
+    ${insert_cdi_courtdisp_id_1},
+    ${insert_cdi_inventory_id_1}, 
+   &apos;userQA_${__Random(1, 999,)}&apos;,
     NOW()
-)</stringProp>
+);</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -9959,14 +10053,14 @@ VALUES (
               <stringProp name="TestPlan.comments">Crea una nueva relación entre un court_dispenser y un inventory usando los IDs obtenidos aleatoriamente.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_dispensers_inventory_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_dispensers_inventory_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE court_dispensers_inventory
 SET
     updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
     updatedAt = NOW()
 WHERE
-    id_court_dispensers_inventorycol = ${random_courtdispinv_id_1}</stringProp>
+    id_court_dispensers_inventorycol = ${random_cdi_id_1};</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -9981,8 +10075,7 @@ WHERE
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_court_dispensers_inventory_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">DELETE FROM court_dispensers_inventory
-WHERE
-    id_court_dispensers_inventorycol = ${random_courtdispinv_id_1}</stringProp>
+WHERE id_court_dispensers_inventorycol = ${random_cdi_id_1};</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -10020,7 +10113,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crea un nuevo documento con una descripción aleatoria, asociándolo a un court existente usando el ID obtenido previamente.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_document_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_document_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE court_document
 SET
@@ -10084,7 +10177,7 @@ VALUES (
               <stringProp name="TestPlan.comments"> Crea un nuevo gasto con un monto y descripción aleatorios, asociándolo a un court y a un tipo de expenditure existentes.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_expenditures_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_expenditures_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE court_expenditures
 SET
@@ -10149,7 +10242,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crea un nuevo recaudo con un monto y descripción aleatorios, asociándolo a un court y a un type_of_collection existentes.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_type_of_collection_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_court_type_of_collection_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE court_type_of_collection
 SET
@@ -10187,12 +10280,12 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="DISPENSER_TYPE_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="DISPENSER_TYPE_EDS">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_dispenser_type" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_dispenser_type">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">INSERT INTO dispenser_type (description, createdBy, createdAt)
 VALUES (
@@ -10211,7 +10304,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crea un nuevo tipo de dispensador con una descripción aleatoria. No requiere IDs de otras tablas.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_dispenser_type_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_dispenser_type_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE dispenser_type
 SET
@@ -10320,7 +10413,7 @@ WHERE
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_dispensers" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_dispensers">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">INSERT INTO eds (name, nit, address, sicom, idbusiness, createdBy, createdAt)
 VALUES (
@@ -10343,7 +10436,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crea una nueva EDS con datos aleatorios y únicos para name, asociándola a un business existente.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_eds_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_eds_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE eds
 SET
@@ -10407,7 +10500,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crea una nueva relación entre una eds y un tank usando el par de IDs válidos obtenidos previamente.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_eds_tank_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_eds_tank_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE eds_tank
 SET
@@ -10468,7 +10561,7 @@ VALUES (
 id_expenditures es auto_increment y no necesita ser especificada.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_expenditures_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_expenditures_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE expenditures
 SET
@@ -10512,13 +10605,15 @@ WHERE
           <hashTree>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_hose">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">INSERT INTO hose (id_dispensers, `number`, accumulated_amount, accumulated_gallons, id_product_type, createdBy, createdAt)
-VALUES (
+              <stringProp name="query">
+INSERT INTO hose (id_dispensers, `number`, accumulated_amount, accumulated_gallons, id_product_type, id_compartiment, createdBy, createdAt)
+VALUES (   
     ${insert_dispenser_id_1},
     ${__Random(50, 99,)},
     ${__Random(1000, 5000,)}.0,
     ${__Random(100, 500,)}.0,
     ${insert_prodtype_id_1},
+    ${insert_hose_compartiment_id_1},
     &apos;userQA_${__RandomString(5,ABC,)}&apos;,
     NOW()
 )</stringProp>
@@ -10533,7 +10628,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crea una nueva manguera con datos aleatorios. Se usa un número alto para number para evitar colisiones con la restricción de clave única.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_hose_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_hose_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE hose
 SET
@@ -10576,7 +10671,7 @@ WHERE
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_hose_history">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_hose_history" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Update Statement</stringProp>
               <stringProp name="query">INSERT INTO hose_history
@@ -10602,7 +10697,7 @@ VALUES(
               <stringProp name="resultSetHandler">Store as String</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_hose_history_RANDOM">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_hose_history_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE hose_history
 SET
@@ -10666,7 +10761,7 @@ VALUES (0,
               <stringProp name="TestPlan.comments">Crea un nuevo registro de inventario con datos aleatorios.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_inventory_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_inventory_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE inventory
 SET
@@ -10729,7 +10824,7 @@ VALUES (
 idisland es auto_increment y no necesita ser especificada.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_island_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_island_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE island
 SET
@@ -10795,7 +10890,7 @@ VALUES (
               <stringProp name="TestPlan.comments"> Crea un nuevo islero con datos aleatorios y un correo electrónico único, asociándolo a una EDS existente. La columna </stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_islander_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_islander_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE islander
 SET
@@ -10841,9 +10936,11 @@ WHERE
           <hashTree>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_phone" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">INSERT INTO phone (`number`)
+              <stringProp name="query">INSERT INTO phone (`number`,  createdBy, createdAt )
 VALUES (
-    &apos;${__Random(3000000000, 3999999999,)}&apos;
+    &apos;573${__RandomString(9,0123456789)}&apos;,
+    &apos;userQA_${__RandomString(5,ABC,)}&apos;,
+    NOW()
 )</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
@@ -10856,13 +10953,17 @@ VALUES (
               <stringProp name="TestPlan.comments"> Crea un nuevo teléfono con un número único y aleatorio. La columna  id_phone es auto_increment y no se especifica. </stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_phone_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_phone_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE phone
 SET
-    `number` = &apos;${__Random(5000000000, 5999999999,)}&apos;
+    `number` = &apos;573${__RandomString(9,0123456789)}&apos;,
+    updatedBby = &apos;updater_${__Random(1,100,)}&apos;,
+    updatedAt = NOW()
 WHERE
-    id_phone = ${update_phone_id_1}</stringProp>
+    id_phone = ${update_phone_id_1}
+
+</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -10898,11 +10999,14 @@ WHERE
           <hashTree>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_product" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">INSERT INTO product (name, id_product_type, price, createdBy, createdAt)
+              <stringProp name="query">INSERT INTO product (name, id_product_type, purchase_price, sell_price, stock, date, createdBy, createdAt)
 VALUES (
     &apos;Producto-${__RandomString(10,ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,)}&apos;,
-    ${insert_prodtype_id_1},
-    ${__Random(1000, 15000,)}.00,
+    ${insert_prod_id_type_1},
+    ${__Random(5000, 10000,)}.00,
+    ${__Random(10001, 15000,)}.00,
+    ${__Random(100, 500,)}.0,
+    NOW(),
     &apos;userQA_${__RandomString(5,ABC,)}&apos;,
     NOW()
 )</stringProp>
@@ -10914,15 +11018,16 @@ VALUES (
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments"> Crea un nuevo producto con un nombre único y aleatorio, un precio y lo asocia a un tipo de producto existente.</stringProp>
+              <stringProp name="TestPlan.comments"> Crea un nuevo producto con precios y stock aleatorios, asociándolo a un tipo de producto existente. El nombre es muy aleatorio para evitar fallos por la UNIQUE KEY.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_product_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_product_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE product
 SET
-    name = &apos;Producto-UPD-${__RandomString(10,ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,)}&apos;,
-    price = ${__Random(15001, 30000,)}.00,
+    purchase_price = ${__Random(15001, 20000,)}.000,
+    sell_price = ${__Random(20001, 25000,)}.000,
+    stock = ${__Random(501, 999,)}.0,
     updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
     updatedAt = NOW()
 WHERE
@@ -10935,14 +11040,13 @@ WHERE
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments">Actualiza el nombre y el precio de un producto aleatorio, identificado por el ID guardado en la variable update_product_id.</stringProp>
+              <stringProp name="TestPlan.comments">Actualiza los precios y el stock de un producto aleatorio, identificado por el ID guardado en la variable update_product_id.</stringProp>
             </JDBCSampler>
             <hashTree/>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_product_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">DELETE FROM product
-WHERE
-    id_product = ${delete_product_id_1}</stringProp>
+WHERE id_product = ${delete_product_id_1}</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -10955,19 +11059,25 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PRODUCT_COMPARTIMENT_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PRODUCT_HISTORY_EDS" enabled="true">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_product_compartiment" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_product_history">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">INSERT INTO product_compartiment (id_product, id_compartiment, stock, createdBy, createdAt)
+              <stringProp name="query">INSERT INTO product_history 
+(id_product, old_sell_price, new_sell_price, old_stock, new_stock, old_purchase_price, new_purchase_price, `date`,  createdBy, createdAt ) 
 VALUES (
     ${insert_product_id_1},
-    ${insert_prodcomp_compartiment_id_1},
-    ${__Random(500, 5000,)}.0,
-    &apos;userQA_${__RandomString(5,ABC,)}&apos;,
+    ${__Random(10001, 15000,)}.000, 
+    ${__Random(15001, 20000,)}.000, 
+    ${__Random(100, 500,)}.0, 
+    ${__Random(501, 999,)}.0, 
+    ${__Random(5000, 10000,)}.000, 
+    ${__Random(10001, 12000,)}.000, 
+    NOW(), 
+    &apos;userQA_${__RandomString(5,ABC,)}&apos;, 
     NOW()
 )</stringProp>
               <stringProp name="queryArguments"></stringProp>
@@ -10978,18 +11088,19 @@ VALUES (
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments">Asigna un producto a un compartimento disponible, estableciendo un stock inicial.</stringProp>
+              <stringProp name="TestPlan.comments">Crea un nuevo registro de histórico con todos los valores antiguos y nuevos de precios y stock, asociándolo a un producto existente.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_product_compartiment_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_product_history_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">UPDATE product_compartiment
-SET
-    stock = ${__Random(5001, 9999,)}.0,
-    updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
-    updatedAt = NOW()
-WHERE
-    id_product_compartiment = ${random_prodcomp_id_1}</stringProp>
+              <stringProp name="query">UPDATE product_history 
+SET 
+    new_sell_price = ${__Random(20001, 25000,)}.000,
+    new_stock = ${__Random(1000, 1500,)}.0,
+    updatedBy = &apos;updater_${__Random(1,100,)}&apos;, 
+    updatedAt = NOW() 
+WHERE 
+    id_product_history = ${random_prodhist_id_1}</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -10998,14 +11109,14 @@ WHERE
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments"> Actualiza el stock de una relación producto-compartimento aleatoria.</stringProp>
+              <stringProp name="TestPlan.comments">Actualiza los valores &quot;nuevos&quot; de un registro de histórico aleatorio, simulando una corrección.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_product_compartiment_RANDOM" enabled="false">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_product_history_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">DELETE FROM product_compartiment
+              <stringProp name="query">DELETE FROM product_history
 WHERE
-    id_product_compartiment = ${random_prodcomp_id_1}</stringProp>
+    id_product_history = ${random_prodhist_id_1}</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
@@ -11014,7 +11125,7 @@ WHERE
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments">orra una relación producto-compartimento aleatoria.</stringProp>
+              <stringProp name="TestPlan.comments">Borra un registro de histórico aleatorio usando el ID obtenido. Como es una tabla de log, un borrado simple es seguro.</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
@@ -11042,7 +11153,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crea un nuevo tipo de producto con una descripción aleatoria. La columna id_product_type es auto_increment y no se especifica. </stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_product_type_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_product_type_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE product_type
 SET
@@ -11105,7 +11216,7 @@ VALUES (
 id_provider es auto_increment y no se especifica. </stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_provider_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_provider_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE provider
 SET
@@ -11174,7 +11285,7 @@ VALUES(
               <stringProp name="TestPlan.comments"> Crea un nuevo registro de compra con un número de factura (invoice) único y aleatorio, asociándolo a un proveedor y categoría existentes.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_shopping_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_shopping_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE shopping
 SET
@@ -11219,10 +11330,11 @@ WHERE
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_shopping_produc_inventory" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Update Statement</stringProp>
-              <stringProp name="query">INSERT INTO shopping_produc_inventory (id_shopping_product, idinventory, createdBy, createdAt)
+              <stringProp name="query">INSERT INTO tank (`number`, ability, compartment, createdBy, createdAt)
 VALUES (
-    ${insert_shopprod_id_1},
-    ${insert_inventory_id_1},
+    &apos;TNK-${__RandomString(10,ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,)}&apos;,
+    ${__Random(5000, 10000,)}.0,
+    ${__Random(1, 4,)},
     &apos;userQA_${__RandomString(5,ABC,)}&apos;,
     NOW()
 )</stringProp>
@@ -11236,7 +11348,7 @@ VALUES (
               <stringProp name="TestPlan.comments">Crea una nueva relación entre un shopping_product y un inventory usando los IDs obtenidos aleatoriamente.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_shopping_produc_inventory_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_shopping_produc_inventory_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE shopping_produc_inventory
 SET
@@ -11280,13 +11392,15 @@ WHERE
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_shopping_product" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Update Statement</stringProp>
-              <stringProp name="query">INSERT INTO shopping_product (id_shopping, id_product, quantity, price, id_compartiment, createdBy, createdAt)
+              <stringProp name="query">INSERT INTO shopping_product (id_shopping, id_product, quantity, purchase_price, sell_price, id_compartiment, `date`, createdBy, createdAt)
 VALUES (
-    ${insert_shopping_id_1},
-    ${insert_product_id_1},
+    ${insert_shopprod_shopping_id_1},
+    ${insert_shopprod_product_id_1},
     ${__Random(1, 100,)}.0,
-    ${__Random(1000, 5000,)}.00,
-    ${insert_shopprod_compartiment_id_1},
+    ${__Random(5000, 10000,)}.000,
+    ${__Random(10001, 15000,)}.000,
+    ${insert_shopprod_compartment_id_1},
+    CURDATE(),
     &apos;userQA_${__RandomString(5,ABC,)}&apos;,
     NOW()
 )</stringProp>
@@ -11297,15 +11411,16 @@ VALUES (
               <stringProp name="queryTimeout"></stringProp>
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
-              <stringProp name="TestPlan.comments">Crea un nuevo registro de producto de compra con datos aleatorios, asociándolo a una compra, un producto y un compartimento existentes.</stringProp>
+              <stringProp name="TestPlan.comments">Propósito: Crea un nuevo registro de producto de compra con precios y cantidad aleatorios.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_shopping_product_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_shopping_product_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE shopping_product
 SET
     quantity = ${__Random(101, 200,)}.0,
-    price = ${__Random(5001, 9999,)}.00,
+    purchase_price = ${__Random(15001, 20000,)}.000,
+    sell_price = ${__Random(20001, 25000,)}.000,
     updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
     updatedAt = NOW()
 WHERE
@@ -11318,7 +11433,7 @@ WHERE
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments">Actualiza la cantidad y el precio de un producto de compra aleatorio, identificado por el ID guardado en la variable update_shopprod_id</stringProp>
+              <stringProp name="TestPlan.comments"> Actualiza la cantidad y los precios de un producto de compra aleatorio.</stringProp>
             </JDBCSampler>
             <hashTree/>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_shopping_product_RANDOM" enabled="false">
@@ -11338,6 +11453,72 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="STRONGBOX_EDS" enabled="true">
+            <boolProp name="TransactionController.parent">true</boolProp>
+            <boolProp name="TransactionController.includeTimers">true</boolProp>
+          </TransactionController>
+          <hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" INSERT_TANK">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">INSERT INTO strongbox (datetime, moviment, ammount, note, saldo, createdBy, createdAt)
+VALUES (
+    NOW(),
+    ELT(${__Random(1,2,)}, &apos;corte&apos;, &apos;retiro&apos;),
+    ${__Random(100, 5000,)}.000,
+    &apos;Nota de prueba - ${__RandomString(15,abcdef,)}&apos;,
+    ${__Random(10000, 50000,)}.000,
+    &apos;userQA_${__RandomString(5,ABC,)}&apos;,
+    NOW()
+)</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="TestPlan.comments">rea un nuevo movimiento en la caja fuerte. La columna moviment se elige aleatoriamente entre los valores permitidos por el ENUM usando una función de MySQL.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_strongbox_RANDOM" enabled="false">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">UPDATE strongbox
+SET
+    ammount = ${__Random(5001, 9999,)}.000,
+    note = &apos;Nota actualizada - ${__time(YMDHMS,)}&apos;,
+    updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
+    updatedAt = NOW()
+WHERE
+    id = ${random_strongbox_id_1}</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="TestPlan.comments">Actualiza el monto y la nota de un movimiento aleatorio, identificado por el ID guardado en la variable random_strongbox_id.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_strongbox_RANDOM" enabled="false">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">DELETE FROM strongbox
+WHERE
+    id = ${random_strongbox_id_1}</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="TestPlan.comments">Borra un movimiento aleatorio usando el ID obtenido. Como no tiene dependencias, un borrado simple es seguro.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+          </hashTree>
           <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TANK_EDS" enabled="true">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
@@ -11345,12 +11526,11 @@ WHERE
           <hashTree>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" INSERT_TANK" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">INSERT INTO tank (`number`, ability, compartment, stock, createdBy, createdAt)
+              <stringProp name="query">INSERT INTO tank (`number`, ability, compartment, createdBy, createdAt)
 VALUES (
     &apos;TNK-${__RandomString(10,ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,)}&apos;,
     ${__Random(5000, 10000,)}.0,
     ${__Random(1, 4,)},
-    ${__Random(1000, 4000,)}.0,
     &apos;userQA_${__RandomString(5,ABC,)}&apos;,
     NOW()
 )</stringProp>
@@ -11365,12 +11545,12 @@ VALUES (
               <stringProp name="TestPlan.comments"> Crea un nuevo tanque con un número (number) único y aleatorio y valores aleatorios para su capacidad y stock.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_tank_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_tank_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE tank
 SET
     ability = ${__Random(10001, 20000,)}.0,
-    stock = ${__Random(4001, 8000,)}.0,
+    compartment = ${__Random(1, 5,)},
     updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
     updatedAt = NOW()
 WHERE
@@ -11383,7 +11563,7 @@ WHERE
               <stringProp name="resultSetMaxRows"></stringProp>
               <stringProp name="resultVariable"></stringProp>
               <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments">Actualiza la capacidad (ability) y el stock de un tanque aleatorio, identificado por el ID guardado en la variable update_tank_id.</stringProp>
+              <stringProp name="TestPlan.comments"> Actualiza la capacidad (ability) y el número de compartimentos de un tanque aleatorio.</stringProp>
             </JDBCSampler>
             <hashTree/>
             <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_tank_RANDOM" enabled="false">
@@ -11391,7 +11571,7 @@ WHERE
               <stringProp name="query">DELETE FROM tank
 WHERE
     id_tank = ${delete_tank_id_1}</stringProp>
-              <stringProp name="queryArguments">${business_id_1}</stringProp>
+              <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes">INTEGER</stringProp>
               <stringProp name="queryTimeout"></stringProp>
               <stringProp name="queryType">Update Statement</stringProp>
@@ -11403,7 +11583,71 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TYPE_OF_COLLECTION_EDS">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TANK_HISTORY_EDS" enabled="true">
+            <boolProp name="TransactionController.parent">true</boolProp>
+            <boolProp name="TransactionController.includeTimers">true</boolProp>
+          </TransactionController>
+          <hashTree>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_tank_history" enabled="true">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">INSERT INTO tank_history (id_tank, old_stock, new_stock,  createdBy, createdAt )
+VALUES (
+    ${insert_tank_id_1},
+    ${__Random(1000, 4000,)}.0,
+    ${__Random(4001, 8000,)}.0,
+    &apos;userQA_${__RandomString(5,ABC,)}&apos;,
+    NOW()
+)</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="TestPlan.comments">Crea un nuevo registro de histórico de stock con valores aleatorios, asociándolo a un tanque (tank) existente.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_tank_history_RANDOM" enabled="false">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">UPDATE tank_history
+SET
+    old_stock = ${__Random(8001, 12000,)}.0,
+    new_stock = ${__Random(12001, 16000,)}.0,
+    updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
+    updatedAt = NOW()
+WHERE
+    id_tank_history = ${random_tankhist_id_1}</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="TestPlan.comments">Actualiza los valores de stock y los campos de auditoría de un registro de histórico aleatorio.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_tank_history_RANDOM" enabled="false">
+              <stringProp name="dataSource">MySQL_Connection</stringProp>
+              <stringProp name="query">DELETE FROM tank_history
+WHERE
+    id_tank_history = ${random_tankhist_id_1}</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes">INTEGER</stringProp>
+              <stringProp name="queryTimeout"></stringProp>
+              <stringProp name="queryType">Update Statement</stringProp>
+              <stringProp name="resultSetHandler">Store as String</stringProp>
+              <stringProp name="resultSetMaxRows"></stringProp>
+              <stringProp name="resultVariable"></stringProp>
+              <stringProp name="variableNames"></stringProp>
+              <stringProp name="TestPlan.comments">Borra un registro de histórico aleatorio. Al ser una tabla de log, un borrado simple es seguro.</stringProp>
+            </JDBCSampler>
+            <hashTree/>
+          </hashTree>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TYPE_OF_COLLECTION_EDS" enabled="true">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -11427,7 +11671,7 @@ VALUES (
               <stringProp name="TestPlan.comments"> Crea un nuevo tipo de recaudo con una descripción única y aleatoria. La columna   id_type_of_collection es auto_increment y no se especifica.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_type_of_collection_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_type_of_collection_RANDOM" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE type_of_collection
 SET
@@ -11452,8 +11696,8 @@ WHERE
               <stringProp name="query">DELETE FROM type_of_collection
 WHERE
     id_type_of_collection = ${delete_typecoll_id_1}</stringProp>
-              <stringProp name="queryArguments">${business_id_1}</stringProp>
-              <stringProp name="queryArgumentsTypes">INTEGER</stringProp>
+              <stringProp name="queryArguments"></stringProp>
+              <stringProp name="queryArgumentsTypes"></stringProp>
               <stringProp name="queryTimeout"></stringProp>
               <stringProp name="queryType">Update Statement</stringProp>
               <stringProp name="resultSetHandler">Store as String</stringProp>
@@ -11465,7 +11709,261 @@ WHERE
             <hashTree/>
           </hashTree>
         </hashTree>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TEST_TRIGGERS">
+          <boolProp name="TransactionController.parent">true</boolProp>
+          <boolProp name="TransactionController.includeTimers">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TEST_COURT_DISPENSERS_TRIGGERS">
+            <stringProp name="TestPlan.comments">validar los dos triggers que se disparan al insertar un registro en la tabla court_dispensers.</stringProp>
+            <boolProp name="TransactionController.parent">true</boolProp>
+            <boolProp name="TransactionController.includeTimers">false</boolProp>
+          </TransactionController>
+          <hashTree>
+            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="PASO 1: PREPARACIÓN">
+              <stringProp name="TestPlan.comments">Necesitamos IDs válidos de varias tablas para poder crear un registro en court_dispensers. Añade los siguientes cuatro samplers JDBC Request al principio.</stringProp>
+            </GenericController>
+            <hashTree>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" Get Court ID for CD Trigger">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT id_court FROM court ORDER BY RAND() LIMIT 1</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">cd_insert_court_id</stringProp>
+                <stringProp name="TestPlan.comments">Obtener id_court</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Product ID for CD Trigger">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT id_product FROM product ORDER BY RAND() LIMIT 1;</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">cd_insert_product_id</stringProp>
+                <stringProp name="TestPlan.comments"> Obtener id_product</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Compartment ID for CD Trigger">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT id_compartiment FROM compartiment ORDER BY RAND() LIMIT 1;</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">cd_insert_compartment_id</stringProp>
+                <stringProp name="TestPlan.comments">Obtener id_compartiment</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Hose ID for CD Trigger">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT id_hose FROM hose ORDER BY RAND() LIMIT 1;</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">cd_insert_hose_id</stringProp>
+                <stringProp name="TestPlan.comments">Obtener id_hose</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+            </hashTree>
+            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="PASO 2: ESTADO ANTERIOR" enabled="true">
+              <stringProp name="TestPlan.comments"> Guardar el Estado &quot;Antes&quot; de la Actualización,Este paso es crucial para verificar el segundo trigger. Necesitamos saber los valores de la manguera antes de que el trigger los modifique.</stringProp>
+            </GenericController>
+            <hashTree>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Get Hose State BEFORE Trigger">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT accumulated_amount, accumulated_gallons 
+FROM hose 
+WHERE id_hose = ${cd_insert_hose_id_1};</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">hose_before_amount,hose_before_gallons</stringProp>
+                <stringProp name="TestPlan.comments">Guardar los valores acumulados actuales de la manguera que vamos a usar.</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+            </hashTree>
+            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="PASO 3: EVENTO">
+              <stringProp name="TestPlan.comments">Ejecutar el Evento que Dispara los Triggers, Este es el INSERT principal que pone en marcha toda la lógica automática.</stringProp>
+            </GenericController>
+            <hashTree>
+              <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname=" Generate Random Values for Event">
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="script">// Generamos los valores que se van a insertar
+def event_amount = new Random().nextInt(100) + 1;
+def event_gallons = new Random().nextInt(10) + 1;
+
+// Los guardamos como variables de JMeter
+vars.put(&quot;event_amount&quot;, event_amount.toString());
+vars.put(&quot;event_gallons&quot;, event_gallons.toString());</stringProp>
+                <stringProp name="scriptLanguage">groovy</stringProp>
+              </JSR223Sampler>
+              <hashTree/>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT into court_dispensers (EVENT)">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">INSERT INTO court_dispensers 
+(id_court, accumulated_amount, accumulated_gallons, id_product, id_compartiment, id_hose, createdBy, createdAt) 
+VALUES (
+    ${cd_insert_court_id_1},
+    ${event_amount}, 
+    ${event_gallons}, 
+    ${cd_insert_product_id_1}, 
+    ${cd_insert_compartment_id_1}, 
+    ${cd_insert_hose_id_1}, 
+    &apos;trigger_test_user&apos;, 
+    NOW()
+);</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Update Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames"></stringProp>
+                <stringProp name="TestPlan.comments"> Crear el registro en court_dispensers para disparar los dos triggers.</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+            </hashTree>
+            <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="PASO 4: VERIFICACIÓN">
+              <stringProp name="TestPlan.comments">Verificar los Resultados, comprobamos que ambos triggers hicieron su trabajo correctamente.</stringProp>
+            </GenericController>
+            <hashTree>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="VERIFY hose_history Creation">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT COUNT(*) FROM hose_history 
+WHERE createdBy = &apos;trigger_test_user&apos; AND id_hose = ${cd_insert_hose_id_1};</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">history_record_count</stringProp>
+                <stringProp name="TestPlan.comments">Confirmar que el trigger trg_insert_hose_history creó un nuevo registro.</stringProp>
+              </JDBCSampler>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert History Record was Created">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="0"></stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">2</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="VERIFY hose Accumulated Update">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT accumulated_amount, accumulated_gallons 
+FROM hose 
+WHERE id_hose = ${cd_insert_hose_id_1};</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">hose_after_amount,hose_after_gallons</stringProp>
+                <stringProp name="TestPlan.comments"> Confirmar que el trigger trg_update_hose_accumulated actualizó los valores.</stringProp>
+              </JDBCSampler>
+              <hashTree>
+                <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert Accumulated Values are Correct">
+                  <stringProp name="scriptLanguage">groovy</stringProp>
+                  <stringProp name="parameters"></stringProp>
+                  <stringProp name="filename"></stringProp>
+                  <stringProp name="cacheKey">true</stringProp>
+                  <stringProp name="script">// Obtenemos los valores de las variables (como String)
+def before_amount = Double.parseDouble(vars.get(&quot;hose_before_amount_1&quot;));
+def event_amount = Double.parseDouble(vars.get(&quot;event_amount&quot;));
+def after_amount = Double.parseDouble(vars.get(&quot;hose_after_amount_1&quot;));
+
+def before_gallons = Double.parseDouble(vars.get(&quot;hose_before_gallons_1&quot;));
+def event_gallons = Double.parseDouble(vars.get(&quot;event_gallons&quot;));
+def after_gallons = Double.parseDouble(vars.get(&quot;hose_after_gallons_1&quot;));
+
+// Calculamos los resultados esperados
+def expected_amount = before_amount + event_amount;
+def expected_gallons = before_gallons + event_gallons;
+
+// Verificamos si el resultado real es igual al esperado
+if (after_amount != expected_amount) {
+    AssertionResult.setFailure(true);
+    AssertionResult.setFailureMessage(&quot;Error en Amount. Esperado: &quot; + expected_amount + &quot;, pero se obtuvo: &quot; + after_amount);
+}
+
+if (after_gallons != expected_gallons) {
+    AssertionResult.setFailure(true);
+    AssertionResult.setFailureMessage(&quot;Error en Gallons. Esperado: &quot; + expected_gallons + &quot;, pero se obtuvo: &quot; + after_gallons);
+}</stringProp>
+                </JSR223Assertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+        </hashTree>
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler">
           <boolProp name="displayJMeterProperties">false</boolProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">false</boolProp>
