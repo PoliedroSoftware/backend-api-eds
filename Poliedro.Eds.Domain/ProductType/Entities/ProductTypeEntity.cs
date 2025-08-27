@@ -10,6 +10,5 @@ public class ProductTypeEntity : AuditableEntity
     public int IdProductType { get; set; } = default!;
     public string Description { get; set; } = default!;
 
-    // Navigation property
     public virtual ICollection<ProductEntity>? Products { get; set; }
 }

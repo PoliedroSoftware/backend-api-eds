@@ -32,7 +32,6 @@ using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
 using Poliedro.Eds.Domain.Phone.DomainServices.Update;
 using Poliedro.Eds.Domain.Ports;
 using Poliedro.Eds.Domain.Product.DomainProduct;
-using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
 using Poliedro.Eds.Domain.ProductType.DomainProductType;
 using Poliedro.Eds.Domain.Provider.DomainProvider;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
@@ -69,7 +68,6 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.Domainislander.Imp
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.DomainIslander.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Phone.DomainService.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.DomainProduct.Impl;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductCompartiment.DomainProductCompartiment.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Provider.DomainProvider.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Redis;
@@ -118,10 +116,6 @@ public static class DependencyInjectionService
         services.AddScoped<IProductGetAllProduct, ProductGetAllProduct>();
         services.AddScoped<IProductGetByIdProduct, ProductGetByIdProduct>();
         services.AddScoped<IProductUpdateProduct, ProductUpdateProduct>();
-        services.AddScoped<IProductCompartimentCreateProductCompartiment, ProductCompartimentCreateProductCompartiment>();
-        services.AddScoped<IProductCompartimentGetAllProductCompartiment, ProductCompartimentGetAllProductCompartiment>();
-        services.AddScoped<IProductCompartimentGetByIdProductCompartiment, ProductCompartimentGetByIdProductCompartiment>();
-        services.AddScoped<IProductCompartimentUpdateProductCompartiment, ProductCompartimentUpdateProductCompartiment>();
         services.AddScoped<IEdsTankCreateEdsTank, EdsTankCreateEdsTank>();
         services.AddScoped<IEdsTankGetAllEdsTank, EdsTankGetAllEdsTank>();
         services.AddScoped<IEdsTankGetByIdEdsTank, EdsTankGetByIdEdsTank>();

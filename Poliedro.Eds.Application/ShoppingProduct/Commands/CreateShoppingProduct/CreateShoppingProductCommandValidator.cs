@@ -3,21 +3,22 @@ using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.ShoppingProduct.Commands.CreateShoppingProduct;
 using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
+using Poliedro.Eds.Domain.Product.DomainProduct;
 
 namespace Poliedro.Eds.Application.ShoppingProduct.Shopping.CreateShoppingProduct;
 
 public class CreateShoppingProductCommandValidator : AbstractValidator<CreateShoppingProductRequestDto>
 {
     private readonly ICompartimentGetByIdService _compartimentService;
-    private readonly IProductCompartimentGetByCompartmentId _productCompartimentService;
+    private readonly IProductGetByIdProduct _productService;
 
     public CreateShoppingProductCommandValidator(
         ICompartimentGetByIdService compartimentService,
         IRedisService redisService,
-        IProductCompartimentGetByCompartmentId productCompartimentService)
+        IProductGetByIdProduct productService)
     {
         _compartimentService = compartimentService;
-        _productCompartimentService = productCompartimentService;
+        _productService = productService;
 
         RuleFor(x => x)
             .MustAsync(async (dto, cancellation) =>
@@ -26,29 +27,60 @@ public class CreateShoppingProductCommandValidator : AbstractValidator<CreateSho
                 if (!compartimentResult.IsSuccess || compartimentResult.Value == null)
                     return false;
 
+                var productResult = await _productService.GetByIdAsync(dto.IdProduct);
+                if (!productResult.IsSuccess || productResult.Value == null)
+                    return false;
+
                 var compartiment = compartimentResult.Value;
-                return dto.Quantity + compartiment.Stock < compartiment.Operative;
+                var product = productResult.Value;
+                
+                // Verificar que el producto corresponda al compartimento
+                if (compartiment.IdProduct != dto.IdProduct)
+                    return false;
+                
+                // Verificar que la suma del stock actual del producto más la cantidad a comprar no supere la capacidad operativa del compartimento
+                return (product.Stock + dto.Quantity) <= compartiment.Operative;
             })
             .WithMessage((dto, context) =>
             {
-                var compartimentResult = _compartimentService.GetByIdAsync(dto.IdCompartment).Result;
-                if (compartimentResult.IsSuccess && compartimentResult.Value != null)
+                // Sincronizar la llamada para evitar problemas con async en WithMessage
+                var compartimentResult = _compartimentService.GetByIdAsync(dto.IdCompartment).GetAwaiter().GetResult();
+                var productResult = _productService.GetByIdAsync(dto.IdProduct).GetAwaiter().GetResult();
+                
+                if (compartimentResult.IsSuccess && compartimentResult.Value != null && 
+                    productResult.IsSuccess && productResult.Value != null)
                 {
                     var compartiment = compartimentResult.Value;
-                    var suma = dto.Quantity + compartiment.Stock;
-                    return $"Hay {compartiment.Stock} gls en el Tanque, esta compra de {dto.Quantity} gls supera la capacidad operativa del Tanque ({compartiment.Operative} gls.)";
+                    var product = productResult.Value;
+                    
+                    // Verificar si es un problema de producto incorrecto
+                    if (compartiment.IdProduct != dto.IdProduct)
+                    {
+                        return $"El producto {product.Name} no corresponde al compartimento {compartiment.Number}. El compartimento está asignado al producto ID {compartiment.IdProduct}.";
+                    }
+                    
+                    // Problema de capacidad - el stock ahora está en el producto, no en el compartimento
+                    var suma = product.Stock + dto.Quantity;
+                    return $"Hay {product.Stock} gls de {product.Name} en stock, esta compra de {dto.Quantity} gls supera la capacidad operativa del Tanque {compartiment.Number} ({compartiment.Operative} gls.)";
                 }
-                return "La suma de la compra más el stock actual supera la capacidad operativa del compartimento.";
+                return "Error en la validación del producto y compartimento.";
             });
 
-        RuleFor(x => x)
-            .MustAsync(async (dto, cancellation) =>
+        RuleFor(x => x.IdProduct)
+            .MustAsync(async (idProduct, cancellation) =>
             {
-                var idProduct = await _productCompartimentService.GetProductIdByCompartmentIdAsync(dto.IdCompartment);
-                return idProduct.HasValue && idProduct.Value == dto.IdProduct;
+                var productResult = await _productService.GetByIdAsync(idProduct);
+                return productResult.IsSuccess && productResult.Value != null;
             })
-            .WithMessage("El producto comprado no coincide con el producto asignado a este tanque");
+            .WithMessage("El producto especificado no existe.");
 
+        RuleFor(x => x.IdCompartment)
+            .MustAsync(async (idCompartment, cancellation) =>
+            {
+                var compartimentResult = await _compartimentService.GetByIdAsync(idCompartment);
+                return compartimentResult.IsSuccess && compartimentResult.Value != null;
+            })
+            .WithMessage("El compartimento especificado no existe.");
     }
 
     public CreateShoppingProductCommandValidator(IRedisService redisService)
@@ -65,9 +97,13 @@ public class CreateShoppingProductCommandValidator : AbstractValidator<CreateSho
             .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("QuantityGreaterThan").GetAwaiter().GetResult())
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("QuantityNotEmpty").GetAwaiter().GetResult());
 
-        RuleFor(x => x.Price)
-            .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("PriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PriceNotEmpty").GetAwaiter().GetResult());
+        RuleFor(x => x.PurchasePrice)
+            .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("PurchasePriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PurchasePriceNotEmpty").GetAwaiter().GetResult());
+
+        RuleFor(x => x.SellPrice)
+            .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("SellPriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("SellPriceNotEmpty").GetAwaiter().GetResult());
 
         RuleFor(x => x.IdCompartment)
             .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdCompartmentGreaterThan").GetAwaiter().GetResult())

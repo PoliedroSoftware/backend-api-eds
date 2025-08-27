@@ -8,7 +8,6 @@ using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Shopping.Errors;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
-using Poliedro.Eds.Domain.ProductCompartiment.Entities;
 using Poliedro.Eds.Domain.Compartiment.Entities;
 using Poliedro.Eds.Domain.Product.Entities;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
@@ -43,7 +42,7 @@ public class ShoppingTransactionalService(
 
             if (shoppingEntity.ShoppingProducts?.Any() == true)
             {
-                var stockUpdateResult = await UpdateCompartimentStockAsync(context, shoppingEntity.ShoppingProducts);
+                var stockUpdateResult = await UpdateProductStockAsync(context, shoppingEntity.ShoppingProducts);
                 if (!stockUpdateResult.IsSuccess)
                 {
                     await transaction.RollbackAsync();
@@ -64,16 +63,16 @@ public class ShoppingTransactionalService(
             var result = Result<VoidResult, Error>.Success(VoidResult.Instance);
             await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.SHOPPING);
             await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.PRODUCT);
-            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.PRODUCT_COMPARTMENT);
             await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.COMPARTIMENT);
             await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.TANK);
 
             return result;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             await transaction.RollbackAsync();
-            return Error.Internal("ShoppingTransactionError", $"Error en la transacción de shopping: {ex.Message}");
+            // Re-lanzar la excepción para que sea manejada por GlobalExceptionConfiguration
+            throw;
         }
     }
 
@@ -102,6 +101,7 @@ public class ShoppingTransactionalService(
             
             if (product != null)
             {
+                product.PurchasePrice = productToUpdate.PurchasePrice;
                 product.SellPrice = productToUpdate.SellPrice;
                 context.Product.Update(product);
             }
@@ -110,70 +110,59 @@ public class ShoppingTransactionalService(
         return Result<VoidResult, Error>.Success(VoidResult.Instance);
     }
 
-    private async Task<Result<VoidResult, Error>> UpdateCompartimentStockAsync(
+    private async Task<Result<VoidResult, Error>> UpdateProductStockAsync(
         DataBaseContext context,
         IEnumerable<ShoppingProductEntity> shoppingProducts)
     {
-        var productCompartimentKeys = shoppingProducts
-            .Select(sp => new { sp.IdProduct, sp.IdCompartment })
-            .ToList();
+        var productIds = shoppingProducts.Select(sp => sp.IdProduct).Distinct().ToList();
+        var compartimentIds = shoppingProducts.Select(sp => sp.IdCompartment).Distinct().ToList();
 
-        var productIds = productCompartimentKeys.Select(k => k.IdProduct).Distinct().ToList();
-        var compartimentIds = productCompartimentKeys.Select(k => k.IdCompartment).Distinct().ToList();
-
-        var productCompartiments = await context.ProductCompartiment
-            .Where(pc => productIds.Contains(pc.IdProduct) && compartimentIds.Contains(pc.IdCompartiment))
+        // Obtener productos y compartimentos necesarios
+        var products = await context.Product
+            .Where(p => productIds.Contains(p.IdProduct))
             .ToListAsync();
 
         var compartiments = await context.Compartiment
             .Where(c => compartimentIds.Contains(c.IdCompartment))
             .ToListAsync();
 
-        var productNames = await context.Product
-            .Where(p => productIds.Contains(p.IdProduct))
-            .ToDictionaryAsync(p => p.IdProduct, p => p.Name);
+        // Validar que todos los productos existan
+        var missingProductIds = productIds.Except(products.Select(p => p.IdProduct)).ToList();
+        if (missingProductIds.Any())
+        {
+            return Error.BadRequest("ProductNotFound", 
+                $"No se encontraron los productos con Ids: {string.Join(", ", missingProductIds)}");
+        }
 
+        // Validar que todos los compartimentos existan
+        var missingCompartimentIds = compartimentIds.Except(compartiments.Select(c => c.IdCompartment)).ToList();
+        if (missingCompartimentIds.Any())
+        {
+            return Error.BadRequest("CompartimentNotFound", 
+                $"No se encontraron los compartimentos con Ids: {string.Join(", ", missingCompartimentIds)}");
+        }
+
+        // Validar capacidad de los compartimentos antes de actualizar stock
         foreach (var shoppingProduct in shoppingProducts)
         {
-            var productCompartiment = productCompartiments
-                .FirstOrDefault(pc => pc.IdProduct == shoppingProduct.IdProduct && pc.IdCompartiment == shoppingProduct.IdCompartment);
+            var product = products.First(p => p.IdProduct == shoppingProduct.IdProduct);
+            var compartiment = compartiments.First(c => c.IdCompartment == shoppingProduct.IdCompartment);
 
-            var productName = productNames.TryGetValue(shoppingProduct.IdProduct, out var name) ? name : $"ID {shoppingProduct.IdProduct}";
-
-            var compartiment = compartiments
-                .FirstOrDefault(c => c.IdCompartment == shoppingProduct.IdCompartment);
-
-            if (productCompartiment == null)
-            {
-                var compartimentNumber = compartiment?.Number.ToString() ?? shoppingProduct.IdCompartment.ToString();
-                return Error.BadRequest(
-                    "ProductCompartimentNotFound",
-                    $"No se encontró el registro de producto-compartimento para {productName} en el Compartimento {compartimentNumber}.");
-            }
-            
-            if (compartiment == null)
-            {
-                return Error.BadRequest(
-                    "CompartimentNotFound",
-                    $"No se encontró el compartimento con Id {shoppingProduct.IdCompartment}.");
-            }
-
-            var nuevoStock = productCompartiment.Stock + shoppingProduct.Quantity;
+            var nuevoStock = product.Stock + shoppingProduct.Quantity;
             if (nuevoStock > compartiment.Operative)
             {
                 return Error.BadRequest(
                     "CompartimentCapacityExceeded",
-                    $"La suma de stock ({nuevoStock} gls) supera la capacidad operativa ({compartiment.Operative} gls) del compartimento {compartiment.Number}.");
+                    $"La suma de stock ({nuevoStock} gls) supera la capacidad operativa ({compartiment.Operative} gls) del compartimento {compartiment.Number} para el producto {product.Name}.");
             }
         }
 
+        // Actualizar stock de productos
         foreach (var shoppingProduct in shoppingProducts)
         {
-            var productCompartiment = productCompartiments
-                .First(pc => pc.IdProduct == shoppingProduct.IdProduct && pc.IdCompartiment == shoppingProduct.IdCompartment);
-
-            productCompartiment.Stock += shoppingProduct.Quantity;
-            context.ProductCompartiment.Update(productCompartiment);
+            var product = products.First(p => p.IdProduct == shoppingProduct.IdProduct);
+            product.Stock += shoppingProduct.Quantity;
+            context.Product.Update(product);
         }
 
         return Result<VoidResult, Error>.Success(VoidResult.Instance);

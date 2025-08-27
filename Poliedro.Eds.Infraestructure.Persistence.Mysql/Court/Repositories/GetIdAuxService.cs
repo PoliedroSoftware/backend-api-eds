@@ -9,7 +9,6 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
 {
     public async Task<ProductAndCompartimentEntity> GetProductAndCompartimentAsync(int hoseId)
     {
-
         using var context = dbContextFactory.CreateDbContext();
         var result = await context.Hose
             .Where(h => h.IdHose == hoseId)
@@ -19,12 +18,12 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
                     .Where(p => p.IdProductType == h.IdProductType)
                     .Select(p => (int)p.IdProduct)
                     .FirstOrDefault(),
-                IdCompartiment = context.ProductCompartiment
-                    .Where(pc => pc.IdProduct == context.Product
+                IdCompartiment = context.Compartiment
+                    .Where(c => c.IdProduct == context.Product
                         .Where(p => p.IdProductType == h.IdProductType)
                         .Select(p => p.IdProduct)
                         .FirstOrDefault())
-                    .Select(pc => (int)pc.IdCompartiment)
+                    .Select(c => (int)c.IdCompartment)
                     .FirstOrDefault()
             })
             .FirstOrDefaultAsync();
