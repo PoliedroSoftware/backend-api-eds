@@ -24,9 +24,9 @@ using Poliedro.Eds.Domain.HoseHistory.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
 using Poliedro.Eds.Domain.Island.Entities;
 using Poliedro.Eds.Domain.Islander.Entities;
+using Poliedro.Eds.Domain.OpenAI.Entities;
 using Poliedro.Eds.Domain.Phone.Entities;
 using Poliedro.Eds.Domain.Product.Entities;
-using Poliedro.Eds.Domain.ProductCompartiment.Entities;
 using Poliedro.Eds.Domain.ProductType.Entities;
 using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Domain.Shopping.Entities;
@@ -34,7 +34,6 @@ using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 using Poliedro.Eds.Domain.ShoppingProductInventory.Entities;
 using Poliedro.Eds.Domain.Tank.Entities;
 using Poliedro.Eds.Domain.TypeOfCollection.Entities;
-using Poliedro.Eds.Domain.OpenAI.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Configuration;
@@ -59,8 +58,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<ProviderEntity> Provider { get; set; }
 
     public DbSet<ProductEntity> Product { get; set; }
-
-    public DbSet<ProductCompartimentEntity> ProductCompartiment { get; set; }
 
     public DbSet<EdsTankEntity> EdsTank { get; set; }
 
@@ -130,7 +127,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     {
         new ProductTypeConfiguration(modelBuilder.Entity<ProductTypeEntity>());
         new ProductConfiguration(modelBuilder.Entity<ProductEntity>());
-        new ProductCompartimentConfiguration(modelBuilder.Entity<ProductCompartimentEntity>());
         new EdsTankConfiguration(modelBuilder.Entity<EdsTankEntity>());
         new ExpendituresConfiguration(modelBuilder.Entity<ExpendituresEntity>());
         new CompartimentCapacityConfiguration(modelBuilder.Entity<CompartimentCapacityEntity>());
