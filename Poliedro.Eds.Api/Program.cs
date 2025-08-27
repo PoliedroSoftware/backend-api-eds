@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Poliedro.External.WhatsApp.SendMessage;
 using Poliedro.Eds.Api;
 using Poliedro.Eds.Api.Common.Configurations;
 using Poliedro.Eds.Api.Middlelware.aws;
@@ -33,7 +32,6 @@ using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.SendMessage;
-using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
@@ -43,10 +41,10 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 using Poliedro.External.HealthCheck.Tolgee;
 using Poliedro.External.HealthCheck.WhatsApp;
+using Poliedro.External.WhatsApp.SendMessage;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
 using WorkerKeycloackService;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -228,7 +226,7 @@ builder.Services.AddScoped<IGetPaymentMethodName, GetIdAuxService>();
 builder.Services.AddScoped<IGetHoseNumber, GetIdAuxService>();
 builder.Services.AddScoped<IGetDispenserNumber, GetIdAuxService>();
 
-builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompartimentGetByCompartmentId>();
+//builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompartimentGetByCompartmentId>();
 
 builder.Services.AddScoped<ICourtListDomainService, CourtListService>();
 builder.Services.AddScoped<IInventoryListDomainService, InventoryListService>();
