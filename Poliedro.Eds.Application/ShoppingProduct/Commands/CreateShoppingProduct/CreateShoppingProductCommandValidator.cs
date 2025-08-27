@@ -38,13 +38,13 @@ public class CreateShoppingProductCommandValidator : AbstractValidator<CreateSho
                 return "La suma de la compra más el stock actual supera la capacidad operativa del compartimento.";
             });
 
-        RuleFor(x => x)
-            .MustAsync(async (dto, cancellation) =>
-            {
-                var idProduct = await _productCompartimentService.GetProductIdByCompartmentIdAsync(dto.IdCompartment);
-                return idProduct.HasValue && idProduct.Value == dto.IdProduct;
-            })
-            .WithMessage("El producto comprado no coincide con el producto asignado a este tanque");
+        //RuleFor(x => x)
+        //    .MustAsync(async (dto, cancellation) =>
+        //    {
+        //        var idProduct = await _productCompartimentService.GetProductIdByCompartmentIdAsync(dto.IdCompartment);
+        //        return idProduct.HasValue && idProduct.Value == dto.IdProduct;
+        //    })
+        //    .WithMessage("El producto comprado no coincide con el producto asignado a este tanque");
 
     }
 
