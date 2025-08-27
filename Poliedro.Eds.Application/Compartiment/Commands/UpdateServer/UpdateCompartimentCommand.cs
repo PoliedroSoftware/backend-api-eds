@@ -9,6 +9,6 @@ int IdCompartment,
 int Number,
 double Nominal,
 double Operative,
-double Stock,
+int IdProduct,
 double Height,
 int IdTank) : IRequest<Result<VoidResult, Error>>;
