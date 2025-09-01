@@ -22,6 +22,10 @@ using Poliedro.Eds.Application.Island.AutoMappers;
 using Poliedro.Eds.Application.Islander.AutoMappers;
 using Poliedro.Eds.Application.Phone.AutoMappers;
 using Poliedro.Eds.Application.Product.AutoMappers;
+<<<<<<< HEAD
+=======
+using Poliedro.Eds.Application.ProductCompartiment.AutoMappers;
+>>>>>>> New-service-StrongBox
 using Poliedro.Eds.Application.ProductType.AutoMappers;
 using Poliedro.Eds.Application.Provider.AutoMappers;
 using Poliedro.Eds.Application.Shopping.AutoMappers;
@@ -29,6 +33,10 @@ using Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProductInventory.AutoMappers;
 using Poliedro.Eds.Application.Tank.AutoMappers;
 using Poliedro.Eds.Application.TypeOfCollection.AutoMappers;
+<<<<<<< HEAD
+=======
+using Poliedro.Eds.Application.StrongBox.AutoMapper;
+>>>>>>> New-service-StrongBox
 
 namespace Poliedro.Eds.Application;
 
@@ -61,6 +69,11 @@ public static class DependencyInjectionService
             config.AddProfile(new DispenserTypeMapper());
             config.AddProfile(new Product.AutoMappers.PaginationMapper());
             config.AddProfile(new ProductMapper());
+<<<<<<< HEAD
+=======
+            config.AddProfile(new ProductCompartiment.AutoMappers.PaginationMapper());
+            config.AddProfile(new ProductCompartimentMapper());
+>>>>>>> New-service-StrongBox
             config.AddProfile(new EdsTank.AutoMappers.PaginationMapper());
             config.AddProfile(new EdsTankMapper());
             config.AddProfile(new CompartimentCapacity.AutoMappers.PaginationMapper());

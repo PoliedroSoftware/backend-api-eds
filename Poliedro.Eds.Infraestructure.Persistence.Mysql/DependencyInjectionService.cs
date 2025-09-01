@@ -18,6 +18,10 @@ using Poliedro.Eds.Domain.DashboardPowerBI.ProviderView.DomainProviderView;
 using Poliedro.Eds.Domain.DashboardPowerBI.ShoppingProductView.DomainShoppingProductView;
 using Poliedro.Eds.Domain.DashboardPowerBI.TypeOfCollectionView.DomainTypeOfCollectionView;
 using Poliedro.Eds.Domain.Dispensers.DomainDispensers;
+<<<<<<< HEAD
+=======
+using Poliedro.Eds.Domain.OpenAI.DomainOpenAI;
+>>>>>>> New-service-StrongBox
 using Poliedro.Eds.Domain.DispenserType.DomainDispenserType;
 using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.EdsTank.DomainEdsTank;
@@ -26,12 +30,19 @@ using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.HoseHistory.DomainHoseHistory;
 using Poliedro.Eds.Domain.Island.DomainIsland;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
+<<<<<<< HEAD
 using Poliedro.Eds.Domain.OpenAI.DomainOpenAI;
+=======
+>>>>>>> New-service-StrongBox
 using Poliedro.Eds.Domain.Phone.DomainServices.Create;
 using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
 using Poliedro.Eds.Domain.Phone.DomainServices.Update;
 using Poliedro.Eds.Domain.Ports;
 using Poliedro.Eds.Domain.Product.DomainProduct;
+<<<<<<< HEAD
+=======
+using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
+>>>>>>> New-service-StrongBox
 using Poliedro.Eds.Domain.ProductType.DomainProductType;
 using Poliedro.Eds.Domain.Provider.DomainProvider;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
@@ -68,6 +79,10 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.Domainislander.Imp
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.DomainIslander.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Phone.DomainService.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.DomainProduct.Impl;
+<<<<<<< HEAD
+=======
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductCompartiment.DomainProductCompartiment.Impl;
+>>>>>>> New-service-StrongBox
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Provider.DomainProvider.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Redis;
@@ -77,6 +92,13 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProduct.DomainShopp
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProductInventory.DomainShoppingProductInventory.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Tank.DomainTank.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
+<<<<<<< HEAD
+=======
+using Poliedro.Eds.Domain.StrongBox.Repositories;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.Repositories;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongBox;
+using Poliedro.Eds.Domain.StrongBox.Services;
+>>>>>>> New-service-StrongBox
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -116,6 +138,13 @@ public static class DependencyInjectionService
         services.AddScoped<IProductGetAllProduct, ProductGetAllProduct>();
         services.AddScoped<IProductGetByIdProduct, ProductGetByIdProduct>();
         services.AddScoped<IProductUpdateProduct, ProductUpdateProduct>();
+<<<<<<< HEAD
+=======
+        services.AddScoped<IProductCompartimentCreateProductCompartiment, ProductCompartimentCreateProductCompartiment>();
+        services.AddScoped<IProductCompartimentGetAllProductCompartiment, ProductCompartimentGetAllProductCompartiment>();
+        services.AddScoped<IProductCompartimentGetByIdProductCompartiment, ProductCompartimentGetByIdProductCompartiment>();
+        services.AddScoped<IProductCompartimentUpdateProductCompartiment, ProductCompartimentUpdateProductCompartiment>();
+>>>>>>> New-service-StrongBox
         services.AddScoped<IEdsTankCreateEdsTank, EdsTankCreateEdsTank>();
         services.AddScoped<IEdsTankGetAllEdsTank, EdsTankGetAllEdsTank>();
         services.AddScoped<IEdsTankGetByIdEdsTank, EdsTankGetByIdEdsTank>();
@@ -200,7 +229,20 @@ public static class DependencyInjectionService
         services.AddScoped<IShoppingProductGetAllShoppingProductView, ShoppingProductGetAllShoppingProductView>();
         services.AddScoped<ITypeOfCollectionViewGetAllTypeOfCollection, TypeOfCollectionViewGetAllTypeOfCollection>();
         services.AddTransient<IBusinessUpdateService, BusinessUpdateService>();
+<<<<<<< HEAD
         
+=======
+
+        // New Service StronBox
+        services.AddScoped<IStrongBoxRepositoryCreate, StrongBoxCreateService>();
+        services.AddScoped<IStrongBoxRepositoryGetLast, StrongBoxGetLastService>();
+        services.AddScoped<IStrongBoxRepositorySaveChanges, StrongBoxSaveChangesService>();
+        services.AddScoped<IStrongBoxService, StrongBoxService>();
+        services.AddScoped<IStrongBoxRepositoryGetById, StrongBoxGetByIdService>();
+        services.AddScoped<IStrongBoxRepositoryGetAll, StrongBoxGetAllService>();
+
+
+>>>>>>> New-service-StrongBox
         // OpenAI Services
         services.AddScoped<IOpenAIChatService, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.DomainOpenAI.Impl.OpenAIChatService>();
         services.AddScoped<IOpenAIRequestRepository, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Repositories.OpenAIRequestRepository>();

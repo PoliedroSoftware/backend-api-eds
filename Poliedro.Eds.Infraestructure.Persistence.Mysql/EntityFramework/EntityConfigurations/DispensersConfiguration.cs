@@ -17,10 +17,13 @@ public class DispensersConfiguration
         builder.Property(x => x.EdsId).HasColumnName("id_eds");
         builder.Property(x => x.IdIsland).HasColumnName("idisland");
         builder.Property(x => x.HoseNumber).HasColumnName("number_hose");
+<<<<<<< HEAD
 
         builder.HasOne(d => d.Eds)
             .WithMany()
             .HasForeignKey(d => d.EdsId)
             .OnDelete(DeleteBehavior.Restrict);
+=======
+>>>>>>> New-service-StrongBox
     }
 }

@@ -162,11 +162,20 @@ public class CourtListService(
                 CodeCourt = reader.IsDBNull("code_court") ? 0 : reader.GetInt32("code_court"),
                 Islander = reader.IsDBNull("islander") ? string.Empty : reader.GetString("islander"),
                 DateStarttime = reader.IsDBNull("date_starttime") ? default : DateOnly.FromDateTime(reader.GetDateTime("date_starttime")),
+<<<<<<< HEAD
                 DateEndtime = reader.IsDBNull("date_endtime") ? default : DateOnly.FromDateTime(reader.GetDateTime("date_endtime")),
                 Distinc = reader.IsDBNull("distinc") ? 0.0 : reader.GetDouble("distinc"),
                 Product = reader.IsDBNull("product") ? string.Empty : reader.GetString("product"),
                 PurchasePrice = reader.IsDBNull("purchase_price") ? 0.0 : reader.GetDouble("purchase_price"),
                 SellPrice = reader.IsDBNull("sell_price") ? 0.0 : reader.GetDouble("sell_price"),
+=======
+                //Starttime = reader.IsDBNull("starttime") ? default : TimeOnly.FromDateTime(reader.GetDateTime("starttime")),
+                DateEndtime = reader.IsDBNull("date_endtime") ? default : DateOnly.FromDateTime(reader.GetDateTime("date_endtime")),
+                //Endtime = reader.IsDBNull("endtime") ? default: TimeOnly.FromDateTime(reader.GetDateTime("endtime")),
+                Distinc = reader.IsDBNull("distinc") ? 0.0 : reader.GetDouble("distinc"),
+                Product = reader.IsDBNull("product") ? string.Empty : reader.GetString("product"),
+                Price = reader.IsDBNull("price") ? 0.0 : reader.GetDouble("price"),
+>>>>>>> New-service-StrongBox
                 ProductType = reader.IsDBNull("product_typr") ? string.Empty : reader.GetString("product_typr"),
                 AccumulatedAmount = reader.IsDBNull("accumulated_amount") ? 0.0 : reader.GetDouble("accumulated_amount"),
                 AccumulatedGallons = reader.IsDBNull("accumulated_gallons") ? 0.0 : reader.GetDouble("accumulated_gallons")
@@ -201,7 +210,10 @@ public class CourtListService(
         return documents;
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> New-service-StrongBox
     private async Task<IEnumerable<CourtExpenditureViewEntity>> GetCourtExpendituresFromViewAsync()
     {
         var expenditures = new List<CourtExpenditureViewEntity>();

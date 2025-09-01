@@ -12,6 +12,7 @@ public class HoseConfiguration
         builder.ToTable("hose");
         builder.HasKey(x => x.IdHose);
         builder.Property(x => x.IdHose).HasColumnName("id_hose");
+<<<<<<< HEAD
         builder.Property(x => x.IdDispensers).HasColumnName("id_dispensers");
         builder.Property(x => x.Number).HasColumnName("number");
         builder.Property(x => x.AccumulatedAmount).HasColumnName("accumulated_amount");
@@ -32,5 +33,12 @@ public class HoseConfiguration
 
         // Remove Product relationship for now - it's causing the issue
         // The price should come from a proper join or be handled differently
+=======
+        builder.Property(x => x.Number).HasColumnName("number");
+        builder.Property(x => x.AccumulatedAmount).HasColumnName("accumulated_amount");
+        builder.Property(x => x.AccumulatedGallons).HasColumnName("accumulated_gallons");
+        builder.Property(x => x.IdDispensers).HasColumnName("id_dispensers");
+        builder.Property(x => x.IdProductType).HasColumnName("id_product_type");
+>>>>>>> New-service-StrongBox
     }
 }

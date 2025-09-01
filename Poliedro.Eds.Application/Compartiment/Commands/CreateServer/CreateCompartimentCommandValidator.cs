@@ -18,9 +18,14 @@ public class CreateCompartimentCommandValidator : AbstractValidator<CreateCompar
 
         RuleFor(x => x.Operative)
             .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("OperativeGreaterThanOrEqualTo").GetAwaiter().GetResult());
+<<<<<<< HEAD
 
         RuleFor(x => x.IdProduct)
             .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdProductGreaterThan").GetAwaiter().GetResult());
+=======
+            
+
+>>>>>>> New-service-StrongBox
 
         RuleFor(x => x.Height)
             .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("HeightGreaterThanOrEqualTo").GetAwaiter().GetResult());

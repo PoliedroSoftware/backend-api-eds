@@ -2,6 +2,10 @@ using System.Net.Http.Headers;
 using Amazon.Runtime;
 using Amazon.S3.FileUploadService;
 using Amazon.Secrets;
+<<<<<<< HEAD
+=======
+using AutoMapper;
+>>>>>>> New-service-StrongBox
 using AWS.Logger;
 using DotNetEnv;
 using FluentValidation;
@@ -23,6 +27,12 @@ using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
+<<<<<<< HEAD
+=======
+using Poliedro.Eds.Application.StrongBox.AutoMapper;
+using Poliedro.Eds.Application.StrongBox.Commands;
+using Poliedro.Eds.Application.StrongBox.Validation;
+>>>>>>> New-service-StrongBox
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
 using Poliedro.Eds.Domain.Business.DomaianServices.Create;
@@ -31,7 +41,14 @@ using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
+<<<<<<< HEAD
 using Poliedro.Eds.Domain.SendMessage;
+=======
+using Poliedro.Eds.Domain.ProductCompartiment.DomainProductCompartiment;
+using Poliedro.Eds.Domain.SendMessage;
+using Poliedro.Eds.Domain.StrongBox.Repositories;
+using Poliedro.Eds.Domain.StrongBox.Services;
+>>>>>>> New-service-StrongBox
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
@@ -39,6 +56,11 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Imp
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
+<<<<<<< HEAD
+=======
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.Repositories;
+>>>>>>> New-service-StrongBox
 using Poliedro.External.HealthCheck.Tolgee;
 using Poliedro.External.HealthCheck.WhatsApp;
 using Poliedro.External.WhatsApp.SendMessage;
@@ -67,6 +89,11 @@ builder.Services
 
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
+<<<<<<< HEAD
+=======
+builder.Services.AddScoped<IStrongBoxRepositoryCreate, StrongBoxCreateService>();
+builder.Services.AddScoped<IStrongBoxService, StrongBoxService>();
+>>>>>>> New-service-StrongBox
 
 builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
 //builder.Services.AddScoped<IBusinessQueryService, BusinessQueryService>();
@@ -76,12 +103,21 @@ builder.Services.AddScoped<IValidator<UpdateBusinessCommand>, UpdateBusinessComm
 // Configure OpenAI
 builder.Services.AddScoped(provider =>
 {
+<<<<<<< HEAD
     var apiKey = builder.Configuration["OpenAI:ApiKey"] ?? 
                  Environment.GetEnvironmentVariable("OPENAI_API_KEY");
     
     if (string.IsNullOrWhiteSpace(apiKey))
         throw new InvalidOperationException("OpenAI API key is not configured. Set OpenAI:ApiKey in configuration or OPENAI_API_KEY environment variable.");
     
+=======
+    var apiKey = builder.Configuration["OpenAI:ApiKey"] ??
+                 Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
+    if (string.IsNullOrWhiteSpace(apiKey))
+        throw new InvalidOperationException("OpenAI API key is not configured. Set OpenAI:ApiKey in configuration or OPENAI_API_KEY environment variable.");
+
+>>>>>>> New-service-StrongBox
     return new OpenAI.OpenAIClient(apiKey);
 });
 
@@ -95,9 +131,15 @@ var connectionStringFactory = connectionString.Replace("{schema}", tenant ?? str
 builder.Services.AddHealthChecks()
     .AddMySql(connectionStringFactory, name: "sql", tags: ["ready"])
     .AddRedis(
+<<<<<<< HEAD
         builder.Configuration["Redis:ConnectionString"] 
             ?? throw new InvalidOperationException("Redis:ConnectionString is not configured."),
         name: "redis", 
+=======
+        builder.Configuration["Redis:ConnectionString"]
+            ?? throw new InvalidOperationException("Redis:ConnectionString is not configured."),
+        name: "redis",
+>>>>>>> New-service-StrongBox
         tags: ["ready"])
     .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee")
     .AddCheck<WhatsAppHealthCheckService>("Service Health Check WhatsApp");
@@ -194,6 +236,10 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining<GetTranslationsHandler>();
     cfg.RegisterServicesFromAssemblyContaining<GetCourtsListQueryHandler>();
+<<<<<<< HEAD
+=======
+    cfg.RegisterServicesFromAssemblyContaining<StrongBoxCreateCommandHandler>();
+>>>>>>> New-service-StrongBox
 });
 
 builder.Services.AddMemoryCache();
@@ -226,7 +272,11 @@ builder.Services.AddScoped<IGetPaymentMethodName, GetIdAuxService>();
 builder.Services.AddScoped<IGetHoseNumber, GetIdAuxService>();
 builder.Services.AddScoped<IGetDispenserNumber, GetIdAuxService>();
 
+<<<<<<< HEAD
 //builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompartimentGetByCompartmentId>();
+=======
+builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompartimentGetByCompartmentId>();
+>>>>>>> New-service-StrongBox
 
 builder.Services.AddScoped<ICourtListDomainService, CourtListService>();
 builder.Services.AddScoped<IInventoryListDomainService, InventoryListService>();
@@ -259,7 +309,15 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<GetCourtsListQueryValidator>();
+<<<<<<< HEAD
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly);
+=======
+builder.Services.AddValidatorsFromAssemblyContaining<StrongBoxCreateValidator>();
+// Reemplaza el registro específico de AutoMapper por uno que registre todos los perfiles de todos los assemblies cargados
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(typeof(StrongBoxProfile).Assembly);
+
+>>>>>>> New-service-StrongBox
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<FileUploadOperationFilter>();
@@ -293,6 +351,10 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();
 var app = builder.Build();
+<<<<<<< HEAD
+=======
+
+>>>>>>> New-service-StrongBox
 app.MapHealthChecks("/health", new HealthCheckOptions()
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse

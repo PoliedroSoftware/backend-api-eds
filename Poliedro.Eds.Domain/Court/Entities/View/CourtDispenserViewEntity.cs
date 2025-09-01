@@ -16,8 +16,12 @@ public class CourtDispenserViewEntity
     public TimeOnly Endtime { get; set; }
     public double Distinc { get; set; }
     public string Product { get; set; }
+<<<<<<< HEAD
     public double PurchasePrice { get; set; }
     public double SellPrice { get; set; }
+=======
+    public double Price { get; set; }
+>>>>>>> New-service-StrongBox
     public string ProductType { get; set; }
     public double AccumulatedAmount { get; set; }
     public double AccumulatedGallons { get; set; }

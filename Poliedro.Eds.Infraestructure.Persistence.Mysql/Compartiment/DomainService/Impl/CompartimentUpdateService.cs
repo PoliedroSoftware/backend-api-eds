@@ -14,8 +14,13 @@ public class CompartimentUpdateService(ITenantDbContextFactory dbContextFactory,
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(CompartimentEntity compartimentEntity)
     {
+<<<<<<< HEAD
         if (!await EntityExists(compartimentEntity.IdCompartiment))
             return CompartimentErrorBuilder.CompartimentNotFoundException(compartimentEntity.IdCompartiment);
+=======
+        if (!await EntityExists(compartimentEntity.IdCompartment))
+            return CompartimentErrorBuilder.CompartimentNotFoundException(compartimentEntity.IdCompartment);
+>>>>>>> New-service-StrongBox
 
         using var context = dbContextFactory.CreateDbContext();
         context.Compartiment.Update(compartimentEntity);
@@ -32,6 +37,10 @@ public class CompartimentUpdateService(ITenantDbContextFactory dbContextFactory,
         using var context = dbContextFactory.CreateDbContext();
         return await context.Compartiment
             .AsNoTracking()
+<<<<<<< HEAD
             .AnyAsync(c => c.IdCompartiment == id);
+=======
+            .AnyAsync(c => c.IdCompartment == id);
+>>>>>>> New-service-StrongBox
     }
 }

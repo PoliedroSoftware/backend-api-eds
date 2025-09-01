@@ -29,7 +29,11 @@ public class GlobalExceptionConfiguration(ILogger<GlobalExceptionConfiguration> 
             var problemDetails = new ProblemDetails
             {
                 Status = StatusCodes.Status400BadRequest,
+<<<<<<< HEAD
                 Type = TypeExeptionConstants.VALIDATION_ERROR,
+=======
+                Type = TypeExceptionConstants.VALIDATION_ERROR,
+>>>>>>> New-service-StrongBox
                 Detail = "One or more validation errors occurred."
             };
 
@@ -53,7 +57,11 @@ public class GlobalExceptionConfiguration(ILogger<GlobalExceptionConfiguration> 
         var problemDetails = new ProblemDetails
         {
             Status = StatusCodes.Status500InternalServerError,
+<<<<<<< HEAD
             Type = TypeExeptionConstants.INTERNAL_SERVER_ERROR,
+=======
+            Type = TypeExceptionConstants.INTERNAL_SERVER_ERROR,
+>>>>>>> New-service-StrongBox
             Detail = "An error occurred while processing your request."
         };
 

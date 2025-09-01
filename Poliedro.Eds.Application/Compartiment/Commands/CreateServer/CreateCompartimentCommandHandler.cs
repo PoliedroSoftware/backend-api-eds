@@ -28,7 +28,11 @@ namespace Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment
 
             var result = await compartimentDomainService.CreateAsync(mapper.Map<CompartimentEntity>(request.Request));
             await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.COMPARTIMENT);
+<<<<<<< HEAD
             return result;
+=======
+            return result.IsSuccess ? result.Value! : result.Error!;
+>>>>>>> New-service-StrongBox
         }
     }
 }

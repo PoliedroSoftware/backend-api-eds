@@ -24,9 +24,15 @@ using Poliedro.Eds.Domain.HoseHistory.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
 using Poliedro.Eds.Domain.Island.Entities;
 using Poliedro.Eds.Domain.Islander.Entities;
+<<<<<<< HEAD
 using Poliedro.Eds.Domain.OpenAI.Entities;
 using Poliedro.Eds.Domain.Phone.Entities;
 using Poliedro.Eds.Domain.Product.Entities;
+=======
+using Poliedro.Eds.Domain.Phone.Entities;
+using Poliedro.Eds.Domain.Product.Entities;
+using Poliedro.Eds.Domain.ProductCompartiment.Entities;
+>>>>>>> New-service-StrongBox
 using Poliedro.Eds.Domain.ProductType.Entities;
 using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Domain.Shopping.Entities;
@@ -34,9 +40,17 @@ using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 using Poliedro.Eds.Domain.ShoppingProductInventory.Entities;
 using Poliedro.Eds.Domain.Tank.Entities;
 using Poliedro.Eds.Domain.TypeOfCollection.Entities;
+<<<<<<< HEAD
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Configuration;
+=======
+using Poliedro.Eds.Domain.OpenAI.Entities;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Configuration;
+using Poliedro.Eds.Domain.StrongBox.Entities;
+>>>>>>> New-service-StrongBox
 
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
@@ -59,6 +73,11 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<ProductEntity> Product { get; set; }
 
+<<<<<<< HEAD
+=======
+    public DbSet<ProductCompartimentEntity> ProductCompartiment { get; set; }
+
+>>>>>>> New-service-StrongBox
     public DbSet<EdsTankEntity> EdsTank { get; set; }
 
     public DbSet<ExpendituresEntity> Expenditures { get; set; }
@@ -117,6 +136,11 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<OpenAIResponseEntity> OpenAIResponse { get; set; }
 
+<<<<<<< HEAD
+=======
+    public DbSet<StrongBoxEntity> StrongBox { get; set; }
+
+>>>>>>> New-service-StrongBox
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -127,6 +151,10 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     {
         new ProductTypeConfiguration(modelBuilder.Entity<ProductTypeEntity>());
         new ProductConfiguration(modelBuilder.Entity<ProductEntity>());
+<<<<<<< HEAD
+=======
+        new ProductCompartimentConfiguration(modelBuilder.Entity<ProductCompartimentEntity>());
+>>>>>>> New-service-StrongBox
         new EdsTankConfiguration(modelBuilder.Entity<EdsTankEntity>());
         new ExpendituresConfiguration(modelBuilder.Entity<ExpendituresEntity>());
         new CompartimentCapacityConfiguration(modelBuilder.Entity<CompartimentCapacityEntity>());
@@ -166,5 +194,9 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new ShoppingProductViewConfiguration(modelBuilder.Entity<ShoppingProductViewEntity>());
         new OpenAIRequestConfiguration(modelBuilder.Entity<OpenAIRequestEntity>());
         new OpenAIResponseConfiguration(modelBuilder.Entity<OpenAIResponseEntity>());
+<<<<<<< HEAD
+=======
+        new StrongBoxConfiguration(modelBuilder.Entity<StrongBoxEntity>());
+>>>>>>> New-service-StrongBox
     }
 }

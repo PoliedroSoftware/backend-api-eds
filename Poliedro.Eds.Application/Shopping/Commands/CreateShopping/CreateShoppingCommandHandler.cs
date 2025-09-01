@@ -41,7 +41,11 @@ public class CreateShoppingCommandHandler(
             .Select(sp => new ProductEntity
             {
                 IdProduct = sp.IdProduct,
+<<<<<<< HEAD
                 SellPrice = sp.SellPrice.Value
+=======
+                Price = sp.SellPrice.Value
+>>>>>>> New-service-StrongBox
             })
             .ToList();
 

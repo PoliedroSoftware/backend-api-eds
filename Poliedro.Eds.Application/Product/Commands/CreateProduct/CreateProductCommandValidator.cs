@@ -17,7 +17,11 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductRequ
             .NotNull().WithMessage(redisService.GetValueFromCacheAsync("IdProductTypeNotNull").GetAwaiter().GetResult())
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdProductTypeNotEmpty").GetAwaiter().GetResult());
 
+<<<<<<< HEAD
         RuleFor(x => x.SellPrice)
+=======
+        RuleFor(x => x.Price)
+>>>>>>> New-service-StrongBox
             .NotNull().WithMessage(redisService.GetValueFromCacheAsync("PriceNotNull").GetAwaiter().GetResult())
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PriceNotEmpty").GetAwaiter().GetResult());
     }

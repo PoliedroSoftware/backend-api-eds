@@ -1,10 +1,14 @@
 using Poliedro.Eds.Domain.Dispensers.Entities;
 using Poliedro.Eds.Domain.Eds.Entities;
+<<<<<<< HEAD
 using Poliedro.Eds.Domain.Product.Entities;
+=======
+>>>>>>> New-service-StrongBox
 using Poliedro.Eds.Domain.ProductType.Entities;
 
 namespace Poliedro.Eds.Domain.Hose.Dtos;
 
+<<<<<<< HEAD
 // Clean DTOs without audit fields
 public record CleanDispensersDto(
     int Id,
@@ -52,4 +56,17 @@ public record HoseDto(
     CleanProductTypeDto? ProductTypeEntity,
     CleanEdsDto? EdsEntity,
     CleanProductDto? ProductEntity
+=======
+public record HoseDto(
+    int IdHose,
+    int Number,
+    int IdDispensers,
+    double AccumulatedGallons,
+    double AccumulatedAmount,
+    int IdProductType,
+    double Price,
+    DispensersEntity dispensersEntity,
+    ProductTypeEntity productTypeEntity,
+    EdsEntity edsEntity
+>>>>>>> New-service-StrongBox
 );

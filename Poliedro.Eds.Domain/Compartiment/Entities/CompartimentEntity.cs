@@ -4,11 +4,19 @@ namespace Poliedro.Eds.Domain.Compartiment.Entities;
 
 public class CompartimentEntity : AuditableEntity
 {
+<<<<<<< HEAD
     public int IdCompartiment { get; set; }
     public int Number { get; set; }
     public double Nominal { get; set; }
     public double Operative { get; set; }
     public int IdProduct { get; set; }
+=======
+    public int IdCompartment { get; set; }
+    public int Number { get; set; }
+    public double Nominal { get; set; }
+    public double Operative { get; set; }
+    public double? Stock { get; set; }
+>>>>>>> New-service-StrongBox
     public double Height { get; set; }
     public int IdTank { get; set; }
 }

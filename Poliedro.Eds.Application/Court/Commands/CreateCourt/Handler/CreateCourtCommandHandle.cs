@@ -12,6 +12,10 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
+<<<<<<< HEAD
+=======
+using Poliedro.Eds.Domain.StrongBox.Services; // <-- Agregado para StrongBox
+>>>>>>> New-service-StrongBox
 
 namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 {
@@ -22,7 +26,12 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         IGetTypeOfCollectionId getTypeOfCollectionId,
         IRedisService redisService,
         ICourtUpdateInventoryService courtUpdateInventoryService,
+<<<<<<< HEAD
         IMediator mediator
+=======
+        IMediator mediator,
+        IStrongBoxService strongBoxService // <-- Inyectar StrongBoxService
+>>>>>>> New-service-StrongBox
         ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
@@ -30,6 +39,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             var courtEntity = mapper.Map<CourtEntity>(request);
 
             var TotalAccumulatedAmount = GetTotalAccumulatedAmount(request);
+<<<<<<< HEAD
 
             var TotalAccumulatedGallons = GetTotalAccumulatedGallons(request);
 
@@ -39,6 +49,12 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 
             var TotalTypeOfCollection = GetTotalTypeOfCollection(request);
 
+=======
+            var TotalAccumulatedGallons = GetTotalAccumulatedGallons(request);
+            var TotalAmount = GetTotalAmount(request);
+            var TotalExpenditures = GetTotalExpenditures(request);
+            var TotalTypeOfCollection = GetTotalTypeOfCollection(request);
+>>>>>>> New-service-StrongBox
             var TotalAmountCollection = GetTotalAmountCollection(request);
 
             if (TotalAmount != TotalTypeOfCollection)
@@ -122,14 +138,32 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                     return inventoryResult;
             }
 
+<<<<<<< HEAD
 
             
+=======
+            // INTEGRACIÓN STRONGBOX: Si hay efectivo, registrar CORTE
+            if (result.IsSuccess && cash > 0)
+            {
+                await strongBoxService.CreateAsync(
+                    dateTime: DateTime.UtcNow,
+                    idCorte: courtEntity.IdCourt, // Usar IdCourt en vez de Id
+                    type: "CORTE",
+                    ammount: (decimal)cash,
+                    note: "Registro automático desde Corte",
+                    cancellationToken: cancellationToken
+                );
+            }
+>>>>>>> New-service-StrongBox
 
             if (result.IsSuccess)
             {
                 var courtDto = mapper.Map<CourtDto>(courtEntity);
                 
+<<<<<<< HEAD
                 
+=======
+>>>>>>> New-service-StrongBox
                 if (courtDto.CourtDispensers != null && request.CourtDispensers != null)
                 {
                     var courtDispensersList = courtDto.CourtDispensers.ToList();

@@ -8,7 +8,10 @@ public class HoseErrorBuilder : IError
     public const string HOSE_CREATION_ERROR = "HoseCreationErrorException";
     public const string HOSE_NOT_FOUND_ERROR = "HoseNotFoundErrorException";
     public const string HOSE_LIMIT_REACHED_ERROR = "HoseLimitErrorException";
+<<<<<<< HEAD
     public const string HOSE_LIST_EMPTY_ERROR = "HoseListEmptyException";
+=======
+>>>>>>> New-service-StrongBox
 
     public static Error HoseCreationException() => Error.CreateInstance(
        HOSE_CREATION_ERROR,
@@ -27,6 +30,7 @@ public class HoseErrorBuilder : IError
        "Failed to update Hose due to an internal error.",
        HttpStatusCode.InternalServerError);
 
+<<<<<<< HEAD
     public static Error HoseNotFoundException(int id) => id == 0 
         ? Error.CreateInstance(
             HOSE_LIST_EMPTY_ERROR,
@@ -36,5 +40,11 @@ public class HoseErrorBuilder : IError
             HOSE_NOT_FOUND_ERROR,
             $"Hose with ID {id} was not found.",
             HttpStatusCode.NotFound);
+=======
+    public static Error HoseNotFoundException(int id) => Error.CreateInstance(
+      HOSE_NOT_FOUND_ERROR,
+       $"Hose with ID {id} was not found.",
+       HttpStatusCode.NotFound);
+>>>>>>> New-service-StrongBox
 
 }

@@ -24,6 +24,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
+<<<<<<< HEAD
             var result = await mediator.Send(new GellAllHoseQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
             
             if (!result.IsSuccess)
@@ -36,6 +37,14 @@ namespace Poliedro.Eds.Api.Controllers.v1.Hose
             }
 
             return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, result.Value));
+=======
+            var data = await mediator.Send(new GellAllHoseQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+            if (data is null)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
+            }
+            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
+>>>>>>> New-service-StrongBox
         }
 
         [SwaggerOperation(Summary = "Get Hose")]
