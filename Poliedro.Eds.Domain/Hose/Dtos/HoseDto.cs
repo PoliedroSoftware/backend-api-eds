@@ -34,9 +34,9 @@ public record CleanProductDto(
     int IdProduct,
     string Name,
     int IdProductType,
-    double PurchasePrice,
-    double SellPrice,
-    double Stock,
+    double? PurchasePrice,
+    double? SellPrice,
+    double? Stock,
     DateTime date
 );
 

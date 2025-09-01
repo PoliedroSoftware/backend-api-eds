@@ -6,5 +6,5 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.Product.Commands.UpdateProduct;
 
-public record UpdateProductCommand(int IdProduct, string Name, int IdProductType, double SellPrice, double PurchasePrice,
-    double Stock) : IRequest<Result<VoidResult, Error>>;
+public record UpdateProductCommand(int IdProduct, string Name, int IdProductType, double? SellPrice, double? PurchasePrice,
+    double? Stock) : IRequest<Result<VoidResult, Error>>;
