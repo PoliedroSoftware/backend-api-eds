@@ -22,6 +22,10 @@
 
   <ItemGroup>
     <Folder Include="Inventory\DomainService\" />
+    <Folder Include="StrongBox\Exceptions\" />
+    <Folder Include="StrongBox\ValueObjects\" />
+    <Folder Include="StrongBox\Services\" />
+    <Folder Include="StrongBox\Repositories\" />
     <Folder Include="Uplou\" />
   </ItemGroup>
 

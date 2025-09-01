@@ -33,6 +33,7 @@ using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 using Poliedro.Eds.Domain.ShoppingProductInventory.Entities;
 using Poliedro.Eds.Domain.Tank.Entities;
+using Poliedro.Eds.Domain.StrongBox.Entities;
 using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
@@ -117,6 +118,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<OpenAIResponseEntity> OpenAIResponse { get; set; }
 
+    public DbSet<StrongBoxEntity> StrongBox { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -166,5 +169,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new ShoppingProductViewConfiguration(modelBuilder.Entity<ShoppingProductViewEntity>());
         new OpenAIRequestConfiguration(modelBuilder.Entity<OpenAIRequestEntity>());
         new OpenAIResponseConfiguration(modelBuilder.Entity<OpenAIResponseEntity>());
+        new StrongBoxConfiguration(modelBuilder.Entity<StrongBoxEntity>());
     }
 }
