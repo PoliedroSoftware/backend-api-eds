@@ -489,5 +489,4 @@ appsettings.Development.json
 .env
 *.pem
 *.key
-Poliedro.Eds.Api/Properties/launchSettings.json
-appsettings.Development.json
+
