@@ -89,6 +89,7 @@ public static class DependencyInjectionService
             config.AddProfile(new CategoryMapper());
             config.AddProfile(new PaginationCategoryMapper());
             config.AddProfile(new DashboardPowerBIMapper());
+            config.AddProfile(new StrongBoxProfile());
         });
         services.AddSingleton(mapper.CreateMapper());
         #endregion

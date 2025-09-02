@@ -9,34 +9,10 @@ using Org.BouncyCastle.Security;
 using Poliedro.Eds.Application.StrongBox.Dtos;
 using Poliedro.Eds.Domain.StrongBox.Repositories;
 
-namespace Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetById
+namespace Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetById;
+
+public class StrongBoxGetByIdHandler(IStrongBoxRepositoryGetById _repo, IMapper _mapper) : IRequestHandler<StrongBoxGetId, StrongBoxDto?>
 {
-    public class StrongBoxGetByIdHandler : IRequestHandler<StrongBoxGetId, StrongBoxDto?>
-    {
-        private readonly IStrongBoxRepositoryGetById _repo;
-        private readonly IMapper _mapper;
-
-        public StrongBoxGetByIdHandler(IStrongBoxRepositoryGetById repo, IMapper mapper)
-        {
-            _repo = repo;
-            _mapper = mapper;
-        }
-
-        public async Task<StrongBoxDto?> Handle(StrongBoxGetId request, CancellationToken cancellationToken)
-        {
-            var entity = await _repo.GetByIdAsync(request.Id, cancellationToken);
-
-            //return entity is null ? null : _mapper.Map<StrongBoxDto>(entity);
-            return entity is null ? null : new StrongBoxDto
-            {
-                Id = entity.Id,
-                DateTime = entity.DateTime,
-                IdCorte = entity.IdCorte,
-                Type = entity.Type,
-                Ammount = entity.Ammount,
-                Saldo = entity.Saldo,
-                Note = entity.Note
-            };
-        }
-    }
+    public async Task<StrongBoxDto?> Handle(StrongBoxGetId request, CancellationToken cancellationToken)
+            => _mapper.Map<StrongBoxDto>(await _repo.GetByIdAsync(request.Id, cancellationToken)) ?? null;
 }
