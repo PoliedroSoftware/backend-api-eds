@@ -10,6 +10,7 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
     public async Task<ProductAndCompartimentEntity> GetProductAndCompartimentAsync(int hoseId)
     {
         using var context = dbContextFactory.CreateDbContext();
+        
         var result = await context.Hose
             .Where(h => h.IdHose == hoseId)
             .Select(h => new

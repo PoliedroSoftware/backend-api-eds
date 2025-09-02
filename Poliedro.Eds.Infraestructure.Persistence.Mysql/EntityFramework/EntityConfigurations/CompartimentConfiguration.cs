@@ -9,8 +9,8 @@ public class CompartimentConfiguration
     public CompartimentConfiguration(EntityTypeBuilder<CompartimentEntity> builder)
     {
         builder.ToTable("compartiment");
-        builder.HasKey(x => x.IdCompartment);
-        builder.Property(x => x.IdCompartment).HasColumnName("id_compartiment");
+        builder.HasKey(x => x.IdCompartiment);
+        builder.Property(x => x.IdCompartiment).HasColumnName("id_compartiment");
         builder.Property(x => x.Number).HasColumnName("number");
         builder.Property(x => x.Nominal).HasColumnName("nominal");
         builder.Property(x => x.Operative).HasColumnName("operative");

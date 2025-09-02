@@ -2,11 +2,11 @@
 namespace Poliedro.Eds.Application.Compartiment.Dtos;
 
 public record CompartimentDto(
-    int IdCompartment,
+    int IdCompartiment,
     int Number,
     double Nominal,
     double Operative,
-    double Stock,
+    int IdProduct,
     double Height,
     int IdTank
     );

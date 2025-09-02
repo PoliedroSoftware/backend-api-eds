@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
@@ -122,9 +119,9 @@ public class ShoppingTransactionalService(
             .Where(p => productIds.Contains(p.IdProduct))
             .ToListAsync();
 
-        var compartiments = await context.Compartiment
-            .Where(c => compartimentIds.Contains(c.IdCompartment))
-            .ToListAsync();
+        //var compartiments = await context.Compartiment
+        //    .Where(c => compartimentIds.Contains(c.IdCompartment))
+        //    .ToListAsync();
 
         // Validar que todos los productos existan
         var missingProductIds = productIds.Except(products.Select(p => p.IdProduct)).ToList();

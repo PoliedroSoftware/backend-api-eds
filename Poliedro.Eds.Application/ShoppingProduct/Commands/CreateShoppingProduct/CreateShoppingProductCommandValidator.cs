@@ -20,12 +20,12 @@ public class CreateShoppingProductCommandValidator : AbstractValidator<CreateSho
         _compartimentService = compartimentService;
         _productService = productService;
 
-        RuleFor(x => x)
-            .MustAsync(async (dto, cancellation) =>
-            {
-                var compartimentResult = await _compartimentService.GetByIdAsync(dto.IdCompartment);
-                if (!compartimentResult.IsSuccess || compartimentResult.Value == null)
-                    return false;
+        //RuleFor(x => x)
+        //    .MustAsync(async (dto, cancellation) =>
+        //    {
+        //        var compartimentResult = await _compartimentService.GetByIdAsync(dto.IdCompartment);
+        //        if (!compartimentResult.IsSuccess || compartimentResult.Value == null)
+        //            return false;
 
                 var productResult = await _productService.GetByIdAsync(dto.IdProduct);
                 if (!productResult.IsSuccess || productResult.Value == null)

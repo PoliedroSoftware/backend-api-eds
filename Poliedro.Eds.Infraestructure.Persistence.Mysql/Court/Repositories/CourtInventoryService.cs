@@ -26,15 +26,20 @@ public class CourtInventoryService(IConfiguration config,
                 .FirstOrDefaultAsync(p => p.IdProduct == dispenser.IdProduct);
 
             if (product != null)
+            if (product != null)
             {
                 Console.WriteLine($"Actualizando producto {product.IdProduct}: Stock antes: {product.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
+                Console.WriteLine($"Actualizando producto {product.IdProduct}: Stock antes: {product.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
 
+                var nuevoStock = product.Stock - dispenser.GallonsDifferenceResult;
                 var nuevoStock = product.Stock - dispenser.GallonsDifferenceResult;
                 if (nuevoStock < 0)
                 {
                     throw new InvalidOperationException(
                         $"El stock no puede ser negativo para el producto {dispenser.IdProduct}. Stock actual: {product.Stock}, Cantidad vendida: {dispenser.GallonsDifferenceResult}");
                 }
+                product.Stock = nuevoStock;
+                context.Product.Update(product);
                 product.Stock = nuevoStock;
                 context.Product.Update(product);
             }
