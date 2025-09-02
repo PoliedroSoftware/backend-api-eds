@@ -55,7 +55,7 @@ using WorkerKeycloackService;
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
-Env.Load();
+DotNetEnv.Env.Load();
 builder.Configuration.AddEnvironmentVariables();
 // Configura el logging
 builder.Logging.ClearProviders();
