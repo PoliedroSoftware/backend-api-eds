@@ -15,11 +15,19 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongB
         public async Task<List<StrongBoxEntity>> GetListAsync(int skip, int take, long? IdCorte, string? type, DateTime? from, DateTime? to, CancellationToken cancellationToken)
         {
             using var db = dbContextFactory.CreateDbContext();
-            return await db.Set<StrongBoxEntity>()
-                .Where(x => (!IdCorte.HasValue || x.IdCorte == IdCorte) &&
-                            (string.IsNullOrEmpty(type) || x.Type == type) &&
-                            (!from.HasValue || x.DateTime >= from) &&
-                            (!to.HasValue || x.DateTime <= to))
+            if (from.HasValue && to.HasValue && from > to)
+            {
+                var tmp = from.Value; from = to; to = tmp;
+            }
+
+            var query = db.Set<StrongBoxEntity>().AsNoTracking();
+
+            if (IdCorte.HasValue) query = query.Where(x => x.IdCorte == IdCorte);
+            if (!string.IsNullOrWhiteSpace(type)) query = query.Where(x=>x.Type == type);
+            if (from.HasValue) query = query.Where(x=> x.DateTime >= from.Value);
+            if (to.HasValue) query = query.Where(x=> x.DateTime <= to.Value);
+
+            return await query
                 .OrderByDescending(x => x.DateTime)
                 .Skip(skip)
                 .Take(take)

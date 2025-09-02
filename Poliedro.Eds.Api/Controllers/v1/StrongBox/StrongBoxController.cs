@@ -76,10 +76,18 @@ namespace Poliedro.Eds.Api.Controllers.v1.StrongBox
 
         private IActionResult ApiResponse<T>(T? data, int successStatus, int notFoundStatus)
         {
-            if (data == null || (data is ICollection<StrongBoxDto> list && list.Count == 0))
+            if (data is null)
             {
                 return StatusCode(notFoundStatus, ResponseApiService.Response(notFoundStatus));
             }
+
+            if (data is System.Collections.IEnumerable seq && !(data is string))
+            {
+                var enumerator = seq.GetEnumerator();
+                if (!enumerator.MoveNext())
+                    return StatusCode(notFoundStatus, ResponseApiService.Response(notFoundStatus));
+            }
+
             return StatusCode(successStatus, ResponseApiService.Response(successStatus, data));
         }
     }

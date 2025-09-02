@@ -23,7 +23,7 @@ using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
-using Poliedro.Eds.Application.StrongBox.AutoMapper;
+using Poliedro.Eds.Application.StrongBox.AutoMappers;
 using Poliedro.Eds.Application.StrongBox.Commands;
 using Poliedro.Eds.Application.StrongBox.Validation;
 using Poliedro.Eds.Application.Translations.Dtos;
@@ -271,7 +271,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<GetCourtsListQueryValidator
 builder.Services.AddValidatorsFromAssemblyContaining<StrongBoxCreateValidator>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddAutoMapper(typeof(StrongBoxProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(Poliedro.Eds.Application.StrongBox.AutoMappers.StrongBoxProfile).Assembly);
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -306,6 +306,7 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();
 var app = builder.Build();
+
 app.MapHealthChecks("/health", new HealthCheckOptions()
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse

@@ -7,12 +7,13 @@ using AutoMapper;
 using Poliedro.Eds.Application.StrongBox.Dtos;
 using Poliedro.Eds.Domain.StrongBox.Entities;
 
-namespace Poliedro.Eds.Application.StrongBox.AutoMapper;
+namespace Poliedro.Eds.Application.StrongBox.AutoMappers;
 
 public class StrongBoxProfile : Profile
 {
     public StrongBoxProfile()
     {
-        CreateMap<StrongBoxEntity, StrongBoxDto>().ReverseMap();
+        CreateMap<Poliedro.Eds.Domain.StrongBox.Entities.StrongBoxEntity,
+            Poliedro.Eds.Application.StrongBox.Dtos.StrongBoxDto>();
     }
 }

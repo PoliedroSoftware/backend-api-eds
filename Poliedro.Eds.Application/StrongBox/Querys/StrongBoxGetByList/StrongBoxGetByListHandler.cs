@@ -32,11 +32,14 @@ namespace Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetList
                 var size = request.PageSize is < 1 or > 100 ? 20 : request.PageSize;
 
                 // Llama al repositorio solo con los parámetros de paginación, los demás pueden ser null
+                var type = string.IsNullOrWhiteSpace(request.Type)
+                    ? null : request.Type.Trim().ToUpperInvariant();
+
                 var list = await _repo.GetListAsync(
                     (page - 1) * size,
                     size,
                     request.IdCorte,   // Puede ser null
-                    request.Type,      // Puede ser null
+                    type,      // Puede ser null
                     request.From,      // Puede ser null
                     request.To,        // Puede ser null
                     cancellationToken);
@@ -45,7 +48,17 @@ namespace Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetList
                 if (list == null)
                     return new List<StrongBoxDto>();
 
-                return _mapper.Map<List<StrongBoxDto>>(list);
+                //return _mapper.Map<List<StrongBoxDto>>(list);
+                return list.Select(x=> new StrongBoxDto
+                {
+                    Id = x.Id,
+                    DateTime = x.DateTime,
+                    IdCorte = x.IdCorte,
+                    Type = x.Type,
+                    Ammount = x.Ammount,
+                    Saldo = x.Saldo,
+                    Note = x.Note
+                }).ToList();
             }
             catch (Exception ex)
             {

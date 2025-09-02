@@ -25,7 +25,18 @@ namespace Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetById
         public async Task<StrongBoxDto?> Handle(StrongBoxGetId request, CancellationToken cancellationToken)
         {
             var entity = await _repo.GetByIdAsync(request.Id, cancellationToken);
-            return entity is null ? null : _mapper.Map<StrongBoxDto>(entity);
+
+            //return entity is null ? null : _mapper.Map<StrongBoxDto>(entity);
+            return entity is null ? null : new StrongBoxDto
+            {
+                Id = entity.Id,
+                DateTime = entity.DateTime,
+                IdCorte = entity.IdCorte,
+                Type = entity.Type,
+                Ammount = entity.Ammount,
+                Saldo = entity.Saldo,
+                Note = entity.Note
+            };
         }
     }
 }

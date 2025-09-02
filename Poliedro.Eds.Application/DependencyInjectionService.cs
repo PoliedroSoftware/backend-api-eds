@@ -29,7 +29,7 @@ using Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProductInventory.AutoMappers;
 using Poliedro.Eds.Application.Tank.AutoMappers;
 using Poliedro.Eds.Application.TypeOfCollection.AutoMappers;
-using Poliedro.Eds.Application.StrongBox.AutoMapper;
+using Poliedro.Eds.Application.StrongBox.AutoMappers;
 
 namespace Poliedro.Eds.Application;
 

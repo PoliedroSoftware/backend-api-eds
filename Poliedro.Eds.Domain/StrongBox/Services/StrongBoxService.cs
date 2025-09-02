@@ -63,12 +63,12 @@ namespace Poliedro.Eds.Domain.StrongBox.Services
             }
 
             var entity = new StrongBoxEntity(
-                dateTime: dateTime,
-                idCorte: idCorte,
-                type: type,
-                ammount: ammount,
+                dateTime,
+                idCorte,
+                type,
+                ammount,
                 saldo: newBalance,
-                note: note
+                note
             );
 
             await _strongBoxRepositoryCreate.CreateAsync(entity, cancellationToken);
