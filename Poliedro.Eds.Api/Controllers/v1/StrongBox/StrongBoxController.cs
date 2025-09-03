@@ -7,6 +7,7 @@ using Poliedro.Eds.Application.StrongBox.Commands;
 using Poliedro.Eds.Application.StrongBox.Dtos;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetById;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetList;
+using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetTotalBalance;
 using Poliedro.Eds.Domain.Common.Models;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
@@ -44,6 +45,15 @@ namespace Poliedro.Eds.Api.Controllers.v1.StrongBox
         {
             var dto = await mediator.Send(new StrongBoxGetId(id));
             return ApiResponse(dto, StatusCodes.Status200OK, StatusCodes.Status404NotFound);
+        }
+
+        [SwaggerOperation(Summary = "Get current total Balance")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Successful", typeof(StrongBoxTotalBalanceDto))]
+        [HttpGet("balance")]
+        public async Task<IActionResult> GetCurrentBalance()
+        {
+            var dto = await mediator.Send(new StrongBoxGetTotalBalance());
+            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, dto));
         }
 
         [SwaggerOperation(Summary = "Create a new Record (CORTE o RETIRO)")]

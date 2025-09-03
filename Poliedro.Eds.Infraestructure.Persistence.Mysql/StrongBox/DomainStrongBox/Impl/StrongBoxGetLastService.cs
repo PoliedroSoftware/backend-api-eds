@@ -12,7 +12,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongB
 {
     public class StrongBoxGetLastService(ITenantDbContextFactory dbContextFactory) : IStrongBoxRepositoryGetLast
     {
-        public async Task<StrongBoxEntity> GetLastAsync(CancellationToken cancellationToken)
+        public async Task<StrongBoxEntity?> GetLastAsync(CancellationToken cancellationToken)
         {
             using var db = dbContextFactory.CreateDbContext();
 

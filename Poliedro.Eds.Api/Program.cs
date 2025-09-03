@@ -271,7 +271,6 @@ builder.Services.AddValidatorsFromAssemblyContaining<GetCourtsListQueryValidator
 builder.Services.AddValidatorsFromAssemblyContaining<StrongBoxCreateValidator>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddAutoMapper(typeof(Poliedro.Eds.Application.StrongBox.AutoMappers.StrongBoxProfile).Assembly);
 
 builder.Services.AddSwaggerGen(c =>
 {
