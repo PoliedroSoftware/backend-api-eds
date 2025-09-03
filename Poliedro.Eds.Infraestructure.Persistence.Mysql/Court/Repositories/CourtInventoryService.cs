@@ -38,8 +38,6 @@ public class CourtInventoryService(IConfiguration config,
                 }
                 product.Stock = nuevoStock;
                 context.Product.Update(product);
-                product.Stock = nuevoStock;
-                context.Product.Update(product);
             }
         }
         await context.SaveChangesAsync();
