@@ -22,7 +22,7 @@ namespace Poliedro.Eds.Application.StrongBox.Commands
             {
 
                 var created = await strongBoxService.CreateAsync(
-                    request.Request.DateTime,
+                    DateTime.UtcNow,
                     request.Request.IdCorte,
                     request.Request.Type,
                     request.Request.Ammount,

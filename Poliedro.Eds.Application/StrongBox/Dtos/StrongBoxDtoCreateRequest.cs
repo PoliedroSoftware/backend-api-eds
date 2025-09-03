@@ -8,7 +8,7 @@ namespace Poliedro.Eds.Application.StrongBox.Dtos;
 
 public class StrongBoxDtoCreateRequest
 {
-    public DateTime DateTime { get; set; }
+   // public DateTime DateTime { get; set; }
 
     public long? IdCorte { get; set; }
 

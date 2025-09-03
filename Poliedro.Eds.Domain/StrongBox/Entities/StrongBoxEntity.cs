@@ -7,7 +7,6 @@ namespace Poliedro.Eds.Domain.StrongBox.Entities;
 
 public class StrongBoxEntity : AuditableEntity
 {
-    [Key]
     public long Id { get; private set; }
     public DateTime DateTime { get; private set; }
     public long? IdCorte { get; private set; }
@@ -15,7 +14,6 @@ public class StrongBoxEntity : AuditableEntity
     public decimal Ammount { get; private set; }
     public decimal Saldo { get; private set; }
     public string? Note { get; private set; }
-
 
     private StrongBoxEntity() { }
 
@@ -43,7 +41,7 @@ public class StrongBoxEntity : AuditableEntity
             throw new ArgumentException("Ammount debe ser mayor a 0", nameof(ammount));
         }
 
-        DateTime = dateTime == default ? DateTime.Now : dateTime;
+        DateTime = DateTime.UtcNow;
         IdCorte = idCorte;
         Type = type;
         Ammount = decimal.Round(ammount, 2);
