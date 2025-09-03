@@ -7299,7 +7299,7 @@ vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;));
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="MySQL QA View Results Tree " enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="MySQL QA View Results Tree ">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -7336,7 +7336,7 @@ vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;));
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -7392,12 +7392,12 @@ vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;));
           <stringProp name="username">root</stringProp>
         </JDBCDataSource>
         <hashTree/>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_EDS">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_EDS" enabled="true">
           <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">true</boolProp>
         </TransactionController>
         <hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_BUSINESS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_BUSINESS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -7453,7 +7453,7 @@ LIMIT 1
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_CAPACITY" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_CAPACITY" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -7513,7 +7513,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_CATEGORY" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_CATEGORY" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -7568,7 +7568,7 @@ LIMIT 1
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_COMPARTIMENT" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_COMPARTIMENT" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -7657,7 +7657,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_COMPARTIMENT_CAPACITY" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_COMPARTIMENT_CAPACITY" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -7740,7 +7740,7 @@ FROM compartiment_capacity ORDER BY RAND() LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_COURT" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_COURT" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -7828,7 +7828,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_court_dispensers" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_court_dispensers" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -7938,7 +7938,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Court_dispensers_inventory" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Court_dispensers_inventory" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8001,7 +8001,7 @@ FROM court_dispensers_inventory;</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_court_document" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_court_document" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8050,7 +8050,7 @@ FROM court_document;</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_court_expenditures" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_court_expenditures" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8113,7 +8113,7 @@ FROM court_expenditures;</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_court_type_of_collection" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_court_type_of_collection" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8176,7 +8176,7 @@ FROM court_type_of_collection;</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Dispenser_type" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Dispenser_type" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8229,7 +8229,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_dispensers" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_dispensers" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8326,7 +8326,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_eds" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_eds" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8400,7 +8400,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_eds_tank" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_eds_tank" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8457,7 +8457,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_expenditures" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_expenditures" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8511,7 +8511,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_hose" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_hose" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8606,7 +8606,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_hose_history" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_hose_history" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8655,7 +8655,7 @@ FROM hose_history;</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Inventory" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Inventory" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8710,7 +8710,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Island" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_Island" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8764,7 +8764,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_islander" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_islander" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8832,7 +8832,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_phone" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_phone" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8885,7 +8885,7 @@ FROM phone;
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_product" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_product" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -8959,7 +8959,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_product_history" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_product_history" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -9009,7 +9009,7 @@ FROM product_history;</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_product_type" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_product_type" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -9064,7 +9064,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_provider" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_provider" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -9118,7 +9118,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_shopping" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_shopping" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -9202,7 +9202,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_shopping_produc_inventory" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_shopping_produc_inventory" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -9266,7 +9266,7 @@ FROM shopping_produc_inventory;</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_shopping_product" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_shopping_product" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -9362,7 +9362,7 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_strongbox" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_strongbox" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -9396,12 +9396,12 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_tank" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_tank">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Tank" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Tank">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
               <stringProp name="query">SELECT id_tank, number, ability, compartment, createdBy, createdAt, updatedBy, updatedAt
@@ -9461,10 +9461,10 @@ LIMIT 1</stringProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_tank_history" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_tank_history">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
-              <stringProp name="query">SELECT id_tank_history, id_tank, old_stock, new_stock,  createdBy, createdAt, updatedBy, updatedAt 
+              <stringProp name="query">SELECT id_tank_history, id_tank, old_ability, new_ability,  createdBy, createdAt, updatedBy, updatedAt 
 FROM tank_history;</stringProp>
               <stringProp name="queryArguments"></stringProp>
               <stringProp name="queryArgumentsTypes"></stringProp>
@@ -9505,7 +9505,7 @@ FROM tank_history;</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_type_of_collection" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_type_of_collection" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
@@ -9559,12 +9559,12 @@ LIMIT 1</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="INSERT_UPDATE_DELETE">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="INSERT_UPDATE_DELETE" enabled="true">
           <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">true</boolProp>
         </TransactionController>
         <hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="BUSINESS_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="BUSINESS_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -9626,7 +9626,7 @@ WHERE id_business = ${delete_business_id_1}
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="CAPACITY_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="CAPACITY_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -9693,7 +9693,7 @@ WHERE id_capacity = ${delete_capacity_id_1}</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="CATEGORY_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="CATEGORY_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -9754,7 +9754,7 @@ WHERE idcategory = ${delete_category_id_1}</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COMPARTIMENT_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COMPARTIMENT_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -9823,7 +9823,7 @@ WHERE id_compartiment = ${delete_compartment_id_1}</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COMPARTIMENT_CAPACITY_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COMPARTIMENT_CAPACITY_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -9888,7 +9888,7 @@ WHERE id_compartiment_capacity = ${delete_comp_cap_id_1}
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_EDS " enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_EDS " enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -9960,7 +9960,7 @@ WHERE id_court = ${delete_court_id_1}</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_DISPENSERS_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_DISPENSERS_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10028,7 +10028,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_DISPENSERS_INVENTORY_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_DISPENSERS_INVENTORY_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10088,7 +10088,7 @@ WHERE id_court_dispensers_inventorycol = ${random_cdi_id_1};</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_DOCUMENT_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_DOCUMENT_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10150,7 +10150,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_EXPENDITURES_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_EXPENDITURES_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10215,7 +10215,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_TYPE_OF_COLLECTION_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="COURT_TYPE_OF_COLLECTION_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10280,7 +10280,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="DISPENSER_TYPE_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="DISPENSER_TYPE_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10341,7 +10341,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="DISPENSERS_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="DISPENSERS_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10408,7 +10408,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EDS_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EDS_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10475,7 +10475,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EDS_TANK_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EDS_TANK_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10536,7 +10536,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EXPENDITURES_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EXPENDITURES_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10598,7 +10598,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="HOSE_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="HOSE_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10666,7 +10666,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="INVENTORY_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="INVENTORY_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10730,7 +10730,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="ISLAND_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="ISLAND_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10792,7 +10792,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="ISLANDER_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="ISLANDER_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10860,7 +10860,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PHONE_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PHONE_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10923,7 +10923,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PRODUCT_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PRODUCT_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -10990,7 +10990,7 @@ WHERE id_product = ${delete_product_id_1}</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PRODUCT_TYPE_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PRODUCT_TYPE_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -11051,7 +11051,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PROVIDER_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="PROVIDER_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -11114,7 +11114,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SHOPPING_EDS " enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SHOPPING_EDS " enabled="false">
             <stringProp name="TestPlan.comments">No se que campos se pueden actualizar</stringProp>
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
@@ -11183,7 +11183,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SHOPPING_PROD_INV_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SHOPPING_PROD_INV_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -11244,7 +11244,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SHOPPING_PRODUCT_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SHOPPING_PRODUCT_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -11313,7 +11313,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="STRONGBOX_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="STRONGBOX_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
@@ -11384,7 +11384,7 @@ WHERE
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" INSERT_TANK" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" INSERT_TANK" enabled="false">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">INSERT INTO tank (`number`, ability, compartment, createdBy, createdAt)
 VALUES (
@@ -11405,7 +11405,7 @@ VALUES (
               <stringProp name="TestPlan.comments"> Crea un nuevo tanque con un número (number) único y aleatorio y valores aleatorios para su capacidad y stock.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_tank_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_tank_RANDOM">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE tank
 SET
@@ -11443,7 +11443,7 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TYPE_OF_COLLECTION_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TYPE_OF_COLLECTION_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
