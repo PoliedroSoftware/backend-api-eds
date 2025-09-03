@@ -6,6 +6,8 @@ using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Court.Dtos;
 using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Application.StrongBox.Commands;
+using Poliedro.Eds.Application.StrongBox.Dtos;
 using Poliedro.Eds.Domain.Common.Enums;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
@@ -151,6 +153,22 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                 });
             }
 
+            var money = GetCashOnly(request);
+            if (money > 0)
+            {
+                await mediator.Send(
+                    new StrongBoxCreateCommand(new StrongBoxDtoCreateRequest
+                    {
+                        DateTime = DateTime.Now,
+                        IdCorte = courtEntity.IdCourt,
+                        Type = "CORTE",
+                        Ammount = money,
+                        Note = $"Corte #{courtEntity.IdCourt} generado automaticamente",
+                    }),
+                    cancellationToken
+                );
+            }
+
             return result.Value!;
         }
 
@@ -186,6 +204,16 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         private double GetTotalAmountCollection(CreateCourtCommand command)
         {
             return command.CourtTypeOfCollections.Sum(d => d.Amount);
+        }
+
+        private decimal GetCashOnly(CreateCourtCommand command)
+        {
+            if (command.CourtTypeOfCollections is null) return 0m;
+
+            var bar = command.CourtTypeOfCollections
+                .Where(t => string.Equals(t.TypeOfCollectionName, "EFECTIVO", StringComparison.OrdinalIgnoreCase))
+                .Sum(t => (decimal)t.Amount);
+            return bar;
         }
     }
 }

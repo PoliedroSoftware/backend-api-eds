@@ -37,6 +37,8 @@ using Poliedro.Eds.Domain.Provider.DomainProvider;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
 using Poliedro.Eds.Domain.ShoppingProduct.DomainShoppingProduct;
 using Poliedro.Eds.Domain.ShoppingProductInventory.DomainShoppingProductInventory;
+using Poliedro.Eds.Domain.StrongBox.Repositories;
+using Poliedro.Eds.Domain.StrongBox.Services;
 using Poliedro.Eds.Domain.Tank.DomainTank;
 using Poliedro.Eds.Domain.TypeOfCollection.DomainTypeOfCollection;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Adapter;
@@ -75,6 +77,8 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Imp
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProduct.DomainShopping.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProduct.DomainShoppingProduct.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProductInventory.DomainShoppingProductInventory.Impl;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongBox;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Tank.DomainTank.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
 
@@ -205,7 +209,14 @@ public static class DependencyInjectionService
         services.AddScoped<IOpenAIChatService, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.DomainOpenAI.Impl.OpenAIChatService>();
         services.AddScoped<IOpenAIRequestRepository, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Repositories.OpenAIRequestRepository>();
         services.AddScoped<IOpenAIResponseRepository, Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Repositories.OpenAIResponseRepository>();
-        
+
+        // StrongBox Services
+        services.AddScoped<IStrongBoxRepositoryCreate, StrongBoxCreateService>();
+        services.AddScoped<IStrongBoxRepositoryGetLast, StrongBoxGetLastService>();
+        services.AddScoped<IStrongBoxRepositorySaveChanges, StrongBoxSaveChangesService>();
+        services.AddScoped<IStrongBoxService, StrongBoxService>();
+        services.AddScoped<IStrongBoxRepositoryGetById, StrongBoxGetByIdService>();
+        services.AddScoped<IStrongBoxRepositoryGetAll, StrongBoxGetAllService>();
         return services;
     }
 }

@@ -32,6 +32,7 @@ using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 using Poliedro.Eds.Domain.ShoppingProductInventory.Entities;
+using Poliedro.Eds.Domain.StrongBox.Entities;
 using Poliedro.Eds.Domain.Tank.Entities;
 using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
@@ -166,5 +167,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new ShoppingProductViewConfiguration(modelBuilder.Entity<ShoppingProductViewEntity>());
         new OpenAIRequestConfiguration(modelBuilder.Entity<OpenAIRequestEntity>());
         new OpenAIResponseConfiguration(modelBuilder.Entity<OpenAIResponseEntity>());
+        new StrongBoxConfiguration(modelBuilder.Entity<StrongBoxEntity>());
     }
 }
