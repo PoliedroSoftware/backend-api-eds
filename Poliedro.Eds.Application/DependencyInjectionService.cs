@@ -27,6 +27,7 @@ using Poliedro.Eds.Application.Provider.AutoMappers;
 using Poliedro.Eds.Application.Shopping.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProductInventory.AutoMappers;
+using Poliedro.Eds.Application.StrongBox.AutoMappers;
 using Poliedro.Eds.Application.Tank.AutoMappers;
 using Poliedro.Eds.Application.TypeOfCollection.AutoMappers;
 
@@ -88,6 +89,7 @@ public static class DependencyInjectionService
             config.AddProfile(new CategoryMapper());
             config.AddProfile(new PaginationCategoryMapper());
             config.AddProfile(new DashboardPowerBIMapper());
+            config.AddProfile(new StrongBoxProfile());
         });
         services.AddSingleton(mapper.CreateMapper());
         #endregion
