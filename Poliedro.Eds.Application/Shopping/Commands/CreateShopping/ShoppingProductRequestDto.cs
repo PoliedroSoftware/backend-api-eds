@@ -3,7 +3,7 @@ namespace Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
 public record ShoppingProductRequestDto(
     int IdProduct,
     double Quantity,
-    double Price,
-    int IdCompartment,
-    double? SellPrice
+    double PurchasePrice,
+    double SellPrice,
+    int IdCompartment
 );

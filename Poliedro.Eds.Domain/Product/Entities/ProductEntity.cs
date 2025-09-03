@@ -15,6 +15,6 @@ public class ProductEntity : AuditableEntity
     public double? Stock { get; set; }
     public DateTime Date { get; set; }
 
-    // Navigation property
+
     public virtual ProductTypeEntity? ProductType { get; set; }
 }

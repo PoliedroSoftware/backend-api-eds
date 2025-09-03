@@ -4,7 +4,6 @@ public record CreateShoppingProductRequestDto(
     int IdShopping,
     int IdProduct,
     double Quantity,
-    double Price,
+    double PurchasePrice,
+    double SellPrice,
     int IdCompartment);
-
-

@@ -226,8 +226,6 @@ builder.Services.AddScoped<IGetPaymentMethodName, GetIdAuxService>();
 builder.Services.AddScoped<IGetHoseNumber, GetIdAuxService>();
 builder.Services.AddScoped<IGetDispenserNumber, GetIdAuxService>();
 
-//builder.Services.AddScoped<IProductCompartimentGetByCompartmentId, ProductCompartimentGetByCompartmentId>();
-
 builder.Services.AddScoped<ICourtListDomainService, CourtListService>();
 builder.Services.AddScoped<IInventoryListDomainService, InventoryListService>();
 

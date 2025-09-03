@@ -37,11 +37,12 @@ public class CreateShoppingCommandHandler(
         };
 
         var productsToUpdatePrice = request.Request.ShoppingProducts
-            .Where(sp => sp.SellPrice.HasValue)
+            .Where(sp => sp.SellPrice > 0)
             .Select(sp => new ProductEntity
             {
                 IdProduct = sp.IdProduct,
-                SellPrice = sp.SellPrice.Value
+                PurchasePrice = sp.PurchasePrice,
+                SellPrice = sp.SellPrice
             })
             .ToList();
 

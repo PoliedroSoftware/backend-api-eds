@@ -21,9 +21,11 @@ public class CourtInventoryService(IConfiguration config,
 
         foreach (var dispenser in courtDispensers)
         {
+            // Ahora obtenemos el producto directamente
             var product = await context.Product
                 .FirstOrDefaultAsync(p => p.IdProduct == dispenser.IdProduct);
 
+            if (product != null)
             if (product != null)
             {
                 Console.WriteLine($"Actualizando producto {product.IdProduct}: Stock antes: {product.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
@@ -32,7 +34,7 @@ public class CourtInventoryService(IConfiguration config,
                 if (nuevoStock < 0)
                 {
                     throw new InvalidOperationException(
-                        $"El stock no puede ser negativo para el producto {dispenser.IdProduct}.");
+                        $"El stock no puede ser negativo para el producto {dispenser.IdProduct}. Stock actual: {product.Stock}, Cantidad vendida: {dispenser.GallonsDifferenceResult}");
                 }
                 product.Stock = nuevoStock;
                 context.Product.Update(product);
