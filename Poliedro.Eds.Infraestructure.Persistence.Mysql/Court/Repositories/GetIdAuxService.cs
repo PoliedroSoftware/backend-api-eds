@@ -24,7 +24,7 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
                         .Where(p => p.IdProductType == h.IdProductType)
                         .Select(p => p.IdProduct)
                         .FirstOrDefault())
-                    .Select(c => (int)c.IdCompartment)
+                    .Select(c => (int)c.IdCompartiment)
                     .FirstOrDefault()
             })
             .FirstOrDefaultAsync();

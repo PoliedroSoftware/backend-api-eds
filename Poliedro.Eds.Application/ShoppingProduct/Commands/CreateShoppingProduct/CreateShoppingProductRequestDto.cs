@@ -9,5 +9,3 @@ public record CreateShoppingProductRequestDto(
     double PurchasePrice,
     double SellPrice,
     int IdCompartment);
-
-

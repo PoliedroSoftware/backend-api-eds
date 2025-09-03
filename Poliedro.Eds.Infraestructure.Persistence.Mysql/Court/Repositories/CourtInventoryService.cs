@@ -29,9 +29,7 @@ public class CourtInventoryService(IConfiguration config,
             if (product != null)
             {
                 Console.WriteLine($"Actualizando producto {product.IdProduct}: Stock antes: {product.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
-                Console.WriteLine($"Actualizando producto {product.IdProduct}: Stock antes: {product.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
 
-                var nuevoStock = product.Stock - dispenser.GallonsDifferenceResult;
                 var nuevoStock = product.Stock - dispenser.GallonsDifferenceResult;
                 if (nuevoStock < 0)
                 {

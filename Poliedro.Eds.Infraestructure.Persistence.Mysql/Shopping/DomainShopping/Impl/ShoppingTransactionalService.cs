@@ -68,7 +68,6 @@ public class ShoppingTransactionalService(
         catch (Exception)
         {
             await transaction.RollbackAsync();
-            // Re-lanzar la excepción para que sea manejada por GlobalExceptionConfiguration
             throw;
         }
     }
@@ -114,16 +113,14 @@ public class ShoppingTransactionalService(
         var productIds = shoppingProducts.Select(sp => sp.IdProduct).Distinct().ToList();
         var compartimentIds = shoppingProducts.Select(sp => sp.IdCompartment).Distinct().ToList();
 
-        // Obtener productos y compartimentos necesarios
         var products = await context.Product
             .Where(p => productIds.Contains(p.IdProduct))
             .ToListAsync();
 
-        //var compartiments = await context.Compartiment
-        //    .Where(c => compartimentIds.Contains(c.IdCompartment))
-        //    .ToListAsync();
+        var compartiments = await context.Compartiment
+            .Where(c => compartimentIds.Contains(c.IdCompartiment))
+            .ToListAsync();
 
-        // Validar que todos los productos existan
         var missingProductIds = productIds.Except(products.Select(p => p.IdProduct)).ToList();
         if (missingProductIds.Any())
         {
@@ -131,19 +128,17 @@ public class ShoppingTransactionalService(
                 $"No se encontraron los productos con Ids: {string.Join(", ", missingProductIds)}");
         }
 
-        // Validar que todos los compartimentos existan
-        var missingCompartimentIds = compartimentIds.Except(compartiments.Select(c => c.IdCompartment)).ToList();
+        var missingCompartimentIds = compartimentIds.Except(compartiments.Select(c => c.IdCompartiment)).ToList();
         if (missingCompartimentIds.Any())
         {
             return Error.BadRequest("CompartimentNotFound", 
                 $"No se encontraron los compartimentos con Ids: {string.Join(", ", missingCompartimentIds)}");
         }
 
-        // Validar capacidad de los compartimentos antes de actualizar stock
         foreach (var shoppingProduct in shoppingProducts)
         {
             var product = products.First(p => p.IdProduct == shoppingProduct.IdProduct);
-            var compartiment = compartiments.First(c => c.IdCompartment == shoppingProduct.IdCompartment);
+            var compartiment = compartiments.First(c => c.IdCompartiment == shoppingProduct.IdCompartment);
 
             var nuevoStock = product.Stock + shoppingProduct.Quantity;
             if (nuevoStock > compartiment.Operative)
@@ -154,7 +149,6 @@ public class ShoppingTransactionalService(
             }
         }
 
-        // Actualizar stock de productos
         foreach (var shoppingProduct in shoppingProducts)
         {
             var product = products.First(p => p.IdProduct == shoppingProduct.IdProduct);
