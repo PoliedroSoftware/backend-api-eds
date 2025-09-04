@@ -17,7 +17,7 @@ public class StrongBoxGetTotalBalanceHandler(IStrongBoxRepositoryGetLast _repo) 
         return new StrongBoxTotalBalanceDto
         {
             Id = last?.Id,
-            DateTime = last?.DateTime,
+            DateTime = last?.CreatedAt,
             Saldo = last?.Saldo ?? 0m
         };
     }
