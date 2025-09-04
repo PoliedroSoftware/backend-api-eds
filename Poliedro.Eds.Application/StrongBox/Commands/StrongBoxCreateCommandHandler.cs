@@ -4,41 +4,25 @@ using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 using Poliedro.Eds.Application.StrongBox.Validation;
+using Poliedro.Eds.Domain.StrongBox.Entities;
 using Poliedro.Eds.Domain.StrongBox.Exceptions;
 using Poliedro.Eds.Domain.StrongBox.Services;
 
-namespace Poliedro.Eds.Application.StrongBox.Commands
+namespace Poliedro.Eds.Application.StrongBox.Commands;
+
+public class StrongBoxCreateCommandHandler(
+    IStrongBoxService strongBoxService,
+    IMapper mapper,
+    StrongBoxCreateValidator validator) : IRequestHandler<StrongBoxCreateCommand, Unit>
 {
-    public class StrongBoxCreateCommandHandler(
-        IStrongBoxService strongBoxService,
-        IMapper mapper,
-        StrongBoxCreateValidator validator) : IRequestHandler<StrongBoxCreateCommand, Unit>
+    async Task<Unit> IRequestHandler<StrongBoxCreateCommand, Unit>.Handle(StrongBoxCreateCommand request, CancellationToken cancellationToken)
     {
-        async Task<Unit> IRequestHandler<StrongBoxCreateCommand, Unit>.Handle(StrongBoxCreateCommand request, CancellationToken cancellationToken)
-        {
-            await validator.ValidateAndThrowAsync(request.Request, cancellationToken);
+        await validator.ValidateAndThrowAsync(request.Request, cancellationToken);
 
-            try
-            {
-
-                var created = await strongBoxService.CreateAsync(
-                    DateTime.UtcNow,
-                    request.Request.IdCorte,
-                    request.Request.Type,
-                    request.Request.Ammount,
-                    request.Request.Note,
-                    cancellationToken);
-            }
-            catch (StrongBoxDomainException ex)
-            {
-                var failures = new List<ValidationFailure>
-                {
-                    new ValidationFailure("Ammount", ex.Message)
-                };
-                throw new ValidationException(failures);
-            }
-
-            return Unit.Value;
-        }
+        await strongBoxService.CreateAsync(
+        mapper.Map<StrongBoxEntity>(request.Request),
+        cancellationToken);
+        
+        return Unit.Value;
     }
 }

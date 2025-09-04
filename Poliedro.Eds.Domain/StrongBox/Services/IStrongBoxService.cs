@@ -10,10 +10,6 @@ namespace Poliedro.Eds.Domain.StrongBox.Services;
 public interface IStrongBoxService
 {
     Task<StrongBoxEntity> CreateAsync(
-        DateTime dateTime,
-        long? idCorte,
-        string type,
-        decimal ammount,
-        string? note,
+        StrongBoxEntity strongBoxEntity,
         CancellationToken cancellationToken);
 }

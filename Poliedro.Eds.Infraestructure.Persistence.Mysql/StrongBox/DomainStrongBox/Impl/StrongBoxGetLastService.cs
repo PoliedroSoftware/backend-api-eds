@@ -17,7 +17,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongB
             using var db = dbContextFactory.CreateDbContext();
 
             return await db.Set<StrongBoxEntity>()
-                            .OrderByDescending(x => x.DateTime)
+                            .OrderByDescending(x => x.CreatedAt)
                             .ThenByDescending(x => x.Id)
                             .FirstOrDefaultAsync(cancellationToken);
         }

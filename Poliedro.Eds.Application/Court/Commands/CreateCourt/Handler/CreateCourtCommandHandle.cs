@@ -159,7 +159,6 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                 await mediator.Send(
                     new StrongBoxCreateCommand(new StrongBoxDtoCreateRequest
                     {
-                        DateTime = DateTime.Now,
                         IdCorte = courtEntity.IdCourt,
                         Type = "CORTE",
                         Ammount = money,
