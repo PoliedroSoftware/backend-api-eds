@@ -14,7 +14,7 @@ public class StrongBoxProfile : Profile
 {
     public StrongBoxProfile()
     {
-        CreateMap<Poliedro.Eds.Domain.StrongBox.Entities.StrongBoxEntity, Poliedro.Eds.Application.StrongBox.Dtos.StrongBoxDto>().ReverseMap();
+        CreateMap<StrongBoxEntity, StrongBoxDto>().ReverseMap();
         CreateMap<StrongBoxEntity, StrongBoxTotalBalanceDto>().ReverseMap();
         CreateMap<StrongBoxEntity, StrongBoxCreateCommand>().ReverseMap();
     }

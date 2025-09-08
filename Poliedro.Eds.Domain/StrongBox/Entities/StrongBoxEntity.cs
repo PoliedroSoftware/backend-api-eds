@@ -44,7 +44,6 @@ public class StrongBoxEntity : AuditableEntity
         Ammount = decimal.Round(ammount, 2);
         Saldo = decimal.Round(saldo, 2);
         Note = note?.Trim();
-        CreatedAt = DateTime.UtcNow;
     }
 
     public void SetSaldo(decimal nuevoSaldo)

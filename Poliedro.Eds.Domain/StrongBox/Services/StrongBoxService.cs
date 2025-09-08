@@ -10,56 +10,63 @@ using Poliedro.Eds.Domain.StrongBox.Exceptions;
 
 namespace Poliedro.Eds.Domain.StrongBox.Services;
 
-public class StrongBoxService(IStrongBoxRepositoryGetLast _repo,
-        IStrongBoxRepositoryCreate repoCreate,
-        IStrongBoxRepositorySaveChanges repoSaveChanges) : IStrongBoxService
+public class StrongBoxService(IStrongBoxRepositoryGetLast _repoLast,
+        IStrongBoxRepositoryCreate repoCreate) : IStrongBoxService
 {
   
-    public async Task<StrongBoxEntity> CreateAsync(StrongBoxEntity strongBoxEntity, CancellationToken cancellationToken)
+    public async Task<StrongBoxEntity> CreateAsync(
+        long? idCorte,
+        string type,
+        decimal ammount,
+        string? note,
+        CancellationToken cancellationToken)
     {
-        if (strongBoxEntity.Ammount <= 0)
+        
+        if (ammount <= 0)
             throw new StrongBoxDomainException("El monto debe ser mayor a cero.");
 
-        if (string.IsNullOrWhiteSpace(strongBoxEntity.Type))
+        if (string.IsNullOrWhiteSpace(type))
             throw new StrongBoxDomainException("El tipo de movimiento es requerido.");
 
-         strongBoxEntity.Type.Trim().ToUpperInvariant();
+        var normalType = type.Trim().ToUpperInvariant();
+        if (normalType != StrongBoxType.CORTE && normalType != StrongBoxType.RETIRO)
+            throw new StrongBoxDomainException($"Tipo de movimiento no soportado: {normalType}");
 
-        if (strongBoxEntity.Type != StrongBoxType.CORTE && strongBoxEntity.Type != StrongBoxType.RETIRO)
-            throw new StrongBoxDomainException($"Tipo de movimiento no soportado: {strongBoxEntity.Type}");
+        var last = await _repoLast.GetLastAsync(cancellationToken);
+        var previousBalance = last?.Saldo ?? 0m;
 
-        var last = await _repo.GetLastAsync(cancellationToken);
-        var previousBalance = last?.Saldo ?? 0;
+        decimal newBalance = previousBalance = ammount;
 
-        decimal newBalance = previousBalance;
-
-        switch (strongBoxEntity.Type)
+        switch (type)
         {
             case StrongBoxType.CORTE:
                 // Siempre suma el monto al saldo anterior
-                newBalance += strongBoxEntity.Ammount;
+                newBalance = previousBalance + ammount;
                 break;
             case StrongBoxType.RETIRO:
                 // Si el retiro es igual al saldo, el saldo queda en cero
-                if (strongBoxEntity.Ammount == previousBalance)
+                if (ammount == previousBalance)
                 {
                     newBalance = 0;
                 }
                 else
                 {
-                    newBalance -= strongBoxEntity.Ammount;
+                    newBalance -= ammount;
                     if (newBalance < 0)
                         throw new StrongBoxDomainException("No se puede hacer el retiro, el saldo quedaría negativo.");
                 }
                 break;
         }
+        var entity = new StrongBoxEntity(
+            idCorte: idCorte,
+            type: normalType,        // el ctor además lo vuelve a normalizar y redondea
+            ammount: ammount,
+            saldo: newBalance,
+            note: note
+        );
 
+        await repoCreate.CreateAsync(entity, cancellationToken);
 
-
-         await repoCreate.CreateAsync(strongBoxEntity, cancellationToken);
-
-        return strongBoxEntity;
-
-
+        return entity;
     }
 }
