@@ -153,20 +153,20 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                 });
             }
 
-            var money = GetCashOnly(request);
-            if (money > 0)
-            {
-                await mediator.Send(
-                    new StrongBoxCreateCommand(new StrongBoxDtoCreateRequest
-                    {
-                        IdCorte = courtEntity.IdCourt,
-                        Type = "CORTE",
-                        Ammount = money,
-                        Note = $"Corte #{courtEntity.IdCourt} generado automaticamente",
-                    }),
-                    cancellationToken
-                );
-            }
+            //var money = GetCashOnly(request);
+            //if (money > 0)
+            //{
+            //    await mediator.Send(
+            //        new StrongBoxCreateCommand(new StrongBoxDtoCreateRequest
+            //        {
+            //            IdCorte = courtEntity.IdCourt,
+            //            Type = "CORTE",
+            //            Ammount = money,
+            //            Note = $"Corte #{courtEntity.IdCourt} generado automaticamente",
+            //        }),
+            //        cancellationToken
+            //    );
+            //}
 
             return result.Value!;
         }
@@ -205,14 +205,20 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             return command.CourtTypeOfCollections.Sum(d => d.Amount);
         }
 
-        private decimal GetCashOnly(CreateCourtCommand command)
+        private double GetCashOnly(CreateCourtCommand command)
         {
-            if (command.CourtTypeOfCollections is null) return 0m;
-
-            var bar = command.CourtTypeOfCollections
+            if (command.CourtTypeOfCollections is null) return 0;
+            double Expenditures = 0;
+            var efectivo = command.CourtTypeOfCollections
                 .Where(t => string.Equals(t.TypeOfCollectionName, "EFECTIVO", StringComparison.OrdinalIgnoreCase))
-                .Sum(t => (decimal)t.Amount);
-            return bar;
+                .Sum(t => (double)t.Amount);
+            if (command.CourtExpenditures?.Count() > 0)
+            {
+                Expenditures = command.CourtExpenditures
+                                .Sum(t => (double)t.Amount);
+            }
+           
+            return efectivo - Expenditures;
         }
     }
 }
