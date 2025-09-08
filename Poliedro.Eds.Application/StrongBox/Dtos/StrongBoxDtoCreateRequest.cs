@@ -12,7 +12,7 @@ public class StrongBoxDtoCreateRequest
 
     public string Type { get; set; }
 
-    public decimal Ammount { get; set; }
+    public double Ammount { get; set; }
 
     public string? Note { get; set; }
 }
