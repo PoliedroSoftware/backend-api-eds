@@ -18,9 +18,9 @@ public class StrongBoxConfiguration
 
         entity.Property(x => x.Id).HasColumnName("id");
         entity.Property(x => x.IdCorte).HasColumnName("id_corte");
-        entity.Property(x => x.Type).HasColumnName("moviment").HasMaxLength(10);
+        entity.Property(x => x.Type).HasColumnName("moviment").HasMaxLength(255);
         entity.Property(x => x.Ammount).HasColumnName("ammount").HasPrecision(18, 2);
         entity.Property(x => x.Saldo).HasColumnName("saldo").HasPrecision(18, 2);
-        entity.Property(x => x.Note).HasColumnName("note").HasMaxLength(500);
+        entity.Property(x => x.Note).HasColumnName("note").HasMaxLength(255);
     }
 }

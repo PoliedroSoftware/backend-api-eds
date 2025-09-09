@@ -153,20 +153,20 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                 });
             }
 
-            //var money = GetCashOnly(request);
-            //if (money > 0)
-            //{
-            //    await mediator.Send(
-            //        new StrongBoxCreateCommand(new StrongBoxDtoCreateRequest
-            //        {
-            //            IdCorte = courtEntity.IdCourt,
-            //            Type = "CORTE",
-            //            Ammount = money,
-            //            Note = $"Corte #{courtEntity.IdCourt} generado automaticamente",
-            //        }),
-            //        cancellationToken
-            //    );
-            //}
+            var money = GetCashOnly(request);
+            if (money > 0)
+            {
+                await mediator.Send(
+                    new StrongBoxCreateCommand(new StrongBoxDtoCreateRequest
+                    {
+                        IdCorte = courtEntity.IdCourt,
+                        Type = "CORTE",
+                        Ammount = money,
+                        Note = $"Corte #{courtEntity.IdCourt} Dinero en efectivo para la Caja!! ${money:N2} ",
+                    }),
+                    cancellationToken
+                );
+            }
 
             return result.Value!;
         }

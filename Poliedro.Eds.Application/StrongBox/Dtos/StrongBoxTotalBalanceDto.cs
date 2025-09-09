@@ -12,5 +12,5 @@ public class StrongBoxTotalBalanceDto
 
     public DateTime? DateTime { get; set; }
 
-    public decimal Saldo { get; set; }
+    public double Saldo { get; set; }
 }

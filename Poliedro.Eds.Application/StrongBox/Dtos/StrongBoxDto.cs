@@ -16,9 +16,9 @@ public class StrongBoxDto
 
     public string Type { get; set; }
 
-    public decimal Ammount { get; set; }
+    public double Ammount { get; set; }
 
-    public decimal Saldo { get; set; }
+    public double Saldo { get; set; }
 
     public string? Note { get; set; }
 

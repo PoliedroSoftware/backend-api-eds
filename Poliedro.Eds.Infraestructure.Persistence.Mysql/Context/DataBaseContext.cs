@@ -118,6 +118,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<OpenAIResponseEntity> OpenAIResponse { get; set; }
 
+    public DbSet<StrongBoxEntity> StrongBox { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
