@@ -35,9 +35,9 @@ public class StrongBoxService(IStrongBoxRepositoryGetLast _repoLast,
         var last = await _repoLast.GetLastAsync(cancellationToken);
         var previousBalance = last?.Saldo ?? 0.0;
 
-        double newBalance = previousBalance + ammount;
+        double newBalance = previousBalance;
 
-        switch (type)
+        switch (normalType)
         {
             case StrongBoxType.CORTE:
                 // Siempre suma el monto al saldo anterior
@@ -45,21 +45,25 @@ public class StrongBoxService(IStrongBoxRepositoryGetLast _repoLast,
                 break;
             case StrongBoxType.RETIRO:
                 // Si el retiro es igual al saldo, el saldo queda en cero
-                if (ammount == previousBalance)
+                if (ammount > previousBalance)
+                    throw new StrongBoxDomainException("No se puede hacer el retiro, el monto es mayor al saldo en caja fuerte!! ");
+
+                if (string.IsNullOrWhiteSpace(note))
                 {
-                    newBalance = 0;
+                    note = $"Retiro de Caja por valor de ${ammount:N2}";
                 }
-                else
+
+                if (idCorte is null or 0L)
                 {
-                    newBalance -= ammount;
-                    if (newBalance < 0)
-                        throw new StrongBoxDomainException("No se puede hacer el retiro, el saldo quedaría negativo.");
+                    idCorte = null;
                 }
+
+                newBalance = previousBalance - ammount;
                 break;
         }
         var entity = new StrongBoxEntity(
             idCorte: idCorte,
-            type: normalType,        // el ctor además lo vuelve a normalizar y redondea
+            type: normalType,      
             ammount: ammount,
             saldo: newBalance,
             note: note

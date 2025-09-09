@@ -21,7 +21,7 @@ public class StrongBoxCreateValidator : AbstractValidator<StrongBoxDtoCreateRequ
 
         RuleFor(x => x.Note)
             .MaximumLength(500)
-            .WithMessage("El campo Nota no debe exceder los 500 caracteres.");
+            .WithMessage("El campo Descripcion no debe exceder los 500 caracteres.");
 
         RuleFor(x => x.Ammount)
             .NotEmpty().WithMessage("El campo Monto es obligatorio.")
