@@ -7,14 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Domain.StrongBox.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
-namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongBox
+namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongBox;
+
+public class StrongBoxSaveChangesService(ITenantDbContextFactory dbContextFactory) : IStrongBoxRepositorySaveChanges
 {
-    internal class StrongBoxSaveChangesService(ITenantDbContextFactory dbContextFactory) : IStrongBoxRepositorySaveChanges
+    public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken)
     {
-        public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            using var db = dbContextFactory.CreateDbContext();
-            return await db.SaveChangesAsync(cancellationToken) > 0;
-        }
+        using var db = dbContextFactory.CreateDbContext();
+        return await db.SaveChangesAsync(cancellationToken) > 0;
     }
 }

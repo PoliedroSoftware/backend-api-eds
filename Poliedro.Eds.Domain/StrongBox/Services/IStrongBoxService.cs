@@ -12,7 +12,7 @@ public interface IStrongBoxService
     Task<StrongBoxEntity> CreateAsync(
         long? idCorte,
         string type,
-        decimal ammount,
+        double ammount,
         string? note,
         CancellationToken cancellationToken);
 }

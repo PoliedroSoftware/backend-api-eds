@@ -17,7 +17,7 @@ public class StrongBoxService(IStrongBoxRepositoryGetLast _repoLast,
     public async Task<StrongBoxEntity> CreateAsync(
         long? idCorte,
         string type,
-        decimal ammount,
+        double ammount,
         string? note,
         CancellationToken cancellationToken)
     {
@@ -33,9 +33,9 @@ public class StrongBoxService(IStrongBoxRepositoryGetLast _repoLast,
             throw new StrongBoxDomainException($"Tipo de movimiento no soportado: {normalType}");
 
         var last = await _repoLast.GetLastAsync(cancellationToken);
-        var previousBalance = last?.Saldo ?? 0m;
+        var previousBalance = last?.Saldo ?? 0.0;
 
-        decimal newBalance = previousBalance = ammount;
+        double newBalance = previousBalance + ammount;
 
         switch (type)
         {

@@ -33,7 +33,7 @@ public class StrongBoxCreateValidator : AbstractValidator<StrongBoxDtoCreateRequ
                 if (req?.Type?.Trim().ToUpperInvariant() == StrongBoxType.RETIRO)
                 {
                     var last = await repoGetLast.GetLastAsync(CancellationToken);
-                    var balance = last?.Saldo ?? 0m;
+                    var balance = last?.Saldo ?? 0.0;
                     return req.Ammount <= balance;
                 }
                 return true;

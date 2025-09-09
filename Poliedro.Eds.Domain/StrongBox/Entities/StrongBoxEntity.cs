@@ -7,20 +7,20 @@ namespace Poliedro.Eds.Domain.StrongBox.Entities;
 
 public class StrongBoxEntity : AuditableEntity
 {
-    public long Id { get; private set; }
-    public long? IdCorte { get; private set; }
-    public string Type { get; private set; } = null!;
-    public decimal Ammount { get; private set; }
-    public decimal Saldo { get; private set; }
-    public string? Note { get; private set; }
+    public long Id { get; set; }
+    public long? IdCorte { get; set; }
+    public string Type { get; set; } = null!;
+    public double Ammount { get; set; }
+    public double Saldo { get; set; }
+    public string? Note { get; set; }
 
     private StrongBoxEntity() { }
 
     public StrongBoxEntity(
         long? idCorte,
         string type,
-        decimal ammount,
-        decimal saldo,
+        double ammount,
+        double saldo,
         string? note)
     {
         if (string.IsNullOrWhiteSpace(type))
@@ -41,14 +41,14 @@ public class StrongBoxEntity : AuditableEntity
 
         IdCorte = idCorte;
         Type = type;
-        Ammount = decimal.Round(ammount, 2);
-        Saldo = decimal.Round(saldo, 2);
+        Ammount = double.Round(ammount, 2);
+        Saldo = double.Round(saldo, 2);
         Note = note?.Trim();
     }
 
-    public void SetSaldo(decimal nuevoSaldo)
+    public void SetSaldo(double nuevoSaldo)
     {
-        Saldo = decimal.Round(nuevoSaldo, 2);
+        Saldo = double.Round(nuevoSaldo, 2);
         UpdatedAt = DateTime.Now;
 
     }
