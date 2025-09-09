@@ -7373,7 +7373,7 @@ vars.put(&quot;updatedAt&quot;, vars.get(&quot;nowISO&quot;));
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="MySQL QA" enabled="true">
+        <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="MySQL QA">
           <boolProp name="autocommit">true</boolProp>
           <stringProp name="checkQuery"></stringProp>
           <stringProp name="connectionAge">5000</stringProp>
@@ -9396,12 +9396,12 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_tank">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_tank" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Tank">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_Tank" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
               <stringProp name="query">SELECT id_tank, number, ability, compartment, createdBy, createdAt, updatedBy, updatedAt
@@ -9456,12 +9456,12 @@ LIMIT 1</stringProp>
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_tank_history" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SELECT_tank_history" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">false</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_tank_history">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SELECT_tank_history" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="queryType">Select Statement</stringProp>
               <stringProp name="query">SELECT id_tank_history, id_tank, old_ability, new_ability,  createdBy, createdAt, updatedBy, updatedAt 
@@ -9559,7 +9559,7 @@ LIMIT 1</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="INSERT_UPDATE_DELETE" enabled="true">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="INSERT_UPDATE_DELETE">
           <boolProp name="TransactionController.parent">true</boolProp>
           <boolProp name="TransactionController.includeTimers">true</boolProp>
         </TransactionController>
@@ -11318,7 +11318,7 @@ WHERE
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" INSERT_TANK" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" INSERT_TANK">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">INSERT INTO strongbox (datetime, moviment, ammount, note, saldo, createdBy, createdAt)
 VALUES (
@@ -11341,7 +11341,7 @@ VALUES (
               <stringProp name="TestPlan.comments">rea un nuevo movimiento en la caja fuerte. La columna moviment se elige aleatoriamente entre los valores permitidos por el ENUM usando una función de MySQL.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_strongbox_RANDOM" enabled="true">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_strongbox_RANDOM">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE strongbox
 SET
@@ -11379,12 +11379,12 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TANK_EDS" enabled="true">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TANK_EDS" enabled="false">
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" INSERT_TANK" enabled="false">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname=" INSERT_TANK" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">INSERT INTO tank (`number`, ability, compartment, createdBy, createdAt)
 VALUES (
@@ -11405,7 +11405,7 @@ VALUES (
               <stringProp name="TestPlan.comments"> Crea un nuevo tanque con un número (number) único y aleatorio y valores aleatorios para su capacidad y stock.</stringProp>
             </JDBCSampler>
             <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_tank_RANDOM">
+            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_tank_RANDOM" enabled="true">
               <stringProp name="dataSource">MySQL_Connection</stringProp>
               <stringProp name="query">UPDATE tank
 SET
@@ -11443,69 +11443,210 @@ WHERE
             </JDBCSampler>
             <hashTree/>
           </hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TYPE_OF_COLLECTION_EDS" enabled="false">
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="TEST_STRONGBOX_LOGIC (Prueba de Lógica de Negocio)">
+            <stringProp name="TestPlan.comments">Este es el flujo principal que simula la creación de registros.</stringProp>
             <boolProp name="TransactionController.parent">true</boolProp>
             <boolProp name="TransactionController.includeTimers">true</boolProp>
           </TransactionController>
           <hashTree>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="INSERT_type_of_collection" enabled="true">
-              <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">INSERT INTO type_of_collection (description, createdBy, createdAt)
+            <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Decidir Tipo de Movimiento (&apos;corte&apos; o &apos;retiro&apos;)">
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">// Elige aleatoriamente entre &apos;corte&apos; y &apos;retiro&apos;
+def movementOptions = [&apos;corte&apos;, &apos;retiro&apos;]
+def randomMoviment = movementOptions[new Random().nextInt(movementOptions.size())]
+
+// Guarda la decisión en una variable para usarla en los If Controllers
+vars.put(&quot;moviment_type&quot;, randomMoviment)</stringProp>
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="TestPlan.comments">Este script elige al azar si la prueba simulará un &apos;corte&apos; o un &apos;retiro&apos; y guarda la decisión en una variable.</stringProp>
+            </JSR223Sampler>
+            <hashTree/>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Si el Movimiento es un &quot;Corte&quot;     Condición para &apos;corte&apos; (&quot;${moviment_type}&quot; == &quot;corte&quot;)">
+              <stringProp name="IfController.condition">${__jexl3(&quot;${moviment_type}&quot; == &quot;corte&quot;)}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+              <stringProp name="TestPlan.comments">Los 6 samplers anidados aquí solo se ejecutarán si el script anterior decidió que el movimiento es un &apos;corte&apos;.</stringProp>
+            </IfController>
+            <hashTree>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="1. Obtener ID de Corte Aleatorio">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT id_court FROM court ORDER BY RAND() LIMIT 1;</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">current_court_id</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="2. Calcular Cobros Totales del Corte">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT SUM(amount) FROM court_type_of_collection WHERE id_court = ${current_court_id_1};</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">total_collection</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="3. Calcular Gastos Totales del Corte  ">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT SUM(amount) FROM court_expenditures WHERE id_court = ${current_court_id_1};</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">total_expenditures</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="4. Obtener Último Saldo de Caja Fuerte">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT saldo FROM strongbox ORDER BY id DESC LIMIT 1;</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">last_saldo</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+              <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="5. Calcular &apos;ammount&apos; y &apos;saldo&apos; final para Corte">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">import java.util.Locale; // Importamos la clase Locale
+
+// Obtenemos los valores de las variables de JMeter
+String collectionStr = vars.get(&quot;total_collection_1&quot;);
+String expendituresStr = vars.get(&quot;total_expenditures_1&quot;);
+String lastSaldoStr = vars.get(&quot;last_saldo_1&quot;);
+
+// Convertimos a número, manejando nulos
+double collection = (collectionStr != null &amp;&amp; !collectionStr.isEmpty()) ? Double.parseDouble(collectionStr) : 0.0;
+double expenditures = (expendituresStr != null &amp;&amp; !expendituresStr.isEmpty()) ? Double.parseDouble(expendituresStr) : 0.0;
+double lastSaldo = (lastSaldoStr != null &amp;&amp; !lastSaldoStr.isEmpty()) ? Double.parseDouble(lastSaldoStr) : 0.0;
+
+// Calculamos el ammount
+double finalAmmount = collection - expenditures;
+
+// Calculamos el nuevo saldo acumulado
+double finalSaldo = lastSaldo + finalAmmount;
+
+// --- LA CORRECCIÓN ESTÁ AQUÍ ---
+// Forzamos el formato a usar el Locale de EEUU (US) para garantizar el punto decimal
+vars.put(&quot;final_ammount&quot;, String.format(Locale.US, &quot;%.2f&quot;, finalAmmount));
+vars.put(&quot;final_saldo&quot;, String.format(Locale.US, &quot;%.2f&quot;, finalSaldo));</stringProp>
+              </JSR223Sampler>
+              <hashTree/>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="6. INSERT (Corte) en Strongbox">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">INSERT INTO strongbox (`datetime`, id_corte, moviment, ammount, note, saldo, createdBy, createdAt)
 VALUES (
-    &apos;Recaudo-${__RandomString(10,ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,)}&apos;,
-    &apos;userQA_${__RandomString(5,ABC,)}&apos;,
+    NOW(),
+    ${current_court_id_1},
+    &apos;corte&apos;,
+    ${final_ammount},
+    &apos;Corte procesado por JMeter&apos;,
+    ${final_saldo},
+    &apos;userQA_logic_test&apos;,
     NOW()
-)</stringProp>
-              <stringProp name="queryArguments"></stringProp>
-              <stringProp name="queryArgumentsTypes"></stringProp>
-              <stringProp name="queryTimeout"></stringProp>
-              <stringProp name="queryType">Update Statement</stringProp>
-              <stringProp name="resultSetHandler">Store as String</stringProp>
-              <stringProp name="resultSetMaxRows"></stringProp>
-              <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments"> Crea un nuevo tipo de recaudo con una descripción única y aleatoria. La columna   id_type_of_collection es auto_increment y no se especifica.</stringProp>
-            </JDBCSampler>
-            <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="UPDATE_type_of_collection_RANDOM" enabled="true">
-              <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">UPDATE type_of_collection
-SET
-    description = &apos;Recaudo-UPD-${__RandomString(10,ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,)}&apos;,
-    updatedBy = &apos;updater_${__Random(1,100,)}&apos;,
-    updatedAt = NOW()
-WHERE
-    id_type_of_collection = ${update_typecoll_id_1}</stringProp>
-              <stringProp name="queryArguments"></stringProp>
-              <stringProp name="queryArgumentsTypes"></stringProp>
-              <stringProp name="queryTimeout"></stringProp>
-              <stringProp name="queryType">Update Statement</stringProp>
-              <stringProp name="resultSetHandler">Store as String</stringProp>
-              <stringProp name="resultSetMaxRows"></stringProp>
-              <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments"> Actualiza la descripción de un tipo de recaudo aleatorio, identificado por el ID guardado en la variable update_typecoll_id.</stringProp>
-            </JDBCSampler>
-            <hashTree/>
-            <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DELETE_type_of_collection_RANDOM" enabled="false">
-              <stringProp name="dataSource">MySQL_Connection</stringProp>
-              <stringProp name="query">DELETE FROM type_of_collection
-WHERE
-    id_type_of_collection = ${delete_typecoll_id_1}</stringProp>
-              <stringProp name="queryArguments"></stringProp>
-              <stringProp name="queryArgumentsTypes"></stringProp>
-              <stringProp name="queryTimeout"></stringProp>
-              <stringProp name="queryType">Update Statement</stringProp>
-              <stringProp name="resultSetHandler">Store as String</stringProp>
-              <stringProp name="resultSetMaxRows"></stringProp>
-              <stringProp name="resultVariable"></stringProp>
-              <stringProp name="variableNames"></stringProp>
-              <stringProp name="TestPlan.comments"> Borra un tipo de recaudo aleatorio que fue previamente verificado como seguro para eliminar.</stringProp>
-            </JDBCSampler>
-            <hashTree/>
+);</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Update Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames"></stringProp>
+              </JDBCSampler>
+              <hashTree/>
+            </hashTree>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Si el Movimiento es un &quot;Retiro&quot; Condición: &quot;${moviment_type}&quot; == &quot;retiro&quot;">
+              <stringProp name="IfController.condition">${__jexl3(&quot;${moviment_type}&quot; == &quot;retiro&quot;)}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+              <stringProp name="TestPlan.comments">Los 3 samplers anidados aquí solo se ejecutarán si el movimiento es un &apos;retiro&apos;.</stringProp>
+            </IfController>
+            <hashTree>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="1. Obtener Último Saldo de Caja Fuerte">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">SELECT saldo FROM strongbox ORDER BY id DESC LIMIT 1;</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Select Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">last_saldo</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+              <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="2. Generar &apos;ammount&apos; y &apos;saldo&apos; para Retiro">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">import java.util.Locale;
+
+// Obtenemos el último saldo
+String lastSaldoStr = vars.get(&quot;last_saldo_1&quot;);
+double lastSaldo = (lastSaldoStr != null &amp;&amp; !lastSaldoStr.isEmpty()) ? Double.parseDouble(lastSaldoStr) : 0.0;
+
+
+
+// 1. Generamos el monto del retiro como un número POSITIVO.
+double retiroAmmount = new Random().nextInt(50000) + 1000;
+
+// 2. Para calcular el nuevo saldo, RESTAMOS este monto positivo.
+double finalSaldo = lastSaldo - retiroAmmount;
+
+// 3. Guardamos el &apos;final_ammount&apos; como el número POSITIVO que generamos.
+vars.put(&quot;final_ammount&quot;, String.format(Locale.US, &quot;%.2f&quot;, retiroAmmount));
+vars.put(&quot;final_saldo&quot;, String.format(Locale.US, &quot;%.2f&quot;, finalSaldo));
+</stringProp>
+              </JSR223Sampler>
+              <hashTree/>
+              <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="3. INSERT (Retiro) en Strongbox">
+                <stringProp name="dataSource">MySQL_Connection</stringProp>
+                <stringProp name="query">INSERT INTO strongbox (`datetime`, id_corte, moviment, ammount, note, saldo, createdBy, createdAt)
+VALUES (
+    NOW(),
+    NULL,
+    &apos;retiro&apos;,
+    ${final_ammount},
+    &apos;Retiro procesado por JMeter&apos;,
+    ${final_saldo},
+    &apos;userQA_logic_test&apos;,
+    NOW()
+);</stringProp>
+                <stringProp name="queryArguments"></stringProp>
+                <stringProp name="queryArgumentsTypes"></stringProp>
+                <stringProp name="queryTimeout"></stringProp>
+                <stringProp name="queryType">Update Statement</stringProp>
+                <stringProp name="resultSetHandler">Store as String</stringProp>
+                <stringProp name="resultSetMaxRows"></stringProp>
+                <stringProp name="resultVariable"></stringProp>
+                <stringProp name="variableNames">total_collection</stringProp>
+              </JDBCSampler>
+              <hashTree/>
+            </hashTree>
           </hashTree>
         </hashTree>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler">
           <boolProp name="displayJMeterProperties">false</boolProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">false</boolProp>
