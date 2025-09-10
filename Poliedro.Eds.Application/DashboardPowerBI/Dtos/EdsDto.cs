@@ -2,12 +2,14 @@ namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 
 public record EdsDto
 (
-     string IdEds,
-     string IdProduct,
-     string Name,
-     string Nit,
-     string Address,
-     string Sicom,
-     string IdBusiness,
-     DateOnly Date
+    string IdEds,
+    string EdsName,
+    string Nit,
+    string Address,
+    string Sicom,
+    DateOnly Date,
+    string IdBusiness,
+    string BusinessName,
+    string IdProduct,
+    string ProductName
     );

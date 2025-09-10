@@ -25,7 +25,11 @@ public class UpdateShoppingProductCommandValidator : AbstractValidator<UpdateSho
             .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("QuantityGreaterThanOrEqualTo").GetAwaiter().GetResult())
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("QuantityNotEmpty").GetAwaiter().GetResult());
 
-        RuleFor(x => x.Price)
+        RuleFor(x => x.PurchasePrice)
+            .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("PriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
+            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PriceNotEmpty").GetAwaiter().GetResult());
+
+        RuleFor(x => x.SellPrice)
             .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("PriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PriceNotEmpty").GetAwaiter().GetResult());
 

@@ -9,5 +9,6 @@ int IdShoppingProduct,
 int IdShopping,
 int IdProduct,
 double Quantity,
-double Price,
+double PurchasePrice,
+double SellPrice,
 int IdCompartment) : IRequest<Result<VoidResult, Error>>;

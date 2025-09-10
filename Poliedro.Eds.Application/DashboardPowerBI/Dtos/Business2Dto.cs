@@ -3,10 +3,11 @@ namespace Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 public record Business2Dto
 (
     string IdBusiness,
+    string BusinessName,
+    string EdsName,
+    string TankNumber,
+    string CompartimentNumber,
     string IdProduct,
-    string IdCompartiment,
-    string IdTank,
-    string NameEds,
-    string Name,
-    DateOnly Date
+    string ProductName,
+    DateOnly ProductDate
 );

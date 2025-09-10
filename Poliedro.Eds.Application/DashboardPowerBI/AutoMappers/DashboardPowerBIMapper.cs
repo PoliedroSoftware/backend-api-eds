@@ -28,12 +28,13 @@ public class DashboardPowerBIMapper : Profile
     {
         CreateMap<BusinessViewEntity, Business2Dto>()
              .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
+             .ForMember(dest => dest.BusinessName, opt => opt.MapFrom(src => src.BusinessName))
+             .ForMember(dest => dest.EdsName, opt => opt.MapFrom(src => src.EdsName))
+             .ForMember(dest => dest.TankNumber, opt => opt.MapFrom(src => src.TankNumber))
+             .ForMember(dest => dest.CompartimentNumber, opt => opt.MapFrom(src => src.CompartimentNumber.ToString()))
              .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
-             .ForMember(dest => dest.IdCompartiment, opt => opt.MapFrom(src => src.IdCompartiment.ToString()))
-             .ForMember(dest => dest.IdTank, opt => opt.MapFrom(src => src.IdTank.ToString()))
-             .ForMember(dest => dest.NameEds, opt => opt.MapFrom(src => src.NameEds))
-             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date));
+             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
+             .ForMember(dest => dest.ProductDate, opt => opt.MapFrom(src => src.ProductDate));
 
 
         CreateMap<CapacityViewEntity, CapacityDto>()
@@ -51,7 +52,6 @@ public class DashboardPowerBIMapper : Profile
             .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Number))
             .ForMember(dest => dest.Nominal, opt => opt.MapFrom(src => src.Nominal))
             .ForMember(dest => dest.Operative, opt => opt.MapFrom(src => src.Operative))
-            .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Stock))
             .ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Height))
             .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
@@ -61,26 +61,31 @@ public class DashboardPowerBIMapper : Profile
             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date));
 
         CreateMap<EdsViewEntity, EdsDto>()
-          .ForMember(dest => dest.IdEds, opt => opt.MapFrom(src => src.IdEds.ToString()))
-          .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
-          .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
-          .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-          .ForMember(dest => dest.Nit, opt => opt.MapFrom(src => src.Nit))
-          .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
-          .ForMember(dest => dest.Sicom, opt => opt.MapFrom(src => src.Sicom))
-          .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date));
+            .ForMember(dest => dest.IdEds, opt => opt.MapFrom(src => src.IdEds.ToString()))
+            .ForMember(dest => dest.EdsName, opt => opt.MapFrom(src => src.EdsName))
+            .ForMember(dest => dest.Nit, opt => opt.MapFrom(src => src.Nit))
+            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
+            .ForMember(dest => dest.Sicom, opt => opt.MapFrom(src => src.Sicom))
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
+            .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
+            .ForMember(dest => dest.BusinessName, opt => opt.MapFrom(src => src.BusinessName))
+            .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName));
 
         CreateMap<ShoppingProductViewEntity, ShoppingProductViewDto>()
-              .ForMember(dest => dest.IdShoppingProduct, opt => opt.MapFrom(src => src.IdShoppingProduct.ToString()))
-              .ForMember(dest => dest.IdShopping, opt => opt.MapFrom(src => src.IdShopping.ToString()))
-              .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
-              .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
-              .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
-              .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
-              .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice))
-              .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
-              .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
-              .ForMember(dest => dest.IdCompartment, opt => opt.MapFrom(src => src.IdCompartment.ToString()));
+            .ForMember(dest => dest.IdShoppingProduct, opt => opt.MapFrom(src => src.IdShoppingProduct.ToString()))
+            .ForMember(dest => dest.IdShopping, opt => opt.MapFrom(src => src.IdShopping.ToString()))
+            .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
+            .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
+            .ForMember(dest => dest.SellPrice, opt => opt.MapFrom(src => src.SellPrice))
+            .ForMember(dest => dest.PurchasePrice, opt => opt.MapFrom(src => src.PurchasePrice))
+            .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Stock))
+            .ForMember(dest => dest.IdCompartment, opt => opt.MapFrom(src => src.IdCompartment.ToString()))
+            .ForMember(dest => dest.TotalSellPrice, opt => opt.MapFrom(src => src.TotalSellPrice))
+            .ForMember(dest => dest.TotalPurchasePrice, opt => opt.MapFrom(src => src.TotalPurchasePrice))
+            .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()));
 
         CreateMap<Domain.Inventory.Dto.View.InventoryListResponseDto, InventoryDto>();
 

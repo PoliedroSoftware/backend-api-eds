@@ -97,16 +97,16 @@ public class CreateShoppingProductCommandValidator : AbstractValidator<CreateSho
             .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("QuantityGreaterThan").GetAwaiter().GetResult())
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("QuantityNotEmpty").GetAwaiter().GetResult());
 
-        RuleFor(x => x.PurchasePrice)
-            .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("PurchasePriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PurchasePriceNotEmpty").GetAwaiter().GetResult());
+        //RuleFor(x => x.PurchasePrice)
+        //    .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("PurchasePriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
+        //    .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PurchasePriceNotEmpty").GetAwaiter().GetResult());
 
-        RuleFor(x => x.SellPrice)
-            .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("SellPriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("SellPriceNotEmpty").GetAwaiter().GetResult());
+        //RuleFor(x => x.SellPrice)
+        //    .GreaterThanOrEqualTo(0).WithMessage(redisService.GetValueFromCacheAsync("SellPriceGreaterThanOrEqualTo").GetAwaiter().GetResult())
+        //    .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("SellPriceNotEmpty").GetAwaiter().GetResult());
 
-        RuleFor(x => x.IdCompartment)
-            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdCompartmentGreaterThan").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdCompartmentNotEmpty").GetAwaiter().GetResult());
+        //RuleFor(x => x.IdCompartment)
+        //    .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdCompartmentGreaterThan").GetAwaiter().GetResult())
+        //    .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdCompartmentNotEmpty").GetAwaiter().GetResult());
     }
 }

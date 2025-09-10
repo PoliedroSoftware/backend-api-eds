@@ -11,12 +11,14 @@ public class EdsViewConfiguration
         builder.ToTable("v_eds");
         builder.HasKey(x => x.IdEds);
         builder.Property(x => x.IdEds).HasColumnName("id_eds");
-        builder.Property(x => x.IdProduct).HasColumnName("id_product");
-        builder.Property(x => x.Name).HasColumnName("name");
+        builder.Property(x => x.EdsName).HasColumnName("eds_name");
         builder.Property(x => x.Nit).HasColumnName("nit");
         builder.Property(x => x.Address).HasColumnName("address");
         builder.Property(x => x.Sicom).HasColumnName("sicom");
-        builder.Property(x => x.IdBusiness).HasColumnName("id_business");
         builder.Property(x => x.Date).HasColumnName("date");
+        builder.Property(x => x.IdBusiness).HasColumnName("id_business");
+        builder.Property(x => x.BusinessName).HasColumnName("business_name");
+        builder.Property(x => x.IdProduct).HasColumnName("id_product");
+        builder.Property(x => x.ProductName).HasColumnName("product_name");
     }
 }
