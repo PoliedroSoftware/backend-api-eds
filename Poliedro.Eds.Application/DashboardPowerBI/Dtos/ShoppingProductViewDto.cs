@@ -5,11 +5,14 @@ public record ShoppingProductViewDto(
     string IdShoppingProduct,
     string IdShopping,
     string IdProduct,
-    string IdBusiness,
-    double Quantity,
-    double Price,
-    double TotalPrice,
+    DateOnly Date,
     string ProductName,
-    int IdCompartment,
-    DateOnly Date
+    double Quantity,
+    double SellPrice,
+    double PurchasePrice,
+    double Stock,
+    string IdCompartment,
+    double TotalSellPrice,
+    double TotalPurchasePrice,
+    string IdBusiness
     );
