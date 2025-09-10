@@ -20,7 +20,7 @@ public class ShoppingProductViewConfiguration
         builder.Property(x => x.SellPrice).HasColumnName("sell_price");
         builder.Property(x => x.PurchasePrice).HasColumnName("purchase_price");
         builder.Property(x => x.Stock).HasColumnName("stock");
-        builder.Property(x => x.IdCompartment).HasColumnName("id_compartment");
+        builder.Property(x => x.IdCompartment).HasColumnName("id_compartiment");
         builder.Property(x => x.TotalSellPrice).HasColumnName("total_sell_price");
         builder.Property(x => x.TotalPurchasePrice).HasColumnName("total_purchase_price");
         builder.Property(x => x.IdBusiness).HasColumnName("id_business");
