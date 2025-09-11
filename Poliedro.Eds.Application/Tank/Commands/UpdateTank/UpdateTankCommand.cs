@@ -9,5 +9,4 @@ public record UpdateTankCommand(
    int IdTank,
    string Number,
    int Compartment,
-   double Ability,
-   double Stock) : IRequest<Result<VoidResult, Error>>;
+   double Ability) : IRequest<Result<VoidResult, Error>>;

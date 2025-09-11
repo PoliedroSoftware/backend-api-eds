@@ -14,6 +14,5 @@ public class TankConfiguration
         builder.Property(x => x.Number).HasColumnName("number");
         builder.Property(x => x.Ability).HasColumnName("ability");
         builder.Property(x => x.Compartment).HasColumnName("compartment");
-        builder.Property(x => x.Stock).HasColumnName("stock");
     }
 }
