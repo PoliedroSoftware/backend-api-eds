@@ -2,9 +2,11 @@ using System.Net;
 using System.Text.Json;
 using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Court.Dtos;
+using Poliedro.Eds.Application.Court.Services;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.StrongBox.Commands;
 using Poliedro.Eds.Application.StrongBox.Dtos;
@@ -18,120 +20,186 @@ using Poliedro.Eds.Domain.Inventory.Entities;
 namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
 {
     public class CreateCourtCommandHandle(IMapper mapper,
-        ICourtDomainService courtDomainService,
         IGetProductAndCompartiment getProductAndCompartiment,
         IGetExpenditureId getExpenditureId,
         IGetTypeOfCollectionId getTypeOfCollectionId,
-        IRedisService redisService,
-        ICourtUpdateInventoryService courtUpdateInventoryService,
+        ICourtTransactionalService courtTransactionalService,
+        ILogger<CreateCourtCommandHandle> logger,
         IMediator mediator
         ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
         {
-            var courtEntity = mapper.Map<CourtEntity>(request);
+            try
+            {
+                logger.LogInformation("=== INICIANDO PROCESO DE CREACIÓN DE CORTE ===");
+                
+                // 1. Validaciones iniciales y cálculos
+                var validationResult = await ValidateCourtDataAsync(request);
+                if (!validationResult.IsSuccess)
+                    return validationResult;
 
-            var TotalAccumulatedAmount = GetTotalAccumulatedAmount(request);
+                // 2. Mapear entidad del corte
+                var courtEntity = mapper.Map<CourtEntity>(request);
 
-            var TotalAccumulatedGallons = GetTotalAccumulatedGallons(request);
+                // 3. Enriquecer datos de expenditures
+                await EnrichExpendituresAsync(courtEntity);
 
+                // 4. Enriquecer datos de tipos de cobro
+                await EnrichTypeOfCollectionsAsync(courtEntity);
+
+                // 5. Enriquecer datos de dispensadores
+                await EnrichDispensersAsync(courtEntity);
+
+                // 6. Preparar entidad de inventario
+                courtEntity.CourtInventory = new InventoryEntity
+                {
+                    Date = courtEntity.DateStarttime,
+                    ReferenceType = ReferenceType.Court,
+                };
+
+                // 7. Preparar entidades de venta de dispensadores
+                var courtDispenserSaleEntities = PrepareCourtDispenserSaleEntities(courtEntity, request);
+
+                // 8. Preparar datos de transacción de dispensadores
+                var courtDispenserTransactionData = MapToTransactionData(request.CourtDispensers);
+
+                // 9. Ejecutar transacción completa (incluye validación de precios, creación del corte e inventario)
+                var transactionResult = await courtTransactionalService.ExecuteCourtTransactionWithPriceValidationAsync(
+                    courtEntity,
+                    courtDispenserTransactionData,
+                    courtDispenserSaleEntities,
+                    cancellationToken);
+
+                if (!transactionResult.IsSuccess)
+                {
+                    logger.LogError("❌ TRANSACCIÓN FALLIDA: {ErrorDescription}", transactionResult.Error?.Description);
+                    return transactionResult.Error!;
+                }
+
+                logger.LogInformation("✅ TRANSACCIÓN EXITOSA - INICIANDO PROCESOS POST-TRANSACCIÓN");
+
+                // 10. Procesos post-transacción (estos no afectan la consistencia de datos)
+                var courtDto = mapper.Map<CourtDto>(transactionResult.Value!);
+                await ExecutePostTransactionProcessesAsync(courtDto, request, courtEntity, cancellationToken);
+
+                logger.LogInformation("✅ PROCESO DE CORTE COMPLETADO EXITOSAMENTE");
+                logger.LogInformation("===============================================");
+
+                return Result<VoidResult, Error>.Success(VoidResult.Instance);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "❌ ERROR CRÍTICO EN EL PROCESO DE CORTE: {ErrorMessage}", ex.Message);
+                logger.LogInformation("===============================================");
+                return Error.Internal("CourtProcessError", $"Error crítico durante el proceso de corte: {ex.Message}");
+            }
+        }
+
+        private async Task<Result<VoidResult, Error>> ValidateCourtDataAsync(CreateCourtCommand request)
+        {
             var TotalAmount = GetTotalAmount(request);
-
+            var TotalTypeOfCollection = GetTotalTypeOfCollection(request);
             var TotalExpenditures = GetTotalExpenditures(request);
 
-            var TotalTypeOfCollection = GetTotalTypeOfCollection(request);
-
-            var TotalAmountCollection = GetTotalAmountCollection(request);
-
-            if (TotalAmount != TotalTypeOfCollection)
+            if (Math.Abs(TotalAmount - TotalTypeOfCollection) > 0.01)
             {
-                throw new InvalidOperationException("Error, La suma de los tipos de cobro no coincide con el total del dia");
+                return Error.BadRequest("AmountMismatch", 
+                    "Error, La suma de los tipos de cobro no coincide con el total del día");
             }
 
             double cash = TotalTypeOfCollection - TotalExpenditures;
             if (cash < 0)
             {
-                throw new InvalidOperationException("Error, El total de efectivo no puede ser negativo");
+                return Error.BadRequest("NegativeCash", 
+                    "Error, El total de efectivo no puede ser negativo");
             }
-            if (courtEntity.CourtExpenditures.Count() > 0)
+
+            logger.LogInformation("✅ Validaciones pasadas - Total: ${TotalAmount:N2}, Efectivo: ${Cash:N2}", TotalAmount, cash);
+            return Result<VoidResult, Error>.Success(VoidResult.Instance);
+        }
+
+        private async Task EnrichExpendituresAsync(CourtEntity courtEntity)
+        {
+            if (courtEntity.CourtExpenditures?.Any() == true)
             {
                 foreach (var item in courtEntity.CourtExpenditures)
                 {
                     var expenditureId = await getExpenditureId.GetExpenditureIdAsync(item.ExpenditureName);
-                    item.IdExpenditures = (int)expenditureId;
+                    item.IdExpenditures = (int)expenditureId!;
                 }
+                logger.LogInformation("✅ {ExpenditureCount} gastos enriquecidos", courtEntity.CourtExpenditures.Count());
             }
+        }
 
-            if (courtEntity.CourtTypeOfCollections.Count() > 0)
+        private async Task EnrichTypeOfCollectionsAsync(CourtEntity courtEntity)
+        {
+            if (courtEntity.CourtTypeOfCollections?.Any() == true)
             {
                 foreach (var item in courtEntity.CourtTypeOfCollections)
                 {
                     var typeOfCollectionId = await getTypeOfCollectionId.GetTypeOfCollectionIdAsync(item.TypeOfCollectionName);
-                    item.IdTypeOfCollection = (int)typeOfCollectionId;
+                    item.IdTypeOfCollection = (int)typeOfCollectionId!;
                 }
+                logger.LogInformation("✅ {CollectionCount} tipos de cobro enriquecidos", courtEntity.CourtTypeOfCollections.Count());
             }
+        }
 
-            if (courtEntity.CourtTypeOfCollections.Count() > 0)
+        private async Task EnrichDispensersAsync(CourtEntity courtEntity)
+        {
+            if (courtEntity.CourtDispensers?.Any() == true)
             {
                 foreach (var item in courtEntity.CourtDispensers)
                 {
-                    ProductAndCompartimentEntity productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(item.IdHose);
+                    var productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(item.IdHose);
                     item.IdProduct = productAndCompartiment.IdProduct;
                     item.IdCompartiment = productAndCompartiment.IdCompartiment;
                 }
+                logger.LogInformation("✅ {DispenserCount} dispensadores enriquecidos", courtEntity.CourtDispensers.Count());
             }
+        }
 
-            courtEntity.CourtInventory = new InventoryEntity
-            {
-                Date = courtEntity.DateStarttime,
-                ReferenceType = ReferenceType.Court,
-            };
-
-            var result = await courtDomainService.CreateAsync(courtEntity);
-
-            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService,
-            KeyRedisConstants.BUSINESS,
-            KeyRedisConstants.COMPARTIMENT,
-            KeyRedisConstants.DISPENSERS,
-            KeyRedisConstants.EDS,
-            KeyRedisConstants.EXPENDITURES,
-            KeyRedisConstants.HOSE,
-            KeyRedisConstants.ISLANDER,
-            KeyRedisConstants.PRODUCT,
-            KeyRedisConstants.TRANSLATION,
-            KeyRedisConstants.TYPE_OF_COLLECTION);
-
-            if (!result.IsSuccess)
-                return result.Error!;
-
-            if (result.IsSuccess)
-            {
-                List<CourtDispenserSaleEntity> courtDispenserSaleEntities = [];
-                CourtDispenserSaleEntity courtDispenserSaleEntity = new();
-                foreach (var item in courtEntity.CourtDispensers)
-                {
-                    courtDispenserSaleEntity = mapper.Map<CourtDispenserSaleEntity>(item);
-                    courtDispenserSaleEntities.Add(courtDispenserSaleEntity);
-                    courtDispenserSaleEntities = courtDispenserSaleEntities
-                        .Select((entity, index) =>
-                        {
-                            mapper.Map(request.CourtDispensers.ElementAt(index), entity);
-                            return entity;
-                        }).ToList();
-                }
-                var inventoryResult = await courtUpdateInventoryService.CourtUpdateInventoryAsync(courtDispenserSaleEntities);
-                if (!inventoryResult.IsSuccess)
-                    return inventoryResult;
-            }
-
-
+        private List<CourtDispenserSaleEntity> PrepareCourtDispenserSaleEntities(CourtEntity courtEntity, CreateCourtCommand request)
+        {
+            var courtDispenserSaleEntities = new List<CourtDispenserSaleEntity>();
             
-
-            if (result.IsSuccess)
+            foreach (var item in courtEntity.CourtDispensers)
             {
-                var courtDto = mapper.Map<CourtDto>(courtEntity);
-                
-                
+                var courtDispenserSaleEntity = mapper.Map<CourtDispenserSaleEntity>(item);
+                courtDispenserSaleEntities.Add(courtDispenserSaleEntity);
+            }
+
+            // Mapear datos adicionales desde el request
+            for (int i = 0; i < courtDispenserSaleEntities.Count && i < request.CourtDispensers.Count(); i++)
+            {
+                mapper.Map(request.CourtDispensers.ElementAt(i), courtDispenserSaleEntities[i]);
+            }
+
+            logger.LogInformation("✅ {SaleEntityCount} entidades de venta preparadas", courtDispenserSaleEntities.Count);
+            return courtDispenserSaleEntities;
+        }
+
+        private List<CourtDispenserTransactionData> MapToTransactionData(IEnumerable<CourtDispenserCommand> courtDispensers)
+        {
+            return courtDispensers.Select(cd => new CourtDispenserTransactionData
+            {
+                AccumulatedAmount = cd.AccumulatedAmount,
+                AccumulatedGallons = cd.AccumulatedGallons,
+                LastAccumulatedAmount = cd.LastAccumulatedAmount,
+                LastAccumulatedGallons = cd.LastAccumulatedGallons,
+                AmountDifferenceResult = cd.AmountDifferenceResult,
+                GallonsDifferenceResult = cd.GallonsDifferenceResult,
+                IdHose = cd.IdHose,
+                NumberName = cd.NumberName,
+                DispenserNumber = cd.DispenserNumber
+            }).ToList();
+        }
+
+        private async Task ExecutePostTransactionProcessesAsync(CourtDto courtDto, CreateCourtCommand request, CourtEntity courtEntity, CancellationToken cancellationToken)
+        {
+            try
+            {
+                // Enriquecer DTO para WhatsApp
                 if (courtDto.CourtDispensers != null && request.CourtDispensers != null)
                 {
                     var courtDispensersList = courtDto.CourtDispensers.ToList();
@@ -146,31 +214,40 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                     courtDto.CourtDispensers = courtDispensersList;
                 }
 
+                // Enviar mensaje de WhatsApp
                 await mediator.Send(new SendWhatsAppMessageCommand
                 {
                     PhoneNumber = "573182989981", 
                     Court = courtDto
-                });
-            }
+                }, cancellationToken);
 
-            var money = GetCashOnly(request);
-            if (money > 0)
+                logger.LogInformation("✅ Mensaje de WhatsApp enviado");
+
+                // Crear entrada en StrongBox si hay efectivo
+                var money = GetCashOnly(request);
+                if (money > 0)
+                {
+                    await mediator.Send(
+                        new StrongBoxCreateCommand(new StrongBoxDtoCreateRequest
+                        {
+                            IdCorte = courtEntity.IdCourt,
+                            Type = "CORTE",
+                            Ammount = money,
+                            Note = $"Corte #{courtEntity.IdCourt} Dinero en efectivo para la Caja!! ${money:N2} ",
+                        }),
+                        cancellationToken
+                    );
+                    logger.LogInformation("✅ Entrada en StrongBox creada: ${Money:N2}", money);
+                }
+            }
+            catch (Exception ex)
             {
-                await mediator.Send(
-                    new StrongBoxCreateCommand(new StrongBoxDtoCreateRequest
-                    {
-                        IdCorte = courtEntity.IdCourt,
-                        Type = "CORTE",
-                        Ammount = money,
-                        Note = $"Corte #{courtEntity.IdCourt} Dinero en efectivo para la Caja!! ${money:N2} ",
-                    }),
-                    cancellationToken
-                );
+                // Los errores en procesos post-transacción no deben afectar el resultado principal
+                logger.LogWarning(ex, "⚠️ Error en proceso post-transacción (no crítico): {ErrorMessage}", ex.Message);
             }
-
-            return result.Value!;
         }
 
+        // Métodos de cálculo privados (sin cambios)
         private double GetTotalAccumulatedAmount(CreateCourtCommand command)
         {
             return command.CourtDispensers.Sum(d => d.AmountDifferenceResult);
