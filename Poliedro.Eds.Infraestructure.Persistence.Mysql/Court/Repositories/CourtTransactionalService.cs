@@ -200,7 +200,13 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     if (dispenser.GallonsDifferenceResult <= 0)
                         continue; // No hay venta, no se puede calcular precio
 
-                    var courtPrice = dispenser.AmountDifferenceResult / dispenser.GallonsDifferenceResult;
+                    // Redondear los valores para evitar problemas de precisión de punto flotante
+                    var roundedAmount = Math.Round(dispenser.AmountDifferenceResult, 2);
+                    var roundedGallons = Math.Round(dispenser.GallonsDifferenceResult, 3);
+                    
+                    // Calcular el precio y redondearlo al entero más cercano (sin decimales)
+                    var calculatedPrice = roundedAmount / roundedGallons;
+                    var courtPrice = Math.Round(calculatedPrice, 0); // Redondear a 0 decimales (entero)
 
                     // Obtener información del producto
                     var productAndCompartiment = await getProductAndCompartiment
@@ -247,7 +253,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     logger.LogInformation("=== PRECIOS ACTUALIZADOS AUTOMÁTICAMENTE DESDE CORTE ===");
                     foreach (var (productId, oldPrice, newPrice, productName) in priceUpdates)
                     {
-                        logger.LogInformation("💰 Producto {ProductId} ({ProductName}): ${OldPrice:F2} -> ${NewPrice:F2}", 
+                        logger.LogInformation("💰 Producto {ProductId} ({ProductName}): ${OldPrice:F0} -> ${NewPrice:F0}", 
                             productId, productName, oldPrice, newPrice);
                     }
                     logger.LogInformation("Total productos actualizados: {UpdateCount}", priceUpdates.Count);

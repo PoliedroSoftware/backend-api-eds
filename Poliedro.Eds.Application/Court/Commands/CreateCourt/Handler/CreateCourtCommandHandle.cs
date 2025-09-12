@@ -183,12 +183,12 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         {
             return courtDispensers.Select(cd => new CourtDispenserTransactionData
             {
-                AccumulatedAmount = cd.AccumulatedAmount,
-                AccumulatedGallons = cd.AccumulatedGallons,
-                LastAccumulatedAmount = cd.LastAccumulatedAmount,
-                LastAccumulatedGallons = cd.LastAccumulatedGallons,
-                AmountDifferenceResult = cd.AmountDifferenceResult,
-                GallonsDifferenceResult = cd.GallonsDifferenceResult,
+                AccumulatedAmount = Math.Round(cd.AccumulatedAmount, 2),
+                AccumulatedGallons = Math.Round(cd.AccumulatedGallons, 3),
+                LastAccumulatedAmount = Math.Round(cd.LastAccumulatedAmount, 2),
+                LastAccumulatedGallons = Math.Round(cd.LastAccumulatedGallons, 3),
+                AmountDifferenceResult = Math.Round(cd.AmountDifferenceResult, 2),
+                GallonsDifferenceResult = Math.Round(cd.GallonsDifferenceResult, 3),
                 IdHose = cd.IdHose,
                 NumberName = cd.NumberName,
                 DispenserNumber = cd.DispenserNumber
@@ -247,20 +247,20 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             }
         }
 
-        // Métodos de cálculo privados (sin cambios)
+        // Métodos de cálculo privados (con redondeo para mayor precisión)
         private double GetTotalAccumulatedAmount(CreateCourtCommand command)
         {
-            return command.CourtDispensers.Sum(d => d.AmountDifferenceResult);
+            return Math.Round(command.CourtDispensers.Sum(d => d.AmountDifferenceResult), 2);
         }
 
         private double GetTotalAccumulatedGallons(CreateCourtCommand command)
         {
-            return command.CourtDispensers.Sum(d => d.AccumulatedGallons);
+            return Math.Round(command.CourtDispensers.Sum(d => d.AccumulatedGallons), 3);
         }
 
         private double GetTotalAmount(CreateCourtCommand command)
         {
-            return command.CourtDispensers.Sum(d => d.AmountDifferenceResult);
+            return Math.Round(command.CourtDispensers.Sum(d => d.AmountDifferenceResult), 2);
         }
 
         private double GetTotalExpenditures(CreateCourtCommand command)
@@ -269,17 +269,17 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
             {
                 return 0;
             }
-            return command.CourtExpenditures.Sum(d => d.Amount);
+            return Math.Round(command.CourtExpenditures.Sum(d => d.Amount), 2);
         }
 
         private double GetTotalTypeOfCollection(CreateCourtCommand command)
         {
-            return command.CourtTypeOfCollections.Sum(d => d.Amount);
+            return Math.Round(command.CourtTypeOfCollections.Sum(d => d.Amount), 2);
         }
 
         private double GetTotalAmountCollection(CreateCourtCommand command)
         {
-            return command.CourtTypeOfCollections.Sum(d => d.Amount);
+            return Math.Round(command.CourtTypeOfCollections.Sum(d => d.Amount), 2);
         }
 
         private double GetCashOnly(CreateCourtCommand command)
@@ -295,7 +295,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                                 .Sum(t => (double)t.Amount);
             }
            
-            return efectivo - Expenditures;
+            return Math.Round(efectivo - Expenditures, 2);
         }
     }
 }
