@@ -9,6 +9,7 @@ using Poliedro.Eds.Application.Common.Behaviors;
 using Poliedro.Eds.Application.Compartiment.AutoMappers;
 using Poliedro.Eds.Application.CompartimentCapacity.AutoMappers;
 using Poliedro.Eds.Application.Court.AutoMappers;
+using Poliedro.Eds.Application.Court.Services;
 using Poliedro.Eds.Application.CourtDispensersInventory.AutoMappers;
 using Poliedro.Eds.Application.DashboardPowerBI.AutoMappers;
 using Poliedro.Eds.Application.Dispensers.AutoMappers;
@@ -99,6 +100,9 @@ public static class DependencyInjectionService
             typeof(IPipelineBehavior<,>),
             typeof(ValidationBehaviour<,>)
         );
+
+        // Register Product Price Validation Service
+        services.AddScoped<IProductPriceValidationService, ProductPriceValidationService>();
 
         return services;
     }

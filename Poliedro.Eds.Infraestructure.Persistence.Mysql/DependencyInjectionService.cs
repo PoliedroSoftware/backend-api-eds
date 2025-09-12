@@ -93,6 +93,7 @@ public static class DependencyInjectionService
         services.AddTransient<ICourtDomainService, CourtCreateService>();
         services.AddTransient<ICourtGetByIdDomainService, CourtGetByIDService>();
         services.AddTransient<ICourtUpdateService, CourtUpdateService>();
+        services.AddScoped<ICourtTransactionalService, CourtTransactionalService>();
         services.AddScoped<IBusinessCreateRepository, BusinessCreateService>();
         services.AddScoped<IBusinessGetByIdService, BusinessGetByIdService>();
         services.AddScoped<IBusinessGetAllService, BusinessGetAllService>();
