@@ -1,9 +1,11 @@
 using MediatR;
+using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetTotalBalance;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
+using Poliedro.Eds.Domain.Product.DomainProduct;
 using Poliedro.Eds.Domain.SendMessage;
 
 public class SendWhatsAppMessageCommandHandler(
@@ -13,7 +15,10 @@ public class SendWhatsAppMessageCommandHandler(
     IIslanderGetAllIslander getIsleros,
     IGetHoseNumber getHose,
     IGetDispenserNumber getdispenserNumber,
-    IPhoneGetAllService getPhone
+    IPhoneGetAllService getPhone,
+    IGetProductAndCompartiment getProductAndCompartiment,
+    IProductGetByIdProduct getProductById,
+    IMediator mediator
     ) : IRequestHandler<SendWhatsAppMessageCommand, Unit>
 {
     public async Task<Unit> Handle(SendWhatsAppMessageCommand request, CancellationToken cancellationToken)
@@ -52,6 +57,16 @@ public class SendWhatsAppMessageCommandHandler(
             .Where(p => getPaymentMethodName.GetPaymentMethodNameAsync(p.IdTypeOfCollection).Result == "Efectivo") // Filtrar por "Efectivo"
             .Sum(p => p.Amount) ?? 0;
 
+        // Restar los gastos del efectivo para obtener el total a recibir
+        var totalARecibirEnEfectivo = sumEfectivo - totalExpenditures;
+
+        // Obtener el saldo actual del strongbox
+        var strongBoxBalance = await mediator.Send(new StrongBoxGetTotalBalance(), cancellationToken);
+        var saldoActualStrongBox = strongBoxBalance?.Saldo ?? 0.0;
+        
+        // Calcular el nuevo saldo que quedaría en el strongbox después del corte
+        var nuevoSaldoStrongBox = saldoActualStrongBox + totalARecibirEnEfectivo;
+
         var totalVentas = court.CourtTypeOfCollections?.Sum(p => p.Amount) ?? 0;
 
         // Obtener todos los isleros usando GetAllAsync
@@ -63,18 +78,38 @@ public class SendWhatsAppMessageCommandHandler(
 
         //Mangueras y Dispensadores
 
-        // Agrupar por DispensadorId, luego construir el mensaje agrupado
+        // Agrupar por DispensadorId, luego construir el mensaje agrupado con utilidades
         var hosesGrouped = await Task.WhenAll(
             court.CourtDispensers.Select(async d =>
             {
                 var hoseNumber = await getHose.GetHoseNumberAsync(d.IdHose);
                 var idDispenser = await getdispenserNumber.GetDispenserNumberAsync(d.IdHose);
+                
+                // Obtener información del producto para calcular utilidad
+                var productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(d.IdHose);
+                var productResult = await getProductById.GetByIdAsync(productAndCompartiment.IdProduct);
+                
+                double utilityPerHose = 0;
+                string productName = "Producto Desconocido";
+                
+                if (productResult.IsSuccess && productResult.Value != null)
+                {
+                    var product = productResult.Value;
+                    productName = product.Name ?? "Producto Sin Nombre";
+                    var sellPrice = product.SellPrice ?? 0;
+                    var purchasePrice = product.PurchasePrice ?? 0;
+                    var utilityPerGallon = sellPrice - purchasePrice;
+                    utilityPerHose = utilityPerGallon * d.GallonsDifferenceResult;
+                }
+                
                 return new
                 {
                     Dispenser = idDispenser,
                     Hose = hoseNumber,
                     Amount = d.AmountDifferenceResult,
-                    Gallons = d.GallonsDifferenceResult
+                    Gallons = d.GallonsDifferenceResult,
+                    Utility = utilityPerHose,
+                    ProductName = productName
                 };
             })
         );
@@ -84,7 +119,7 @@ public class SendWhatsAppMessageCommandHandler(
             .GroupBy(h => h.Dispenser)
             .OrderBy(g => g.Key);
 
-        // Construir string final
+        // Construir string final con utilidades
         var hoseDetailString = string.Join("\n\n", dispensersGrouped.Select(group =>
         {
             var mangueras = string.Join("\n", group
@@ -92,9 +127,11 @@ public class SendWhatsAppMessageCommandHandler(
                 .Select(h =>
                     $"""
 
-            🧯 Manguera: {h.Hose}
+            🔧 Manguera: {h.Hose}
+            🛢️ Producto: {h.ProductName}
             💵 Venta En Dinero: ${h.Amount:N2}
-                Venta En Galones: {h.Gallons:N2} gal
+            📊 Venta En Galones: {h.Gallons:N2} gal
+            📈 Utilidad: ${h.Utility:N2}
             """));
 
             return $"""
@@ -105,33 +142,46 @@ public class SendWhatsAppMessageCommandHandler(
         }));
 
         var totalGallons = court.CourtDispensers?.Sum(d => d.GallonsDifferenceResult) ?? 0;
+        var totalUtility = hosesGrouped.Sum(h => h.Utility);
 
         // Construir el mensaje final
         var message = $"""
-                📋 Corte Finalizado
+                📋 CORTE FINALIZADO
 
-                🧑‍🔧 Islero: {isleroName}
+                👨‍💼 Islero: {isleroName}
 
-                🕐 Inicio Turno:  {court.Starttime} {court.DateStarttime}
-                🕐 Fin Turno: {court.Endtime} {court.DateEndtime}
+                ⏰ Inicio Turno: {court.Starttime} {court.DateStarttime}
+                ⏰ Fin Turno: {court.Endtime} {court.DateEndtime}
                 
                    {hoseDetailString}
-                   
+               
+                ════════════════════════
+                📊 RESUMEN TOTAL
+                ════════════════════════
 
                 ⛽ Total Galones Vendidos: {totalGallons:N2}
                 💰 Total Ventas: ${totalVentas:N2}
+                📈 Total Utilidad Del Día: ${totalUtility:N2}
 
-                Gastos Detallados:
+                ════════════════════════
+                💸 GASTOS DETALLADOS
+                ════════════════════════
                 {ExpenseSummary}
 
                 💸 Total En Gastos: ${totalExpenditures:N2}
 
-                💳 Medios de pago:
+                ════════════════════════
+                💳 MEDIOS DE PAGO
+                ════════════════════════
                 {paymentSummary}
 
-                💰 Total A Recibir En Efectivo: ${sumEfectivo:N2}
+                ════════════════════════
+                💼 RESUMEN FINANCIERO
+                ════════════════════════
+                💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo:N2}
+                🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox:N2}
 
-                📎 Documentos cargados: {court.CourtDocuments?.Count() ?? 0}
+                📎 Documentos Cargados: {court.CourtDocuments?.Count() ?? 0}
                 """;
 
         // Enviar mensaje a cada número de teléfono

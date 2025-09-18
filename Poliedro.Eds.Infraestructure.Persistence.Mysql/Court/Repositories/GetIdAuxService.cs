@@ -87,8 +87,11 @@ public class GetIdAuxService(ITenantDbContextFactory dbContextFactory) : IGetPro
     {
         using var context = dbContextFactory.CreateDbContext();
         return await context.Hose
-            .Where(d => d.IdHose == id)
-            .Select(d => d.IdDispensers)
+            .Where(h => h.IdHose == id)
+            .Join(context.Dispensers, 
+                  hose => hose.IdDispensers, 
+                  dispenser => dispenser.Id, 
+                  (hose, dispenser) => dispenser.Number)
             .FirstOrDefaultAsync();
     }
 }
