@@ -2,6 +2,7 @@ using MediatR;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetTotalBalance;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
+using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
@@ -18,7 +19,8 @@ public class SendWhatsAppMessageCommandHandler(
     IPhoneGetAllService getPhone,
     IGetProductAndCompartiment getProductAndCompartiment,
     IProductGetByIdProduct getProductById,
-    IMediator mediator
+    IMediator mediator,
+    IEdsGetByIdService edsGetByIdService
     ) : IRequestHandler<SendWhatsAppMessageCommand, Unit>
 {
     public async Task<Unit> Handle(SendWhatsAppMessageCommand request, CancellationToken cancellationToken)
@@ -76,6 +78,12 @@ public class SendWhatsAppMessageCommandHandler(
         var islero = isleros.FirstOrDefault(i => i.IdIslander == court.IdIslander);
         var isleroName = islero?.Name ?? "Desconocido";
 
+        // Obtener el nombre de la EDS
+        var edsResult = await edsGetByIdService.GetByIdAsync(court.IdEds);
+        var edsName = edsResult.IsSuccess && edsResult.Value != null 
+            ? edsResult.Value.Name 
+            : "EDS";
+
         //Mangueras y Dispensadores
 
         // Agrupar por DispensadorId, luego construir el mensaje agrupado con utilidades
@@ -129,9 +137,9 @@ public class SendWhatsAppMessageCommandHandler(
 
             🔧 Manguera: {h.Hose}
             🛢️ Producto: {h.ProductName}
-            💵 Venta En Dinero: ${h.Amount:N2}
-            📊 Venta En Galones: {h.Gallons:N2} gal
-            📈 Utilidad: ${h.Utility:N2}
+            💵 Venta En Dinero: ${h.Amount:N0}
+            📊 Venta En Galones: {h.Gallons:N0} gl
+            📈 Utilidad: ${h.Utility:N0}
             """));
 
             return $"""
@@ -146,7 +154,7 @@ public class SendWhatsAppMessageCommandHandler(
 
         // Construir el mensaje final
         var message = $"""
-                📋 CORTE FINALIZADO
+                📋 CORTE {edsName} FINALIZADO
 
                 👨‍💼 Islero: {isleroName}
 
@@ -159,16 +167,16 @@ public class SendWhatsAppMessageCommandHandler(
                 📊 RESUMEN TOTAL
                 ════════════════════════
 
-                ⛽ Total Galones Vendidos: {totalGallons:N2}
-                💰 Total Ventas: ${totalVentas:N2}
-                📈 Total Utilidad Del Día: ${totalUtility:N2}
+                ⛽ Total Galones Vendidos: {totalGallons:N0} gl
+                💰 Total Ventas: ${totalVentas:N0}
+                📈 Total Utilidad Del Día: ${totalUtility:N0}
 
                 ════════════════════════
                 💸 GASTOS DETALLADOS
                 ════════════════════════
                 {ExpenseSummary}
 
-                💸 Total En Gastos: ${totalExpenditures:N2}
+                💸 Total En Gastos: ${totalExpenditures:N0}
 
                 ════════════════════════
                 💳 MEDIOS DE PAGO
@@ -178,8 +186,8 @@ public class SendWhatsAppMessageCommandHandler(
                 ════════════════════════
                 💼 RESUMEN FINANCIERO
                 ════════════════════════
-                💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo:N2}
-                🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox:N2}
+                💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo:N0}
+                🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox:N0}
 
                 📎 Documentos Cargados: {court.CourtDocuments?.Count() ?? 0}
                 """;
