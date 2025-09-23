@@ -33,17 +33,25 @@ public class SendWhatsAppMessageCommandHandler(
         // Convertir los números de teléfono en una lista de strings
         var phoneNumbersList = phoneNumbers.Select(p => p.Number).ToList();
 
-        // Gastos
-        var ExpenseSummary = string.Join("\n", await Task.WhenAll(
-        court.CourtExpenditures?.Select(async p =>
+        // Verificar si existen gastos
+        var hasExpenditures = court.CourtExpenditures?.Any() == true && court.CourtExpenditures.Any(e => e != null);
+
+        // Gastos (solo procesar si existen)
+        var ExpenseSummary = string.Empty;
+        var totalExpenditures = 0.0;
+
+        if (hasExpenditures)
         {
-            var gastosname = await getExpenditure.GetExpenditureIdAsync(p.IdExpenditures);
-            return $"{gastosname}:$ {p.Amount:N2}";
-        }) ?? Enumerable.Empty<Task<string>>()
-         ));
+            ExpenseSummary = string.Join("\n", await Task.WhenAll(
+                court.CourtExpenditures!.Where(p => p != null).Select(async p =>
+                {
+                    var gastosname = await getExpenditure.GetExpenditureIdAsync(p.IdExpenditures);
+                    return $"{gastosname}:$ {p.Amount:N2}";
+                })
+            ));
 
-        var totalExpenditures = court.CourtExpenditures?.Sum(e => e?.Amount ?? 0) ?? 0;
-
+            totalExpenditures = court.CourtExpenditures.Sum(e => e?.Amount ?? 0);
+        }
 
         // Medios de pago
         var paymentSummary = string.Join("\n", await Task.WhenAll(
@@ -98,13 +106,14 @@ public class SendWhatsAppMessageCommandHandler(
                 var productResult = await getProductById.GetByIdAsync(productAndCompartiment.IdProduct);
                 
                 double utilityPerHose = 0;
+                double sellPrice = 0;
                 string productName = "Producto Desconocido";
                 
                 if (productResult.IsSuccess && productResult.Value != null)
                 {
                     var product = productResult.Value;
                     productName = product.Name ?? "Producto Sin Nombre";
-                    var sellPrice = product.SellPrice ?? 0;
+                    sellPrice = product.SellPrice ?? 0;
                     var purchasePrice = product.PurchasePrice ?? 0;
                     var utilityPerGallon = sellPrice - purchasePrice;
                     utilityPerHose = utilityPerGallon * d.GallonsDifferenceResult;
@@ -117,7 +126,8 @@ public class SendWhatsAppMessageCommandHandler(
                     Amount = d.AmountDifferenceResult,
                     Gallons = d.GallonsDifferenceResult,
                     Utility = utilityPerHose,
-                    ProductName = productName
+                    ProductName = productName,
+                    SellPrice = sellPrice
                 };
             })
         );
@@ -127,7 +137,7 @@ public class SendWhatsAppMessageCommandHandler(
             .GroupBy(h => h.Dispenser)
             .OrderBy(g => g.Key);
 
-        // Construir string final con utilidades
+        // Construir string final con utilidades y precio por galón
         var hoseDetailString = string.Join("\n\n", dispensersGrouped.Select(group =>
         {
             var mangueras = string.Join("\n", group
@@ -139,6 +149,7 @@ public class SendWhatsAppMessageCommandHandler(
             🛢️ Producto: {h.ProductName}
             💵 Venta En Dinero: ${h.Amount:N0}
             📊 Venta En Galones: {h.Gallons:N0} gl
+            💰 Precio por Galón: ${h.SellPrice:N0}
             📈 Utilidad: ${h.Utility:N0}
             """));
 
@@ -152,6 +163,17 @@ public class SendWhatsAppMessageCommandHandler(
         var totalGallons = court.CourtDispensers?.Sum(d => d.GallonsDifferenceResult) ?? 0;
         var totalUtility = hosesGrouped.Sum(h => h.Utility);
 
+        // Construir la sección de gastos condicionalmente
+        var gastosSection = hasExpenditures ? $"""
+
+                ══════════════
+                💸 GASTOS DETALLADOS
+                ══════════════
+                {ExpenseSummary}
+
+                💸 Total En Gastos: ${totalExpenditures:N0}
+                """ : string.Empty;
+
         // Construir el mensaje final
         var message = $"""
                 📋 CORTE {edsName} FINALIZADO
@@ -163,29 +185,23 @@ public class SendWhatsAppMessageCommandHandler(
                 
                    {hoseDetailString}
                
-                ════════════════════════
+                ══════════════
                 📊 RESUMEN TOTAL
-                ════════════════════════
+                ══════════════
 
                 ⛽ Total Galones Vendidos: {totalGallons:N0} gl
                 💰 Total Ventas: ${totalVentas:N0}
                 📈 Total Utilidad Del Día: ${totalUtility:N0}
+                {gastosSection}
 
-                ════════════════════════
-                💸 GASTOS DETALLADOS
-                ════════════════════════
-                {ExpenseSummary}
-
-                💸 Total En Gastos: ${totalExpenditures:N0}
-
-                ════════════════════════
+                ══════════════
                 💳 MEDIOS DE PAGO
-                ════════════════════════
+                ══════════════
                 {paymentSummary}
 
-                ════════════════════════
+                ══════════════
                 💼 RESUMEN FINANCIERO
-                ════════════════════════
+                ══════════════
                 💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo:N0}
                 🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox:N0}
 
