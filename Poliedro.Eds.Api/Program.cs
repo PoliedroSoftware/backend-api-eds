@@ -76,12 +76,12 @@ builder.Services.AddScoped<IValidator<UpdateBusinessCommand>, UpdateBusinessComm
 // Configure OpenAI
 builder.Services.AddScoped(provider =>
 {
-    var apiKey = builder.Configuration["OpenAI:ApiKey"] ?? 
+    var apiKey = builder.Configuration["OpenAI:ApiKey"] ??
                  Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-    
+
     if (string.IsNullOrWhiteSpace(apiKey))
         throw new InvalidOperationException("OpenAI API key is not configured. Set OpenAI:ApiKey in configuration or OPENAI_API_KEY environment variable.");
-    
+
     return new OpenAI.OpenAIClient(apiKey);
 });
 
@@ -95,9 +95,9 @@ var connectionStringFactory = connectionString.Replace("{schema}", tenant ?? str
 builder.Services.AddHealthChecks()
     .AddMySql(connectionStringFactory, name: "sql", tags: ["ready"])
     .AddRedis(
-        builder.Configuration["Redis:ConnectionString"] 
+        builder.Configuration["Redis:ConnectionString"]
             ?? throw new InvalidOperationException("Redis:ConnectionString is not configured."),
-        name: "redis", 
+        name: "redis",
         tags: ["ready"])
     .AddCheck<TolgeeHealthCheckService>("Service Health Check Tolgee")
     .AddCheck<WhatsAppHealthCheckService>("Service Health Check WhatsApp");
