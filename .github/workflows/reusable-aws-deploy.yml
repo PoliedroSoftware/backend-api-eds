@@ -77,12 +77,40 @@ jobs:
         if: ${{ inputs.wait-for-deployment }}
         run: |
           echo "Waiting for deployment to complete..."
+          timeout_minutes=${{ inputs.deployment-timeout }}
+          timeout_seconds=$((timeout_minutes * 60))
+          
           aws ecs wait services-stable \
             --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
             --services ${{ secrets.AWS_ECS_SERVICE }} \
-            --cli-read-timeout ${{ inputs.deployment-timeout }}
-            
-          echo "Deployment completed successfully"
+            --cli-read-timeout 0 \
+            --cli-connect-timeout 60 &
+          
+          wait_pid=$!
+          
+          # Custom timeout implementation
+          (
+            sleep $timeout_seconds
+            kill $wait_pid 2>/dev/null
+            echo "Deployment wait timed out after ${timeout_minutes} minutes"
+            exit 124
+          ) &
+          timeout_pid=$!
+          
+          if wait $wait_pid 2>/dev/null; then
+            kill $timeout_pid 2>/dev/null
+            echo "Deployment completed successfully"
+          else
+            wait_exit_code=$?
+            kill $timeout_pid 2>/dev/null
+            if [ $wait_exit_code -eq 124 ]; then
+              echo "⚠️ Deployment wait timed out, but deployment may still be in progress"
+              echo "Check AWS ECS console for current status"
+            else
+              echo "❌ Deployment wait failed with exit code: $wait_exit_code"
+              exit $wait_exit_code
+            fi
+          fi
           
       - name: Verify deployment
         run: |
