@@ -4,9 +4,11 @@ using System.Text.Json;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Domain.Common.Events;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
@@ -20,6 +22,8 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
         IMapper mapper,
         IValidator<CreateIslanderRequestDto> validator,
         IRedisService redisService,
+        IDomainEventDispatcher domainEventDispatcher,
+        IHttpContextAccessor httpContextAccessor,
         IConnection rabbitConnection) : IRequestHandler<CreateIslanderCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateIslanderCommand request, CancellationToken cancellationToken)
@@ -40,7 +44,16 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
             islanderEntity.Password = BCrypt.Net.BCrypt.HashPassword(islanderEntity.Password);
 
             var result = await islanderDomainIslander.CreateAsync(islanderEntity);
-            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.ISLANDER);
+            
+            // Usar el nuevo sistema de invalidación distribuida
+            await RedisHelper.InvalidateDistributedCacheAsync(
+                result, 
+                redisService, 
+                domainEventDispatcher, 
+                httpContextAccessor,
+                "islander",
+                "create",
+                islanderEntity.IdIslander);
 
             if (!result.IsSuccess)
                 return result.Error!;

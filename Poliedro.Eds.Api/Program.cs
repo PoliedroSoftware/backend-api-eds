@@ -6,6 +6,7 @@ using AWS.Logger;
 using DotNetEnv;
 using FluentValidation;
 using HealthChecks.UI.Client;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +19,10 @@ using Poliedro.Eds.Api.Middlelware.NameIdentifier;
 using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
 using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
+using Poliedro.Eds.Application.Common.Behaviors;
+using Poliedro.Eds.Application.Common.EventHandlers.Cache;
+using Poliedro.Eds.Application.Common.Services.Background;
+using Poliedro.Eds.Application.Common.Services.Cache;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -27,6 +32,7 @@ using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
 using Poliedro.Eds.Domain.Business.DomaianServices.Create;
 using Poliedro.Eds.Domain.Business.Extensions;
+using Poliedro.Eds.Domain.Common.Events;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
@@ -72,6 +78,19 @@ builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
 //builder.Services.AddScoped<IBusinessQueryService, BusinessQueryService>();
 
 builder.Services.AddScoped<IValidator<UpdateBusinessCommand>, UpdateBusinessCommandValidator>();
+
+// Servicios de caché con tags y invalidación distribuida
+builder.Services.AddScoped<ICacheService, CacheService>();
+
+// Event handlers para invalidación de caché
+builder.Services.AddScoped<CacheInvalidationEventHandler>();
+builder.Services.AddScoped<EntityModifiedEventHandler>();
+
+// Servicio de background para suscripción a invalidación de caché
+builder.Services.AddHostedService<CacheInvalidationSubscriberService>();
+
+// Domain Event Dispatcher
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
 // Configure OpenAI
 builder.Services.AddScoped(provider =>
@@ -190,10 +209,14 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
+// Configuración de MediatR con el nuevo behavior de invalidación de caché
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining<GetTranslationsHandler>();
     cfg.RegisterServicesFromAssemblyContaining<GetCourtsListQueryHandler>();
+    
+    // Agregar el behavior de invalidación de caché usando el método genérico
+    cfg.AddOpenBehavior(typeof(CacheInvalidationBehavior<,>));
 });
 
 builder.Services.AddMemoryCache();
