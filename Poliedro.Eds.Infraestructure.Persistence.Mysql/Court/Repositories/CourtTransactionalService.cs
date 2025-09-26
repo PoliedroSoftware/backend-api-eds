@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Court.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Domain.Common.Events;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
@@ -16,7 +18,9 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
         ITenantDbContextFactory dbContextFactory,
         IGetProductAndCompartiment getProductAndCompartiment,
         ILogger<CourtTransactionalService> logger,
-        IRedisService redisService) : ICourtTransactionalService
+        IRedisService redisService,
+        IDomainEventDispatcher domainEventDispatcher,
+        IHttpContextAccessor httpContextAccessor) : ICourtTransactionalService
     {
         public async Task<Result<CourtEntity, Error>> ExecuteCourtTransactionAsync(
             CourtEntity courtEntity,
@@ -66,21 +70,17 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 await transaction.CommitAsync(cancellationToken);
                 logger.LogInformation("✅ TRANSACCIÓN CONFIRMADA EXITOSAMENTE");
 
-                // 4. Limpiar cache solo después de commit exitoso
                 var result = Result<CourtEntity, Error>.Success(courtEntity);
-                await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService,
-                    KeyRedisConstants.BUSINESS,
-                    KeyRedisConstants.COMPARTIMENT,
-                    KeyRedisConstants.DISPENSERS,
-                    KeyRedisConstants.EDS,
-                    KeyRedisConstants.EXPENDITURES,
-                    KeyRedisConstants.HOSE,
-                    KeyRedisConstants.ISLANDER,
-                    KeyRedisConstants.PRODUCT,
-                    KeyRedisConstants.TRANSLATION,
-                    KeyRedisConstants.TYPE_OF_COLLECTION);
+                await RedisHelper.InvalidateDistributedCacheAsync(
+                    result, 
+                    redisService, 
+                    domainEventDispatcher, 
+                    httpContextAccessor,
+                    "court",
+                    "create",
+                    courtEntity.IdCourt);
 
-                logger.LogInformation("✅ Cache limpiado");
+                logger.LogInformation("✅ Cache invalidado usando sistema distribuido");
                 logger.LogInformation("==========================================");
 
                 return result;
@@ -154,21 +154,18 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 await transaction.CommitAsync(cancellationToken);
                 logger.LogInformation("✅ TRANSACCIÓN COMPLETA CONFIRMADA EXITOSAMENTE");
 
-                // 5. Limpiar cache solo después de commit exitoso
+                // 5. Invalidar caché usando el nuevo sistema distribuido
                 var result = Result<CourtEntity, Error>.Success(courtEntity);
-                await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService,
-                    KeyRedisConstants.BUSINESS,
-                    KeyRedisConstants.COMPARTIMENT,
-                    KeyRedisConstants.DISPENSERS,
-                    KeyRedisConstants.EDS,
-                    KeyRedisConstants.EXPENDITURES,
-                    KeyRedisConstants.HOSE,
-                    KeyRedisConstants.ISLANDER,
-                    KeyRedisConstants.PRODUCT,
-                    KeyRedisConstants.TRANSLATION,
-                    KeyRedisConstants.TYPE_OF_COLLECTION);
+                await RedisHelper.InvalidateDistributedCacheAsync(
+                    result, 
+                    redisService, 
+                    domainEventDispatcher, 
+                    httpContextAccessor,
+                    "court",
+                    "create",
+                    courtEntity.IdCourt);
 
-                logger.LogInformation("✅ Cache limpiado");
+                logger.LogInformation("✅ Cache invalidado usando sistema distribuido");
                 logger.LogInformation("===================================================");
 
                 return result;
