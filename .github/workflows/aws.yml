@@ -2,6 +2,7 @@ name: Build, Test, Deploy to ECS
 
 permissions:
   contents: read
+  pull-requests: read
 
 on:
   push:
