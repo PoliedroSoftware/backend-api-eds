@@ -94,26 +94,29 @@ public class SendWhatsAppMessageCommandHandler(
 
         //Mangueras y Dispensadores
 
-        // Agrupar por DispensadorId, luego construir el mensaje agrupado con utilidades
+        // Agrupar por DispensadorId, luego construir el mensaje agrupado con utilidades y stock
         var hosesGrouped = await Task.WhenAll(
             court.CourtDispensers.Select(async d =>
             {
                 var hoseNumber = await getHose.GetHoseNumberAsync(d.IdHose);
                 var idDispenser = await getdispenserNumber.GetDispenserNumberAsync(d.IdHose);
                 
-                // Obtener información del producto para calcular utilidad
+                // Obtener información del producto para calcular utilidad y stock
                 var productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(d.IdHose);
                 var productResult = await getProductById.GetByIdAsync(productAndCompartiment.IdProduct);
                 
                 double utilityPerHose = 0;
                 double sellPrice = 0;
+                double stock = 0;
                 string productName = "Producto Desconocido";
+                int productId = productAndCompartiment.IdProduct;
                 
                 if (productResult.IsSuccess && productResult.Value != null)
                 {
                     var product = productResult.Value;
                     productName = product.Name ?? "Producto Sin Nombre";
                     sellPrice = product.SellPrice ?? 0;
+                    stock = product.Stock ?? 0;
                     var purchasePrice = product.PurchasePrice ?? 0;
                     var utilityPerGallon = sellPrice - purchasePrice;
                     utilityPerHose = utilityPerGallon * d.GallonsDifferenceResult;
@@ -127,7 +130,9 @@ public class SendWhatsAppMessageCommandHandler(
                     Gallons = d.GallonsDifferenceResult,
                     Utility = utilityPerHose,
                     ProductName = productName,
-                    SellPrice = sellPrice
+                    SellPrice = sellPrice,
+                    Stock = stock,
+                    ProductId = productId
                 };
             })
         );
@@ -137,7 +142,7 @@ public class SendWhatsAppMessageCommandHandler(
             .GroupBy(h => h.Dispenser)
             .OrderBy(g => g.Key);
 
-        // Construir string final con utilidades y precio por galón
+        // Construir string final con utilidades, precio por galón y stock
         var hoseDetailString = string.Join("\n\n", dispensersGrouped.Select(group =>
         {
             var mangueras = string.Join("\n", group
@@ -151,6 +156,7 @@ public class SendWhatsAppMessageCommandHandler(
             📊 Venta En Galones: {h.Gallons:N0} gl
             💰 Precio por Galón: ${h.SellPrice:N0}
             📈 Utilidad: ${h.Utility:N0}
+            📦 Stock Actual: {h.Stock:N0} gl
             """));
 
             return $"""
@@ -162,6 +168,26 @@ public class SendWhatsAppMessageCommandHandler(
 
         var totalGallons = court.CourtDispensers?.Sum(d => d.GallonsDifferenceResult) ?? 0;
         var totalUtility = hosesGrouped.Sum(h => h.Utility);
+
+        // Crear resumen de stock por producto (agrupando productos únicos)
+        var stockSummary = hosesGrouped
+            .GroupBy(h => new { h.ProductId, h.ProductName })
+            .Select(g => new
+            {
+                ProductName = g.Key.ProductName,
+                Stock = g.First().Stock // Todos los elementos del grupo tienen el mismo stock
+            })
+            .OrderBy(p => p.ProductName)
+            .Select(p => $"🛢️ {p.ProductName}: {p.Stock:N0} gl")
+            .ToList();
+
+        var stockSection = stockSummary.Any() ? $"""
+
+                ══════════════
+                📦 INVENTARIO ACTUAL
+                ══════════════
+                {string.Join("\n", stockSummary)}
+                """ : string.Empty;
 
         // Construir la sección de gastos condicionalmente
         var gastosSection = hasExpenditures ? $"""
@@ -193,6 +219,7 @@ public class SendWhatsAppMessageCommandHandler(
                 💰 Total Ventas: ${totalVentas:N0}
                 📈 Total Utilidad Del Día: ${totalUtility:N0}
                 {gastosSection}
+                {stockSection}
 
                 ══════════════
                 💳 MEDIOS DE PAGO
