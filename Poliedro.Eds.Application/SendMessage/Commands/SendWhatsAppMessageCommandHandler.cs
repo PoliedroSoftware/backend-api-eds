@@ -169,25 +169,6 @@ public class SendWhatsAppMessageCommandHandler(
         var totalGallons = court.CourtDispensers?.Sum(d => d.GallonsDifferenceResult) ?? 0;
         var totalUtility = hosesGrouped.Sum(h => h.Utility);
 
-        // Crear resumen de stock por producto (agrupando productos únicos)
-        var stockSummary = hosesGrouped
-            .GroupBy(h => new { h.ProductId, h.ProductName })
-            .Select(g => new
-            {
-                ProductName = g.Key.ProductName,
-                Stock = g.First().Stock // Todos los elementos del grupo tienen el mismo stock
-            })
-            .OrderBy(p => p.ProductName)
-            .Select(p => $"🛢️ {p.ProductName}: {p.Stock:N0} gl")
-            .ToList();
-
-        var stockSection = stockSummary.Any() ? $"""
-
-                ══════════════
-                📦 INVENTARIO ACTUAL
-                ══════════════
-                {string.Join("\n", stockSummary)}
-                """ : string.Empty;
 
         // Construir la sección de gastos condicionalmente
         var gastosSection = hasExpenditures ? $"""
@@ -219,7 +200,7 @@ public class SendWhatsAppMessageCommandHandler(
                 💰 Total Ventas: ${totalVentas:N0}
                 📈 Total Utilidad Del Día: ${totalUtility:N0}
                 {gastosSection}
-                {stockSection}
+               
 
                 ══════════════
                 💳 MEDIOS DE PAGO
