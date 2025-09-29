@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using Poliedro.Eds.Api.Controllers.v1.Compartiment;
 using Amazon.Runtime;
 using Amazon.S3.FileUploadService;
 using Amazon.Secrets;
@@ -251,7 +252,7 @@ builder.Services.AddHttpClient(nameof(TolgeeService), client =>
 
 builder.Services.AddHttpClient<ISendMessage, WhatsAppService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SendWhatsAppMessageCommand>());
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddApplicationPart(typeof(Poliedro.Eds.Api.Controllers.v1.Compartiment.CompartimentController).Assembly);
 
 
 
