@@ -16,6 +16,7 @@ public static class KeyRedisConstants
     public const string EXPENDITURES = "expenditures:";
     public const string HOSE = "hose:";
     public const string HOSE_HISTORY = "hoseHistory:";
+    public const string INVENTORY = "inventory:";
     public const string ISLAND = "island:";
     public const string ISLANDER = "islander:";
     public const string PRODUCT = "product:";
