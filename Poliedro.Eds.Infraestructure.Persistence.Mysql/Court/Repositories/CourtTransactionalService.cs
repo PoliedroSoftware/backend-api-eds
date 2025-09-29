@@ -50,7 +50,20 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 }
                 logger.LogInformation("✅ Corte creado exitosamente");
 
-                // 2. Actualizar inventario de productos (reducir stock)
+                // 2. Actualizar hoses con los valores acumulados del corte
+                var hoseUpdateResult = await UpdateHoseAccumulatedValuesAsync(
+                    context, courtEntity.CourtDispensers, cancellationToken);
+                
+                if (!hoseUpdateResult.IsSuccess)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                    logger.LogError("❌ ERROR: Falló la actualización de mangueras - {ErrorDescription}", 
+                        hoseUpdateResult.Error?.Description);
+                    return Result<CourtEntity, Error>.Failure(hoseUpdateResult.Error!);
+                }
+                logger.LogInformation("✅ Mangueras actualizadas exitosamente");
+
+                // 3. Actualizar inventario de productos (reducir stock)
                 if (courtDispenserSaleEntities.Any())
                 {
                     var inventoryUpdateResult = await UpdateProductInventoryAsync(
@@ -66,13 +79,13 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     logger.LogInformation("✅ Inventario actualizado exitosamente");
                 }
 
-                // 3. Confirmar la transacción
+                // 4. Confirmar la transacción
                 await transaction.CommitAsync(cancellationToken);
                 logger.LogInformation("✅ TRANSACCIÓN CONFIRMADA EXITOSAMENTE");
 
                 var result = Result<CourtEntity, Error>.Success(courtEntity);
                 
-                // 4. Invalidar caché del corte usando sistema distribuido
+                // 5. Invalidar caché del corte usando sistema distribuido
                 await RedisHelper.InvalidateDistributedCacheAsync(
                     result, 
                     redisService, 
@@ -82,8 +95,11 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     "create",
                     courtEntity.IdCourt);
 
-                // 5. Invalidar caché del inventario y productos afectados
+                // 6. Invalidar caché del inventario y productos afectados
                 await InvalidateInventoryAndProductCacheAsync(result, courtDispenserSaleEntities);
+
+                // 7. Invalidar caché de mangueras afectadas
+                await InvalidateHoseCacheAsync(result, courtEntity.CourtDispensers);
 
                 logger.LogInformation("✅ Cache invalidado usando sistema distribuido");
                 logger.LogInformation("==========================================");
@@ -139,7 +155,20 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 }
                 logger.LogInformation("✅ Corte creado exitosamente");
 
-                // 3. Actualizar inventario de productos (reducir stock)
+                // 3. Actualizar hoses con los valores acumulados del corte
+                var hoseUpdateResult = await UpdateHoseAccumulatedValuesAsync(
+                    context, courtEntity.CourtDispensers, cancellationToken);
+                
+                if (!hoseUpdateResult.IsSuccess)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                    logger.LogError("❌ ERROR: Falló la actualización de mangueras - {ErrorDescription}", 
+                        hoseUpdateResult.Error?.Description);
+                    return Result<CourtEntity, Error>.Failure(hoseUpdateResult.Error!);
+                }
+                logger.LogInformation("✅ Mangueras actualizadas exitosamente");
+
+                // 4. Actualizar inventario de productos (reducir stock)
                 if (courtDispenserSaleEntities.Any())
                 {
                     var inventoryUpdateResult = await UpdateProductInventoryAsync(
@@ -155,13 +184,13 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     logger.LogInformation("✅ Inventario actualizado exitosamente");
                 }
 
-                // 4. Confirmar la transacción
+                // 5. Confirmar la transacción
                 await transaction.CommitAsync(cancellationToken);
                 logger.LogInformation("✅ TRANSACCIÓN COMPLETA CONFIRMADA EXITOSAMENTE");
 
                 var result = Result<CourtEntity, Error>.Success(courtEntity);
                 
-                // 5. Invalidar caché del corte usando sistema distribuido
+                // 6. Invalidar caché del corte usando sistema distribuido
                 await RedisHelper.InvalidateDistributedCacheAsync(
                     result, 
                     redisService, 
@@ -171,8 +200,11 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     "create",
                     courtEntity.IdCourt);
 
-                // 6. Invalidar caché del inventario y productos afectados
+                // 7. Invalidar caché del inventario y productos afectados
                 await InvalidateInventoryAndProductCacheAsync(result, courtDispenserSaleEntities);
+
+                // 8. Invalidar caché de mangueras afectadas
+                await InvalidateHoseCacheAsync(result, courtEntity.CourtDispensers);
 
                 logger.LogInformation("✅ Cache invalidado usando sistema distribuido");
                 logger.LogInformation("===================================================");
@@ -188,6 +220,77 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     Error.CreateInstance("CourtTransactionError", 
                         $"Error durante la transacción completa del corte: {ex.Message}", 
                         System.Net.HttpStatusCode.InternalServerError));
+            }
+        }
+
+        /// <summary>
+        /// Actualiza los valores acumulados de las mangueras con los datos del corte
+        /// </summary>
+        private async Task<Result<VoidResult, Error>> UpdateHoseAccumulatedValuesAsync(
+            DataBaseContext context,
+            IEnumerable<CourtDispenserEntity> courtDispensers,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var hoseUpdates = new List<(int HoseId, double OldAmount, double NewAmount, double OldGallons, double NewGallons)>();
+
+                foreach (var courtDispenser in courtDispensers)
+                {
+                    // Obtener la manguera actual desde el contexto de la transacción
+                    var hose = await context.Hose
+                        .FirstOrDefaultAsync(h => h.IdHose == courtDispenser.IdHose, cancellationToken);
+
+                    if (hose == null)
+                    {
+                        return Error.BadRequest("HoseNotFound", 
+                            $"No se encontró la manguera con Id {courtDispenser.IdHose}");
+                    }
+
+                    var oldAmount = hose.AccumulatedAmount;
+                    var oldGallons = hose.AccumulatedGallons;
+
+                    // Actualizar los valores acumulados de la manguera
+                    hose.AccumulatedAmount = courtDispenser.AccumulatedAmount;
+                    hose.AccumulatedGallons = courtDispenser.AccumulatedGallons;
+                    
+                    context.Hose.Update(hose);
+
+                    hoseUpdates.Add((hose.IdHose, oldAmount, courtDispenser.AccumulatedAmount, 
+                        oldGallons, courtDispenser.AccumulatedGallons));
+                }
+
+                // Guardar cambios de mangueras
+                if (hoseUpdates.Any())
+                {
+                    var hosesSaveResult = await context.SaveChangesAsync(cancellationToken) > 0;
+                    if (!hosesSaveResult)
+                    {
+                        return Error.Internal("HoseUpdateError", 
+                            "Error al guardar los cambios en las mangueras");
+                    }
+                }
+
+                // Log de auditoría de mangueras actualizadas
+                if (hoseUpdates.Any())
+                {
+                    logger.LogInformation("=== MANGUERAS ACTUALIZADAS DESDE CORTE ===");
+                    foreach (var (hoseId, oldAmount, newAmount, oldGallons, newGallons) in hoseUpdates)
+                    {
+                        logger.LogInformation("🔧 Manguera {HoseId}: Monto ${OldAmount:F2} -> ${NewAmount:F2}, Galones {OldGallons:F3} -> {NewGallons:F3} gls", 
+                            hoseId, oldAmount, newAmount, oldGallons, newGallons);
+                    }
+                    logger.LogInformation("Total mangueras actualizadas: {UpdateCount}", hoseUpdates.Count);
+                    logger.LogInformation("=============================================");
+                }
+
+                return Result<VoidResult, Error>.Success(VoidResult.Instance);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error al actualizar valores acumulados de mangueras: {ErrorMessage}", ex.Message);
+                return Error.Internal("HoseUpdateError", 
+                    $"Error al actualizar valores acumulados de mangueras: {ex.Message}");
             }
         }
 
@@ -394,6 +497,56 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
             catch (Exception ex)
             {
                 logger.LogError(ex, "❌ Error al invalidar cache de inventario y productos: {ErrorMessage}", ex.Message);
+                // No lanzamos excepción porque la transacción ya fue confirmada exitosamente
+            }
+        }
+
+        /// <summary>
+        /// Invalida la caché de las mangueras afectadas por el corte
+        /// </summary>
+        private async Task InvalidateHoseCacheAsync(
+            Result<CourtEntity, Error> result, 
+            IEnumerable<CourtDispenserEntity> courtDispensers)
+        {
+            if (!result.IsSuccess) return;
+
+            try
+            {
+                // Invalidar cache general de mangueras usando sistema distribuido
+                await RedisHelper.InvalidateDistributedCacheAsync(
+                    result,
+                    redisService,
+                    domainEventDispatcher,
+                    httpContextAccessor,
+                    "hose",
+                    "update",
+                    null);
+
+                // Invalidar cache específico de cada manguera afectada
+                foreach (var courtDispenser in courtDispensers)
+                {
+                    await RedisHelper.InvalidateDistributedCacheAsync(
+                        result,
+                        redisService,
+                        domainEventDispatcher,
+                        httpContextAccessor,
+                        "hose",
+                        "update",
+                        courtDispenser.IdHose);
+                }
+
+                // También invalidar las constantes de cache tradicionales como respaldo
+                await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, 
+                    KeyRedisConstants.HOSE,
+                    KeyRedisConstants.HOSE_HISTORY,
+                    "LastAccumulated:");
+
+                logger.LogInformation("🗑️ Cache de mangueras invalidado exitosamente - {HoseCount} mangueras afectadas", 
+                    courtDispensers.Count());
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "❌ Error al invalidar cache de mangueras: {ErrorMessage}", ex.Message);
                 // No lanzamos excepción porque la transacción ya fue confirmada exitosamente
             }
         }
