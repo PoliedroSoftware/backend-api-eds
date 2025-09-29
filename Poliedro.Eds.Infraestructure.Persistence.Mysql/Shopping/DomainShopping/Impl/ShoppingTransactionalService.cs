@@ -97,6 +97,9 @@ public class ShoppingTransactionalService(
             // 6. Invalidar caché del inventario y productos afectados
             await InvalidateInventoryAndProductCacheAsync(result, shoppingEntity.ShoppingProducts, productsToUpdatePrice);
 
+            // 7. Invalidar caché de mangueras ya que las compras pueden afectar los productos asociados a las mangueras
+            await InvalidateHoseCacheAsync(result, shoppingEntity.ShoppingProducts);
+
             logger.LogInformation("✅ Cache invalidado usando sistema distribuido");
             logger.LogInformation("================================================");
 
@@ -313,6 +316,43 @@ public class ShoppingTransactionalService(
         catch (Exception ex)
         {
             logger.LogError(ex, "❌ Error al invalidar cache de inventario y productos: {ErrorMessage}", ex.Message);
+            // No lanzamos excepción porque la transacción ya fue confirmada exitosamente
+        }
+    }
+
+    /// <summary>
+    /// Invalida la caché de mangueras cuando se realizan compras que pueden afectar productos asociados a las mangueras
+    /// </summary>
+    private async Task InvalidateHoseCacheAsync(
+        Result<VoidResult, Error> result,
+        IEnumerable<ShoppingProductEntity>? shoppingProducts)
+    {
+        if (!result.IsSuccess || shoppingProducts?.Any() != true) return;
+
+        try
+        {
+            // Invalidar cache general de mangueras usando sistema distribuido
+            await RedisHelper.InvalidateDistributedCacheAsync(
+                result,
+                redisService,
+                domainEventDispatcher,
+                httpContextAccessor,
+                "hose",
+                "update",
+                null);
+
+            // También invalidar las constantes de cache tradicionales como respaldo
+            await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, 
+                KeyRedisConstants.HOSE,
+                KeyRedisConstants.HOSE_HISTORY,
+                "LastAccumulated:");
+
+            logger.LogInformation("🗑️ Cache de mangueras invalidado desde compra - {ProductCount} productos afectados", 
+                shoppingProducts.Count());
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "❌ Error al invalidar cache de mangueras desde compra: {ErrorMessage}", ex.Message);
             // No lanzamos excepción porque la transacción ya fue confirmada exitosamente
         }
     }
