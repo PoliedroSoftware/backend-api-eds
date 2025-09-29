@@ -201,7 +201,6 @@ public class SendWhatsAppMessageCommandHandler(
                 📈 Total Utilidad Del Día: ${totalUtility:N0}
                 {gastosSection}
                
-
                 ══════════════
                 💳 MEDIOS DE PAGO
                 ══════════════

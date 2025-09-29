@@ -71,6 +71,8 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 logger.LogInformation("✅ TRANSACCIÓN CONFIRMADA EXITOSAMENTE");
 
                 var result = Result<CourtEntity, Error>.Success(courtEntity);
+                
+                // 4. Invalidar caché del corte usando sistema distribuido
                 await RedisHelper.InvalidateDistributedCacheAsync(
                     result, 
                     redisService, 
@@ -79,6 +81,9 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     "court",
                     "create",
                     courtEntity.IdCourt);
+
+                // 5. Invalidar caché del inventario y productos afectados
+                await InvalidateInventoryAndProductCacheAsync(result, courtDispenserSaleEntities);
 
                 logger.LogInformation("✅ Cache invalidado usando sistema distribuido");
                 logger.LogInformation("==========================================");
@@ -154,8 +159,9 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 await transaction.CommitAsync(cancellationToken);
                 logger.LogInformation("✅ TRANSACCIÓN COMPLETA CONFIRMADA EXITOSAMENTE");
 
-                // 5. Invalidar caché usando el nuevo sistema distribuido
                 var result = Result<CourtEntity, Error>.Success(courtEntity);
+                
+                // 5. Invalidar caché del corte usando sistema distribuido
                 await RedisHelper.InvalidateDistributedCacheAsync(
                     result, 
                     redisService, 
@@ -164,6 +170,9 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     "court",
                     "create",
                     courtEntity.IdCourt);
+
+                // 6. Invalidar caché del inventario y productos afectados
+                await InvalidateInventoryAndProductCacheAsync(result, courtDispenserSaleEntities);
 
                 logger.LogInformation("✅ Cache invalidado usando sistema distribuido");
                 logger.LogInformation("===================================================");
@@ -317,6 +326,76 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
             }
 
             return Result<VoidResult, Error>.Success(VoidResult.Instance);
+        }
+
+        /// <summary>
+        /// Invalida la caché del inventario y productos afectados por el corte
+        /// </summary>
+        private async Task InvalidateInventoryAndProductCacheAsync(
+            Result<CourtEntity, Error> result, 
+            IEnumerable<CourtDispenserSaleEntity> courtDispenserSaleEntities)
+        {
+            if (!result.IsSuccess) return;
+
+            try
+            {
+                // Invalidar cache del inventario usando sistema distribuido
+                await RedisHelper.InvalidateDistributedCacheAsync(
+                    result,
+                    redisService,
+                    domainEventDispatcher,
+                    httpContextAccessor,
+                    "inventory",
+                    "update",
+                    null);
+
+                // Invalidar cache de productos usando sistema distribuido
+                await RedisHelper.InvalidateDistributedCacheAsync(
+                    result,
+                    redisService,
+                    domainEventDispatcher,
+                    httpContextAccessor,
+                    "product",
+                    "update",
+                    null);
+
+                // Invalidar cache específico de cada producto afectado
+                foreach (var courtDispenser in courtDispenserSaleEntities)
+                {
+                    await RedisHelper.InvalidateDistributedCacheAsync(
+                        result,
+                        redisService,
+                        domainEventDispatcher,
+                        httpContextAccessor,
+                        "product",
+                        "update",
+                        courtDispenser.IdProduct);
+                }
+
+                // Invalidar cache de compartimentos ya que el stock puede afectar la información de compartimentos
+                await RedisHelper.InvalidateDistributedCacheAsync(
+                    result,
+                    redisService,
+                    domainEventDispatcher,
+                    httpContextAccessor,
+                    "compartiment",
+                    "update",
+                    null);
+
+                // También invalidar las constantes de cache tradicionales como respaldo
+                await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, 
+                    KeyRedisConstants.INVENTORY,
+                    KeyRedisConstants.PRODUCT, 
+                    "inventoryListService:",
+                    KeyRedisConstants.COMPARTIMENT);
+
+                logger.LogInformation("🗑️ Cache de inventario y productos invalidado exitosamente");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "❌ Error al invalidar cache de inventario y productos: {ErrorMessage}", ex.Message);
+                // No lanzamos excepción porque la transacción ya fue confirmada exitosamente
+            }
         }
     }
 }
