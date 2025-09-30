@@ -153,10 +153,10 @@ public class SendWhatsAppMessageCommandHandler(
             🔧 Manguera: {h.Hose}
             🛢️ Producto: {h.ProductName}
             💵 Venta En Dinero: ${h.Amount:N0}
-            📊 Venta En Galones: {h.Gallons:N0} gl
+            📊 Venta En Galones: {h.Gallons:N3} gl
             💰 Precio por Galón: ${h.SellPrice:N0}
             📈 Utilidad: ${h.Utility:N0}
-            📦 Stock Actual: {h.Stock:N0} gl
+            📦 Stock Actual: {h.Stock:N3} gl
             """));
 
             return $"""
@@ -196,7 +196,7 @@ public class SendWhatsAppMessageCommandHandler(
                 📊 RESUMEN TOTAL
                 ══════════════
 
-                ⛽ Total Galones Vendidos: {totalGallons:N0} gl
+                ⛽ Total Galones Vendidos: {totalGallons:N3} gl
                 💰 Total Ventas: ${totalVentas:N0}
                 📈 Total Utilidad Del Día: ${totalUtility:N0}
                 {gastosSection}
