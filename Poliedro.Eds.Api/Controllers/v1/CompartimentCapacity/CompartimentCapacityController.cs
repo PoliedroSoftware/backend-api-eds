@@ -12,22 +12,37 @@ using Poliedro.Eds.Application.CompartimentCapacity.Queries.GetCompartimentCapac
 using Poliedro.Eds.Domain.Common.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Poliedro.Eds.Api.Controllers.v1.Islender
+namespace Poliedro.Eds.Api.Controllers.v1
 {
-    [Route("api/v1/compartiment-capacity")]
+    [Route("api/v1/compartment-capacity")]
     [ApiController]
-    public class CompartimentCapacityController(IMediator mediator) : ControllerBase
+    public class CompartmentCapacityController : ControllerBase
     {
+        private readonly IMediator _mediator;
+
+        public CompartmentCapacityController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
         [Authorize(Policy = "AdminOnly")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var data = await mediator.Send(new GellAllCompartimentCapacityQuery(new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+            var data = await _mediator.Send(
+                new GellAllCompartimentCapacityQuery(
+                    new PaginationParams { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }
+                )
+            );
+
             if (data is null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, ResponseApiService.Response(StatusCodes.Status404NotFound));
+                return StatusCode(StatusCodes.Status404NotFound,
+                    ResponseApiService.Response(StatusCodes.Status404NotFound));
             }
-            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, data));
+
+            return StatusCode(StatusCodes.Status200OK,
+                ResponseApiService.Response(StatusCodes.Status200OK, data));
         }
 
         [SwaggerOperation(Summary = "Get CompartimentCapacity")]
@@ -42,7 +57,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         {
             var getCompartimentCapacityQuery = new GetCompartimentCapacityByIdQuery(Id: id);
 
-            var result = await mediator.Send(getCompartimentCapacityQuery);
+            var result = await _mediator.Send(getCompartimentCapacityQuery);
 
             return result.Match(
                 onSuccess => TypedResults.Ok(result.Value),
@@ -50,18 +65,16 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
             );
         }
 
-        [SwaggerOperation(
-            Summary = "Create new CompartimentCapacity")]
+        [SwaggerOperation(Summary = "Create new CompartimentCapacity")]
         [SwaggerResponse(StatusCodes.Status204NoContent, "The operation was successful.")]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
         [HttpPost]
-
         public async Task<IResult> Create([FromBody] CreateCompartimentCapacityCommand createCompartimentCapacityCommand)
         {
-            var result = await mediator.Send(createCompartimentCapacityCommand);
+            var result = await _mediator.Send(createCompartimentCapacityCommand);
             return result.Match(onSuccess => TypedResults.Created());
         }
 
@@ -75,7 +88,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCompartimentCapacityCommand updateCompartimentCapacityCommand)
         {
-            var result = await mediator.Send(updateCompartimentCapacityCommand);
+            var result = await _mediator.Send(updateCompartimentCapacityCommand);
 
             if (!result.IsSuccess)
             {
@@ -84,11 +97,11 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
                     return NotFound(ResponseApiService.Response(StatusCodes.Status404NotFound));
                 }
 
-                return StatusCode(StatusCodes.Status500InternalServerError, ResponseApiService.Response(StatusCodes.Status500InternalServerError, result.Error));
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    ResponseApiService.Response(StatusCodes.Status500InternalServerError, result.Error));
             }
 
             return NoContent();
         }
     }
 }
-
