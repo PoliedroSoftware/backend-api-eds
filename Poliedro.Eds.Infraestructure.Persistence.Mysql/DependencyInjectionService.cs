@@ -29,6 +29,7 @@ using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.OpenAI.DomainOpenAI;
 using Poliedro.Eds.Domain.Phone.DomainServices.Create;
 using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
+using Poliedro.Eds.Domain.Phone.DomainServices.GetByNumber;
 using Poliedro.Eds.Domain.Phone.DomainServices.Update;
 using Poliedro.Eds.Domain.Ports;
 using Poliedro.Eds.Domain.Product.DomainProduct;
@@ -101,6 +102,7 @@ public static class DependencyInjectionService
         services.AddScoped<IPhoneCreateService, PhoneCreateService>();
         services.AddScoped<IPhoneGetAllService, PhoneGetAllService>();
         services.AddScoped<IPhoneUpdateService, PhoneUpdateService>();
+        services.AddScoped<IPhoneGetByNumberService, PhoneGetByNumberService>();
         services.AddScoped<ICapacityCreateService, CapacityCreateService>();
         services.AddScoped<ICapacityGetByIdService, CapacityGetByIdService>();
         services.AddScoped<ICapacityGetAllService, CapacityGetAllService>();
@@ -218,6 +220,7 @@ public static class DependencyInjectionService
         services.AddScoped<IStrongBoxService, StrongBoxService>();
         services.AddScoped<IStrongBoxRepositoryGetById, StrongBoxGetByIdService>();
         services.AddScoped<IStrongBoxRepositoryGetAll, StrongBoxGetAllService>();
+        
         return services;
     }
 }
