@@ -213,6 +213,15 @@ public class SendWhatsAppMessageCommandHandler(
                 💸 Total En Gastos: ${totalExpenditures.ToString("N0", SpanishCulture)}
                 """ : string.Empty;
 
+        // Construir la sección de observaciones condicionalmente
+        var observacionesSection = !string.IsNullOrWhiteSpace(court.Descripcion) ? $"""
+
+                ══════════════
+                📝 OBSERVACIONES
+                ══════════════
+                {court.Descripcion}
+                """ : string.Empty;
+
         // Construir el mensaje final
         var message = $"""
                 📋 CORTE {edsName} FINALIZADO
@@ -243,6 +252,7 @@ public class SendWhatsAppMessageCommandHandler(
                 ══════════════
                 💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo.ToString("N0", SpanishCulture)}
                 🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox.ToString("N0", SpanishCulture)}
+                {observacionesSection}
 
                 📎 Documentos Cargados: {court.CourtDocuments?.Count() ?? 0}
                 """;
