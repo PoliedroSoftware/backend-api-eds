@@ -29,8 +29,12 @@ public class CreatePhoneCommandHandler(
                     HttpStatusCode.BadRequest));
         }
 
-        var phoneEntities = request.Request.Numbers
-            .Select(number => new PhoneEntity { Number = NormalizePhoneNumber(number) })
+        var phoneEntities = request.Request.Phones
+            .Select(phone => new PhoneEntity 
+            { 
+                Number = NormalizePhoneNumber(phone.Number),
+                Name = phone.Name
+            })
             .ToList();
 
         foreach (var phoneEntity in phoneEntities)

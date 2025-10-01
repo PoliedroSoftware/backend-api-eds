@@ -12,5 +12,6 @@ public class PhoneConfiguration
         builder.HasKey(x => x.IdPhone);
         builder.Property(x => x.IdPhone).HasColumnName("id_phone");
         builder.Property(x => x.Number).HasColumnName("number").HasMaxLength(13).IsRequired();
+        builder.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
     }
 }
