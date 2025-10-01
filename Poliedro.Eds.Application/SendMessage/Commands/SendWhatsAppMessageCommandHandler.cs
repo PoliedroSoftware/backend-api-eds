@@ -8,6 +8,7 @@ using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
 using Poliedro.Eds.Domain.Product.DomainProduct;
 using Poliedro.Eds.Domain.SendMessage;
+using System.Globalization;
 
 public class SendWhatsAppMessageCommandHandler(
     ISendMessage sendMessage,
@@ -23,6 +24,37 @@ public class SendWhatsAppMessageCommandHandler(
     IEdsGetByIdService edsGetByIdService
     ) : IRequestHandler<SendWhatsAppMessageCommand, Unit>
 {
+    // Cultura española para usar coma como separador decimal
+    private static readonly CultureInfo SpanishCulture = new CultureInfo("es-ES");
+
+    /// <summary>
+    /// Formatea los galones mostrando decimales solo cuando es necesario (máximo 3 decimales)
+    /// </summary>
+    /// <param name="gallons">Valor de galones a formatear</param>
+    /// <returns>String formateado con decimales dinámicos</returns>
+    private static string FormatGallons(double gallons)
+    {
+        // Si es un número entero, mostrar sin decimales
+        if (gallons == Math.Floor(gallons))
+        {
+            return gallons.ToString("N0", SpanishCulture);
+        }
+        
+        // Si tiene decimales, determinar cuántos decimales significativos mostrar (máximo 3)
+        var rounded = Math.Round(gallons, 3);
+        
+        // Convertir a string con 3 decimales y luego remover ceros al final
+        var formatted = rounded.ToString("N3", SpanishCulture);
+        
+        // Remover ceros trailing después del separador decimal
+        if (formatted.Contains(','))
+        {
+            formatted = formatted.TrimEnd('0').TrimEnd(',');
+        }
+        
+        return formatted;
+    }
+
     public async Task<Unit> Handle(SendWhatsAppMessageCommand request, CancellationToken cancellationToken)
     {
         var court = request.Court;
@@ -33,24 +65,32 @@ public class SendWhatsAppMessageCommandHandler(
         // Convertir los números de teléfono en una lista de strings
         var phoneNumbersList = phoneNumbers.Select(p => p.Number).ToList();
 
-        // Gastos
-        var ExpenseSummary = string.Join("\n", await Task.WhenAll(
-        court.CourtExpenditures?.Select(async p =>
+        // Verificar si existen gastos
+        var hasExpenditures = court.CourtExpenditures?.Any() == true && court.CourtExpenditures.Any(e => e != null);
+
+        // Gastos (solo procesar si existen)
+        var ExpenseSummary = string.Empty;
+        var totalExpenditures = 0.0;
+
+        if (hasExpenditures)
         {
-            var gastosname = await getExpenditure.GetExpenditureIdAsync(p.IdExpenditures);
-            return $"{gastosname}:$ {p.Amount:N2}";
-        }) ?? Enumerable.Empty<Task<string>>()
-         ));
+            ExpenseSummary = string.Join("\n", await Task.WhenAll(
+                court.CourtExpenditures!.Where(p => p != null).Select(async p =>
+                {
+                    var gastosname = await getExpenditure.GetExpenditureIdAsync(p.IdExpenditures);
+                    return $"{gastosname}:$ {p.Amount.ToString("N0", SpanishCulture)}";
+                })
+            ));
 
-        var totalExpenditures = court.CourtExpenditures?.Sum(e => e?.Amount ?? 0) ?? 0;
-
+            totalExpenditures = court.CourtExpenditures.Sum(e => e?.Amount ?? 0);
+        }
 
         // Medios de pago
         var paymentSummary = string.Join("\n", await Task.WhenAll(
         court.CourtTypeOfCollections.Select(async p =>
         {
             var paymentMethodName = await getPaymentMethodName.GetPaymentMethodNameAsync(p.IdTypeOfCollection);
-            return $"{paymentMethodName}: $ {p.Amount:N2}";
+            return $"{paymentMethodName}: $ {p.Amount.ToString("N0", SpanishCulture)}";
         })
          ));
 
@@ -86,25 +126,29 @@ public class SendWhatsAppMessageCommandHandler(
 
         //Mangueras y Dispensadores
 
-        // Agrupar por DispensadorId, luego construir el mensaje agrupado con utilidades
+        // Agrupar por DispensadorId, luego construir el mensaje agrupado con utilidades y stock
         var hosesGrouped = await Task.WhenAll(
             court.CourtDispensers.Select(async d =>
             {
                 var hoseNumber = await getHose.GetHoseNumberAsync(d.IdHose);
                 var idDispenser = await getdispenserNumber.GetDispenserNumberAsync(d.IdHose);
                 
-                // Obtener información del producto para calcular utilidad
+                // Obtener información del producto para calcular utilidad y stock
                 var productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(d.IdHose);
                 var productResult = await getProductById.GetByIdAsync(productAndCompartiment.IdProduct);
                 
                 double utilityPerHose = 0;
+                double sellPrice = 0;
+                double stock = 0;
                 string productName = "Producto Desconocido";
+                int productId = productAndCompartiment.IdProduct;
                 
                 if (productResult.IsSuccess && productResult.Value != null)
                 {
                     var product = productResult.Value;
                     productName = product.Name ?? "Producto Sin Nombre";
-                    var sellPrice = product.SellPrice ?? 0;
+                    sellPrice = product.SellPrice ?? 0;
+                    stock = product.Stock ?? 0;
                     var purchasePrice = product.PurchasePrice ?? 0;
                     var utilityPerGallon = sellPrice - purchasePrice;
                     utilityPerHose = utilityPerGallon * d.GallonsDifferenceResult;
@@ -117,7 +161,10 @@ public class SendWhatsAppMessageCommandHandler(
                     Amount = d.AmountDifferenceResult,
                     Gallons = d.GallonsDifferenceResult,
                     Utility = utilityPerHose,
-                    ProductName = productName
+                    ProductName = productName,
+                    SellPrice = sellPrice,
+                    Stock = stock,
+                    ProductId = productId
                 };
             })
         );
@@ -127,7 +174,7 @@ public class SendWhatsAppMessageCommandHandler(
             .GroupBy(h => h.Dispenser)
             .OrderBy(g => g.Key);
 
-        // Construir string final con utilidades
+        // Construir string final con utilidades, precio por galón y stock
         var hoseDetailString = string.Join("\n\n", dispensersGrouped.Select(group =>
         {
             var mangueras = string.Join("\n", group
@@ -137,9 +184,11 @@ public class SendWhatsAppMessageCommandHandler(
 
             🔧 Manguera: {h.Hose}
             🛢️ Producto: {h.ProductName}
-            💵 Venta En Dinero: ${h.Amount:N0}
-            📊 Venta En Galones: {h.Gallons:N0} gl
-            📈 Utilidad: ${h.Utility:N0}
+            💵 Venta En Dinero: ${h.Amount.ToString("N0", SpanishCulture)}
+            📊 Venta En Galones: {FormatGallons(h.Gallons)} gl
+            💰 Precio por Galón: ${h.SellPrice.ToString("N0", SpanishCulture)}
+            📈 Utilidad: ${h.Utility.ToString("N0", SpanishCulture)}
+            📦 Stock Actual: {FormatGallons(h.Stock)} gl
             """));
 
             return $"""
@@ -152,6 +201,18 @@ public class SendWhatsAppMessageCommandHandler(
         var totalGallons = court.CourtDispensers?.Sum(d => d.GallonsDifferenceResult) ?? 0;
         var totalUtility = hosesGrouped.Sum(h => h.Utility);
 
+
+        // Construir la sección de gastos condicionalmente
+        var gastosSection = hasExpenditures ? $"""
+
+                ══════════════
+                💸 GASTOS DETALLADOS
+                ══════════════
+                {ExpenseSummary}
+
+                💸 Total En Gastos: ${totalExpenditures.ToString("N0", SpanishCulture)}
+                """ : string.Empty;
+
         // Construir el mensaje final
         var message = $"""
                 📋 CORTE {edsName} FINALIZADO
@@ -163,31 +224,25 @@ public class SendWhatsAppMessageCommandHandler(
                 
                    {hoseDetailString}
                
-                ════════════════════════
+                ══════════════
                 📊 RESUMEN TOTAL
-                ════════════════════════
+                ══════════════
 
-                ⛽ Total Galones Vendidos: {totalGallons:N0} gl
-                💰 Total Ventas: ${totalVentas:N0}
-                📈 Total Utilidad Del Día: ${totalUtility:N0}
-
-                ════════════════════════
-                💸 GASTOS DETALLADOS
-                ════════════════════════
-                {ExpenseSummary}
-
-                💸 Total En Gastos: ${totalExpenditures:N0}
-
-                ════════════════════════
+                ⛽ Total Galones Vendidos: {FormatGallons(totalGallons)} gl
+                💰 Total Ventas: ${totalVentas.ToString("N0", SpanishCulture)}
+                📈 Total Utilidad Del Día: ${totalUtility.ToString("N0", SpanishCulture)}
+                {gastosSection}
+               
+                ══════════════
                 💳 MEDIOS DE PAGO
-                ════════════════════════
+                ══════════════
                 {paymentSummary}
 
-                ════════════════════════
+                ══════════════
                 💼 RESUMEN FINANCIERO
-                ════════════════════════
-                💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo:N0}
-                🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox:N0}
+                ══════════════
+                💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo.ToString("N0", SpanishCulture)}
+                🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox.ToString("N0", SpanishCulture)}
 
                 📎 Documentos Cargados: {court.CourtDocuments?.Count() ?? 0}
                 """;
