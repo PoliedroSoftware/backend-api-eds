@@ -38,6 +38,7 @@
     <Folder Include="Inventory\Commands\" />
     <Folder Include="Inventory\Dtos\" />
     <Folder Include="Inventory\Queries\GetInventoryList\" />
+    <Folder Include="Phone\Validators\" />
   </ItemGroup>
 
 </Project>
