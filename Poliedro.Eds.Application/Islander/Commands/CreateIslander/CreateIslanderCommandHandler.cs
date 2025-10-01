@@ -71,7 +71,7 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 islanderEntity.FirstName,
                 islanderEntity.LastName,
                 Password = originalPassword,
-                NameClaimToken = nameClaimToken
+                
             };
 
             var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));

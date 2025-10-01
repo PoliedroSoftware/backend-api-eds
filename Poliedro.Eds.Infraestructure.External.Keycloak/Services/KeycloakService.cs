@@ -96,7 +96,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
                 }
 
 
-                var groupId = _configuration["Keycloak:DefaultGroupId"];
+                var groupId = _configuration["Keycloak:registred-business-EDS"];
 
                 var subgroupsUrl = $"{_configuration["Keycloak:KeycloakUri"]}/admin/realms/{realm}/groups/{groupId}/children";
                 var groupResponse = await _httpClient.GetAsync(subgroupsUrl);
