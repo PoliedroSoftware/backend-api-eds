@@ -72,8 +72,7 @@ public class CategoryController(IMediator mediator) : ControllerBase
     {
         var result = await mediator.Send(createCategoryCommand);
         return result.Match(
-             onSuccess => TypedResults.Created(),
-             onFailure => TypedResults.BadRequest(onFailure)
+             
          );
     }
 
