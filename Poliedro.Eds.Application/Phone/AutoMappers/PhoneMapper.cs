@@ -14,5 +14,6 @@ public class PhoneMapper : Profile
         CreateMap<PhoneEntity, CreatePhoneCommand>().ReverseMap();
         CreateMap<PhoneEntity, CreatePhoneRequestDto>().ReverseMap();
         CreateMap<PhoneEntity, UpdatePhoneCommand>().ReverseMap();
+        CreateMap<PhoneEntity, PhoneCreateDto>().ReverseMap();
     }
 }
