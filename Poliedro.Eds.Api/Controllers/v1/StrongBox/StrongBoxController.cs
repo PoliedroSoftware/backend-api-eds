@@ -6,6 +6,7 @@ using Poliedro.Eds.Application.Common.Features;
 using Poliedro.Eds.Application.StrongBox.Commands;
 using Poliedro.Eds.Application.StrongBox.Dtos;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetById;
+using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetByEds;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetList;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetTotalBalance;
 using Poliedro.Eds.Domain.Common.Models;
@@ -44,6 +45,18 @@ namespace Poliedro.Eds.Api.Controllers.v1.StrongBox
         public async Task<IActionResult> GetById([FromRoute] long id)
         {
             var dto = await mediator.Send(new StrongBoxGetId(id));
+            return ApiResponse(dto, StatusCodes.Status200OK, StatusCodes.Status404NotFound);
+        }
+
+        [SwaggerOperation(Summary = "Get StrongBox records by EDS ID", Description = "Retrieves all StrongBox records associated with a specific EDS (Estación de Servicio) ID, ordered by creation date descending")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Successful", typeof(List<StrongBoxDto>))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Not Found", typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized", typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request", typeof(ProblemDetails))]
+        [HttpGet("eds/{idEds:int}")]
+        public async Task<IActionResult> GetByEds([FromRoute] int idEds)
+        {
+            var dto = await mediator.Send(new StrongBoxGetByEds(idEds));
             return ApiResponse(dto, StatusCodes.Status200OK, StatusCodes.Status404NotFound);
         }
 
