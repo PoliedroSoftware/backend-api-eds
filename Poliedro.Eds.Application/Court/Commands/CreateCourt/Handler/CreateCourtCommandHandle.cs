@@ -234,6 +234,7 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                             Type = "CORTE",
                             Ammount = money,
                             Note = $"Corte #{courtEntity.IdCourt} Dinero en efectivo para la Caja!! ${money:N2} ",
+                            IdEds  = courtEntity.IdEds
                         }),
                         cancellationToken
                     );
