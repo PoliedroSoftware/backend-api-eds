@@ -24,6 +24,7 @@ public class StrongBoxCreateCommandHandler(
         {
             var created = await  strongBoxService.CreateAsync(
                 idCorte: request.Request.IdCorte,
+                idEds: request.Request.IdEds,
                 type: request.Request.Type?.Trim().ToUpperInvariant() ?? string.Empty,
                 ammount: request.Request.Ammount,
                 note: request.Request.Note,

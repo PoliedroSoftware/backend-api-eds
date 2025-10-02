@@ -16,6 +16,7 @@ public class StrongBoxService(IStrongBoxRepositoryGetLast _repoLast,
   
     public async Task<StrongBoxEntity> CreateAsync(
         long? idCorte,
+        int? idEds,
         string type,
         double ammount,
         string? note,
@@ -63,6 +64,7 @@ public class StrongBoxService(IStrongBoxRepositoryGetLast _repoLast,
         }
         var entity = new StrongBoxEntity(
             idCorte: idCorte,
+            idEds: idEds,
             type: normalType,      
             ammount: ammount,
             saldo: newBalance,

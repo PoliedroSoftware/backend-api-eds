@@ -11,6 +11,7 @@ public interface IStrongBoxService
 {
     Task<StrongBoxEntity> CreateAsync(
         long? idCorte,
+        int? idEds,
         string type,
         double ammount,
         string? note,

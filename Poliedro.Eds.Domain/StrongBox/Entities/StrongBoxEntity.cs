@@ -9,6 +9,7 @@ public class StrongBoxEntity : AuditableEntity
 {
     public long Id { get; set; }
     public long? IdCorte { get; set; }
+    public int? IdEds { get; set; }
     public string Type { get; set; } = null!;
     public double Ammount { get; set; }
     public double Saldo { get; set; }
@@ -18,6 +19,7 @@ public class StrongBoxEntity : AuditableEntity
 
     public StrongBoxEntity(
         long? idCorte,
+        int? idEds,
         string type,
         double ammount,
         double saldo,
@@ -40,6 +42,7 @@ public class StrongBoxEntity : AuditableEntity
         }
 
         IdCorte = idCorte;
+        IdEds = idEds;
         Type = type;
         Ammount = double.Round(ammount, 2);
         Saldo = double.Round(saldo, 2);
