@@ -10,6 +10,8 @@ public class StrongBoxDtoCreateRequest
 {
     public long? IdCorte { get; set; }
 
+    public int? IdEds { get; set; }
+
     public string Type { get; set; }
 
     public double Ammount { get; set; }

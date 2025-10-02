@@ -78,7 +78,8 @@ public class SendWhatsAppMessageCommandHandler(
                 court.CourtExpenditures!.Where(p => p != null).Select(async p =>
                 {
                     var gastosname = await getExpenditure.GetExpenditureIdAsync(p.IdExpenditures);
-                    return $"{gastosname}:$ {p.Amount.ToString("N0", SpanishCulture)}";
+                    var description = !string.IsNullOrWhiteSpace(p.Description) ? $" ({p.Description})" : "";
+                    return $"{gastosname}: $ {p.Amount.ToString("N0", SpanishCulture)}{description}";
                 })
             ));
 
@@ -90,7 +91,8 @@ public class SendWhatsAppMessageCommandHandler(
         court.CourtTypeOfCollections.Select(async p =>
         {
             var paymentMethodName = await getPaymentMethodName.GetPaymentMethodNameAsync(p.IdTypeOfCollection);
-            return $"{paymentMethodName}: $ {p.Amount.ToString("N0", SpanishCulture)}";
+            var description = !string.IsNullOrWhiteSpace(p.Description) ? $" ({p.Description})" : "";
+            return $"{paymentMethodName}: $ {p.Amount.ToString("N0", SpanishCulture)}{description}";
         })
          ));
 
@@ -121,8 +123,8 @@ public class SendWhatsAppMessageCommandHandler(
         // Obtener el nombre de la EDS
         var edsResult = await edsGetByIdService.GetByIdAsync(court.IdEds);
         var edsName = edsResult.IsSuccess && edsResult.Value != null 
-            ? edsResult.Value.Name 
-            : "EDS";
+            ? $"*{edsResult.Value.Name.ToUpper()}*"
+            : "*EDS*";
 
         //Mangueras y Dispensadores
 
@@ -223,39 +225,44 @@ public class SendWhatsAppMessageCommandHandler(
                 """ : string.Empty;
 
         // Construir el mensaje final
-        var message = $"""
-                📋 CORTE {edsName} FINALIZADO
+        var message = @$"📋 CORTE {edsName} FINALIZADO
 
-                👨‍💼 Islero: {isleroName}
+👨‍💼 Islero: {isleroName}
 
-                ⏰ Inicio Turno: {court.Starttime} {court.DateStarttime}
-                ⏰ Fin Turno: {court.Endtime} {court.DateEndtime}
-                
-                   {hoseDetailString}
-               
-                ══════════════
-                📊 RESUMEN TOTAL
-                ══════════════
+⏰ Inicio Turno
+Hora: {court.Starttime.ToString("h:mm tt", SpanishCulture).ToLower()}
+Fecha: {court.DateStarttime.ToString("d/M/yyyy", SpanishCulture)}
+⏰ Fin Turno
+Hora: {court.Endtime.ToString("h:mm tt", SpanishCulture).ToLower()}
+Fecha: {court.DateEndtime.ToString("d/M/yyyy", SpanishCulture)}
 
-                ⛽ Total Galones Vendidos: {FormatGallons(totalGallons)} gl
-                💰 Total Ventas: ${totalVentas.ToString("N0", SpanishCulture)}
-                📈 Total Utilidad Del Día: ${totalUtility.ToString("N0", SpanishCulture)}
-                {gastosSection}
-               
-                ══════════════
-                💳 MEDIOS DE PAGO
-                ══════════════
-                {paymentSummary}
+{hoseDetailString}
 
-                ══════════════
-                💼 RESUMEN FINANCIERO
-                ══════════════
-                💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo.ToString("N0", SpanishCulture)}
-                🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox.ToString("N0", SpanishCulture)}
-                {observacionesSection}
 
-                📎 Documentos Cargados: {court.CourtDocuments?.Count() ?? 0}
-                """;
+══════════════
+💳 MEDIOS DE PAGO
+══════════════
+{paymentSummary}
+
+{gastosSection}
+
+══════════════
+📊 RESUMEN TOTAL
+══════════════
+
+⛽ Total Galones Vendidos: {FormatGallons(totalGallons)} gl
+💰 Total Ventas: ${totalVentas.ToString("N0", SpanishCulture)}
+📈 Total Utilidad Del Día: ${totalUtility.ToString("N0", SpanishCulture)}
+
+
+══════════════
+💼 RESUMEN FINANCIERO
+══════════════
+💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo.ToString("N0", SpanishCulture)}
+🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox.ToString("N0", SpanishCulture)}
+{observacionesSection}
+
+📎 Documentos Cargados: {court.CourtDocuments?.Count() ?? 0}";
 
         // Enviar mensaje a cada número de teléfono
         foreach (var phoneNumber in phoneNumbersList)
