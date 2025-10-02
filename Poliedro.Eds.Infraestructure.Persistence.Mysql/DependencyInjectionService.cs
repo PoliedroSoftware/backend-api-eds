@@ -220,7 +220,8 @@ public static class DependencyInjectionService
         services.AddScoped<IStrongBoxService, StrongBoxService>();
         services.AddScoped<IStrongBoxRepositoryGetById, StrongBoxGetByIdService>();
         services.AddScoped<IStrongBoxRepositoryGetAll, StrongBoxGetAllService>();
-        
+        services.AddScoped<IStrongBoxRepositoryGetByEds, StrongBoxGetByEdsService>();
+
         return services;
     }
 }
