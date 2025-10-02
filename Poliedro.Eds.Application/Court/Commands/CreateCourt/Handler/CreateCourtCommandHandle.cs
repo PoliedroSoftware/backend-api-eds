@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
@@ -25,13 +26,15 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         IGetTypeOfCollectionId getTypeOfCollectionId,
         ICourtTransactionalService courtTransactionalService,
         ILogger<CreateCourtCommandHandle> logger,
-        IMediator mediator
+        IMediator mediator,
+        IHttpContextAccessor httpContextAccessor
         ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
         {
             try
             {
+                var currentUser = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
                 logger.LogInformation("=== INICIANDO PROCESO DE CREACIÓN DE CORTE ===");
                 
                 // 1. Validaciones iniciales y cálculos

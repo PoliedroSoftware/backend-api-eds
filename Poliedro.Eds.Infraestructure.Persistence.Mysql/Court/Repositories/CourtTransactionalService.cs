@@ -10,6 +10,8 @@ using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
+using Poliedro.Eds.Domain.Hose.DomainHose;
+using Poliedro.Eds.Domain.Product.DomainProduct;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
@@ -20,7 +22,12 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
         ILogger<CourtTransactionalService> logger,
         IRedisService redisService,
         IDomainEventDispatcher domainEventDispatcher,
-        IHttpContextAccessor httpContextAccessor) : ICourtTransactionalService
+        IHttpContextAccessor httpContextAccessor,
+        ICourtDomainService courtDomainService,
+        IHoseUpdateHose hoseUpdateService,
+        IHoseGetByIdHose hoseGetByIdService,
+        IProductUpdateProduct productUpdateService,
+        IProductGetByIdProduct productGetByIdService) : ICourtTransactionalService
     {
         public async Task<Result<CourtEntity, Error>> ExecuteCourtTransactionAsync(
             CourtEntity courtEntity,
@@ -39,20 +46,19 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     courtEntity.CourtExpenditures?.Count() ?? 0,
                     courtEntity.CourtTypeOfCollections.Count());
 
-                // 1. Crear el corte
-                await context.Court.AddAsync(courtEntity, cancellationToken);
-                var courtSaveResult = await context.SaveChangesAsync(cancellationToken) > 0;
-                if (!courtSaveResult)
+                // 1. Crear el corte usando domain service
+                var courtSaveResult = await courtDomainService.CreateAsync(courtEntity);
+                if (!courtSaveResult.IsSuccess)
                 {
                     await transaction.RollbackAsync(cancellationToken);
                     logger.LogError("❌ ERROR: Falló la creación del corte");
-                    return CourtErrorBuilder.CourtCreationException();
+                    return Result<CourtEntity, Error>.Failure(courtSaveResult.Error!);
                 }
                 logger.LogInformation("✅ Corte creado exitosamente");
 
-                // 2. Actualizar hoses con los valores acumulados del corte
-                var hoseUpdateResult = await UpdateHoseAccumulatedValuesAsync(
-                    context, courtEntity.CourtDispensers, cancellationToken);
+                // 2. Actualizar hoses con los valores acumulados del corte usando domain service
+                var hoseUpdateResult = await UpdateHoseAccumulatedValuesWithDomainServiceAsync(
+                    courtEntity.CourtDispensers, cancellationToken);
                 
                 if (!hoseUpdateResult.IsSuccess)
                 {
@@ -63,11 +69,11 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 }
                 logger.LogInformation("✅ Mangueras actualizadas exitosamente");
 
-                // 3. Actualizar inventario de productos (reducir stock)
+                // 3. Actualizar inventario de productos (reducir stock) usando domain service
                 if (courtDispenserSaleEntities.Any())
                 {
-                    var inventoryUpdateResult = await UpdateProductInventoryAsync(
-                        context, courtDispenserSaleEntities, cancellationToken);
+                    var inventoryUpdateResult = await UpdateProductInventoryWithDomainServiceAsync(
+                        courtDispenserSaleEntities, cancellationToken);
                     
                     if (!inventoryUpdateResult.IsSuccess)
                     {
@@ -131,9 +137,9 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
             {
                 logger.LogInformation("=== INICIANDO TRANSACCIÓN COMPLETA DEL CORTE ===");
 
-                // 1. Validar y actualizar precios de productos
-                var priceValidationResult = await ValidateAndUpdateProductPricesWithinTransactionAsync(
-                    context, courtDispensers, cancellationToken);
+                // 1. Validar y actualizar precios de productos usando domain service
+                var priceValidationResult = await ValidateAndUpdateProductPricesWithDomainServiceAsync(
+                    courtDispensers, cancellationToken);
 
                 if (!priceValidationResult.IsSuccess)
                 {
@@ -144,20 +150,19 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 }
                 logger.LogInformation("✅ Precios validados y actualizados");
 
-                // 2. Crear el corte
-                await context.Court.AddAsync(courtEntity, cancellationToken);
-                var courtSaveResult = await context.SaveChangesAsync(cancellationToken) > 0;
-                if (!courtSaveResult)
+                // 2. Crear el corte usando domain service
+                var courtSaveResult = await courtDomainService.CreateAsync(courtEntity);
+                if (!courtSaveResult.IsSuccess)
                 {
                     await transaction.RollbackAsync(cancellationToken);
                     logger.LogError("❌ ERROR: Falló la creación del corte");
-                    return CourtErrorBuilder.CourtCreationException();
+                    return Result<CourtEntity, Error>.Failure(courtSaveResult.Error!);
                 }
                 logger.LogInformation("✅ Corte creado exitosamente");
 
-                // 3. Actualizar hoses con los valores acumulados del corte
-                var hoseUpdateResult = await UpdateHoseAccumulatedValuesAsync(
-                    context, courtEntity.CourtDispensers, cancellationToken);
+                // 3. Actualizar hoses con los valores acumulados del corte usando domain service
+                var hoseUpdateResult = await UpdateHoseAccumulatedValuesWithDomainServiceAsync(
+                    courtEntity.CourtDispensers, cancellationToken);
                 
                 if (!hoseUpdateResult.IsSuccess)
                 {
@@ -168,11 +173,11 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 }
                 logger.LogInformation("✅ Mangueras actualizadas exitosamente");
 
-                // 4. Actualizar inventario de productos (reducir stock)
+                // 4. Actualizar inventario de productos (reducir stock) usando domain service
                 if (courtDispenserSaleEntities.Any())
                 {
-                    var inventoryUpdateResult = await UpdateProductInventoryAsync(
-                        context, courtDispenserSaleEntities, cancellationToken);
+                    var inventoryUpdateResult = await UpdateProductInventoryWithDomainServiceAsync(
+                        courtDispenserSaleEntities, cancellationToken);
                     
                     if (!inventoryUpdateResult.IsSuccess)
                     {
@@ -224,10 +229,9 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
         }
 
         /// <summary>
-        /// Actualiza los valores acumulados de las mangueras con los datos del corte
+        /// Actualiza los valores acumulados de las mangueras con los datos del corte usando domain services
         /// </summary>
-        private async Task<Result<VoidResult, Error>> UpdateHoseAccumulatedValuesAsync(
-            DataBaseContext context,
+        private async Task<Result<VoidResult, Error>> UpdateHoseAccumulatedValuesWithDomainServiceAsync(
             IEnumerable<CourtDispenserEntity> courtDispensers,
             CancellationToken cancellationToken)
         {
@@ -237,16 +241,15 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
 
                 foreach (var courtDispenser in courtDispensers)
                 {
-                    // Obtener la manguera actual desde el contexto de la transacción
-                    var hose = await context.Hose
-                        .FirstOrDefaultAsync(h => h.IdHose == courtDispenser.IdHose, cancellationToken);
-
-                    if (hose == null)
+                    // Obtener la manguera actual usando domain service
+                    var hoseResult = await hoseGetByIdService.GetByIdAsync(courtDispenser.IdHose);
+                    if (!hoseResult.IsSuccess)
                     {
                         return Error.BadRequest("HoseNotFound", 
                             $"No se encontró la manguera con Id {courtDispenser.IdHose}");
                     }
 
+                    var hose = hoseResult.Value!;
                     var oldAmount = hose.AccumulatedAmount;
                     var oldGallons = hose.AccumulatedGallons;
 
@@ -254,21 +257,15 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     hose.AccumulatedAmount = courtDispenser.AccumulatedAmount;
                     hose.AccumulatedGallons = courtDispenser.AccumulatedGallons;
                     
-                    context.Hose.Update(hose);
+                    // Usar domain service para actualizar
+                    var updateResult = await hoseUpdateService.UpdateAsync(hose);
+                    if (!updateResult.IsSuccess)
+                    {
+                        return updateResult.Error!;
+                    }
 
                     hoseUpdates.Add((hose.IdHose, oldAmount, courtDispenser.AccumulatedAmount, 
                         oldGallons, courtDispenser.AccumulatedGallons));
-                }
-
-                // Guardar cambios de mangueras
-                if (hoseUpdates.Any())
-                {
-                    var hosesSaveResult = await context.SaveChangesAsync(cancellationToken) > 0;
-                    if (!hosesSaveResult)
-                    {
-                        return Error.Internal("HoseUpdateError", 
-                            "Error al guardar los cambios en las mangueras");
-                    }
                 }
 
                 // Log de auditoría de mangueras actualizadas
@@ -294,8 +291,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
             }
         }
 
-        private async Task<Result<VoidResult, Error>> ValidateAndUpdateProductPricesWithinTransactionAsync(
-            DataBaseContext context,
+        private async Task<Result<VoidResult, Error>> ValidateAndUpdateProductPricesWithDomainServiceAsync(
             IEnumerable<CourtDispenserTransactionData> courtDispensers,
             CancellationToken cancellationToken)
         {
@@ -321,38 +317,31 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     var productAndCompartiment = await getProductAndCompartiment
                         .GetProductAndCompartimentAsync(dispenser.IdHose);
 
-                    // Obtener el producto actual desde el contexto de la transacción
-                    var product = await context.Product
-                        .FirstOrDefaultAsync(p => p.IdProduct == productAndCompartiment.IdProduct, cancellationToken);
-
-                    if (product == null)
+                    // Obtener el producto actual usando domain service
+                    var productResult = await productGetByIdService.GetByIdAsync(productAndCompartiment.IdProduct);
+                    if (!productResult.IsSuccess)
                     {
                         return Error.BadRequest("ProductNotFound", 
                             $"No se encontró el producto con Id {productAndCompartiment.IdProduct}");
                     }
 
+                    var product = productResult.Value!;
                     var currentSellPrice = product.SellPrice ?? 0;
 
                     // Validar si el precio es diferente (usando tolerancia para comparación de decimales)
                     if (Math.Abs(currentSellPrice - courtPrice) > 0.01)
                     {
-                        // Actualizar el precio del producto dentro de la transacción
+                        // Actualizar el precio del producto usando domain service
                         var previousPrice = product.SellPrice;
                         product.SellPrice = courtPrice;
-                        context.Product.Update(product);
+                        
+                        var updateResult = await productUpdateService.UpdateAsync(product);
+                        if (!updateResult.IsSuccess)
+                        {
+                            return updateResult.Error!;
+                        }
 
                         priceUpdates.Add((product.IdProduct, currentSellPrice, courtPrice, product.Name));
-                    }
-                }
-
-                // Guardar cambios de precios
-                if (priceUpdates.Any())
-                {
-                    var pricesSaveResult = await context.SaveChangesAsync(cancellationToken) > 0;
-                    if (!pricesSaveResult)
-                    {
-                        return Error.Internal("PriceUpdateError", 
-                            "Error al guardar los cambios de precios");
                     }
                 }
 
@@ -383,49 +372,47 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
             }
         }
 
-        private async Task<Result<VoidResult, Error>> UpdateProductInventoryAsync(
-            DataBaseContext context,
+        private async Task<Result<VoidResult, Error>> UpdateProductInventoryWithDomainServiceAsync(
             IEnumerable<CourtDispenserSaleEntity> courtDispensers,
             CancellationToken cancellationToken)
         {
             foreach (var dispenser in courtDispensers)
             {
-                // Obtener el producto
-                var product = await context.Product
-                    .FirstOrDefaultAsync(p => p.IdProduct == dispenser.IdProduct, cancellationToken);
-
-                if (product == null)
+                // Obtener el producto usando domain service
+                var productResult = await productGetByIdService.GetByIdAsync(dispenser.IdProduct);
+                if (!productResult.IsSuccess)
                 {
                     return Error.BadRequest("ProductNotFound", 
                         $"No se encontró el producto con Id {dispenser.IdProduct}");
                 }
 
+                var product = productResult.Value!;
+
                 // Validar que hay suficiente stock
                 var nuevoStock = product.Stock - dispenser.GallonsDifferenceResult;
-                if (nuevoStock < 0)
-                {
-                    return Error.BadRequest("InsufficientStock",
-                        $"Stock insuficiente para el producto {dispenser.IdProduct}. " +
-                        $"Stock actual: {product.Stock}, Cantidad solicitada: {dispenser.GallonsDifferenceResult}");
-                }
+                //if (nuevoStock < 0)
+                //{
+                //    return Error.BadRequest("InsufficientStock",
+                //        $"Stock insuficiente para el producto {dispenser.IdProduct}. " +
+                //        $"Stock actual: {product.Stock}, Cantidad solicitada: {dispenser.GallonsDifferenceResult}");
+                //}
 
                 // Actualizar el stock
+                var oldStock = product.Stock;
                 product.Stock = nuevoStock;
-                context.Product.Update(product);
+                
+                // Usar domain service para actualizar
+                var updateResult = await productUpdateService.UpdateAsync(product);
+                if (!updateResult.IsSuccess)
+                {
+                    return updateResult.Error!;
+                }
 
                 logger.LogInformation("📦 Stock actualizado para producto {ProductId}: {OldStock} -> {NewStock} (Vendidos: {SoldGallons} gal)",
                     product.IdProduct,
-                    product.Stock + dispenser.GallonsDifferenceResult,
+                    oldStock,
                     product.Stock,
                     dispenser.GallonsDifferenceResult);
-            }
-
-            // Guardar cambios de inventario
-            var stockSaveResult = await context.SaveChangesAsync(cancellationToken) > 0;
-            if (!stockSaveResult)
-            {
-                return Error.Internal("InventoryUpdateError", 
-                    "Error al actualizar el inventario de productos");
             }
 
             return Result<VoidResult, Error>.Success(VoidResult.Instance);
