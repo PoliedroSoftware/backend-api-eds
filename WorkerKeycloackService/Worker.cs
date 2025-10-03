@@ -59,7 +59,7 @@ namespace WorkerKeycloackService
                     }
                     else
                     {
-                        _logger.LogError($"Error creando usuario: {resultService.Error}");
+                        _logger.LogError($"Error creando usuario {islanderDto.Email}: {resultService.Error}");
                         channel.BasicNack(result.DeliveryTag, false, requeue: true);
                     }
                 }

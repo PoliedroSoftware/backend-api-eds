@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
@@ -14,6 +15,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<KeycloakService> _logger;
 
         public KeycloakService(HttpClient httpClient, IConfiguration configuration)
         {
@@ -67,6 +69,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorMsg = await response.Content.ReadAsStringAsync();
+                    _logger.LogError($"[Keycloak] Status: {response.StatusCode}, Error: {errorMsg}");
                     return Error.Conflict("Keycloak", $"Error creating user: {errorMsg}");
                 }
 
@@ -159,7 +162,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
             var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("grant_type", "client_credentials"),
-                new KeyValuePair<string, string>("client_id","eds-backend-service"),
+                new KeyValuePair<string, string>("client_id", "eds-backend-service"),
                 new KeyValuePair<string, string>("client_secret", "sZxDY46BQ9IasIZc0Tk01LSGkjb4Dytr")
             });
 
