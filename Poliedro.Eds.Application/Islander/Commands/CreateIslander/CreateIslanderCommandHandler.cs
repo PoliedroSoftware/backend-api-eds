@@ -33,19 +33,16 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 return Result<VoidResult, Error>.Failure(
                     Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
-            var islanderEntity = mapper.Map<IslanderEntity>(request.Request);
+            IslanderEntity islanderEntity = mapper.Map<IslanderEntity>(request.Request);
 
-            var nameClaimToken = request.NameClaimToken;
+            Console.WriteLine($"nombre del clain del token: {request.NameClaimToken}");
 
-            Console.WriteLine($"nombre del clain del token: {nameClaimToken}");
-
-            var originalPassword = islanderEntity.Password;
+            string originalPassword = islanderEntity.Password;
 
             islanderEntity.Password = BCrypt.Net.BCrypt.HashPassword(islanderEntity.Password);
 
             var result = await islanderDomainIslander.CreateAsync(islanderEntity);
             
-            // Usar el nuevo sistema de invalidación distribuida
             await RedisHelper.InvalidateDistributedCacheAsync(
                 result, 
                 redisService, 
@@ -71,7 +68,7 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 islanderEntity.FirstName,
                 islanderEntity.LastName,
                 Password = originalPassword,
-                
+                request.NameClaimToken,
             };
 
             var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));

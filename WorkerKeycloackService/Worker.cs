@@ -68,7 +68,7 @@ namespace WorkerKeycloackService
                     _logger.LogInformation("No hay mensajes en la cola.");
                 }
 
-                await Task.Delay(5000, stoppingToken);
+                await Task.Delay(30000, stoppingToken);
             }
 
             _logger.LogInformation("Worker detenido.");
