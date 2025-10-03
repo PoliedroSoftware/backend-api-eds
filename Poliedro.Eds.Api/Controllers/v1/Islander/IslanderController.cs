@@ -65,12 +65,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         public async Task<IResult> Create([FromBody] CreateIslanderCommand createIslanderCommand)
 
         {
-            var nameClaimToken = HttpContext.User.FindFirst("name")?.Value;
-
-            var command = new CreateIslanderCommand(createIslanderCommand.Request, nameClaimToken);
-
-            Console.WriteLine($"nombre del token: {nameClaimToken}");
-
+            var command = new CreateIslanderCommand(createIslanderCommand.Request, createIslanderCommand.NameClaimToken);
             var result = await mediator.Send(command);
             return result.Match(
                  onSuccess => TypedResults.Created()
