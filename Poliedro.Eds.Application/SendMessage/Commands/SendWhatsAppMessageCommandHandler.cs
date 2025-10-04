@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetTotalBalance;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
@@ -21,7 +22,8 @@ public class SendWhatsAppMessageCommandHandler(
     IGetProductAndCompartiment getProductAndCompartiment,
     IProductGetByIdProduct getProductById,
     IMediator mediator,
-    IEdsGetByIdService edsGetByIdService
+    IEdsGetByIdService edsGetByIdService,
+    IHttpContextAccessor httpContextAccessor
     ) : IRequestHandler<SendWhatsAppMessageCommand, Unit>
 {
     // Cultura española para usar coma como separador decimal
@@ -57,6 +59,9 @@ public class SendWhatsAppMessageCommandHandler(
 
     public async Task<Unit> Handle(SendWhatsAppMessageCommand request, CancellationToken cancellationToken)
     {
+        // Obtener el usuario de sesión
+        var currentUser = httpContextAccessor.HttpContext?.Items["identifiername"]?.ToString() ?? "Sistema";
+        
         var court = request.Court;
 
         // Obtener todos los números de teléfono usando el servicio IPhoneGetAllService
@@ -224,8 +229,8 @@ public class SendWhatsAppMessageCommandHandler(
                 {court.Descripcion}
                 """ : string.Empty;
 
-        // Construir el mensaje final
-        var message = @$"📋 CORTE {edsName} FINALIZADO
+        // Construir el mensaje final con el usuario generador
+        var message = @$"📋 CORTE {edsName}
 
 👨‍💼 Islero: {isleroName}
 
@@ -262,7 +267,9 @@ Fecha: {court.DateEndtime.ToString("d/M/yyyy", SpanishCulture)}
 🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox.ToString("N0", SpanishCulture)}
 {observacionesSection}
 
-📎 Documentos Cargados: {court.CourtDocuments?.Count() ?? 0}";
+📎 Documentos Cargados: {court.CourtDocuments?.Count() ?? 0}
+
+👤 Generado por: {currentUser}";
 
         // Enviar mensaje a cada número de teléfono
         foreach (var phoneNumber in phoneNumbersList)
