@@ -14,11 +14,16 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly IIslanderCreateIslander _islanderDomainIslander;
 
-        public KeycloakService(HttpClient httpClient, IConfiguration configuration)
+        public KeycloakService(
+            HttpClient httpClient,
+            IConfiguration configuration,
+            IIslanderCreateIslander islanderDomainIslander)
         {
             _httpClient = httpClient;
             _configuration = configuration;
+            _islanderDomainIslander = islanderDomainIslander;
         }
 
         public async Task<Result<VoidResult, Error>> CreateUserAsync(IslanderEntity islander, string plainPassword, string? nameClaimToken)
@@ -144,6 +149,11 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
                     Console.WriteLine(errorText);
 
                     return Error.Conflict("Keycloak", $"Error assigning user to sub-group: {errorText}");
+                }
+                if (assignResponse.IsSuccessStatusCode)
+                {
+
+                    await _islanderDomainIslander.CreateAsync(islander);
                 }
 
                 return VoidResult.Instance;
