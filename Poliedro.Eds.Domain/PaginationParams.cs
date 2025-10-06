@@ -1,4 +1,4 @@
-namespace Poliedro.Eds.Domain.Common.Pagination;
+namespace Poliedro.Eds.Domain;
 
 public class PaginationParams
 {

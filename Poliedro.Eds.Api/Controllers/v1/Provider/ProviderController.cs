@@ -11,7 +11,7 @@ using Poliedro.Eds.Application.Provider.Dtos;
 using Poliedro.Eds.Application.Provider.Errors;
 using Poliedro.Eds.Application.Provider.Queries.GellAllProvider;
 using Poliedro.Eds.Application.Provider.Queries.GetProviderById;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Poliedro.Eds.Api.Controllers.v1.Provider;

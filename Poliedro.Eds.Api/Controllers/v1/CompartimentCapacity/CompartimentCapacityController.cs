@@ -9,7 +9,7 @@ using Poliedro.Eds.Application.CompartimentCapacity.Dtos;
 using Poliedro.Eds.Application.CompartimentCapacity.Errors;
 using Poliedro.Eds.Application.CompartimentCapacity.Queries.GellAllCompartimentCapacity;
 using Poliedro.Eds.Application.CompartimentCapacity.Queries.GetCompartimentCapacityById;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Poliedro.Eds.Api.Controllers.v1.Islender
