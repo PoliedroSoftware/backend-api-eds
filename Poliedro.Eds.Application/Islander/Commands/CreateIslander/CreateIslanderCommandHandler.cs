@@ -40,8 +40,7 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
             string originalPassword = islanderEntity.Password;
 
             islanderEntity.Password = BCrypt.Net.BCrypt.HashPassword(islanderEntity.Password);
-
-                "create",   
+   
             using var channel = rabbitConnection.CreateModel();
             channel.ExchangeDeclare("keycloak_exchange", ExchangeType.Direct);
             channel.QueueDeclare("keycloak", true, false, false, null);
