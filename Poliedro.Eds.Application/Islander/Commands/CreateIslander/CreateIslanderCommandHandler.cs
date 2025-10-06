@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
+using Poliedro.Eds.Application.Islander.Dtos;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Events;
 using Poliedro.Eds.Domain.Common.Results;
@@ -60,15 +61,15 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
             channel.QueueDeclare("keycloak", true, false, false, null);
             channel.QueueBind("keycloak", "keycloak_exchange", "keycloak");
 
-            var message = new
+            var message = new IslanderMessageDto
             {
-                islanderEntity.IdEds,
-                islanderEntity.Name,
-                islanderEntity.Email,
-                islanderEntity.FirstName,
-                islanderEntity.LastName,
-                Password = originalPassword,
-                request.NameClaimToken,
+                IdEds = islanderEntity.IdEds,
+                User = islanderEntity.Name,
+                Email = islanderEntity.Email,
+                FirstName = islanderEntity.FirstName,
+                LastName = islanderEntity.LastName,
+                Password = islanderEntity.Password,
+                NameClaimToken = request.NameClaimToken
             };
 
             var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));

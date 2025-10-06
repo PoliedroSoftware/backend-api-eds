@@ -37,10 +37,10 @@ namespace WorkerKeycloackService
                     var message = Encoding.UTF8.GetString(result.Body.ToArray());
                     _logger.LogInformation($"Mensaje recibido: {message}");
 
-                    var islanderDto = JsonSerializer.Deserialize<IslanderDto>(message);
+                    var islanderDto = JsonSerializer.Deserialize<IslanderMessageDto>(message);
                     var islanderEntity = new IslanderEntity
                     {
-                        Name = islanderDto.Name,
+                        Name = islanderDto.User,
                         Email = islanderDto.Email,
                         FirstName = islanderDto.FirstName,
                         LastName = islanderDto.LastName,
@@ -67,7 +67,7 @@ namespace WorkerKeycloackService
                 {
                     _logger.LogInformation("No hay mensajes en la cola.");
                 }
-
+                var delay = _configuration.GetValue<int>("worker:PollingInterval", 30000);
                 await Task.Delay(30000, stoppingToken);
             }
 

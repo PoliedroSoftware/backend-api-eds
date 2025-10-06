@@ -8,29 +8,51 @@ public class CreateIslanderCommandValidator : AbstractValidator<CreateIslanderRe
 {
     public CreateIslanderCommandValidator(IRedisService redisService)
     {
+        var messages = LoadMessages(redisService).GetAwaiter().GetResult();
+
         RuleFor(x => x.Name)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("NameNotNull").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("NameNotEmpty").GetAwaiter().GetResult());
+            .NotNull().WithMessage(messages["NameNotNull"])
+            .NotEmpty().WithMessage(messages["NameNotEmpty"]);
 
         RuleFor(x => x.IdEds)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("IdEdsNotNull").GetAwaiter().GetResult())
-            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdEdsNotEmpty").GetAwaiter().GetResult());
+            .NotNull().WithMessage(messages["IdEdsNotNull"])
+            .GreaterThan(0).WithMessage(messages["IdEdsNotEmpty"]);
 
         RuleFor(x => x.Password)
-           .NotNull().WithMessage(redisService.GetValueFromCacheAsync("PasswordNotNull").GetAwaiter().GetResult())
-           .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("PasswordNotEmpty").GetAwaiter().GetResult());
+            .NotNull().WithMessage(messages["PasswordNotNull"])
+            .NotEmpty().WithMessage(messages["PasswordNotEmpty"]);
 
         RuleFor(x => x.Email)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("EmailNotNull").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("EmailNotEmpty").GetAwaiter().GetResult());
+            .NotNull().WithMessage(messages["EmailNotNull"])
+            .NotEmpty().WithMessage(messages["EmailNotEmpty"]);
 
         RuleFor(x => x.FirstName)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("FirstNameNotNull").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("FirstNameNotEmpty").GetAwaiter().GetResult());
+            .NotNull().WithMessage(messages["FirstNameNotNull"])
+            .NotEmpty().WithMessage(messages["FirstNameNotEmpty"]);
 
         RuleFor(x => x.LastName)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("LastNameNotNull").GetAwaiter().GetResult())
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("LastNameNotEmpty").GetAwaiter().GetResult());
+            .NotNull().WithMessage(messages["LastNameNotNull"])
+            .NotEmpty().WithMessage(messages["LastNameNotEmpty"]);
 
+    }
+
+    private async Task<Dictionary<string, string>> LoadMessages(IRedisService redis)
+    {
+        var keys = new[]
+        {
+            "NameNotNull", "NameNotEmpty",
+            "IdEdsNotNull", "IdEdsNotEmpty",
+            "PasswordNotNull", "PasswordNotEmpty",
+            "EmailNotNull", "EmailNotEmpty",
+            "FirstNameNotNull", "FirstNameNotEmpty",
+            "LastNameNotNull", "LastNameNotEmpty"
+        };
+
+        var result = new Dictionary<string, string>();
+        foreach (var key in keys)
+        {
+            result[key] = await redis.GetValueFromCacheAsync(key) ?? $"Mensaje {key} perdido!!";
+        }
+        return result;
     }
 }
