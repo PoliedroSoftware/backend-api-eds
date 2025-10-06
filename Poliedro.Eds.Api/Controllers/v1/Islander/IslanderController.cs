@@ -66,10 +66,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
 
         {
             var command = new CreateIslanderCommand(createIslanderCommand.Request, createIslanderCommand.NameClaimToken);
-            var result = await mediator.Send(command);
-            return result.Match(
-                 onSuccess => TypedResults.Created()
-             );
+            return (IResult)Ok( await mediator.Send(command));
         }
 
         [SwaggerOperation(Summary = "Update an existing Islander")]
