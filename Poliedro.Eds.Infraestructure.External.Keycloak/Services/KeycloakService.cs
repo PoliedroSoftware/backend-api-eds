@@ -152,6 +152,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
                 }
                 if (assignResponse.IsSuccessStatusCode)
                 {
+
                     await _islanderDomainIslander.CreateAsync(islander);
                 }
 
