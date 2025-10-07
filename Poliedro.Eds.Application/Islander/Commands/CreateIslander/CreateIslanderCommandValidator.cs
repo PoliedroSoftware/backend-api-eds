@@ -24,7 +24,8 @@ public class CreateIslanderCommandValidator : AbstractValidator<CreateIslanderRe
 
         RuleFor(x => x.Email)
             .NotNull().WithMessage(messages["EmailNotNull"])
-            .NotEmpty().WithMessage(messages["EmailNotEmpty"]);
+            .NotEmpty().WithMessage(messages["EmailNotEmpty"])
+            .EmailAddress().WithMessage("EmailInvalid");
 
         RuleFor(x => x.FirstName)
             .NotNull().WithMessage(messages["FirstNameNotNull"])
@@ -43,7 +44,7 @@ public class CreateIslanderCommandValidator : AbstractValidator<CreateIslanderRe
             "NameNotNull", "NameNotEmpty",
             "IdEdsNotNull", "IdEdsNotEmpty",
             "PasswordNotNull", "PasswordNotEmpty",
-            "EmailNotNull", "EmailNotEmpty",
+            "EmailNotNull", "EmailNotEmpty", "EmailInvalid",
             "FirstNameNotNull", "FirstNameNotEmpty",
             "LastNameNotNull", "LastNameNotEmpty"
         };

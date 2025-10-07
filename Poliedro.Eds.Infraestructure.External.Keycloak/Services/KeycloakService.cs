@@ -2,11 +2,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Islander.Entities;
+using Poliedro.Eds.Infraestructure;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 {
@@ -153,8 +156,30 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
                 if (assignResponse.IsSuccessStatusCode)
                 {
 
-                    await _islanderDomainIslander.CreateAsync(islander);
+                    try
+                    {
+                        var tenantSchema = $"eds_{islander.IdEds}";
+
+                        var baseConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION")
+                            ?? _configuration["ConnectionStrings:MysqlConnection"];
+                        var tenantConnection = baseConnectionString.Replace("{schema}", tenantSchema);
+
+                        var optionsBuilder = new DbContextOptionsBuilder<DataBaseContext>();
+                        optionsBuilder.UseMySql(tenantConnection, ServerVersion.AutoDetect(tenantConnection));
+                        using var db = new DataBaseContext(optionsBuilder.Options);
+
+                        db.Add(islander);
+                        await db.SaveChangesAsync();
+
+                        Console.WriteLine($"Usuario guardado en BD del tenant {tenantSchema}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error creando usuario en BD: {ex.Message}");
+                        return Error.Internal("Database", ex.Message);
+                    }
                 }
+
 
                 return VoidResult.Instance;
             }
