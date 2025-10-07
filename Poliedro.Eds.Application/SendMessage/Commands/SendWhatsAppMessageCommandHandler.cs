@@ -189,7 +189,7 @@ public class SendWhatsAppMessageCommandHandler(
                 .Select(h =>
                 {
                     // Agregar nota informativa si el stock es negativo
-                    var stockNote = h.Stock < 0 ? " ᶠᵃˡᵗᵃ ᵃᵍʳᵉᵍᵃʳ ᶜᵒᵐᵖʳᵃˢ ᵈᵉ ᵉˢᵗᵉ ᵖʳᵒᵈᵘᶜᵗᵒ" : "";
+                    var stockNote = h.Stock < 0 ? "\n            (    falta agregar la compra de este producto)" : "";
                     
                     return $"""
 
