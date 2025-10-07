@@ -187,7 +187,11 @@ public class SendWhatsAppMessageCommandHandler(
             var mangueras = string.Join("\n", group
                 .OrderBy(h => h.Hose)
                 .Select(h =>
-                    $"""
+                {
+                    // Agregar nota informativa si el stock es negativo
+                    var stockNote = h.Stock < 0 ? " ᶠᵃˡᵗᵃ ᵃᵍʳᵉᵍᵃʳ ᶜᵒᵐᵖʳᵃˢ ᵈᵉ ᵉˢᵗᵉ ᵖʳᵒᵈᵘᶜᵗᵒ" : "";
+                    
+                    return $"""
 
             🔧 Manguera: {h.Hose}
             🛢️ Producto: {h.ProductName}
@@ -195,8 +199,9 @@ public class SendWhatsAppMessageCommandHandler(
             📊 Venta En Galones: {FormatGallons(h.Gallons)} gl
             💰 Precio por Galón: ${h.SellPrice.ToString("N0", SpanishCulture)}
             📈 Utilidad: ${h.Utility.ToString("N0", SpanishCulture)}
-            📦 Stock Actual: {FormatGallons(h.Stock)} gl
-            """));
+            📦 Stock Actual: {FormatGallons(h.Stock)} gl{stockNote}
+            """;
+                }));
 
             return $"""
 
