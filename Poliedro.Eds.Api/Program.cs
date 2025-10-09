@@ -18,7 +18,10 @@ using Poliedro.Eds.Api.Middlelware.Jwt;
 using Poliedro.Eds.Api.Middlelware.NameIdentifier;
 using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
+using Poliedro.Eds.Application.Account.Commands.CreateAccount;
+using Poliedro.Eds.Application.Account.Queries.GetAllAccounts;
 using Poliedro.Eds.Application.Bank.Commands;
+using Poliedro.Eds.Application.Bank.Querys.BankGetAll;
 using Poliedro.Eds.Application.Bank.Validation;
 using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 using Poliedro.Eds.Application.Common.Behaviors;
@@ -267,12 +270,15 @@ builder.Services.AddScoped<IBankService, BankService>();
 builder.Services.AddScoped<IBankRepositoryCreate, BankCreateService>();
 builder.Services.AddScoped<IBankRepositoryGetLast, BankGetLastService>();
 builder.Services.AddScoped<IBankRepositoryGetById, BankGetByIdService>();
+builder.Services.AddScoped<IBankRepositoryGetAll, BankGetAllService>();
 
 // Validators Bank
 builder.Services.AddScoped<BankCreateValidator>();
 
 // Account services  
 builder.Services.AddScoped<IAccountGetAllService, AccountGetAllService>();
+builder.Services.AddScoped<IAccountCreateService, AccountCreateService>();
+builder.Services.AddScoped<IAccountGetByIdService, AccountGetByIdService>();
 
 //Configura Tolgee
 builder.Services.AddScoped<ITolgeeService, TolgeeService>();
@@ -294,6 +300,9 @@ builder.Services.AddHttpClient(nameof(TolgeeService), client =>
 builder.Services.AddHttpClient<ISendMessage, WhatsAppService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SendWhatsAppMessageCommand>());
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<BankCreateCommand>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<BankGetAllQuery>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateAccountCommand>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAllAccountsQuery>());
 builder.Services.AddControllers();
 AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 

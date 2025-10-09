@@ -2,7 +2,7 @@ using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Application.Account.Dtos;
 
-public class AccountDto : AuditableEntity
+public class AccountDto
 {
     public int IdAccount { get; set; }
     public string AccountType { get; set; } = null!;
