@@ -1,5 +1,5 @@
 using MediatR;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using Poliedro.Eds.Domain.Inventory.Dto.View;
 
 namespace Poliedro.Eds.Application.Inventory.Queries.GetInventoryList;

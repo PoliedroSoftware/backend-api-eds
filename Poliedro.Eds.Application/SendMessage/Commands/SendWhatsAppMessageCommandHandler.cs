@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetTotalBalance;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Hose.DomainHose;

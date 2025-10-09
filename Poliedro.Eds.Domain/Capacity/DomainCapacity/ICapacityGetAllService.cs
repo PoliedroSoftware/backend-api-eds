@@ -1,5 +1,5 @@
 using Poliedro.Eds.Domain.Capacity.Entities;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 
 namespace Poliedro.Eds.Domain.Capacity.DomainCapacity;
 

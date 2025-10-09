@@ -1,7 +1,7 @@
 using AutoMapper;
 using Poliedro.Eds.Application.Capacity.Dtos;
 using Poliedro.Eds.Domain.Capacity.Entities;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 
 namespace Poliedro.Eds.Application.Capacity.AutoMappers;
 

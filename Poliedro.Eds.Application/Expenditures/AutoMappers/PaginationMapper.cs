@@ -1,6 +1,6 @@
 using AutoMapper;
 using Poliedro.Eds.Application.Expenditures.Dtos;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using Poliedro.Eds.Domain.Expenditures.Entities;
 
 namespace Poliedro.Eds.Application.Expenditures.AutoMappers;

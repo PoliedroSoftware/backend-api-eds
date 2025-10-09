@@ -1,6 +1,6 @@
 using AutoMapper;
 using Poliedro.Eds.Application.Islander.Dtos;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using Poliedro.Eds.Domain.Islander.Entities;
 
 namespace Poliedro.Eds.Application.Islander.AutoMappers

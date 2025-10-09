@@ -1,6 +1,6 @@
 using AutoMapper;
 using Poliedro.Eds.Application.Compartiment.Dtos;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using Poliedro.Eds.Domain.Compartiment.Entities;
 
 namespace Poliedro.Eds.Application.Compartiment.AutoMappers

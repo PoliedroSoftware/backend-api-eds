@@ -1,6 +1,6 @@
 using MediatR;
 using Poliedro.Eds.Application.Shopping.Dtos;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 
 namespace Poliedro.Eds.Application.Shopping.Queries.GellAllShopping;
 

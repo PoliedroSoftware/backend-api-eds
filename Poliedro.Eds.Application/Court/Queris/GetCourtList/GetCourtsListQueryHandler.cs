@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Poliedro.Eds.Application.Court.Dtos.View;
 using Poliedro.Eds.Application.Ports.Redis;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using Poliedro.Eds.Domain.Court.DomainService;
 
 namespace Poliedro.Eds.Application.Court.Queris.GetCourtList;

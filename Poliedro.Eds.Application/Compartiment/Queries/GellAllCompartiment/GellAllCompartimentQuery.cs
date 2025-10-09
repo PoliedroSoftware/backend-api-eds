@@ -1,6 +1,6 @@
 using MediatR;
 using Poliedro.Eds.Application.Compartiment.Dtos;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 
 namespace Poliedro.Eds.Application.Compartiment.Queries.GellAllCompartiment;
 

@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-
-namespace Poliedro.Eds.Domain.Common.Pagination
+namespace Poliedro.Eds.Domain
 {
     public class PaginationResponse<T>
     {
-        public IEnumerable<T> Items { get; set; }
+        public IEnumerable<T> Data { get; set; }
         public int TotalCount { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }

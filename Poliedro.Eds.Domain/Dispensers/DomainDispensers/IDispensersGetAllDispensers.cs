@@ -1,4 +1,4 @@
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using Poliedro.Eds.Domain.Dispensers.Entities;
 
 namespace Poliedro.Eds.Domain.Dispensers.DomainDispensers

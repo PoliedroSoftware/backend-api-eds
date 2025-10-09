@@ -1,5 +1,5 @@
 using Poliedro.Eds.Domain.Phone.Entities;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

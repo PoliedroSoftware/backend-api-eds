@@ -1,6 +1,6 @@
 using MediatR;
 using Poliedro.Eds.Application.EdsTank.Dtos;
-using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain;
 
 namespace Poliedro.Eds.Application.EdsTank.Queries.GellAllEdsTank;
 
