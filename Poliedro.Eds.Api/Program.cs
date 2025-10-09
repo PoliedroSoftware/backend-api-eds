@@ -18,6 +18,11 @@ using Poliedro.Eds.Api.Middlelware.Jwt;
 using Poliedro.Eds.Api.Middlelware.NameIdentifier;
 using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
+using Poliedro.Eds.Application.Account.Commands.CreateAccount;
+using Poliedro.Eds.Application.Account.Queries.GetAllAccounts;
+using Poliedro.Eds.Application.Bank.Commands;
+using Poliedro.Eds.Application.Bank.Querys.BankGetAll;
+using Poliedro.Eds.Application.Bank.Validation;
 using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 using Poliedro.Eds.Application.Common.Behaviors;
 using Poliedro.Eds.Application.Common.EventHandlers.Cache;
@@ -30,6 +35,9 @@ using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
+using Poliedro.Eds.Domain.Account.Services;
+using Poliedro.Eds.Domain.Bank.Repositories;
+using Poliedro.Eds.Domain.Bank.Services;
 using Poliedro.Eds.Domain.Business.DomaianServices.Create;
 using Poliedro.Eds.Domain.Business.Extensions;
 using Poliedro.Eds.Domain.Common.Events;
@@ -41,6 +49,8 @@ using Poliedro.Eds.Domain.SendMessage;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Account.Repositories;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Bank.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
@@ -252,8 +262,25 @@ builder.Services.AddScoped<IGetDispenserNumber, GetIdAuxService>();
 builder.Services.AddScoped<ICourtListDomainService, CourtListService>();
 builder.Services.AddScoped<IInventoryListDomainService, InventoryListService>();
 
-//Configura Tolgee
+// === SERVICIOS BANK ===
+// Domain services
+builder.Services.AddScoped<IBankService, BankService>();
 
+// Repositories Bank
+builder.Services.AddScoped<IBankRepositoryCreate, BankCreateService>();
+builder.Services.AddScoped<IBankRepositoryGetLast, BankGetLastService>();
+builder.Services.AddScoped<IBankRepositoryGetById, BankGetByIdService>();
+builder.Services.AddScoped<IBankRepositoryGetAll, BankGetAllService>();
+
+// Validators Bank
+builder.Services.AddScoped<BankCreateValidator>();
+
+// Account services  
+builder.Services.AddScoped<IAccountGetAllService, AccountGetAllService>();
+builder.Services.AddScoped<IAccountCreateService, AccountCreateService>();
+builder.Services.AddScoped<IAccountGetByIdService, AccountGetByIdService>();
+
+//Configura Tolgee
 builder.Services.AddScoped<ITolgeeService, TolgeeService>();
 
 builder.Services.AddHttpClient(nameof(TolgeeService), client =>
@@ -269,23 +296,14 @@ builder.Services.AddHttpClient(nameof(TolgeeService), client =>
         client.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
 });
 
-
 //Configura WhatsApp
-
 builder.Services.AddHttpClient<ISendMessage, WhatsAppService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SendWhatsAppMessageCommand>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<BankCreateCommand>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<BankGetAllQuery>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateAccountCommand>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAllAccountsQuery>());
 builder.Services.AddControllers();
-
-
-
-
-builder.Services.AddValidatorsFromAssemblyContaining<GetCourtsListQueryValidator>();
-builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Poliedro.Eds.Application.OpenAI.AutoMappers.OpenAIProfile).Assembly);
-builder.Services.AddSwaggerGen(c =>
-{
-    c.OperationFilter<FileUploadOperationFilter>();
-    c.MapType<IFormFile>(() => new OpenApiSchema { Type = "string", Format = "binary" });
-});
 AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 
 

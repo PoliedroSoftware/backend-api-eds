@@ -4,6 +4,8 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Poliedro.Eds.Application.Bank.Commands;
+using Poliedro.Eds.Application.Bank.Dtos;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Court.Dtos;
@@ -11,6 +13,7 @@ using Poliedro.Eds.Application.Court.Services;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.StrongBox.Commands;
 using Poliedro.Eds.Application.StrongBox.Dtos;
+using Poliedro.Eds.Domain.Account.Services;
 using Poliedro.Eds.Domain.Common.Enums;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
@@ -27,7 +30,9 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         ICourtTransactionalService courtTransactionalService,
         ILogger<CreateCourtCommandHandle> logger,
         IMediator mediator,
-        IHttpContextAccessor httpContextAccessor
+        IHttpContextAccessor httpContextAccessor,
+        IGetPaymentMethodName getPaymentMethodName,
+        IAccountGetAllService accountGetAllService
         ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
@@ -243,11 +248,88 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
                     );
                     logger.LogInformation("✅ Entrada en StrongBox creada: ${Money:N2}", money);
                 }
+
+                // === NUEVA FUNCIONALIDAD DE BANCO ===
+                // Crear entrada en Bank si hay medios de pago bancarios
+                await CreateBankEntryIfNeededAsync(request, courtEntity, cancellationToken);
             }
             catch (Exception ex)
             {
                 // Los errores en procesos post-transacción no deben afectar el resultado principal
                 logger.LogWarning(ex, "⚠️ Error en proceso post-transacción (no crítico): {ErrorMessage}", ex.Message);
+            }
+        }
+
+        private async Task CreateBankEntryIfNeededAsync(CreateCourtCommand request, CourtEntity courtEntity, CancellationToken cancellationToken)
+        {
+            try
+            {
+                // Medios de pago bancarios que deben registrarse en banco
+                var bancaryPaymentMethods = new[] { "Datafono", "Nequi", "Cod_QR", "Transferencia", "Bre-B" };
+                
+                // Filtrar medios de pago bancarios
+                var bancaryPayments = new List<(string PaymentName, double Amount, string? Description)>();
+                
+                foreach (var payment in request.CourtTypeOfCollections)
+                {
+                    var paymentMethodName = await getPaymentMethodName.GetPaymentMethodNameAsync(payment.IdTypeOfCollection);
+                    
+                    if (bancaryPaymentMethods.Contains(paymentMethodName, StringComparer.OrdinalIgnoreCase))
+                    {
+                        bancaryPayments.Add((paymentMethodName, payment.Amount, payment.Description));
+                    }
+                }
+
+                // Si hay medios de pago bancarios, crear registro en banco
+                if (bancaryPayments.Any())
+                {
+                    var totalBancaryAmount = bancaryPayments.Sum(p => p.Amount);
+                    
+                    // Obtener la cuenta bancaria por defecto
+                    var accounts = await accountGetAllService.GetAllAsync();
+                    var defaultAccount = accounts.FirstOrDefault();
+                    
+                    if (defaultAccount != null)
+                    {
+                        // Crear nota detallada con todos los medios de pago bancarios e información de la cuenta
+                        var bancaryDetails = string.Join(", ", bancaryPayments.Select(p => 
+                        {
+                            var description = !string.IsNullOrWhiteSpace(p.Description) ? $" ({p.Description})" : "";
+                            return $"{p.PaymentName}: ${p.Amount:N0}{description}";
+                        }));
+
+                        var bancaryNote = $"Corte #{courtEntity.IdCourt} - Banco: {defaultAccount.Bank} - Cuenta: {defaultAccount.Account} - Medios de pago bancarios: {bancaryDetails}";
+
+                        // Crear registro en banco
+                        await mediator.Send(
+                            new BankCreateCommand(new BankDtoCreateRequest
+                            {
+                                IdAccount = defaultAccount.IdAccount,
+                                IdEds = courtEntity.IdEds,
+                                IdCourt = courtEntity.IdCourt,
+                                Moviment = "CORTE",
+                                Ammount = totalBancaryAmount,
+                                Note = bancaryNote
+                            }),
+                            cancellationToken
+                        );
+                        
+                        logger.LogInformation("✅ Entrada en Bank creada: ${Amount:N2} para {Count} medios de pago bancarios - Banco: {Bank} - Cuenta: {Account}", 
+                            totalBancaryAmount, bancaryPayments.Count, defaultAccount.Bank, defaultAccount.Account);
+                    }
+                    else
+                    {
+                        logger.LogWarning("⚠️ No se encontró cuenta bancaria por defecto para crear registro en Bank");
+                    }
+                }
+                else
+                {
+                    logger.LogInformation("ℹ️ No se detectaron medios de pago bancarios para registrar en Bank");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "⚠️ Error al crear entrada en Bank (no crítico): {ErrorMessage}", ex.Message);
             }
         }
 

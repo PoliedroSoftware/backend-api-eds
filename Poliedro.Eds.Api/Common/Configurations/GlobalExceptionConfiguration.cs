@@ -9,16 +9,16 @@ public class GlobalExceptionConfiguration(ILogger<GlobalExceptionConfiguration> 
 {
     public void OnException(ExceptionContext context)
     {
-        logger.LogError(context.Exception.Message);
+        //logger.LogError(context.Exception.Message);
 
-        if (context.Exception is FluentValidation.ValidationException validationException)
-        {
-            CreateValidationError(context, validationException);
-        }
-        else
-        {
-            CreateDefaultUnhandledError(context);
-        }
+        //if (context.Exception is FluentValidation.ValidationException validationException)
+        //{
+        //    CreateValidationError(context, validationException);
+        //}
+        //else
+        //{
+        //    CreateDefaultUnhandledError(context);
+        //}
     }
 
     private static void CreateValidationError(ExceptionContext context, FluentValidation.ValidationException validationException)

@@ -2,6 +2,8 @@ using System.Reflection;
 using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Poliedro.Eds.Application.Account.AutoMappers;
+using Poliedro.Eds.Application.Bank.AutoMappers;
 using Poliedro.Eds.Application.Business.AutoMappers;
 using Poliedro.Eds.Application.Capacity.AutoMappers;
 using Poliedro.Eds.Application.Category.AutoMappers;
@@ -91,6 +93,8 @@ public static class DependencyInjectionService
             config.AddProfile(new PaginationCategoryMapper());
             config.AddProfile(new DashboardPowerBIMapper());
             config.AddProfile(new StrongBoxProfile());
+            config.AddProfile(new BankProfile());
+            config.AddProfile(new AccountProfile());
         });
         services.AddSingleton(mapper.CreateMapper());
         #endregion

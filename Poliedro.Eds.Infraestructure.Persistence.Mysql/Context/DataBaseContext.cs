@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Poliedro.Eds.Domain.Account.Entities;
+using Poliedro.Eds.Domain.Bank.Entities;
 using Poliedro.Eds.Domain.Business.Entities;
 using Poliedro.Eds.Domain.Capacity.Entities;
 using Poliedro.Eds.Domain.Category.Entities;
@@ -120,6 +122,10 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<StrongBoxEntity> StrongBox { get; set; }
 
+    public DbSet<BankEntity> Bank { get; set; }
+
+    public DbSet<AccountEntity> Account { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -170,5 +176,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new OpenAIRequestConfiguration(modelBuilder.Entity<OpenAIRequestEntity>());
         new OpenAIResponseConfiguration(modelBuilder.Entity<OpenAIResponseEntity>());
         new StrongBoxConfiguration(modelBuilder.Entity<StrongBoxEntity>());
+        new BankConfiguration(modelBuilder.Entity<BankEntity>());
+        new AccountConfiguration(modelBuilder.Entity<AccountEntity>());
     }
 }
