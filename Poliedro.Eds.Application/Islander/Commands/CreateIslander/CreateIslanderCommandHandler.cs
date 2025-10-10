@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -22,7 +23,9 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
         IMapper mapper,
         IValidator<CreateIslanderRequestDto> validator,
         IConnection rabbitConnection,
-        IHttpContextAccessor httpContextAccessor) : IRequestHandler<CreateIslanderCommand, bool>
+        IHttpContextAccessor httpContextAccessor,
+        IIslanderGetByUserIslander islanderGetByUser // injected checker
+        ) : IRequestHandler<CreateIslanderCommand, bool>
     {
         public async Task<bool> Handle(CreateIslanderCommand request, CancellationToken cancellationToken)
         {
@@ -40,6 +43,14 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
             string originalPassword = islanderEntity.Password;
 
             islanderEntity.Password = BCrypt.Net.BCrypt.HashPassword(islanderEntity.Password);
+
+            // Validate if the user already exists in DB by email; do not publish if exists
+            var exists = await islanderGetByUser.ExistsAsync(islanderEntity.Name);
+            if (exists)
+            {
+                Console.WriteLine($"Usuario con nombre {islanderEntity.Name} ya existe. No se publicará en RabbitMQ.");
+                return false;
+            }
 
             var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
             
