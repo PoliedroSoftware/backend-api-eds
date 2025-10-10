@@ -1,3 +1,4 @@
+using System.Net;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -69,6 +70,7 @@ public class BusinessController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status201Created, "The operation was successful.")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status409Conflict, "The business name already exists. Please provide a different name.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOrIslander")]
     [HttpPost]
@@ -77,7 +79,19 @@ public class BusinessController(IMediator mediator) : ControllerBase
         [FromBody] CreateBusinessCommand createBusinessCommand)
     {
         var result = await mediator.Send(createBusinessCommand);
-        return result.Match(onSuccess => TypedResults.Created());
+
+        return result.Match(
+            onSuccess => TypedResults.Created(),
+            onFailure => result.Error.HttpStatusCode == HttpStatusCode.Conflict
+                ? TypedResults.Conflict(new
+                {
+                    status = 409,
+                    type = result.Error.Code,
+                    detail = result.Error.Description
+                })
+                : throw new Exception(result.Error.Description ?? "Unexpected error")
+        );
+
     }
 
     [SwaggerOperation(Summary = "Update an existing Business")]
