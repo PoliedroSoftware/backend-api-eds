@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Poliedro.Eds.Domain.Common.Results;
@@ -17,8 +18,7 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
-        private readonly IIslanderCreateIslander _islanderDomainIslander;
-
+        
         public KeycloakService(
             HttpClient httpClient,
             IConfiguration configuration,
@@ -26,7 +26,6 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
         {
             _httpClient = httpClient;
             _configuration = configuration;
-            _islanderDomainIslander = islanderDomainIslander;
         }
 
         public async Task<Result<VoidResult, Error>> CreateUserAsync(IslanderEntity islander, string plainPassword, string? nameClaimToken)
@@ -153,34 +152,6 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 
                     return Error.Conflict("Keycloak", $"Error assigning user to sub-group: {errorText}");
                 }
-                if (assignResponse.IsSuccessStatusCode)
-                {
-
-                    try
-                    {
-                        var tenantSchema = $"eds_{islander.IdEds}";
-
-                        var baseConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION")
-                            ?? _configuration["ConnectionStrings:MysqlConnection"];
-                        var tenantConnection = baseConnectionString.Replace("{schema}", tenantSchema);
-
-                        var optionsBuilder = new DbContextOptionsBuilder<DataBaseContext>();
-                        optionsBuilder.UseMySql(tenantConnection, ServerVersion.AutoDetect(tenantConnection));
-                        using var db = new DataBaseContext(optionsBuilder.Options);
-
-                        db.Add(islander);
-                        await db.SaveChangesAsync();
-
-                        Console.WriteLine($"Usuario guardado en BD del tenant {tenantSchema}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error creando usuario en BD: {ex.Message}");
-                        return Error.Internal("Database", ex.Message);
-                    }
-                }
-
-
                 return VoidResult.Instance;
             }
             catch (Exception ex)

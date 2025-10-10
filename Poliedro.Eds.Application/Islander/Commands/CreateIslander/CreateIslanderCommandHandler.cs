@@ -21,7 +21,8 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
     public class CreateIslanderCommandHandler(
         IMapper mapper,
         IValidator<CreateIslanderRequestDto> validator,
-        IConnection rabbitConnection) : IRequestHandler<CreateIslanderCommand, bool>
+        IConnection rabbitConnection,
+        IHttpContextAccessor httpContextAccessor) : IRequestHandler<CreateIslanderCommand, bool>
     {
         public async Task<bool> Handle(CreateIslanderCommand request, CancellationToken cancellationToken)
         {
@@ -31,7 +32,6 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest);
                 return false;
             }
-                 
 
             IslanderEntity islanderEntity = mapper.Map<IslanderEntity>(request.Request);
 
@@ -40,7 +40,9 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
             string originalPassword = islanderEntity.Password;
 
             islanderEntity.Password = BCrypt.Net.BCrypt.HashPassword(islanderEntity.Password);
-   
+
+            var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+            
             using var channel = rabbitConnection.CreateModel();
             channel.ExchangeDeclare("keycloak_exchange", ExchangeType.Direct);
             channel.QueueDeclare("keycloak", true, false, false, null);
@@ -54,7 +56,8 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
                 FirstName = islanderEntity.FirstName,
                 LastName = islanderEntity.LastName,
                 Password = islanderEntity.Password,
-                NameClaimToken = request.NameClaimToken
+                NameClaimToken = request.NameClaimToken,
+                Tenant = tenant 
             };
 
             var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));

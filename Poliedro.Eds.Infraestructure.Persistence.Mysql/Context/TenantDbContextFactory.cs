@@ -11,9 +11,14 @@ Microsoft.Extensions.Configuration.IConfiguration config) : ITenantDbContextFact
 {
     public DataBaseContext CreateDbContext()
     {
-
         var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
+        return createContext(tenant);
+    }
 
+    public DataBaseContext CreateDbContext(string tenant) => createContext(tenant);
+
+    private DataBaseContext createContext(string? tenant)
+    {
         if (string.IsNullOrWhiteSpace(tenant))
             throw new InvalidOperationException("Tenant not found");
 

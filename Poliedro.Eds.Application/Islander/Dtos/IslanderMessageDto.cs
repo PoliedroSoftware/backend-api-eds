@@ -15,4 +15,5 @@ public class IslanderMessageDto
     public string LastName { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public string NameClaimToken { get; set; }
+    public string? Tenant { get; set; }
 }

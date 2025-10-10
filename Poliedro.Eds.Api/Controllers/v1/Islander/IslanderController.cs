@@ -61,12 +61,11 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOrIslander")]
         [HttpPost]
-
         public async Task<IResult> Create([FromBody] CreateIslanderCommand createIslanderCommand)
-
         {
             var command = new CreateIslanderCommand(createIslanderCommand.Request, createIslanderCommand.NameClaimToken);
-            return (IResult)Ok( await mediator.Send(command));
+            var result = await mediator.Send(command);
+            return TypedResults.Ok(result);
         }
 
         [SwaggerOperation(Summary = "Update an existing Islander")]
