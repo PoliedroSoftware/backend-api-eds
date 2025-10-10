@@ -1,6 +1,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Poliedro.Eds.Application.Bank.Commands;
+using Poliedro.Eds.Application.Bank.Dtos;
+using Poliedro.Eds.Application.Bank.Querys.BankGetCurrentBalance;
+using Poliedro.Eds.Application.Court.Dtos;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetTotalBalance;
+using Poliedro.Eds.Domain.Account.Services;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Eds.DomainEds;
@@ -23,7 +28,8 @@ public class SendWhatsAppMessageCommandHandler(
     IProductGetByIdProduct getProductById,
     IMediator mediator,
     IEdsGetByIdService edsGetByIdService,
-    IHttpContextAccessor httpContextAccessor
+    IHttpContextAccessor httpContextAccessor,
+    IAccountGetAllService accountGetAllService
     ) : IRequestHandler<SendWhatsAppMessageCommand, Unit>
 {
     // Cultura española para usar coma como separador decimal
@@ -109,12 +115,73 @@ public class SendWhatsAppMessageCommandHandler(
         // Restar los gastos del efectivo para obtener el total a recibir
         var totalARecibirEnEfectivo = sumEfectivo - totalExpenditures;
 
-        // Obtener el saldo actual del strongbox
+        // Obtener el saldo currente del strongbox
         var strongBoxBalance = await mediator.Send(new StrongBoxGetTotalBalance(), cancellationToken);
         var saldoActualStrongBox = strongBoxBalance?.Saldo ?? 0.0;
         
         // Calcular el nuevo saldo que quedaría en el strongbox después del corte
         var nuevoSaldoStrongBox = saldoActualStrongBox + totalARecibirEnEfectivo;
+
+        // === NUEVA FUNCIONALIDAD DE BANCO ===
+        // Obtener medios de pago bancarios
+        var bancaryPaymentMethods = new[] { "Datafono", "Nequi", "Cod_QR", "Transferencia", "Bre-B" };
+        
+        var bancaryPayments = court.CourtTypeOfCollections?
+            .Where(p => bancaryPaymentMethods.Contains(getPaymentMethodName.GetPaymentMethodNameAsync(p.IdTypeOfCollection).Result, StringComparer.OrdinalIgnoreCase))
+            .ToList() ?? new List<CourtTypeOfCollectionDto>();
+
+        // Si hay medios de pago bancarios, crear registro en banco (no-bloqueante)
+        var totalBancaryAmount = 0.0;
+        if (bancaryPayments.Any())
+        {
+            totalBancaryAmount = bancaryPayments.Sum(p => p.Amount);
+            
+            // Ejecutar creación de registro bancario de forma asíncrona sin bloquear
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    // Obtener todas las cuentas bancarias
+                    var accounts = await accountGetAllService.GetAllAsync();
+                    
+                    // Por defecto usar la primera cuenta, o se puede implementar lógica para seleccionar cuenta específica
+                    var defaultAccount = accounts.FirstOrDefault();
+                    
+                    if (defaultAccount != null)
+                    {
+                        // Crear nota con detalles de los medios de pago bancarios e información de la cuenta
+                        var bancaryDetails = string.Join(", ", bancaryPayments.Select(p => 
+                        {
+                            var paymentName = getPaymentMethodName.GetPaymentMethodNameAsync(p.IdTypeOfCollection).Result;
+                            var description = !string.IsNullOrWhiteSpace(p.Description) ? $" ({p.Description})" : "";
+                            return $"{paymentName}: ${p.Amount.ToString("N0", SpanishCulture)}{description}";
+                        }));
+
+                        var bancaryNote = $"Corte #{court.IdCourt} - Banco: {defaultAccount.Bank} - Cuenta: {defaultAccount.Account} - Medios de pago bancarios: {bancaryDetails}";
+
+                        // Crear registro en banco
+                        await mediator.Send(
+                            new BankCreateCommand(new BankDtoCreateRequest
+                            {
+                                IdAccount = defaultAccount.IdAccount,
+                                IdEds = court.IdEds,
+                                IdCourt = court.IdCourt,
+                                Moviment = "CORTE",
+                                Ammount = totalBancaryAmount,
+                                Note = bancaryNote
+                            }),
+                            cancellationToken
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log el error pero no afectar el flujo principal
+                    // El logging se puede agregar aquí si hay un logger disponible
+                    // Por ahora simplemente continúa sin fallar
+                }
+            });
+        }
 
         var totalVentas = court.CourtTypeOfCollections?.Sum(p => p.Amount) ?? 0;
 
@@ -234,6 +301,49 @@ public class SendWhatsAppMessageCommandHandler(
                 {court.Descripcion}
                 """ : string.Empty;
 
+        // === NUEVA SECCIÓN DE BANCO ===
+        var bancarySection = string.Empty;
+        string bankName = string.Empty;
+        string accountNumber = string.Empty;
+        double currentBankBalance = 0.0;
+        
+        if (bancaryPayments.Any())
+        {
+            // Obtener información de la cuenta bancaria para mostrar en el resumen
+            try
+            {
+                var accounts = await accountGetAllService.GetAllAsync();
+                var defaultAccount = accounts.FirstOrDefault();
+                
+                if (defaultAccount != null)
+                {
+                    bankName = defaultAccount.Bank;
+                    accountNumber = defaultAccount.Account;
+                    
+                    // Obtener el balance actual de la cuenta bancaria
+                    var currentBalance = await mediator.Send(new BankGetCurrentBalance(defaultAccount.IdAccount), cancellationToken);
+                    currentBankBalance = currentBalance;
+                }
+            }
+            catch
+            {
+                // Si hay error obteniendo la cuenta, usar valores por defecto
+                bankName = "Banco no disponible";
+                accountNumber = "Cuenta no disponible";
+                currentBankBalance = totalBancaryAmount; // Solo el monto actual si no se puede obtener el balance
+            }
+            
+            bancarySection = $"""
+
+                ══════════════
+                🏦 RESUMEN BANCARIO
+                ══════════════
+                🏛️ Banco: {bankName}
+                📋 Cuenta: {accountNumber}
+                💳 Total En Banco: ${currentBankBalance.ToString("N0", SpanishCulture)}
+                """;
+        }
+
         // Construir el mensaje final con el usuario generador
         var message = @$"📋 CORTE {edsName}
 
@@ -270,6 +380,7 @@ Fecha: {court.DateEndtime.ToString("d/M/yyyy", SpanishCulture)}
 ══════════════
 💰 Total A Recibir En Efectivo: ${totalARecibirEnEfectivo.ToString("N0", SpanishCulture)}
 🏛️ Total En Caja Fuerte: ${nuevoSaldoStrongBox.ToString("N0", SpanishCulture)}
+{bancarySection}
 {observacionesSection}
 
 📎 Documentos Cargados: {court.CourtDocuments?.Count() ?? 0}
