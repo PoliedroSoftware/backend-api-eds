@@ -7,4 +7,5 @@ public class BusinessDto
     public string Name { get; set; }
 
     public string Context { get; set; }
+    public string KeycloakId { get; set; }
 }
