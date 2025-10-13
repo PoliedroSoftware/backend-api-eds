@@ -2,11 +2,15 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Islander.Entities;
+using Poliedro.Eds.Infraestructure;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
 namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 {
@@ -14,8 +18,11 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
-
-        public KeycloakService(HttpClient httpClient, IConfiguration configuration)
+        
+        public KeycloakService(
+            HttpClient httpClient,
+            IConfiguration configuration,
+            IIslanderCreateIslander islanderDomainIslander)
         {
             _httpClient = httpClient;
             _configuration = configuration;
@@ -145,7 +152,6 @@ namespace Poliedro.Eds.Infraestructure.External.Keycloak.Services
 
                     return Error.Conflict("Keycloak", $"Error assigning user to sub-group: {errorText}");
                 }
-
                 return VoidResult.Instance;
             }
             catch (Exception ex)

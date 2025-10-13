@@ -222,6 +222,9 @@ public static class DependencyInjectionService
         services.AddScoped<IStrongBoxRepositoryGetAll, StrongBoxGetAllService>();
         services.AddScoped<IStrongBoxRepositoryGetByEds, StrongBoxGetByEdsService>();
 
+        // New: Islander lookup by email
+        services.AddScoped<IIslanderGetByUserIslander, IslanderGetByUserIslander>();
+
         return services;
     }
 }

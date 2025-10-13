@@ -9,9 +9,9 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.Domainislander
 
 public class IslanderCreateIslander(ITenantDbContextFactory dbContextFactory) : IIslanderCreateIslander
 {
-    public async Task<Result<VoidResult, Error>> CreateAsync(IslanderEntity islanderEntity)
+    public async Task<Result<VoidResult, Error>> CreateAsync(IslanderEntity islanderEntity, string tenant)
     {
-        using var context = dbContextFactory.CreateDbContext();
+        using var context = dbContextFactory.CreateDbContext(tenant);
 
         await context.Islander.AddAsync(islanderEntity);
 

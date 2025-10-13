@@ -1,8 +1,11 @@
 using System.Text;
 using System.Text.Json;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Islander.Dtos;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Islander.Entities;
+using Poliedro.Eds.Domain.Islander.Events;
 using RabbitMQ.Client;
 namespace WorkerKeycloackService
 {
@@ -29,7 +32,7 @@ namespace WorkerKeycloackService
 
             while (!stoppingToken.IsCancellationRequested)
             {
-
+                
                 var result = channel.BasicGet(queue: queueName, autoAck: false);
 
                 if (result != null)
@@ -37,10 +40,10 @@ namespace WorkerKeycloackService
                     var message = Encoding.UTF8.GetString(result.Body.ToArray());
                     _logger.LogInformation($"Mensaje recibido: {message}");
 
-                    var islanderDto = JsonSerializer.Deserialize<IslanderDto>(message);
+                    var islanderDto = JsonSerializer.Deserialize<IslanderMessageDto>(message);
                     var islanderEntity = new IslanderEntity
                     {
-                        Name = islanderDto.Name,
+                        Name = islanderDto.User,
                         Email = islanderDto.Email,
                         FirstName = islanderDto.FirstName,
                         LastName = islanderDto.LastName,
@@ -50,11 +53,19 @@ namespace WorkerKeycloackService
 
                     using var scope = _serviceProvider.CreateScope();
                     var keycloakUserService = scope.ServiceProvider.GetRequiredService<IKeycloakUserService>();
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    
                     var resultService = await keycloakUserService.CreateUserAsync(islanderEntity, islanderDto.Password, islanderDto.NameClaimToken);
 
                     if (resultService.IsSuccess)
                     {
                         _logger.LogInformation($"Usuario creado en Keycloak: {islanderDto.Email}");
+                        var tenant = islanderDto.Tenant ?? string.Empty;
+                        var keycloakCreatedEvent = new IslanderKeycloakCreatedEvent(islanderEntity, tenant);
+                        
+                        await mediator.Publish(keycloakCreatedEvent, stoppingToken);
+                        _logger.LogInformation($"Evento IslanderKeycloakCreatedEvent publicado para: {islanderDto.Email} con tenant: {tenant}");
+                        
                         channel.BasicAck(result.DeliveryTag, false);
                     }
                     else
@@ -67,7 +78,7 @@ namespace WorkerKeycloackService
                 {
                     _logger.LogInformation("No hay mensajes en la cola.");
                 }
-
+                var delay = _configuration.GetValue<int>("worker:PollingInterval", 30000);
                 await Task.Delay(30000, stoppingToken);
             }
 

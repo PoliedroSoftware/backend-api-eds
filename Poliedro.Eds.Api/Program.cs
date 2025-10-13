@@ -224,6 +224,7 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining<GetTranslationsHandler>();
     cfg.RegisterServicesFromAssemblyContaining<GetCourtsListQueryHandler>();
+    cfg.RegisterServicesFromAssemblyContaining<Poliedro.Eds.Application.Islander.EventHandlers.IslanderKeycloakCreatedEventHandler>();
     
     // Agregar el behavior de invalidación de caché usando el método genérico
     cfg.AddOpenBehavior(typeof(CacheInvalidationBehavior<,>));
