@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Poliedro.Eds.Domain.Common.Events;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
+using Poliedro.Eds.Domain.Islander.Entities;
 using Poliedro.Eds.Domain.Islander.Events;
 
 namespace Poliedro.Eds.Application.Islander.EventHandlers;
@@ -29,6 +30,8 @@ public class IslanderKeycloakCreatedEventHandler : INotificationHandler<Islander
         {
             _logger.LogInformation("Procesando evento IslanderKeycloakCreatedEvent para Islander ID: {IslanderId}, Tenant: {Tenant}", 
                 notification.Islander.IdEds, notification.Tenant);
+
+            notification.Islander.Password = BCrypt.Net.BCrypt.HashPassword(notification.Islander.Password);
             var result = await _islanderCreateService.CreateAsync(notification.Islander, notification.Tenant);
 
             if (result.IsSuccess)
