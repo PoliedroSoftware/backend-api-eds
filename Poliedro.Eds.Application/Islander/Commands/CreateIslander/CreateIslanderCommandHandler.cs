@@ -40,11 +40,6 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
 
             Console.WriteLine($"nombre del clain del token: {request.NameClaimToken}");
 
-            string originalPassword = islanderEntity.Password;
-
-            islanderEntity.Password = BCrypt.Net.BCrypt.HashPassword(islanderEntity.Password);
-
-            // Validate if the user already exists in DB by email; do not publish if exists
             var exists = await islanderGetByUser.ExistsAsync(islanderEntity.Name);
             if (exists)
             {
