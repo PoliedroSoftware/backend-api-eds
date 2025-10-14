@@ -13,5 +13,6 @@ public class BusinessConfiguration
         builder.Property(x => x.IdBusiness).HasColumnName("id_business");
         builder.Property(x => x.Name).HasColumnName("name");
         builder.Property(x => x.Context).HasColumnName("context");
+        builder.Property(x => x.KeycloakId).HasColumnName("keycloack");
     }
 }

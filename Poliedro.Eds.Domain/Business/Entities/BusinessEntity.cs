@@ -11,6 +11,7 @@ public class BusinessEntity : AggregateRoot
     public int IdBusiness { get; private set; }
     public string Name { get; private set; } = null!;
     public string Context { get; private set; } = null!;
+    public string? KeycloakId { get; private set; }
 
     private BusinessEntity(string name, string context)
     {
@@ -19,7 +20,9 @@ public class BusinessEntity : AggregateRoot
         Name = name;
         Context = context;
         CreatedAt = DateTime.UtcNow;
+        KeycloakId = null;
         AddDomainEvent(new BusinessCreated(name, context, IdBusiness));
+
     }
 
     public void Update(string name, string? context)
