@@ -1,7 +1,7 @@
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Utils;
 using Poliedro.Eds.Domain.Audit.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 
@@ -25,7 +25,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit
                 if (entry.State == EntityState.Added)
                 {
                     entity.CreatedBy = currentUser;
-                    entity.CreatedAt = DateTime.UtcNow;
+                    entity.CreatedAt = DateTimeColombiaHelper.NowColombia(); // Cambiado a hora Colombia
                 }
 
                 if (entry.State == EntityState.Modified)
@@ -34,7 +34,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit
                     entry.Property(nameof(AuditableEntity.CreatedAt)).IsModified = false;
 
                     entity.UpdatedBy = currentUser;
-                    entity.UpdatedAt = DateTime.UtcNow;
+                    entity.UpdatedAt = DateTimeColombiaHelper.NowColombia(); // Cambiado a hora Colombia
                 }
             }
 
