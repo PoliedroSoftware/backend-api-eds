@@ -32,6 +32,7 @@ using Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProductInventory.AutoMappers;
 using Poliedro.Eds.Application.StrongBox.AutoMappers;
 using Poliedro.Eds.Application.Tank.AutoMappers;
+using Poliedro.Eds.Application.TransferValidation.AutoMappers;
 using Poliedro.Eds.Application.TypeOfCollection.AutoMappers;
 
 namespace Poliedro.Eds.Application;
@@ -95,6 +96,7 @@ public static class DependencyInjectionService
             config.AddProfile(new StrongBoxProfile());
             config.AddProfile(new BankProfile());
             config.AddProfile(new AccountProfile());
+            config.AddProfile(new TransferValidationProfile());
         });
         services.AddSingleton(mapper.CreateMapper());
         #endregion
