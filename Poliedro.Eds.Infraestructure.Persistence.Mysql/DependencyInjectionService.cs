@@ -82,6 +82,9 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongBox;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Tank.DomainTank.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
+using Poliedro.Eds.Domain.TransferValidation.Repositories;
+using Poliedro.Eds.Domain.TransferValidation.Services;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.TransferValidation.Repositories;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -224,6 +227,11 @@ public static class DependencyInjectionService
 
         // New: Islander lookup by email
         services.AddScoped<IIslanderGetByUserIslander, IslanderGetByUserIslander>();
+
+        // TransferValidation Services
+        services.AddScoped<ITransferValidationRepositoryCreate, TransferValidationRepositoryCreate>();
+        services.AddScoped<ITransferValidationRepositoryGetByUniqueId, TransferValidationRepositoryGetByUniqueId>();
+        services.AddScoped<ITransferValidationService, TransferValidationService>();
 
         return services;
     }

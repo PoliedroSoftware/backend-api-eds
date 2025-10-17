@@ -36,6 +36,7 @@ using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 using Poliedro.Eds.Domain.ShoppingProductInventory.Entities;
 using Poliedro.Eds.Domain.StrongBox.Entities;
 using Poliedro.Eds.Domain.Tank.Entities;
+using Poliedro.Eds.Domain.TransferValidation.Entities;
 using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
@@ -126,6 +127,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<AccountEntity> Account { get; set; }
 
+    public DbSet<TransferValidationEntity> TransferValidation { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -178,5 +181,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new StrongBoxConfiguration(modelBuilder.Entity<StrongBoxEntity>());
         new BankConfiguration(modelBuilder.Entity<BankEntity>());
         new AccountConfiguration(modelBuilder.Entity<AccountEntity>());
+        new TransferValidationConfiguration(modelBuilder.Entity<TransferValidationEntity>());
     }
 }

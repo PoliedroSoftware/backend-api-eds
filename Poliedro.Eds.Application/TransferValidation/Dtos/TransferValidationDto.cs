@@ -1,0 +1,28 @@
+namespace Poliedro.Eds.Application.TransferValidation.Dtos;
+
+public class TransferValidationDto
+{
+    public int IdTransferValidation { get; set; }
+    
+    public string UniqueId { get; set; } = null!;
+    
+    public string CustomerName { get; set; } = null!;
+    
+    public double TransactionAmount { get; set; }
+    
+    public DateOnly TransactionDate { get; set; }
+    
+    public TimeOnly TransactionTime { get; set; }
+    
+    public string Status { get; set; } = null!;
+    
+    public string? ConfirmedBy { get; set; }
+    
+    public string? CreatedBy { get; set; }
+    
+    public DateTime? CreatedAt { get; set; }
+    
+    public string? UpdatedBy { get; set; }
+    
+    public DateTime? UpdatedAt { get; set; }
+}
