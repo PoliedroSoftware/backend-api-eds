@@ -37,7 +37,7 @@ public class TransferValidationController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, 
         "Error interno al procesar la solicitud.", 
         typeof(ProblemDetails))]
-    [Authorize(Policy = "AdminOrIslander")]
+
     [HttpPost]
     public async Task<IActionResult> Create(
         [FromBody] TransferValidationCreateRequestDto createRequest)
