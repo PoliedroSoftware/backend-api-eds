@@ -231,6 +231,8 @@ public static class DependencyInjectionService
         // TransferValidation Services
         services.AddScoped<ITransferValidationRepositoryCreate, TransferValidationRepositoryCreate>();
         services.AddScoped<ITransferValidationRepositoryGetByUniqueId, TransferValidationRepositoryGetByUniqueId>();
+        services.AddScoped<ITransferValidationRepositoryGetById, TransferValidationRepositoryGetById>();
+        services.AddScoped<ITransferValidationRepositoryUpdate, TransferValidationRepositoryUpdate>();
         services.AddScoped<ITransferValidationService, TransferValidationService>();
 
         return services;
