@@ -28,3 +28,7 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
+
+# Ignore worker service projects to prevent conflicts during API build
+WorkerKeycloackService/
+WorkerS3UploaderService/
