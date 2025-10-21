@@ -86,7 +86,7 @@ namespace WorkerS3UploaderService
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, $"Error subiendo {doc?.FileName}");
+                        _logger.LogError(ex, $"Error subiendo {doc?.FileName} Error: {ex.Message}");
                         channel.BasicNack(result.DeliveryTag, false, true); // retry
                     }
                 }
