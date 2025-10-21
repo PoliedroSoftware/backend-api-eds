@@ -59,6 +59,7 @@
 	 
     <ProjectReference Include="..\WhatsApp\Poliedor.External.WhatsApp.csproj" />
     <ProjectReference Include="..\WorkerKeycloackService\WorkerKeycloackService.csproj" />
+    <ProjectReference Include="..\WorkerS3UploaderService\WorkerS3UploaderService.csproj" />
   </ItemGroup>
 
 </Project>

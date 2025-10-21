@@ -82,6 +82,7 @@ builder.Services
     .AddBusinessDomainEvents();
 
 builder.Services.AddHostedService<Worker>();
+builder.Services.AddHostedService<WorkerS3UploaderService.Worker>();
 builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
 
 builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();

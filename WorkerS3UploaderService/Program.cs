@@ -1,20 +1,31 @@
-using System.Net.Http.Headers;
-using Poliedro.Eds.Domain.Islander.DomainIslander;
-using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using RabbitMQ.Client;
-using WorkerKeycloackService;
+using WorkerS3UploaderService;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((context, config) =>
     {
-        config.AddJsonFile("appsettingsworker.json", optional: false, reloadOnChange: true);
+        config.Sources.Clear();
+
+        var basePath = Path.Combine(AppContext.BaseDirectory, @"..\..\..\..", "Poliedro.Eds.Api");
+        var apiSettingsPath = Path.Combine(basePath, "appsettings.json");
+
+        if (!File.Exists(apiSettingsPath))
+        {
+            throw new FileNotFoundException($"No se encontró el appsettings.json del proyecto principal en: {apiSettingsPath}");
+        }
+
+        config
+            .SetBasePath(basePath)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables();
     })
     .ConfigureServices((hostContext, services) =>
     {
         IConfiguration configuration = hostContext.Configuration;
-
         services.AddSingleton<IConnection>(sp =>
         {
+            ;
+
             var factory = new ConnectionFactory()
             {
                 HostName = configuration["RabbitMQ:HostName"],
@@ -23,16 +34,7 @@ IHost host = Host.CreateDefaultBuilder(args)
             };
             return factory.CreateConnection();
         });
-
         services.AddHostedService<Worker>();
-
-        services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
-        {
-
-            client.BaseAddress = new Uri(configuration["Keycloak:KeycloakUri"]);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        });
-
     })
     .Build();
 
