@@ -6,16 +6,9 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         config.Sources.Clear();
 
-        var basePath = Path.Combine(AppContext.BaseDirectory, @"..\..\..\..", "Poliedro.Eds.Api");
-        var apiSettingsPath = Path.Combine(basePath, "appsettings.json");
-
-        if (!File.Exists(apiSettingsPath))
-        {
-            throw new FileNotFoundException($"No se encontró el appsettings.json del proyecto principal en: {apiSettingsPath}");
-        }
-
+        // Usar el appsettings.json local del WorkerService
         config
-            .SetBasePath(basePath)
+            .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddEnvironmentVariables();
     })
@@ -24,8 +17,6 @@ IHost host = Host.CreateDefaultBuilder(args)
         IConfiguration configuration = hostContext.Configuration;
         services.AddSingleton<IConnection>(sp =>
         {
-            ;
-
             var factory = new ConnectionFactory()
             {
                 HostName = configuration["RabbitMQ:HostName"],
