@@ -21,4 +21,6 @@
     <ProjectReference Include="..\Poliedro.Eds.Domain\Poliedro.Eds.Domain.csproj" />
     <ProjectReference Include="..\Poliedro.Eds.Infraestructure.External.Keycloak\Poliedro.Eds.Infraestructure.External.Keycloak.csproj" />
   </ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties appsettingsworker_1json__JsonSchema="https://appsemble.app/api.json" /></VisualStudio></ProjectExtensions>
 </Project>

@@ -15,7 +15,7 @@ RUN dotnet build "./Poliedro.Eds.Api.csproj" -c $BUILD_CONFIGURATION -o /app/bui
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Poliedro.Eds.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Poliedro.Eds.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:PublishSingleFile=false /p:PublishTrimmed=false
 
 FROM base AS final
 WORKDIR /app

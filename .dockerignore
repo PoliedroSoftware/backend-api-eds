@@ -29,6 +29,6 @@ README.md
 !.git/packed-refs
 !.git/refs/heads/**
 
-# Ignore worker service projects to prevent conflicts during API build
-WorkerKeycloackService/
-WorkerS3UploaderService/
+# Exclude individual appsettings files that cause conflicts
+WorkerKeycloackService/appsettingsworker.json
+WorkerS3UploaderService/appsettingsS3.json
