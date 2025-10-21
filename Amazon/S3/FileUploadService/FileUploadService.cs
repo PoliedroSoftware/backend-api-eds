@@ -60,7 +60,7 @@ namespace Amazon.S3.FileUploadService
             var json = JsonSerializer.Serialize(message);
             var body = Encoding.UTF8.GetBytes(json);
 
-            channel.BasicPublish(exchange: "", routingKey: "documents", basicProperties: null, body: body);
+            channel.BasicPublish(exchange: string.Empty, routingKey: _queue, basicProperties: null, body: body);
 
             return $"{_folderName}/pending/{file.FileName}";
         }

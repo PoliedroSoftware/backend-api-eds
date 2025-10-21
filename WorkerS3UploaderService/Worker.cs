@@ -81,7 +81,12 @@ namespace WorkerS3UploaderService
                         await transferUtility.UploadAsync(uploadRequest, stoppingToken);
 
                         _logger.LogInformation($"Subido a S3: {key}");
-                        File.Delete(doc.TempPath);
+
+                        if (File.Exists(doc.TempPath))
+                        {
+                            File.Delete(doc.TempPath);
+                        }
+
                         channel.BasicAck(result.DeliveryTag, false);
                     }
                     catch (Exception ex)
