@@ -9,7 +9,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         // Usar el appsettings.json local del WorkerService
         config
             .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettingsS3.json", optional: false, reloadOnChange: true)
             .AddEnvironmentVariables();
     })
     .ConfigureServices((hostContext, services) =>
