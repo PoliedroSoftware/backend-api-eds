@@ -26,5 +26,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 # Copiar el appsettings.json específico del WorkerService
-COPY ["WorkerS3UploaderService/appsettings.json", "./appsettings.json"]
+COPY ["WorkerS3UploaderService/appsettingsS3.json", "./appsettings.json"]
 ENTRYPOINT ["dotnet", "WorkerS3UploaderService.dll"]
