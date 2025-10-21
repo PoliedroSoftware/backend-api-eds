@@ -62,7 +62,7 @@ using Poliedro.External.HealthCheck.WhatsApp;
 using Poliedro.External.WhatsApp.SendMessage;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
-using WorkerKeycloackService;
+// using WorkerKeycloackService; // Commented out for API-only build
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,8 +83,9 @@ builder.Services
     .AddExternalTolgee()
     .AddBusinessDomainEvents();
 
-builder.Services.AddHostedService<Worker>();
-builder.Services.AddHostedService<WorkerS3UploaderService.Worker>();
+// Commented out for API-only build - Workers run separately
+// builder.Services.AddHostedService<Worker>();
+// builder.Services.AddHostedService<WorkerS3UploaderService.Worker>();
 builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
 
 builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
