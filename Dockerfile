@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-# Copy solution file and all project files that are referenced by the main API
+# Copy solution file and all project files including Workers
 COPY ["Poliedro.EDS.sln", "."]
 COPY ["Poliedro.Eds.Api/Poliedro.Eds.Api.csproj", "Poliedro.Eds.Api/"]
 COPY ["Poliedro.Eds.Application/Poliedro.Eds.Application.csproj", "Poliedro.Eds.Application/"]
@@ -20,8 +20,10 @@ COPY ["Poliedro.Eds.Infraestructure.Persistence.Mysql/Poliedro.Eds.Infraestructu
 COPY ["Poliedro.External.HealthCheck/Poliedro.External.HealthCheck.csproj", "Poliedro.External.HealthCheck/"]
 COPY ["Poliedro.Tolgee/Poliedro.Tolgee.csproj", "Poliedro.Tolgee/"]
 COPY ["WhatsApp/Poliedor.External.WhatsApp.csproj", "WhatsApp/"]
+COPY ["WorkerKeycloackService/WorkerKeycloackService.csproj", "WorkerKeycloackService/"]
+COPY ["WorkerS3UploaderService/WorkerS3UploaderService.csproj", "WorkerS3UploaderService/"]
 
-# Restore dependencies only for the main API project
+# Restore dependencies for the API project (which now includes Worker references)
 RUN dotnet restore "Poliedro.Eds.Api/Poliedro.Eds.Api.csproj"
 
 # Copy everything else and build
