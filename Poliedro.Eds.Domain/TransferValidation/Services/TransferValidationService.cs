@@ -7,7 +7,9 @@ namespace Poliedro.Eds.Domain.TransferValidation.Services;
 
 public class TransferValidationService(
     ITransferValidationRepositoryCreate repositoryCreate,
-    ITransferValidationRepositoryGetByUniqueId repositoryGetByUniqueId) 
+    ITransferValidationRepositoryGetByUniqueId repositoryGetByUniqueId,
+    ITransferValidationRepositoryGetById repositoryGetById,
+    ITransferValidationRepositoryUpdate repositoryUpdate) 
     : ITransferValidationService
 {
     public async Task<TransferValidationEntity> CreateAsync(
@@ -67,5 +69,59 @@ public class TransferValidationService(
 
         // Persistir en la base de datos
         return await repositoryCreate.CreateAsync(entity, cancellationToken);
+    }
+
+    public async Task<TransferValidationEntity> UpdateAsync(
+        int idTransferValidation,
+        string customerName,
+        double transactionAmount,
+        DateOnly transactionDate,
+        TimeOnly transactionTime,
+        string status,
+        string? confirmedBy,
+        CancellationToken cancellationToken = default)
+    {
+        // Validaciones de negocio
+        if (idTransferValidation <= 0)
+            throw new TransferValidationDomainException("El ID de la validación de transferencia debe ser mayor a cero.");
+
+        if (string.IsNullOrWhiteSpace(customerName))
+            throw new TransferValidationDomainException("El nombre del cliente es requerido.");
+
+        if (transactionAmount <= 0)
+            throw new TransferValidationDomainException("El monto de la transacción debe ser mayor a cero.");
+
+        if (string.IsNullOrWhiteSpace(status))
+            throw new TransferValidationDomainException("El estado es requerido.");
+
+        var normalizedStatus = TransferValidationStatus.Normalize(status);
+
+        // Verificar que la entidad exista
+        var existingEntity = await repositoryGetById.GetByIdAsync(idTransferValidation, cancellationToken);
+        if (existingEntity == null)
+        {
+            throw new TransferValidationDomainException(
+                $"No se encontró la validación de transferencia con ID: {idTransferValidation}");
+        }
+
+        // Validar que si el estado es CONFIRMADA, debe haber un confirmedBy
+        if (normalizedStatus == TransferValidationStatus.CONFIRMADA && 
+            string.IsNullOrWhiteSpace(confirmedBy))
+        {
+            throw new TransferValidationDomainException(
+                "Si el estado es CONFIRMADA, debe especificar quién confirmó la transacción.");
+        }
+
+        // Actualizar la entidad existente
+        existingEntity.CustomerName = customerName.Trim();
+        existingEntity.TransactionAmount = transactionAmount;
+        existingEntity.TransactionDate = transactionDate;
+        existingEntity.TransactionTime = transactionTime;
+        existingEntity.Status = normalizedStatus;
+        existingEntity.ConfirmedBy = confirmedBy?.Trim();
+        existingEntity.UpdatedAt = DateTime.Now;
+
+        // Persistir los cambios
+        return await repositoryUpdate.UpdateAsync(existingEntity, cancellationToken);
     }
 }

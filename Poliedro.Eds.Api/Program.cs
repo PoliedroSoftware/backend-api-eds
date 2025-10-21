@@ -46,6 +46,8 @@ using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.SendMessage;
+using Poliedro.Eds.Application.TransferValidation.Commands.UpdateTransferValidation;
+using Poliedro.Eds.Application.TransferValidation.Validation;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
@@ -305,6 +307,11 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Ba
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<BankGetAllQuery>());
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateAccountCommand>());
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<GetAllAccountsQuery>());
+
+// === TRANSFER VALIDATION SERVICES ===
+builder.Services.AddScoped<TransferValidationCreateValidator>();
+builder.Services.AddScoped<UpdateTransferValidationValidator>();
+
 builder.Services.AddControllers();
 AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 
