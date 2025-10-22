@@ -15,6 +15,9 @@ public class ProductEntity : AuditableEntity
     public double? Stock { get; set; }
     public DateTime Date { get; set; }
 
+    // Nueva columna para multi-tenant por EDS
+    public int? IdEds { get; set; }
+
 
     public virtual ProductTypeEntity? ProductType { get; set; }
 }

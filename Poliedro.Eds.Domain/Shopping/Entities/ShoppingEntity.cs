@@ -13,6 +13,9 @@ public class ShoppingEntity : AuditableEntity
     public int IdCategory { get; set; }
     public double Amount { get; set; }
 
+    // Nueva columna para multi-tenant por EDS
+    public int? IdEds { get; set; }
+
     public IEnumerable<ShoppingProductEntity> ShoppingProducts { get; set; }
     public InventoryEntity ShoppingInventory { get; set; }
 }
