@@ -39,6 +39,7 @@
     <Folder Include="Inventory\Dtos\" />
     <Folder Include="Inventory\Queries\GetInventoryList\" />
     <Folder Include="Phone\Validators\" />
+    <Folder Include="RegisterShift\AutoMappers\" />
   </ItemGroup>
 
 </Project>
