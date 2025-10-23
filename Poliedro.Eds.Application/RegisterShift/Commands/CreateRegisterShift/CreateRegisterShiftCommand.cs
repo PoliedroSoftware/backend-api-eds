@@ -10,4 +10,4 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Poliedro.Eds.Application.RegisterShift.Commands.CreateRegisterShift;
 
-public record CreateRegisterShiftCommand(RegisterShiftDto Request) : IRequest<Result<VoidResult, Error>>;
+public record CreateRegisterShiftCommand(RegisterShiftDto Request) : IRequest<RegisterShiftDto>;

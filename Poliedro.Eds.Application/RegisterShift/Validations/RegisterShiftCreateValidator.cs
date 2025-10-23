@@ -25,11 +25,11 @@ public class RegisterShiftCreateValidator : AbstractValidator<RegisterShiftDto>
             .NotNull().WithMessage("El campo StartTime no puede ser nulo.");
 
         RuleFor(x => x.EndTime)
-            .GreaterThan(x => x.StartTime).When(x => x.EndTime.HasValue)
+            .GreaterThan(x => x.StartTime)
             .WithMessage("El campo EndTime debe ser mayor que StartTime si se proporciona.");
 
         RuleFor(x => x.EndTime)
-            .GreaterThan(x => x.StartTime).When(x => x.EndTime.HasValue)
+            .GreaterThan(x => x.StartTime)
             .WithMessage("El campo EndTime debe ser mayor que StartTime si se proporciona.");
     }
 }

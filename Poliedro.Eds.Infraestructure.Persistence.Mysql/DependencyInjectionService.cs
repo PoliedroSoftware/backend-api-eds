@@ -85,6 +85,10 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainType
 using Poliedro.Eds.Domain.TransferValidation.Repositories;
 using Poliedro.Eds.Domain.TransferValidation.Services;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.TransferValidation.Repositories;
+using Poliedro.Eds.Domain.RegisterShift.DomainService;
+using Microsoft.EntityFrameworkCore.Internal;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.RegisterShift.DomainRegisterShift.Impl;
+using Poliedro.Eds.Application.RegisterShift.Validations;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -234,6 +238,9 @@ public static class DependencyInjectionService
         services.AddScoped<ITransferValidationRepositoryGetById, TransferValidationRepositoryGetById>();
         services.AddScoped<ITransferValidationRepositoryUpdate, TransferValidationRepositoryUpdate>();
         services.AddScoped<ITransferValidationService, TransferValidationService>();
+
+        services.AddScoped<RegisterShiftCreateValidator>();
+        services.AddScoped<IRegisterShiftCreateService, RegisterShiftCreateService>();
 
         return services;
     }
