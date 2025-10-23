@@ -36,8 +36,8 @@ on:
         description: 'ECS service name'
         required: true
       TASK_DEFINITION_ARN:
-        description: 'Task definition ARN'
-        required: true
+        description: 'Task definition ARN (optional - if not provided, will use the latest task definition from the service)'
+        required: false
 
 jobs:
   deploy:
@@ -51,20 +51,37 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ inputs.aws-region }}
+      
+      - name: Get latest task definition
+        id: get-task-def
+        run: |
+          if [ -n "${{ secrets.TASK_DEFINITION_ARN }}" ]; then
+            echo "Using provided task definition ARN: ${{ secrets.TASK_DEFINITION_ARN }}"
+            TASK_DEF_ARN="${{ secrets.TASK_DEFINITION_ARN }}"
+          else
+            echo "No task definition ARN provided, fetching latest from service..."
+            TASK_DEF_ARN=$(aws ecs describe-services \
+              --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
+              --services ${{ secrets.AWS_ECS_SERVICE }} \
+              --query 'services[0].taskDefinition' \
+              --output text)
+            echo "Latest task definition from service: $TASK_DEF_ARN"
+          fi
+          echo "task_definition_arn=$TASK_DEF_ARN" >> $GITHUB_OUTPUT
           
       - name: Deploy to Amazon ECS
         id: deploy
         run: |
           echo "Deploying to ECS cluster: ${{ secrets.AWS_ECS_CLUSTER }}"
           echo "Service: ${{ secrets.AWS_ECS_SERVICE }}"
-          echo "Task Definition: ${{ secrets.TASK_DEFINITION_ARN }}"
+          echo "Task Definition: ${{ steps.get-task-def.outputs.task_definition_arn }}"
           echo "Environment: ${{ inputs.environment }}"
           
           # Update the service with force new deployment
           ecs_deploy_result=$(aws ecs update-service \
             --cluster ${{ secrets.AWS_ECS_CLUSTER }} \
             --service ${{ secrets.AWS_ECS_SERVICE }} \
-            --task-definition ${{ secrets.TASK_DEFINITION_ARN }} \
+            --task-definition ${{ steps.get-task-def.outputs.task_definition_arn }} \
             --force-new-deployment \
             --output json)
           
@@ -117,7 +134,7 @@ jobs:
           
           # Verify task definition image
           task_definition_image=$(aws ecs describe-task-definition \
-            --task-definition ${{ secrets.TASK_DEFINITION_ARN }} \
+            --task-definition ${{ steps.get-task-def.outputs.task_definition_arn }} \
             --query 'taskDefinition.containerDefinitions[0].image' \
             --output text)
           

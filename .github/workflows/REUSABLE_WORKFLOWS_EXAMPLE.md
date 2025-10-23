@@ -85,6 +85,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ECS_CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
       AWS_ECS_SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
+      # TASK_DEFINITION_ARN is optional - if not provided, will use latest from service
       TASK_DEFINITION_ARN: ${{ secrets.TASK_DEFINITION_ARN }}
 ```
 
@@ -116,5 +117,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ECS_CLUSTER: ${{ secrets[format('AWS_ECS_CLUSTER_{0}', upper(matrix.environment))] }}
       AWS_ECS_SERVICE: ${{ secrets[format('AWS_ECS_SERVICE_{0}', upper(matrix.environment))] }}
+      # TASK_DEFINITION_ARN is optional - if not provided, will use latest from service
       TASK_DEFINITION_ARN: ${{ secrets[format('TASK_DEFINITION_ARN_{0}', upper(matrix.environment))] }}
 ```
