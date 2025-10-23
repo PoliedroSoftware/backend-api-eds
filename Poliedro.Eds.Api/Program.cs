@@ -29,6 +29,7 @@ using Poliedro.Eds.Application.Common.EventHandlers.Cache;
 using Poliedro.Eds.Application.Common.Services.Background;
 using Poliedro.Eds.Application.Common.Services.Cache;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
+using Poliedro.Eds.Application.Court.Settings;
 using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
@@ -236,6 +237,7 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.AddMemoryCache();
 builder.Services.Configure<TolgeeSettings>(builder.Configuration.GetSection("Tolgee"));
+builder.Services.Configure<PaymentSettings>(builder.Configuration.GetSection("PaymentSettings"));
 builder.Services.AddHttpClient<TranslationCachingService>((serviceProvider, client) =>
 {
     var apiSettings = builder.Configuration.GetSection("Tolgee").Get<TolgeeSettings>();
