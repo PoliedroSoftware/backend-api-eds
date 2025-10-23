@@ -211,6 +211,9 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 // 8. Invalidar caché de mangueras afectadas
                 await InvalidateHoseCacheAsync(result, courtEntity.CourtDispensers);
 
+                // 8. Invalidar caché de Listas de court afectadas
+                await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.COURT_LIST_SERVICE);
+
                 logger.LogInformation("✅ Cache invalidado usando sistema distribuido");
                 logger.LogInformation("===================================================");
 
