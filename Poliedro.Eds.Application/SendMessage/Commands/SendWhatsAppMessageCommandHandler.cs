@@ -192,8 +192,8 @@ public class SendWhatsAppMessageCommandHandler(
         var islero = isleros.FirstOrDefault(i => i.IdIslander == court.IdIslander);
         var isleroName = islero?.Name ?? "Desconocido";
 
-        // Obtener el nombre de la EDS
-        var edsResult = await edsGetByIdService.GetByIdAsync(court.IdEds);
+        // Obtener el nombre de la EDS asociada al islero
+        var edsResult = await edsGetByIdService.GetByIdAsync(islero?.IdEds ?? court.IdEds);
         var edsName = edsResult.IsSuccess && edsResult.Value != null 
             ? $"*{edsResult.Value.Name.ToUpper()}*"
             : "*EDS*";
