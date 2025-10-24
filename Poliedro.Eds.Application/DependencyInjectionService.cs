@@ -27,6 +27,7 @@ using Poliedro.Eds.Application.Phone.AutoMappers;
 using Poliedro.Eds.Application.Product.AutoMappers;
 using Poliedro.Eds.Application.ProductType.AutoMappers;
 using Poliedro.Eds.Application.Provider.AutoMappers;
+using Poliedro.Eds.Application.RegisterShift.AutoMappers;
 using Poliedro.Eds.Application.Shopping.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProductInventory.AutoMappers;
@@ -97,6 +98,7 @@ public static class DependencyInjectionService
             config.AddProfile(new BankProfile());
             config.AddProfile(new AccountProfile());
             config.AddProfile(new TransferValidationProfile());
+            config.AddProfile(new RegisterShiftMapper());
         });
         services.AddSingleton(mapper.CreateMapper());
         #endregion
