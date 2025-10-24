@@ -15,13 +15,18 @@ public class CourtListService(
     {
         try
         {
-            var courts = await GetCourtsFromViewAsync(username, isAdmin);
-            var collections = await GetCourtCollectionsFromViewAsync();
-            var dispensers = await GetCourtDispensersFromViewAsync();
-            var documents = await GetCourtDocumentsFromViewAsync();
-            var expenditures = await GetCourtExpendituresFromViewAsync();
+            var pagedCourts = await GetCourtsFromViewAsync(username, isAdmin, paginationParams);
 
-            var groupedCourts = courts
+            if (!pagedCourts.Any())
+            {
+                return Enumerable.Empty<CourtListResponseEntity>();
+            }
+            var courtIds = pagedCourts.Select(c => c.Id).ToList();
+            var collections = await GetCourtCollectionsFromViewAsync(courtIds);
+            var dispensers = await GetCourtDispensersFromViewAsync(courtIds);
+            var documents = await GetCourtDocumentsFromViewAsync(courtIds);
+            var expenditures = await GetCourtExpendituresFromViewAsync(courtIds);
+            var result = pagedCourts
                 .Select(court => new CourtListResponseEntity
                 {
                     Id = court.Id,
@@ -41,15 +46,10 @@ public class CourtListService(
                     Dispensers = dispensers.Where(x => x.CodeCourt == court.Id).ToList(),
                     Documents = documents.Where(x => x.Court == court.Id).ToList(),
                     Expenditures = expenditures.Where(x => x.Court == court.Id).ToList()
-                });
-
-            var pagedCourts = groupedCourts
-                .OrderByDescending(c => c.DateStarttime)
-                .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
-                .Take(paginationParams.PageSize)
+                })
                 .ToList();
 
-            return pagedCourts;
+            return result;
         }
         catch (Exception ex)
         {
@@ -57,31 +57,47 @@ public class CourtListService(
         }
     }
 
-    private async Task<IEnumerable<CourtViewEntity>> GetCourtsFromViewAsync(string username, bool isAdmin)
+    private async Task<List<CourtViewEntity>> GetCourtsFromViewAsync(
+        string username,
+        bool isAdmin,
+        PaginationParams paginationParams)
     {
         using var context = dbContextFactory.CreateDbContext();
         var courts = new List<CourtViewEntity>();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
 
-        string query = "SELECT * FROM v_court";
+        string query;
+        int offset = (paginationParams.PageNumber - 1) * paginationParams.PageSize;
+        int limit = paginationParams.PageSize;
+
         using var command = connection.CreateCommand();
 
         if (isAdmin)
         {
-            query = "SELECT * FROM v_court";
+            query = "SELECT * FROM v_court ORDER BY id DESC LIMIT @limit OFFSET @offset";
             command.CommandText = query;
         }
         else
         {
-            query = "SELECT * FROM v_court WHERE islander = @islanderName";
+            query = "SELECT * FROM v_court WHERE islander = @islanderName ORDER BY id DESC LIMIT @limit OFFSET @offset";
             command.CommandText = query;
 
-            var parameter = command.CreateParameter();
-            parameter.ParameterName = "@islanderName";
-            parameter.Value = username;
-            command.Parameters.Add(parameter);
+            var paramIslander = command.CreateParameter();
+            paramIslander.ParameterName = "@islanderName";
+            paramIslander.Value = username;
+            command.Parameters.Add(paramIslander);
         }
+
+        var paramLimit = command.CreateParameter();
+        paramLimit.ParameterName = "@limit";
+        paramLimit.Value = limit;
+        command.Parameters.Add(paramLimit);
+
+        var paramOffset = command.CreateParameter();
+        paramOffset.ParameterName = "@offset";
+        paramOffset.Value = offset;
+        command.Parameters.Add(paramOffset);
 
         using var reader = await command.ExecuteReaderAsync();
 
@@ -108,13 +124,21 @@ public class CourtListService(
         return courts;
     }
 
-    private async Task<IEnumerable<CourtCollectionViewEntity>> GetCourtCollectionsFromViewAsync()
+    private async Task<IEnumerable<CourtCollectionViewEntity>> GetCourtCollectionsFromViewAsync(List<int> courtIds)
     {
+        if (!courtIds.Any())
+        {
+            return Enumerable.Empty<CourtCollectionViewEntity>();
+        }
+
         using var context = dbContextFactory.CreateDbContext();
         var collections = new List<CourtCollectionViewEntity>();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
-        string query = "SELECT * FROM v_court_collection";
+
+        string courtIdsString = string.Join(",", courtIds);
+        string query = $"SELECT * FROM v_court_collection WHERE court IN ({courtIdsString}) ORDER BY court DESC";
+
         using var command = connection.CreateCommand();
         command.CommandText = query;
         using var reader = await command.ExecuteReaderAsync();
@@ -135,14 +159,22 @@ public class CourtListService(
         return collections;
     }
 
-    private async Task<IEnumerable<CourtDispenserViewEntity>> GetCourtDispensersFromViewAsync()
+    private async Task<IEnumerable<CourtDispenserViewEntity>> GetCourtDispensersFromViewAsync(List<int> courtIds)
     {
+        if (!courtIds.Any())
+        {
+            return Enumerable.Empty<CourtDispenserViewEntity>();
+        }
+
         var dispensers = new List<CourtDispenserViewEntity>();
 
         using var context = dbContextFactory.CreateDbContext();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
-        string query = "SELECT * FROM v_court_dispenser";
+
+        string courtIdsString = string.Join(",", courtIds);
+        string query = $"SELECT * FROM v_court_dispenser WHERE code_court IN ({courtIdsString}) ORDER BY code_court DESC";
+
         using var command = connection.CreateCommand();
         command.CommandText = query;
         using var reader = await command.ExecuteReaderAsync();
@@ -176,14 +208,21 @@ public class CourtListService(
         return dispensers;
     }
 
-    private async Task<IEnumerable<CourtDocumentViewEntity>> GetCourtDocumentsFromViewAsync()
+    private async Task<IEnumerable<CourtDocumentViewEntity>> GetCourtDocumentsFromViewAsync(List<int> courtIds)
     {
+        if (!courtIds.Any())
+        {
+            return Enumerable.Empty<CourtDocumentViewEntity>();
+        }
+
         var documents = new List<CourtDocumentViewEntity>();
         using var context = dbContextFactory.CreateDbContext();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
 
-        string query = "SELECT * FROM v_court_document";
+        string courtIdsString = string.Join(",", courtIds);
+        string query = $"SELECT * FROM v_court_document WHERE court IN ({courtIdsString}) ORDER BY court DESC";
+
         using var command = connection.CreateCommand();
         command.CommandText = query;
         using var reader = await command.ExecuteReaderAsync();
@@ -202,14 +241,21 @@ public class CourtListService(
     }
 
 
-    private async Task<IEnumerable<CourtExpenditureViewEntity>> GetCourtExpendituresFromViewAsync()
+    private async Task<IEnumerable<CourtExpenditureViewEntity>> GetCourtExpendituresFromViewAsync(List<int> courtIds)
     {
+        if (!courtIds.Any())
+        {
+            return Enumerable.Empty<CourtExpenditureViewEntity>();
+        }
+
         var expenditures = new List<CourtExpenditureViewEntity>();
         using var context = dbContextFactory.CreateDbContext();
         using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
 
-        string query = "SELECT * FROM v_court_expenditure";
+        string courtIdsString = string.Join(",", courtIds);
+        string query = $"SELECT * FROM v_court_expenditure WHERE court IN ({courtIdsString}) ORDER BY court DESC";
+
         using var command = connection.CreateCommand();
         command.CommandText = query;
         using var reader = await command.ExecuteReaderAsync();
