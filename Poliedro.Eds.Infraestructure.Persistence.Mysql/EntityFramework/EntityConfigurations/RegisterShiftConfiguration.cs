@@ -11,16 +11,16 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityC
 
 public class RegisterShiftConfiguration
 {
-    public RegisterShiftConfiguration(EntityTypeBuilder<RegisterShiftEntity> entity)
+    public RegisterShiftConfiguration(EntityTypeBuilder<RegisterShiftEntity> builder)
     {
-        entity.ToTable("registershift");
-        entity.HasKey(x => x.IdRegisterShift);
+        builder.ToTable("registershift");
+        builder.HasKey(x => x.IdRegisterShift);
 
-        entity.Property(x => x.IdRegisterShift).HasColumnName("id_registershift");
-        entity.Property(x => x.IdEds).HasColumnName("id_eds");
-        entity.Property(x => x.DateStartTime).HasColumnName("date_starttime");
-        entity.Property(x => x.StartTime).HasColumnName("starttime");
-        entity.Property(x => x.DateEndTime).HasColumnName("date_endtime");
-        entity.Property(x => x.EndTime).HasColumnName("endtime");
+        builder.Property(x => x.IdRegisterShift).HasColumnName("id_registershift");
+        builder.Property(x => x.IdEds).HasColumnName("id_eds");
+        builder.Property(x => x.DateStartTime).HasColumnName("date_starttime");
+        builder.Property(x => x.StartTime).HasColumnName("starttime");
+        builder.Property(x => x.DateEndTime).HasColumnName("date_endtime");
+        builder.Property(x => x.EndTime).HasColumnName("endtime");
     }
 }

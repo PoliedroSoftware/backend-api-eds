@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text;
-using System.Threading.Tasks;
-using Org.BouncyCastle.Tls;
+using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.RegisterShift.Errors;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.RegisterShift.Validations;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
@@ -17,13 +12,26 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.RegisterShift.DomainReg
 
 public class RegisterShiftCreateService(ITenantDbContextFactory dbContextFactory) : IRegisterShiftCreateService
 {
-    public async Task<Result<VoidResult, Error>> CreateAsync(RegisterShiftEntity entity, CancellationToken cancellationToken)
+    public async Task<Result<VoidResult, Error>> CreateAsync(RegisterShiftEntity entity)
     {
-        using var db = dbContextFactory.CreateDbContext();
-        await db.AddAsync(entity, cancellationToken);
-        var result = await db.SaveChangesAsync() >0;
-        if (!result)
+        try
+        {
+            using var context = dbContextFactory.CreateDbContext();
+            await context.RegisterShift.AddAsync(entity);
+            var saved = await context.SaveChangesAsync() > 0;
+            if (!saved)
+            {
+                return RegisterShiftBuilder.RegisterShiftCreationException();
+            }
+            else
+            {
+                return VoidResult.Instance;
+            }
+        }
+        catch (Exception)
+        {
+            // Mapear cualquier excepción de persistencia a un Error de dominio controlado
             return RegisterShiftBuilder.RegisterShiftCreationException();
-        return VoidResult.Instance;
+        }
     }
 }

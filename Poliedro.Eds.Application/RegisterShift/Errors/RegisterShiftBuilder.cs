@@ -17,9 +17,9 @@ public class RegisterShiftBuilder : IError
         "Failed to create RegisterShift due to an internal error.",
         HttpStatusCode.InternalServerError);
 
-    public static Error EdsNotFoundException(int id) => Error.CreateInstance(
-        EDS_NOT_FOUND_ERROR,
-        $"Eds with ID {id} was not found.",
-        HttpStatusCode.NotFound);
+    //public static Error EdsNotFoundException(int id) => Error.CreateInstance(
+    //    EDS_NOT_FOUND_ERROR,
+    //    $"Eds with ID {id} was not found.",
+    //    HttpStatusCode.NotFound);
 
 }
