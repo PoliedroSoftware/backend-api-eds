@@ -15,6 +15,7 @@ public class HoseEntity : AuditableEntity
     public double AccumulatedGallons { get; set; }
     public int IdProductType { get; set; }
     public int IdCompartiment { get; set; }
+    public string? CodeDispenser { get; set; }
 
     
     public virtual DispensersEntity? Dispenser { get; set; }

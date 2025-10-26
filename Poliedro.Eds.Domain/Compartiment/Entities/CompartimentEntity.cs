@@ -12,6 +12,7 @@ public class CompartimentEntity : AuditableEntity
     public int IdProduct { get; set; }
     public int IdTank { get; set; }
     public DateTime Date { get; set; }
+    public string? NumberTank { get; set; }
 }
 
 
