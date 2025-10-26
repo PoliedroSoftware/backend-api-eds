@@ -122,7 +122,8 @@ public class HoseGetAllHose(
                 cleanDispenser,
                 cleanProductType,
                 cleanEds,
-                cleanProduct
+                cleanProduct,
+                string.Empty
             );
         }).ToList();
 
