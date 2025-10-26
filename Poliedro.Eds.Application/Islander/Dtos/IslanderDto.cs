@@ -17,5 +17,6 @@ public class IslanderDto
     public string LastName { get; set; }
 
     public string? NameClaimToken { get; set; }
+    public string? NameEDS { get; set; }
 }
 

@@ -123,7 +123,8 @@ public class HoseGetAllHose(
                 cleanProductType,
                 cleanEds,
                 cleanProduct,
-                string.Empty
+                string.Empty,
+                0
             );
         }).ToList();
 

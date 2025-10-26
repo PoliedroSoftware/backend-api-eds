@@ -9,5 +9,6 @@ public record DispensersDto(
     int EdsId,
     int IdIsland,
     int HoseNumber,
-    int? NumberIsland
+    int? NumberIsland,
+    string? NameEDS
     );

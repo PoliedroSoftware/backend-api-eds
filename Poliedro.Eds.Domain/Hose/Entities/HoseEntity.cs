@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Poliedro.Eds.Domain.Audit.Entities;
 using Poliedro.Eds.Domain.Dispensers.Entities;
 using Poliedro.Eds.Domain.ProductType.Entities;
@@ -15,9 +16,11 @@ public class HoseEntity : AuditableEntity
     public double AccumulatedGallons { get; set; }
     public int IdProductType { get; set; }
     public int IdCompartiment { get; set; }
+    [NotMapped]
     public string? CodeDispenser { get; set; }
+    [NotMapped]
+    public int? NumberCompartiment { get; set; }
 
-    
     public virtual DispensersEntity? Dispenser { get; set; }
     public virtual ProductTypeEntity? ProductType { get; set; }
 }

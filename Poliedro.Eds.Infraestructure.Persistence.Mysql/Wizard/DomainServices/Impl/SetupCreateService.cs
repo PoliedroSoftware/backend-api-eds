@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.Eds.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Wizard.Errors;
@@ -54,14 +55,30 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
 
             await context.SaveChangesAsync();
 
+            // create products
+            foreach (var product in setupEntity.Products)
+            {
+                await context.Product.AddAsync(product);
+            }
+
+            await context.SaveChangesAsync();
+
             // create compartiment(by tank)
             foreach (var compartiment in setupEntity.Compartiments)
             {
                 var parentTank = setupEntity.Tanks.FirstOrDefault(t => t.Number == compartiment.NumberTank);
-                if (parentTank == null)
-                    throw new Exception($"Compartimiento sin tanque válido.");
 
-                compartiment.IdTank = parentTank.IdTank;
+                if (parentTank != null)
+                {
+                    compartiment.IdTank = parentTank.IdTank;
+                }
+
+                var parentProduct = setupEntity.Products.FirstOrDefault(t => t.Name == compartiment.NameProduct);
+
+                if (parentProduct != null)
+                {
+                    compartiment.IdProduct = parentProduct.IdProduct;
+                }
 
                 await context.Compartiment.AddAsync(compartiment);
             }
@@ -73,10 +90,19 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
             {
                 var numberIsland = dispenser.NumberIsland ?? 0;
                 var island = setupEntity.Islands[numberIsland];
-                if (island == null)
-                    throw new Exception($"Dispensador '{dispenser.Code}' no tiene una isla válida.");
 
-                dispenser.IdIsland = island.IdIsland;
+                if (island != null)
+                {
+                    dispenser.IdIsland = island.IdIsland;
+                }
+
+                var eds = setupEntity.EDS.FirstOrDefault(t => t.Name == dispenser.NameEDS);
+
+                if (eds != null)
+                {
+                    dispenser.EdsId = eds.IdEds;
+                }
+
                 await context.Dispensers.AddAsync(dispenser);
             }
 
@@ -86,19 +112,20 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
             foreach (var hose in setupEntity.Hoses)
             {
                 var dispenser = setupEntity.Dispensers.FirstOrDefault(d => d.Code == hose.CodeDispenser);
-                if (dispenser == null)
-                    throw new Exception($"Manguera '{hose.Number}' no tiene un dispensador válido.");
 
-                hose.IdDispensers = dispenser.Id;
+                if (dispenser != null)
+                {
+                    hose.IdDispensers = dispenser.Id;
+                }
+
+                var compartiment = setupEntity.Compartiments.FirstOrDefault(d => d.Number == hose.NumberCompartiment);
+
+                if (compartiment != null)
+                {
+                    hose.IdCompartiment = compartiment.IdCompartiment;
+                }
+
                 await context.Hose.AddAsync(hose);
-            }
-
-            await context.SaveChangesAsync();
-
-            // create products
-            foreach (var product in setupEntity.Products)
-            {
-                await context.Product.AddAsync(product);
             }
 
             await context.SaveChangesAsync();
@@ -111,6 +138,13 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
                     .AnyAsync(u => u.Name == islander.Name || u.Email == islander.Email);
                 if (exists)
                     throw new Exception($"Usuario islero '{islander.Name}' ya existe.");
+
+                var eds = setupEntity.EDS.FirstOrDefault(t => t.Name == islander.NameEDS);
+
+                if (eds != null)
+                {
+                    islander.IdEds = eds.IdEds;
+                }
 
                 await context.Islander.AddAsync(islander);
             }

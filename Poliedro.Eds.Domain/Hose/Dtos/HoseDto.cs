@@ -52,5 +52,6 @@ public record HoseDto(
     CleanProductTypeDto? ProductTypeEntity,
     CleanEdsDto? EdsEntity,
     CleanProductDto? ProductEntity,
-    string? CodeDispenser
+    string? CodeDispenser,
+    int? NumberCompartiment
 );
