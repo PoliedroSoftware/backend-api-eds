@@ -13,5 +13,11 @@ public class PhoneConfiguration
         builder.Property(x => x.IdPhone).HasColumnName("id_phone");
         builder.Property(x => x.Number).HasColumnName("number").HasMaxLength(13).IsRequired();
         builder.Property(x => x.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
+        
+        // Audit fields configuration
+        builder.Property(x => x.CreatedBy).HasColumnName("createdBy");
+        builder.Property(x => x.CreatedAt).HasColumnName("createdAt");
+        builder.Property(x => x.UpdatedBy).HasColumnName("updatedBy");
+        builder.Property(x => x.UpdatedAt).HasColumnName("updatedAt");
     }
 }
