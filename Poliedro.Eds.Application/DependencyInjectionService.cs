@@ -35,6 +35,7 @@ using Poliedro.Eds.Application.StrongBox.AutoMappers;
 using Poliedro.Eds.Application.Tank.AutoMappers;
 using Poliedro.Eds.Application.TransferValidation.AutoMappers;
 using Poliedro.Eds.Application.TypeOfCollection.AutoMappers;
+using Poliedro.Eds.Application.Wizard.AutoMappers;
 
 namespace Poliedro.Eds.Application;
 
@@ -99,6 +100,7 @@ public static class DependencyInjectionService
             config.AddProfile(new AccountProfile());
             config.AddProfile(new TransferValidationProfile());
             config.AddProfile(new RegisterShiftMapper());
+            config.AddProfile(new SetupMapper());
         });
         services.AddSingleton(mapper.CreateMapper());
         #endregion

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Poliedro.Eds.Domain.Audit.Entities;
 
 namespace Poliedro.Eds.Domain.Islander.Entities;
@@ -13,5 +14,7 @@ public class IslanderEntity : AuditableEntity
     public string Email { get; set; } = default!;
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
+    [NotMapped]
+    public string? NameEDS { get; set; }
 
 }
