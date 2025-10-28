@@ -63,7 +63,19 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [HttpPost]
         public async Task<IResult> Create([FromBody] CreateIslanderCommand createIslanderCommand)
         {
-            var command = new CreateIslanderCommand(createIslanderCommand.Request, createIslanderCommand.NameClaimToken);
+            int? idEds = null;
+            var claimVal = HttpContext.User?.FindFirst("id_eds")?.Value ?? HttpContext.User?.FindFirst("idEds")?.Value;
+            if (!string.IsNullOrEmpty(claimVal) && int.TryParse(claimVal, out var parsedClaim))
+                idEds = parsedClaim;
+            else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
+                idEds = parsedItem;
+
+            var req = createIslanderCommand.Request;
+            var requestWithEds = idEds.HasValue
+                ? new CreateIslanderRequestDto(idEds, req.Name, req.Password, req.Email, req.FirstName, req.LastName)
+                : req;
+
+            var command = new CreateIslanderCommand(requestWithEds, createIslanderCommand.NameClaimToken);
             var result = await mediator.Send(command);
             return TypedResults.Ok(result);
         }

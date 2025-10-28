@@ -57,12 +57,28 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
-        [HttpPost]
+        [HttpPost] 
 
         public async Task<IResult> Create([FromBody] CreateProductCommand createProductCommand)
-        {
-            var result = await mediator.Send(createProductCommand);
-            return result.Match(onSuccess => TypedResults.Created());
+        {            
+            int? idEds = null;
+            var claimVal = HttpContext.User?.FindFirst("id_eds")?.Value ?? HttpContext.User?.FindFirst("idEds")?.Value;
+            if (!string.IsNullOrEmpty(claimVal) && int.TryParse(claimVal, out var parsedClaim))
+                idEds = parsedClaim;
+            else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
+                idEds = parsedItem;
+
+            if (idEds.HasValue)
+            {
+                var req = createProductCommand.Request;
+                var modified = new CreateProductRequestDto(req.Name, req.IdProductType, req.SellPrice, req.PurchasePrice, req.Stock, idEds);
+                var newCommand = new CreateProductCommand(modified);
+                var result = await mediator.Send(newCommand);
+                return result.Match(onSuccess => TypedResults.Created());
+            }
+
+            var resultNoTenant = await mediator.Send(createProductCommand);
+            return resultNoTenant.Match(onSuccess => TypedResults.Created());
         }
 
         [SwaggerOperation(Summary = "Update an existing Product")]

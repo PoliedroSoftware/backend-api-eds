@@ -27,9 +27,19 @@ public class AccountController(IMediator mediator) : ControllerBase
     {
         try
         {
+            int? idEds = null;
+            var claimVal = HttpContext.User?.FindFirst("id_eds")?.Value ?? HttpContext.User?.FindFirst("idEds")?.Value;
+            if (!string.IsNullOrEmpty(claimVal) && int.TryParse(claimVal, out var parsedClaim))
+                idEds = parsedClaim;
+            else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
+                idEds = parsedItem;
+
+            if (idEds.HasValue)
+                createAccountRequest.IdEds = idEds.Value;
+
             var command = new CreateAccountCommand(createAccountRequest);
             var result = await mediator.Send(command);
-            
+
             return ApiResponse(result, StatusCodes.Status201Created, StatusCodes.Status400BadRequest);
         }
         catch (ValidationException ex)
@@ -60,7 +70,7 @@ public class AccountController(IMediator mediator) : ControllerBase
         {
             var query = new GetAllAccountsQuery();
             var result = await mediator.Send(query);
-            
+
             return ApiResponse(result, StatusCodes.Status200OK, StatusCodes.Status404NotFound);
         }
         catch (Exception ex)
@@ -85,7 +95,7 @@ public class AccountController(IMediator mediator) : ControllerBase
         {
             var query = new GetAccountByIdQuery(id);
             var result = await mediator.Send(query);
-            
+
             return ApiResponse(result, StatusCodes.Status200OK, StatusCodes.Status404NotFound);
         }
         catch (Exception ex)
