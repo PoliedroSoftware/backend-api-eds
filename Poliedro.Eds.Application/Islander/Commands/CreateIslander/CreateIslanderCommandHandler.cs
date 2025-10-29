@@ -38,6 +38,12 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
 
             IslanderEntity islanderEntity = mapper.Map<IslanderEntity>(request.Request);
 
+            // assign IdEds from command if present, otherwise fallback to DTO
+            if (request.IdEds.HasValue)
+                islanderEntity.IdEds = request.IdEds.Value;
+            else if (request.Request.IdEds.HasValue)
+                islanderEntity.IdEds = request.Request.IdEds.Value;
+
             Console.WriteLine($"nombre del clain del token: {request.NameClaimToken}");
 
             var exists = await islanderGetByUser.ExistsAsync(islanderEntity.Name);

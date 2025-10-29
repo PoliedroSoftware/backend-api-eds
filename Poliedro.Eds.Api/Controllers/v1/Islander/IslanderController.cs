@@ -71,11 +71,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
                 idEds = parsedItem;
 
             var req = createIslanderCommand.Request;
-            var requestWithEds = idEds.HasValue
-                ? new CreateIslanderRequestDto(idEds, req.Name, req.Password, req.Email, req.FirstName, req.LastName)
-                : req;
-
-            var command = new CreateIslanderCommand(requestWithEds, createIslanderCommand.NameClaimToken);
+            var command = new CreateIslanderCommand(req, createIslanderCommand.NameClaimToken, idEds);
             var result = await mediator.Send(command);
             return TypedResults.Ok(result);
         }

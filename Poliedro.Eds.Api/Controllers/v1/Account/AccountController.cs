@@ -34,10 +34,7 @@ public class AccountController(IMediator mediator) : ControllerBase
             else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
                 idEds = parsedItem;
 
-            if (idEds.HasValue)
-                createAccountRequest.IdEds = idEds.Value;
-
-            var command = new CreateAccountCommand(createAccountRequest);
+            var command = new CreateAccountCommand(createAccountRequest, idEds);
             var result = await mediator.Send(command);
 
             return ApiResponse(result, StatusCodes.Status201Created, StatusCodes.Status400BadRequest);

@@ -68,17 +68,10 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
             else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
                 idEds = parsedItem;
 
-            if (idEds.HasValue)
-            {
-                var req = createProductCommand.Request;
-                var modified = new CreateProductRequestDto(req.Name, req.IdProductType, req.SellPrice, req.PurchasePrice, req.Stock, idEds);
-                var newCommand = new CreateProductCommand(modified);
-                var result = await mediator.Send(newCommand);
-                return result.Match(onSuccess => TypedResults.Created());
-            }
-
-            var resultNoTenant = await mediator.Send(createProductCommand);
-            return resultNoTenant.Match(onSuccess => TypedResults.Created());
+            var req = createProductCommand.Request;
+            var commandWithEds = new CreateProductCommand(req, idEds);
+            var result = await mediator.Send(commandWithEds);
+            return result.Match(onSuccess => TypedResults.Created());
         }
 
         [SwaggerOperation(Summary = "Update an existing Product")]

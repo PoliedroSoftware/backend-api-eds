@@ -77,17 +77,10 @@ namespace Poliedro.Eds.Api.Controllers.v1.Shopping
             else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
                 idEds = parsedItem;
 
-            if (idEds.HasValue)
-            {
-                var req = createShoppingCommand.Request;
-                var modified = new CreateShoppingRequestDto(req.Invoice, req.Date, req.IdProvider, req.IdCategory, req.Amount, req.ShoppingProducts, req.ShoppingInventory, idEds);
-                var newCommand = new CreateShoppingCommand(modified);
-                var result = await mediator.Send(newCommand);
-                return result.Match(onSuccess => TypedResults.Created());
-            }
-
-            var resultNoTenant = await mediator.Send(createShoppingCommand);
-            return resultNoTenant.Match(onSuccess => TypedResults.Created());
+            var req = createShoppingCommand.Request;
+            var commandWithEds = new CreateShoppingCommand(req, idEds);
+            var result = await mediator.Send(commandWithEds);
+            return result.Match(onSuccess => TypedResults.Created());
         }
 
         [SwaggerOperation(Summary = "Update an existing Shopping")]
