@@ -31,6 +31,7 @@ using Poliedro.Eds.Domain.Phone.Entities;
 using Poliedro.Eds.Domain.Product.Entities;
 using Poliedro.Eds.Domain.ProductType.Entities;
 using Poliedro.Eds.Domain.Provider.Entities;
+using Poliedro.Eds.Domain.RegisterShift.Entities;
 using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 using Poliedro.Eds.Domain.ShoppingProductInventory.Entities;
@@ -129,6 +130,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<TransferValidationEntity> TransferValidation { get; set; }
 
+    public DbSet<RegisterShiftEntity> RegisterShift { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -182,5 +185,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new BankConfiguration(modelBuilder.Entity<BankEntity>());
         new AccountConfiguration(modelBuilder.Entity<AccountEntity>());
         new TransferValidationConfiguration(modelBuilder.Entity<TransferValidationEntity>());
+        new RegisterShiftConfiguration(modelBuilder.Entity<RegisterShiftEntity>());
     }
 }

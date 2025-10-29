@@ -1,7 +1,9 @@
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 using Poliedro.Eds.Application.Ports.Redis;
+using Poliedro.Eds.Application.RegisterShift.Validations;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
 using Poliedro.Eds.Domain.Capacity.DomainCapacity;
 using Poliedro.Eds.Domain.Category.DomainCategory;
@@ -35,13 +37,17 @@ using Poliedro.Eds.Domain.Ports;
 using Poliedro.Eds.Domain.Product.DomainProduct;
 using Poliedro.Eds.Domain.ProductType.DomainProductType;
 using Poliedro.Eds.Domain.Provider.DomainProvider;
+using Poliedro.Eds.Domain.RegisterShift.DomainService;
 using Poliedro.Eds.Domain.Shopping.DomainShopping;
 using Poliedro.Eds.Domain.ShoppingProduct.DomainShoppingProduct;
 using Poliedro.Eds.Domain.ShoppingProductInventory.DomainShoppingProductInventory;
 using Poliedro.Eds.Domain.StrongBox.Repositories;
 using Poliedro.Eds.Domain.StrongBox.Services;
 using Poliedro.Eds.Domain.Tank.DomainTank;
+using Poliedro.Eds.Domain.TransferValidation.Repositories;
+using Poliedro.Eds.Domain.TransferValidation.Services;
 using Poliedro.Eds.Domain.TypeOfCollection.DomainTypeOfCollection;
+using Poliedro.Eds.Domain.Wizard.DomainSetup;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Adapter;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Capacity.DomainCapacity.Impl;
@@ -74,6 +80,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.DomainProduct.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Provider.DomainProvider.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Redis;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.RegisterShift.DomainRegisterShift.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Shopping.DomainShopping.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProduct.DomainShopping.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProduct.DomainShoppingProduct.Impl;
@@ -81,10 +88,9 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.ShoppingProductInventory.Do
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongBox;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Tank.DomainTank.Impl;
-using Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
-using Poliedro.Eds.Domain.TransferValidation.Repositories;
-using Poliedro.Eds.Domain.TransferValidation.Services;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.TransferValidation.Repositories;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.Wizard.DomainServices.Impl;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -184,6 +190,7 @@ public static class DependencyInjectionService
         services.AddScoped<ITankUpdateTank, TankUpdateTank>();
         services.AddScoped<ITankGetByIdTank, TankGetByIdTank>();
         services.AddScoped<ITankGetAllTank, TankGetAllTank>();
+        services.AddScoped<ISetupCreateService, SetupCreateService>();
         services.AddScoped<ICompartimentCreateService, CompartimentCreateService>();
         services.AddScoped<ICompartimentUpdateService, CompartimentUpdateService>();
         services.AddScoped<ICompartimentGetByIdService, CompartimentGetByIdService>();
@@ -234,6 +241,9 @@ public static class DependencyInjectionService
         services.AddScoped<ITransferValidationRepositoryGetById, TransferValidationRepositoryGetById>();
         services.AddScoped<ITransferValidationRepositoryUpdate, TransferValidationRepositoryUpdate>();
         services.AddScoped<ITransferValidationService, TransferValidationService>();
+
+        services.AddScoped<RegisterShiftCreateValidator>();
+        services.AddScoped<IRegisterShiftCreateService, RegisterShiftCreateService>();
 
         return services;
     }

@@ -29,6 +29,7 @@ using Poliedro.Eds.Application.Common.EventHandlers.Cache;
 using Poliedro.Eds.Application.Common.Services.Background;
 using Poliedro.Eds.Application.Common.Services.Cache;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
+using Poliedro.Eds.Application.Court.Settings;
 using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
@@ -62,7 +63,7 @@ using Poliedro.External.HealthCheck.WhatsApp;
 using Poliedro.External.WhatsApp.SendMessage;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
-using WorkerKeycloackService;
+using WorkerKeycloackService; // Re-enabled for background worker execution
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,7 @@ builder.Services
     .AddExternalTolgee()
     .AddBusinessDomainEvents();
 
+// Re-enabled for background worker execution - Workers run in the same process as API
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddHostedService<WorkerS3UploaderService.Worker>();
 builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
@@ -235,6 +237,7 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.AddMemoryCache();
 builder.Services.Configure<TolgeeSettings>(builder.Configuration.GetSection("Tolgee"));
+builder.Services.Configure<PaymentSettings>(builder.Configuration.GetSection("PaymentSettings"));
 builder.Services.AddHttpClient<TranslationCachingService>((serviceProvider, client) =>
 {
     var apiSettings = builder.Configuration.GetSection("Tolgee").Get<TolgeeSettings>();
@@ -370,3 +373,6 @@ app.UseMiddleware<NameIdentifierMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+// Make Program class accessible for integration tests
+public partial class Program { }

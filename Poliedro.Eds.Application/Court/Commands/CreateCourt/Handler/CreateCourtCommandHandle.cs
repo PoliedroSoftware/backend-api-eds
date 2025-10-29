@@ -4,12 +4,14 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Poliedro.Eds.Application.Bank.Commands;
 using Poliedro.Eds.Application.Bank.Dtos;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Court.Dtos;
 using Poliedro.Eds.Application.Court.Services;
+using Poliedro.Eds.Application.Court.Settings;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.StrongBox.Commands;
 using Poliedro.Eds.Application.StrongBox.Dtos;
@@ -32,9 +34,12 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         IMediator mediator,
         IHttpContextAccessor httpContextAccessor,
         IGetPaymentMethodName getPaymentMethodName,
-        IAccountGetAllService accountGetAllService
-        ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
+        IAccountGetAllService accountGetAllService,
+        IOptions<PaymentSettings> paymentSettings
+    ) : IRequestHandler<CreateCourtCommand, Result<VoidResult, Error>>
     {
+        private readonly PaymentSettings _paymentSettings = paymentSettings.Value;
+
         public async Task<Result<VoidResult, Error>> Handle(CreateCourtCommand request, CancellationToken cancellationToken)
         {
             try
@@ -264,8 +269,8 @@ namespace Poliedro.Eds.Application.Court.Commands.CreateCourt.Handler
         {
             try
             {
-                // Medios de pago bancarios que deben registrarse en banco
-                var bancaryPaymentMethods = new[] { "Datafono", "Nequi", "Cod_QR", "Transferencia", "Bre-B" };
+                // Obtener medios de pago bancarios desde configuración
+                var bancaryPaymentMethods = _paymentSettings.BancaryPaymentMethods;
                 
                 // Filtrar medios de pago bancarios
                 var bancaryPayments = new List<(string PaymentName, double Amount, string? Description)>();

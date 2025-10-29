@@ -10,5 +10,4 @@ public class TankEntity : AuditableEntity
     public string Number { get; set; }
     public int Compartment { get; init; }
     public double Ability { get; init; }
-
 }
