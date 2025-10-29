@@ -54,7 +54,7 @@ public class SimpleHttpGetTests : IClassFixture<WireMockFixture>
 }
 ```
 
-## Example 2: Testing a POST Request with Request Body Validation
+## Example 2: Testing a POST Request
 
 ```csharp
 [Fact]
@@ -69,8 +69,7 @@ public async Task PostData_WithValidPayload_ShouldReturnCreated()
     mockServer
         .Given(Request.Create()
             .WithPath("/api/items")
-            .UsingPost()
-            .WithBody(new JsonMatcher(JsonSerializer.Serialize(requestPayload))))
+            .UsingPost())
         .RespondWith(Response.Create()
             .WithStatusCode(HttpStatusCode.Created)
             .WithHeader("Content-Type", "application/json")
