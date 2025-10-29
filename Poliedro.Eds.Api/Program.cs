@@ -20,6 +20,7 @@ using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
 using Poliedro.Eds.Application.Account.Commands.CreateAccount;
 using Poliedro.Eds.Application.Account.Queries.GetAllAccounts;
+using Poliedro.Eds.Application.Auth.Commands.Authenticate;
 using Poliedro.Eds.Application.Bank.Commands;
 using Poliedro.Eds.Application.Bank.Querys.BankGetAll;
 using Poliedro.Eds.Application.Bank.Validation;
@@ -49,6 +50,7 @@ using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.SendMessage;
 using Poliedro.Eds.Application.TransferValidation.Commands.UpdateTransferValidation;
 using Poliedro.Eds.Application.TransferValidation.Validation;
+using Poliedro.Eds.Infraestructure.External.Keycloak;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
@@ -82,6 +84,7 @@ builder.Services
     .AddPersistence(builder.Configuration)
     .AddExternalAmazon()
     .AddExternalTolgee()
+    .AddKeycloakServices(builder.Configuration)
     .AddBusinessDomainEvents();
 
 // Re-enabled for background worker execution - Workers run in the same process as API
