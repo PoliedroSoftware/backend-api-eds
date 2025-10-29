@@ -3,6 +3,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Poliedro.Eds.Application.Account.AutoMappers;
+using Poliedro.Eds.Application.Auth.AutoMappers;
 using Poliedro.Eds.Application.Bank.AutoMappers;
 using Poliedro.Eds.Application.Business.AutoMappers;
 using Poliedro.Eds.Application.Capacity.AutoMappers;
@@ -101,6 +102,7 @@ public static class DependencyInjectionService
             config.AddProfile(new TransferValidationProfile());
             config.AddProfile(new RegisterShiftMapper());
             config.AddProfile(new SetupMapper());
+            config.AddProfile(new AuthMapper());
         });
         services.AddSingleton(mapper.CreateMapper());
         #endregion
