@@ -15,6 +15,13 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit
         {
             var currentUser = httpContextAccessor.HttpContext?.Items["identifiername"]?.ToString();
 
+            // Set MySQL session variable for triggers to use
+            // This ensures that triggers can access the application user
+            if (!string.IsNullOrEmpty(currentUser))
+            {
+                await Database.ExecuteSqlRawAsync($"SET @app_user = '{currentUser.Replace("'", "''")}'", cancellationToken);
+            }
+
             var entries = ChangeTracker.Entries()
                 .Where(e => e.Entity is AuditableEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
 

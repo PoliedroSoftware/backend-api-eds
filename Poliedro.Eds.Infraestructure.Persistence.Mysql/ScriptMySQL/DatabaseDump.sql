@@ -173,6 +173,8 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `trg_insert_hose_history` AFTER INSERT ON `court_dispensers` FOR EACH ROW BEGIN
     DECLARE court_date DATE;
     DECLARE v_id_dispensers INT;
+    DECLARE v_current_user VARCHAR(255);
+    DECLARE v_current_datetime DATETIME;
 
     SELECT date_starttime INTO court_date
     FROM court
@@ -182,18 +184,29 @@ DELIMITER ;;
     FROM hose
     WHERE id_hose = NEW.id_hose;
 
+    -- Get the application user from session variable (set by application)
+    -- If not set, fall back to CURRENT_USER()
+    SET v_current_user = IFNULL(@app_user, CURRENT_USER());
+    
+    -- Get current timestamp
+    SET v_current_datetime = NOW();
+
     INSERT INTO hose_history (
         id_hose,
         id_dispensers,
         accumulated_amount,
         accumulated_gallons,
-        date
+        date,
+        createdBy,
+        createdAt
     ) VALUES (
         NEW.id_hose,
         v_id_dispensers,
         NEW.accumulated_amount,
         NEW.accumulated_gallons,
-        court_date
+        court_date,
+        v_current_user,
+        v_current_datetime
     );
 END */;;
 DELIMITER ;
@@ -430,6 +443,10 @@ CREATE TABLE `hose_history` (
   `accumulated_amount` double NOT NULL,
   `accumulated_gallons` double NOT NULL,
   `date` date NOT NULL,
+  `createdBy` varchar(255) DEFAULT NULL,
+  `createdAt` datetime DEFAULT NULL,
+  `updatedBy` varchar(255) DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id_hose_hose_history`),
   KEY `fk_hose_has_hose_history_hose1_idx` (`id_hose`),
   KEY `fk_hose_history_dispensers1_idx` (`id_dispensers`),

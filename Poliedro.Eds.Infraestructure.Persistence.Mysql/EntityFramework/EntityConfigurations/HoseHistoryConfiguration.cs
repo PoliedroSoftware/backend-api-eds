@@ -16,5 +16,11 @@ public class HoseHistoryConfiguration
         builder.Property(x => x.AccumulatedGallons).HasColumnName("accumulated_gallons");
         builder.Property(x => x.IdDispensers).HasColumnName("id_dispensers");
         builder.Property(x => x.Date).HasColumnName("date");
+        
+        // Audit fields mapping
+        builder.Property(x => x.CreatedBy).HasColumnName("createdBy");
+        builder.Property(x => x.CreatedAt).HasColumnName("createdAt");
+        builder.Property(x => x.UpdatedBy).HasColumnName("updatedBy");
+        builder.Property(x => x.UpdatedAt).HasColumnName("updatedAt");
     }
 }
