@@ -14,12 +14,18 @@ public class EdsCreateService(ITenantDbContextFactory dbContextFactory, ILogger<
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(EdsEntity EdsEntity)
     {
+        logger.LogInformation("Creating new EDS: {EdsName}", EdsEntity.Name);
+        
         using var context = dbContextFactory.CreateDbContext();
         await context.Eds.AddAsync(EdsEntity);
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
+        {
+            logger.LogError("Failed to save EDS to database: {EdsName}", EdsEntity.Name);
             return EdsErrorBuilder.EdsCreationException();
-        logger.LogInformation("Successfully created DomainEds");
-return VoidResult.Instance;
+        }
+        
+        logger.LogInformation("Successfully created EDS: {EdsName}", EdsEntity.Name);
+        return VoidResult.Instance;
     }
 }
