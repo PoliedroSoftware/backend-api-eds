@@ -15,7 +15,7 @@ public class ShoppingDto
 
     public int IdCategory { get; set; }
 
-    public double Amount { get; set; }
+    public decimal Amount { get; set; }
 
     public IEnumerable<ShoppingProductDto> ShoppingProducts { get; set; }
 

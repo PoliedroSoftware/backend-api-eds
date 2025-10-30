@@ -10,4 +10,4 @@ string Invoice,
 DateTime Date,
 int IdProvider,
 int IdCategory,
-double Amount) : IRequest<Result<VoidResult, Error>>;
+decimal Amount) : IRequest<Result<VoidResult, Error>>;
