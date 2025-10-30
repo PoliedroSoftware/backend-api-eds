@@ -6,7 +6,7 @@ namespace Poliedro.Eds.Application.Shopping.Commands.UpdateShopping;
 
 public record UpdateShoppingCommand(
 int IdShopping,
-string Invoice,
+string? Invoice,
 DateTime Date,
 int IdProvider,
 int IdCategory,
