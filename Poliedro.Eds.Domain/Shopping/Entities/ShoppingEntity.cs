@@ -7,7 +7,7 @@ namespace Poliedro.Eds.Domain.Shopping.Entities;
 public class ShoppingEntity : AuditableEntity
 {
     public int IdShopping { get; set; }
-    public string Invoice { get; set; } = default!;
+    public string? Invoice { get; set; }
     public DateTime Date { get; set; }
     public int IdProvider { get; set; }
     public int IdCategory { get; set; }

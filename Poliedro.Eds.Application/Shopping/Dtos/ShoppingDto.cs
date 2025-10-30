@@ -7,7 +7,7 @@ public class ShoppingDto
 {
     public int IdShopping { get; set; }
 
-    public string Invoice { get; set; }
+    public string? Invoice { get; set; }
 
     public DateTime Date { get; set; }
 
