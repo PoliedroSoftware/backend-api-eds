@@ -19,7 +19,8 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit
             // This ensures that triggers can access the application user
             if (!string.IsNullOrEmpty(currentUser))
             {
-                await Database.ExecuteSqlInterpolatedAsync($"SET @app_user = {currentUser}");
+                // Use parameterized query to safely set the session variable
+                await Database.ExecuteSqlRawAsync("SET @app_user = {0}", currentUser);
             }
 
             var entries = ChangeTracker.Entries()
