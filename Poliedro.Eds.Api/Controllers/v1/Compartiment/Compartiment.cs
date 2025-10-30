@@ -68,13 +68,16 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
-    public async Task<IResult> Create([FromBody] CreateCompartimentCommand createCompartimentCommand)
+    public async Task<IActionResult> Create([FromBody] CreateCompartimentCommand createCompartimentCommand)
     {
         var result = await mediator.Send(createCompartimentCommand);
-        return result.Match(
-            onSuccess => TypedResults.Created(),
-            onFailure => TypedResults.BadRequest(onFailure)
-        );
+        
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return Created();
     }
 
     [SwaggerOperation(Summary = "Update an existing Compartiment")]
