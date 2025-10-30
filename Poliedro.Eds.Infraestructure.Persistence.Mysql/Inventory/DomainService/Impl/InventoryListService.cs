@@ -7,14 +7,13 @@ using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Inventory.Dto.View;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 
-public class InventoryListService(
-    IRedisService redisService,
+public class InventoryListService(IRedisService redisService,
     IHttpContextAccessor httpContextAccessor,
-    ITenantDbContextFactory dbContextFactory
-    ) : IInventoryListDomainService
+    ITenantDbContextFactory dbContextFactory, ILogger<InventoryListService> logger) : IInventoryListDomainService
 {
     public async Task<IEnumerable<InventoryListResponseDto>> GetAllAsync(PaginationParams paginationParams)
     {

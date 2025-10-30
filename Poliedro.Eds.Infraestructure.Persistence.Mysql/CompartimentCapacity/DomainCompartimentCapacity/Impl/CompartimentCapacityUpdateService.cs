@@ -8,10 +8,11 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.CompartimentCapacity.DomainCompartimentCapacity.Impl;
 
-public class CompartimentCapacityUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentCapacityUpdateService
+public class CompartimentCapacityUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService, ILogger<CompartimentCapacityUpdateService> logger) : ICompartimentCapacityUpdateService
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(CompartimentCapacityEntity CompartimentCapacityEntity)
     {
@@ -24,7 +25,8 @@ public class CompartimentCapacityUpdateService(ITenantDbContextFactory dbContext
         if (await context.SaveChangesAsync() <= 0)
             return CompartimentCapacityErrorBuilder.CompartimentCapacityUpdateException();
         await redisService.RemoveByPrefixAsync("comparimentCapacity:");
-        return VoidResult.Instance;
+        logger.LogInformation("Successfully updated CompartimentCapacity");
+return VoidResult.Instance;
     }
 
     private async Task<bool> EntityExists(int id)
