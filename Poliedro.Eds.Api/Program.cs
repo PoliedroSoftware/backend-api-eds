@@ -75,8 +75,13 @@ builder.Configuration.AddEnvironmentVariables();
 // Configura el logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
-builder.Configuration
-    .AddSecretsManager("poliedro-conecctionstring-mysql-eds-backend", "us-east-2");
+
+// Only load AWS Secrets Manager in non-Test environments
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    builder.Configuration
+        .AddSecretsManager("poliedro-conecctionstring-mysql-eds-backend", "us-east-2");
+}
 builder.Services
     .AddWebApi()
     .AddApplication()
@@ -319,20 +324,23 @@ builder.Services.AddScoped<TransferValidationCreateValidator>();
 builder.Services.AddScoped<UpdateTransferValidationValidator>();
 
 builder.Services.AddControllers();
-AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 
-
-var loggerConfig = new AWSLoggerConfig
+// Only configure AWS logging in non-Test environments
+if (!builder.Environment.IsEnvironment("Test"))
 {
-    Region = secret.Region,
-    Credentials = new BasicAWSCredentials(secret.AwsAccessKeyId, secret.AwsSecretAccessKey),
-    LogGroup = "poliedro-eds-group",
+    AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 
-};
+    var loggerConfig = new AWSLoggerConfig
+    {
+        Region = secret.Region,
+        Credentials = new BasicAWSCredentials(secret.AwsAccessKeyId, secret.AwsSecretAccessKey),
+        LogGroup = "poliedro-eds-group",
+    };
 
-builder.Logging.ClearProviders();
-builder.Logging.AddAWSProvider(loggerConfig);
-builder.Logging.SetMinimumLevel(LogLevel.Information);
+    builder.Logging.ClearProviders();
+    builder.Logging.AddAWSProvider(loggerConfig);
+    builder.Logging.SetMinimumLevel(LogLevel.Information);
+}
 
 
 builder.Services.AddCors(options =>
