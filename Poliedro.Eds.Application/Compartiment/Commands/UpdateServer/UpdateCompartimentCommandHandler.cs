@@ -8,7 +8,7 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 using Poliedro.Eds.Domain.Compartiment.Entities;
 
-namespace Poliedro.Eds.Application.Compartiment.UpdateCompartiment
+namespace Poliedro.Eds.Application.Compartiment.Commands.UpdateCompartiment
 {
     public class UpdateCompartimentCommandHandler(
         ICompartimentUpdateService compartimentDomainCompartiment,
