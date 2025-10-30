@@ -300,7 +300,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
         {
             try
             {
-                var priceUpdates = new List<(int ProductId, decimal OldPrice, double NewPrice, string ProductName)>();
+                var priceUpdates = new List<(int ProductId, decimal OldPrice, decimal NewPrice, string ProductName)>();
 
                 foreach (var dispenser in courtDispensers)
                 {
@@ -344,7 +344,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                             return updateResult.Error!;
                         }
 
-                        priceUpdates.Add((product.IdProduct, currentSellPrice, courtPrice, product.Name));
+                        priceUpdates.Add((product.IdProduct, currentSellPrice, (decimal)courtPrice, product.Name));
                     }
                 }
 
