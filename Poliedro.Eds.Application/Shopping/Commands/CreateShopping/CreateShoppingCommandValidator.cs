@@ -26,5 +26,11 @@ public class CreateShoppingCommandValidator : AbstractValidator<CreateShoppingRe
 
         //RuleFor(x => x.Amount)
         //    .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("AmountGreaterThan").GetAwaiter().GetResult());
+
+        RuleForEach(x => x.ShoppingProducts)
+            .Must(product => product.SellPrice > product.PurchasePrice)
+            .WithMessage((_, product) => 
+                $"El precio de venta (${product.SellPrice:N2}) debe ser mayor al precio de compra (${product.PurchasePrice:N2}). " +
+                $"La operación ha sido rechazada para prevenir pérdidas.");
     }
 }
