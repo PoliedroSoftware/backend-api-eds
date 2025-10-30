@@ -23,7 +23,7 @@ public class CapacityGetAllService(
             .Take(paginationParams.PageSize)
             .ToListAsync();
         
-        logger.LogInformation("Successfully retrieved {Count} capacities", data.Count());
+        logger.LogInformation("Successfully retrieved {Count} capacities", data.Count);
         
         return data;
     }

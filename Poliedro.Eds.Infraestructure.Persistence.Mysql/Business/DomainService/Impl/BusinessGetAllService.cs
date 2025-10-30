@@ -25,7 +25,7 @@ public class BusinessGetAllService(
             .ToListAsync();
         
         logger.LogInformation("Successfully retrieved {Count} businesses out of {Total} total", 
-            data.Count(), totalRows);
+            data.Count, totalRows);
         
         return data;
     }

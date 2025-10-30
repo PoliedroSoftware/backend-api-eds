@@ -20,7 +20,7 @@ public class ProviderGetAllService(ITenantDbContextFactory dbContextFactory, ILo
             .Take(paginationParams.PageSize)
             .ToListAsync();
         
-        logger.LogInformation("Successfully retrieved {Count} providers", data.Count());
+        logger.LogInformation("Successfully retrieved {Count} providers", data.Count);
         
         return data;
     }

@@ -24,7 +24,7 @@ public class PhoneGetAllService(
             .ToListAsync();
         
         logger.LogInformation("Successfully retrieved {Count} phones out of {Total} total", 
-            data.Count(), totalRows);
+            data.Count, totalRows);
         
         return data;
     }

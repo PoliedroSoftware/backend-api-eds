@@ -23,7 +23,7 @@ public class CategoryGetAllService(
             .Take(paginationParams.PageSize)
             .ToListAsync();
         
-        logger.LogInformation("Successfully retrieved {Count} categories", data.Count());
+        logger.LogInformation("Successfully retrieved {Count} categories", data.Count);
         
         return data;
     }
