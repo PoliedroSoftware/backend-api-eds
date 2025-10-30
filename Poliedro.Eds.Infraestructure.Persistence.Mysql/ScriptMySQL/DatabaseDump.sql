@@ -187,13 +187,17 @@ DELIMITER ;;
         id_dispensers,
         accumulated_amount,
         accumulated_gallons,
-        date
+        date,
+        createdBy,
+        createdAt
     ) VALUES (
         NEW.id_hose,
         v_id_dispensers,
         NEW.accumulated_amount,
         NEW.accumulated_gallons,
-        court_date
+        court_date,
+        'trigger',
+        NOW()
     );
 END */;;
 DELIMITER ;
@@ -430,6 +434,10 @@ CREATE TABLE `hose_history` (
   `accumulated_amount` double NOT NULL,
   `accumulated_gallons` double NOT NULL,
   `date` date NOT NULL,
+  `createdBy` varchar(255) DEFAULT NULL,
+  `createdAt` datetime DEFAULT NULL,
+  `updatedBy` varchar(255) DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id_hose_hose_history`),
   KEY `fk_hose_has_hose_history_hose1_idx` (`id_hose`),
   KEY `fk_hose_history_dispensers1_idx` (`id_dispensers`),
