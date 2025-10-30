@@ -6,10 +6,11 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Provider.DomainProvider;
 using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Provider.DomainProvider.Impl;
 
-public class ProviderCreateService(ITenantDbContextFactory dbContextFactory) : IProviderCreateService
+public class ProviderCreateService(ITenantDbContextFactory dbContextFactory, ILogger<ProviderCreateService> logger) : IProviderCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(ProviderEntity ProviderEntity)
     {
@@ -18,6 +19,7 @@ public class ProviderCreateService(ITenantDbContextFactory dbContextFactory) : I
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return ProviderErrorBuilder.ProviderCreationException();
-        return VoidResult.Instance;
+        logger.LogInformation("Successfully created Provider");
+return VoidResult.Instance;
     }
 }

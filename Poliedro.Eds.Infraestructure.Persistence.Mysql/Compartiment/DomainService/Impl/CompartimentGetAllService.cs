@@ -3,12 +3,11 @@ using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 using Poliedro.Eds.Domain.Compartiment.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Compartiment.DomainCompartiment.Impl;
 
-public class CompartimentGetAllService(
-    ITenantDbContextFactory dbContextFactory
-    ) : ICompartimentGetAllService
+public class CompartimentGetAllService(ITenantDbContextFactory dbContextFactory, ILogger<CompartimentGetAllService> logger) : ICompartimentGetAllService
 {
     public async Task<IEnumerable<CompartimentEntity>> GetAllAsync(PaginationParams paginationParams)
     {

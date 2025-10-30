@@ -7,13 +7,13 @@ using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.DomainCapacityView;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Business.DomainBusiness.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CapacityView;
 
-public class CapacityViewGetAllService(
-    ITenantDbContextFactory dbContextFactory,
+public class CapacityViewGetAllService(ITenantDbContextFactory dbContextFactory,
     IRedisService redisService,
-    IHttpContextAccessor httpContextAccessor) : ICapacityViewGetAllService
+    IHttpContextAccessor httpContextAccessor, ILogger<CapacityViewGetAllService> logger) : ICapacityViewGetAllService
 {
     public async Task<IEnumerable<CapacityViewEntity>> GetAllAsync(PaginationParams paginationParams)
     {
