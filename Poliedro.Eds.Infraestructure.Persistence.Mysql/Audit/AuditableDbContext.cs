@@ -19,7 +19,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit
             // This ensures that triggers can access the application user
             if (!string.IsNullOrEmpty(currentUser))
             {
-                await Database.ExecuteSqlRawAsync($"SET @app_user = '{currentUser.Replace("'", "''")}'", cancellationToken);
+                await Database.ExecuteSqlRawAsync("SET @app_user = {0}", currentUser);
             }
 
             var entries = ChangeTracker.Entries()
