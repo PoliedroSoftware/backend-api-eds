@@ -16,18 +16,18 @@ public class CapacityCreateService(
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CapacityEntity CapacityEntity)
     {
-        logger.LogInformation("Creating new capacity for EDS: {EdsId}", CapacityEntity.IdEds);
+        logger.LogInformation("Creating new capacity with code: {CapacityCode}", CapacityEntity.Code);
         
         using var context = dbContextFactory.CreateDbContext();
         await context.Capacity.AddAsync(CapacityEntity);
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
         {
-            logger.LogError("Failed to save capacity to database for EDS: {EdsId}", CapacityEntity.IdEds);
+            logger.LogError("Failed to save capacity to database: {CapacityCode}", CapacityEntity.Code);
             return CapacityErrorBuilder.CapacityCreationException();
         }
         
-        logger.LogInformation("Successfully created capacity for EDS: {EdsId}", CapacityEntity.IdEds);
+        logger.LogInformation("Successfully created capacity: {CapacityCode}", CapacityEntity.Code);
         return VoidResult.Instance;
     }
 }

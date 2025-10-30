@@ -3,12 +3,11 @@ using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Provider.DomainProvider;
 using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Provider.DomainProvider.Impl;
 
-public class ProviderGetAllService(
-    ITenantDbContextFactory dbContextFactory
-    ) : IProviderGetAllService
+public class ProviderGetAllService(ITenantDbContextFactory dbContextFactory, ILogger<ProviderGetAllService> logger) : IProviderGetAllService
 {
     public async Task<IEnumerable<ProviderEntity>> GetAllAsync(PaginationParams paginationParams)
     {

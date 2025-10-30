@@ -6,10 +6,11 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Eds.DomainEds.Impl;
 
-public class EdsCreateService(ITenantDbContextFactory dbContextFactory) : IEdsCreateService
+public class EdsCreateService(ITenantDbContextFactory dbContextFactory, ILogger<EdsCreateService> logger) : IEdsCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(EdsEntity EdsEntity)
     {
@@ -18,6 +19,7 @@ public class EdsCreateService(ITenantDbContextFactory dbContextFactory) : IEdsCr
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return EdsErrorBuilder.EdsCreationException();
-        return VoidResult.Instance;
+        logger.LogInformation("Successfully created DomainEds");
+return VoidResult.Instance;
     }
 }
