@@ -314,7 +314,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     
                     // Calcular el precio y redondearlo al entero más cercano (sin decimales)
                     var calculatedPrice = roundedAmount / roundedGallons;
-                    var courtPrice = Math.Round(calculatedPrice, 0); // Redondear a 0 decimales (entero)
+                    var courtPrice = (decimal)Math.Round(calculatedPrice, 0); // Redondear a 0 decimales (entero) y convertir a decimal
 
                     // Obtener información del producto
                     var productAndCompartiment = await getProductAndCompartiment
@@ -332,11 +332,11 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     var currentSellPrice = product.SellPrice ?? 0;
 
                     // Validar si el precio es diferente (usando tolerancia para comparación de decimales)
-                    if (Math.Abs(currentSellPrice - (decimal)courtPrice) > 0.01m)
+                    if (Math.Abs(currentSellPrice - courtPrice) > 0.01m)
                     {
                         // Actualizar el precio del producto usando domain service
                         var previousPrice = product.SellPrice;
-                        product.SellPrice = (decimal)courtPrice;
+                        product.SellPrice = courtPrice;
                         
                         var updateResult = await productUpdateService.UpdateAsync(product);
                         if (!updateResult.IsSuccess)
@@ -344,7 +344,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                             return updateResult.Error!;
                         }
 
-                        priceUpdates.Add((product.IdProduct, currentSellPrice, (decimal)courtPrice, product.Name));
+                        priceUpdates.Add((product.IdProduct, currentSellPrice, courtPrice, product.Name));
                     }
                 }
 
