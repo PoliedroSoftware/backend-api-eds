@@ -7,5 +7,5 @@ public record ShoppingDto
     DateTime Date,
     string IdProvider,
     string IdCategory,
-    double Amount
+    decimal Amount
     );
