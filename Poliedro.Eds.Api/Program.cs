@@ -6,7 +6,6 @@ using AWS.Logger;
 using DotNetEnv;
 using FluentValidation;
 using HealthChecks.UI.Client;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +19,6 @@ using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
 using Poliedro.Eds.Application.Account.Commands.CreateAccount;
 using Poliedro.Eds.Application.Account.Queries.GetAllAccounts;
-using Poliedro.Eds.Application.Auth.Commands.Authenticate;
 using Poliedro.Eds.Application.Bank.Commands;
 using Poliedro.Eds.Application.Bank.Querys.BankGetAll;
 using Poliedro.Eds.Application.Bank.Validation;
@@ -35,6 +33,8 @@ using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
+using Poliedro.Eds.Application.TransferValidation.Commands.UpdateTransferValidation;
+using Poliedro.Eds.Application.TransferValidation.Validation;
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
 using Poliedro.Eds.Domain.Account.Services;
@@ -48,8 +48,6 @@ using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.SendMessage;
-using Poliedro.Eds.Application.TransferValidation.Commands.UpdateTransferValidation;
-using Poliedro.Eds.Application.TransferValidation.Validation;
 using Poliedro.Eds.Infraestructure.External.Keycloak;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
@@ -156,7 +154,6 @@ builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 
-
 builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
 {
     try
@@ -168,7 +165,7 @@ builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
             UserName = builder.Configuration["RabbitMQ:UserName"],
             Password = builder.Configuration["RabbitMQ:Password"]
         };
-        
+
         var connection = factory.CreateConnection();
         logger.LogInformation("Successfully connected to RabbitMQ at {HostName}", factory.HostName);
         return connection;
@@ -244,14 +241,13 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(type => type.FullName);
 });
 
-
 // Configuración de MediatR con el nuevo behavior de invalidación de caché
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining<GetTranslationsHandler>();
     cfg.RegisterServicesFromAssemblyContaining<GetCourtsListQueryHandler>();
     cfg.RegisterServicesFromAssemblyContaining<Poliedro.Eds.Application.Islander.EventHandlers.IslanderKeycloakCreatedEventHandler>();
-    
+
     // Agregar el behavior de invalidación de caché usando el método genérico
     cfg.AddOpenBehavior(typeof(CacheInvalidationBehavior<,>));
 });
@@ -355,7 +351,6 @@ if (!builder.Environment.IsEnvironment("Test"))
     builder.Logging.SetMinimumLevel(LogLevel.Information);
 }
 
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PoliedroEDS", policy =>
@@ -397,6 +392,11 @@ app.UseMiddleware<NameIdentifierMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
-
 // Make Program class accessible for integration tests
-public partial class Program { }
+
+/// <summary>
+/// Defines the <see cref="Program" />
+/// </summary>
+public partial class Program
+{
+}

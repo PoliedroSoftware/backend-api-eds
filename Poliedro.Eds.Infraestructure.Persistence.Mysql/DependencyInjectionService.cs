@@ -240,6 +240,7 @@ public static class DependencyInjectionService
         services.AddScoped<ITransferValidationRepositoryGetByUniqueId, TransferValidationRepositoryGetByUniqueId>();
         services.AddScoped<ITransferValidationRepositoryGetById, TransferValidationRepositoryGetById>();
         services.AddScoped<ITransferValidationRepositoryUpdate, TransferValidationRepositoryUpdate>();
+        services.AddScoped<ITransferValidationRepositoryGetAll, TransferValidationRepositoryGetAll>();
         services.AddScoped<ITransferValidationService, TransferValidationService>();
 
         services.AddScoped<RegisterShiftCreateValidator>();
