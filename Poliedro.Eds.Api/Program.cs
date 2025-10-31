@@ -159,13 +159,26 @@ builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 
 builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
 {
-    var factory = new RabbitMQ.Client.ConnectionFactory()
+    try
     {
-        HostName = builder.Configuration["RabbitMQ:HostName"],
-        UserName = builder.Configuration["RabbitMQ:UserName"],
-        Password = builder.Configuration["RabbitMQ:Password"]
-    };
-    return factory.CreateConnection();
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        var factory = new RabbitMQ.Client.ConnectionFactory()
+        {
+            HostName = builder.Configuration["RabbitMQ:HostName"],
+            UserName = builder.Configuration["RabbitMQ:UserName"],
+            Password = builder.Configuration["RabbitMQ:Password"]
+        };
+        
+        var connection = factory.CreateConnection();
+        logger.LogInformation("Successfully connected to RabbitMQ at {HostName}", factory.HostName);
+        return connection;
+    }
+    catch (Exception ex)
+    {
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning(ex, "Failed to connect to RabbitMQ. The application will continue without RabbitMQ functionality.");
+        return null;
+    }
 });
 
 // Configura el JWT
