@@ -21,11 +21,14 @@ public class CreateTransferValidationCommandHandler(
         CreateTransferValidationCommand request, 
         CancellationToken cancellationToken)
     {
+        // Ajustar el monto: dividir entre 100 para quitar los dos ceros de más en los decimales
+        var adjustedAmount = request.Request.TransactionAmount / 100;
+        
         logger.LogInformation("=== INICIANDO CREACIÓN DE VALIDACIÓN DE TRANSFERENCIA ===");
         logger.LogInformation("UniqueId: {UniqueId}, Cliente: {CustomerName}, Monto: ${Amount:F2}", 
             request.Request.UniqueId, 
             request.Request.CustomerName, 
-            request.Request.TransactionAmount);
+            adjustedAmount);
 
         // Validar el request usando FluentValidation
         await validator.ValidateAndThrowAsync(request.Request, cancellationToken);
@@ -36,7 +39,7 @@ public class CreateTransferValidationCommandHandler(
             var created = await transferValidationService.CreateAsync(
                 uniqueId: request.Request.UniqueId,
                 customerName: request.Request.CustomerName,
-                transactionAmount: request.Request.TransactionAmount,
+                transactionAmount: adjustedAmount,
                 transactionDate: request.Request.TransactionDate,
                 transactionTime: request.Request.TransactionTime,
                 status: request.Request.Status,
