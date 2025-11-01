@@ -51,5 +51,10 @@ SELECT * FROM hose_history ORDER BY id_hose_hose_history DESC LIMIT 5;
 
 ## Notas
 - Los registros creados antes de esta migración tendrán valores NULL en los campos de auditoría
-- Los nuevos registros creados por el trigger tendrán `createdBy = 'trigger'` y `createdAt = NOW()`
-- Los registros creados directamente por la aplicación respetarán los valores establecidos por Entity Framework
+- Los nuevos registros creados por el trigger tendrán:
+  - `createdBy = 'trigger'` (los triggers de base de datos no tienen acceso al contexto de autenticación de la aplicación)
+  - `createdAt = CONVERT_TZ(NOW(), 'UTC', 'America/Bogota')` (hora de Colombia, coherente con la aplicación)
+- Los registros creados directamente por la aplicación a través de la API tendrán:
+  - `createdBy` = nombre del usuario autenticado
+  - `createdAt` = fecha/hora de Colombia establecida por `AuditableDbContext`
+- La zona horaria de Colombia (America/Bogota) es UTC-5

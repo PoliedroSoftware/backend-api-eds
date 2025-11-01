@@ -197,7 +197,7 @@ DELIMITER ;;
         NEW.accumulated_gallons,
         court_date,
         'trigger',
-        NOW()
+        CONVERT_TZ(NOW(), 'UTC', 'America/Bogota')
     );
 END */;;
 DELIMITER ;
