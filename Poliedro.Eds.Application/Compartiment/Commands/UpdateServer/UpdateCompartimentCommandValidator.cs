@@ -10,7 +10,7 @@ namespace Poliedro.Eds.Application.Compartiment.Commands.UpdateCompartiment
     {
         public UpdateCompartimentCommandValidator(IRedisService redisService)
         {
-            RuleFor(x => x.IdCompartment)
+            RuleFor(x => x.IdCompartiment)
            .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdCompartmentGreaterThan").GetAwaiter().GetResult())
            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdCompartmentNotEmpty").GetAwaiter().GetResult());
 

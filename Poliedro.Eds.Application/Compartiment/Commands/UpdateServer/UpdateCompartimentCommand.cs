@@ -5,7 +5,7 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 namespace Poliedro.Eds.Application.Compartiment.Commands.UpdateCompartiment;
 
 public record UpdateCompartimentCommand(
-int IdCompartment,
+int IdCompartiment,
 int Number,
 double Nominal,
 double Operative,
