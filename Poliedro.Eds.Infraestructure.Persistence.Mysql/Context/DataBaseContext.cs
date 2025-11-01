@@ -23,6 +23,8 @@ using Poliedro.Eds.Domain.EdsTank.Entities;
 using Poliedro.Eds.Domain.Expenditures.Entities;
 using Poliedro.Eds.Domain.Hose.Entities;
 using Poliedro.Eds.Domain.HoseHistory.Entities;
+using Poliedro.Eds.Domain.ProductHistory.Entities;
+using Poliedro.Eds.Domain.TankHistory.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
 using Poliedro.Eds.Domain.Island.Entities;
 using Poliedro.Eds.Domain.Islander.Entities;
@@ -79,6 +81,10 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<HoseEntity> Hose { get; set; }
 
     public DbSet<HoseHistoryEntity> HoseHistory { get; set; }
+
+    public DbSet<ProductHistoryEntity> ProductHistory { get; set; }
+
+    public DbSet<TankHistoryEntity> TankHistory { get; set; }
 
     public DbSet<DispensersEntity> Dispensers { get; set; }
 
@@ -161,6 +167,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new DispenserTypeConfiguration(modelBuilder.Entity<DispenserTypeEntity>());
         new HoseConfiguration(modelBuilder.Entity<HoseEntity>());
         new HoseHistoryConfiguration(modelBuilder.Entity<HoseHistoryEntity>());
+        new ProductHistoryConfiguration(modelBuilder.Entity<ProductHistoryEntity>());
+        new TankHistoryConfiguration(modelBuilder.Entity<TankHistoryEntity>());
         new TypeOfCollectionConfiguration(modelBuilder.Entity<TypeOfCollectionEntity>());
         new ShoppingConfiguration(modelBuilder.Entity<ShoppingEntity>());
         new ShoppingProductConfiguration(modelBuilder.Entity<ShoppingProductEntity>());

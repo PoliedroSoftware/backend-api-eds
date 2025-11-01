@@ -28,6 +28,12 @@ public class ProductConfiguration
             .IsRequired(false);
             
         builder.Property(x => x.Date).HasColumnName("date");
+        
+        // Audit fields mapping
+        builder.Property(x => x.CreatedBy).HasColumnName("createdBy");
+        builder.Property(x => x.CreatedAt).HasColumnName("createdAt");
+        builder.Property(x => x.UpdatedBy).HasColumnName("updatedBy");
+        builder.Property(x => x.UpdatedAt).HasColumnName("updatedAt");
 
         // Configure relationship with ProductType
         builder.HasOne(p => p.ProductType)
