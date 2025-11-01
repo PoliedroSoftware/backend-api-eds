@@ -22,6 +22,7 @@ public class CompartimentUpdateService(ITenantDbContextFactory dbContextFactory,
         if (existingEntity is null)
             return CompartimentErrorBuilder.CompartimentNotFoundException(compartimentEntity.IdCompartiment);
 
+        // Update only the fields provided in the command, preserving Date and audit fields
         existingEntity.Number = compartimentEntity.Number;
         existingEntity.Nominal = compartimentEntity.Nominal;
         existingEntity.Operative = compartimentEntity.Operative;
