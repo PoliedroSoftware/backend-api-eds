@@ -16,7 +16,9 @@ public class ShoppingConfiguration
         builder.Property(x => x.Date).HasColumnName("date");
         builder.Property(x => x.IdProvider).HasColumnName("id_provider");
         builder.Property(x => x.IdCategory).HasColumnName("id_category");
-        builder.Property(x => x.Amount).HasColumnName("amount");
+        builder.Property(x => x.Amount)
+            .HasColumnName("amount")
+            .HasColumnType("decimal(18,3)");
 
         builder.HasMany(x => x.ShoppingProducts)
                    .WithOne()

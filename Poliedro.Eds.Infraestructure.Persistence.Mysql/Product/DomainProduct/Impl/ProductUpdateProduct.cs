@@ -47,9 +47,9 @@ public class ProductUpdateProduct(
 
             if (currentProduct != null)
             {
-                stockChanged = Math.Abs((currentProduct.Stock ?? 0) - (productEntity.Stock ?? 0)) > 0.001;
-                priceChanged = Math.Abs((currentProduct.SellPrice ?? 0) - (productEntity.SellPrice ?? 0)) > 0.01 ||
-                              Math.Abs((currentProduct.PurchasePrice ?? 0) - (productEntity.PurchasePrice ?? 0)) > 0.01;
+                stockChanged = Math.Abs((currentProduct.Stock ?? 0) - (productEntity.Stock ?? 0)) > 0.001m;
+                priceChanged = Math.Abs((currentProduct.SellPrice ?? 0) - (productEntity.SellPrice ?? 0)) > 0.01m ||
+                              Math.Abs((currentProduct.PurchasePrice ?? 0) - (productEntity.PurchasePrice ?? 0)) > 0.01m;
 
                 if (stockChanged)
                 {

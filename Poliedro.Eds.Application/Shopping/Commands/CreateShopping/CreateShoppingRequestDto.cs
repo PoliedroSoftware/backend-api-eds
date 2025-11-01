@@ -7,7 +7,7 @@ public record CreateShoppingRequestDto(
     DateTime Date,
     int IdProvider,
     int IdCategory,
-    double Amount,
+    decimal Amount,
     IEnumerable<ShoppingProductRequestDto> ShoppingProducts,
     InventoryCommand? ShoppingInventory
     );

@@ -11,7 +11,7 @@ public class ShoppingEntity : AuditableEntity
     public DateTime Date { get; set; }
     public int IdProvider { get; set; }
     public int IdCategory { get; set; }
-    public double Amount { get; set; }
+    public decimal Amount { get; set; }
 
     public IEnumerable<ShoppingProductEntity> ShoppingProducts { get; set; }
     public InventoryEntity ShoppingInventory { get; set; }
