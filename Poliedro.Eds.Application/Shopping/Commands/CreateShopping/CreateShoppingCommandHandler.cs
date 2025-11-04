@@ -30,12 +30,6 @@ public class CreateShoppingCommandHandler(
 
         var shoppingEntity = mapper.Map<ShoppingEntity>(request.Request);
 
-        // assign IdEds from command if present, otherwise fallback to DTO value
-        if (request.IdEds.HasValue)
-            shoppingEntity.IdEds = request.IdEds.Value;
-        else if (request.Request.IdEds.HasValue)
-            shoppingEntity.IdEds = request.Request.IdEds.Value;
-
         shoppingEntity.ShoppingInventory = new InventoryEntity
         {
             Date = DateOnly.FromDateTime(shoppingEntity.Date),

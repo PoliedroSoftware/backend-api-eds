@@ -4,4 +4,4 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
 
-public record CreateShoppingCommand(CreateShoppingRequestDto Request, int? IdEds = null) : IRequest<Result<VoidResult, Error>>;
+public record CreateShoppingCommand(CreateShoppingRequestDto Request) : IRequest<Result<VoidResult, Error>>;

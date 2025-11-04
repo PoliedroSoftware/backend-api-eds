@@ -62,19 +62,8 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [Authorize(Policy = "AdminOrIslander")]
         [HttpPost]
         public async Task<IResult> Create([FromBody] CreateIslanderCommand createIslanderCommand)
-        {
-            int? idEds = null;
-            var claimVal = HttpContext.User?.FindFirst("id_eds")?.Value ?? HttpContext.User?.FindFirst("idEds")?.Value;
-            if (!string.IsNullOrEmpty(claimVal) && int.TryParse(claimVal, out var parsedClaim))
-                idEds = parsedClaim;
-            else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
-                idEds = parsedItem;
-
-            var req = createIslanderCommand.Request;
-            var command = new CreateIslanderCommand(req, createIslanderCommand.NameClaimToken, idEds);
-            var result = await mediator.Send(command);
-            return TypedResults.Ok(result);
-        }
+        => TypedResults.Ok(await mediator.Send(new CreateIslanderCommand(createIslanderCommand.Request, createIslanderCommand.NameClaimToken)));
+        
 
         [SwaggerOperation(Summary = "Update an existing Islander")]
         [SwaggerResponse(StatusCodes.Status200OK, "The operation was successful.")]

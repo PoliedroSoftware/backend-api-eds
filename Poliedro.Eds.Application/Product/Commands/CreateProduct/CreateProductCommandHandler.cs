@@ -27,11 +27,7 @@ public class CreateProductCommandHandler(
                 Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
         var entity = mapper.Map<ProductEntity>(request.Request);
-        if (request.IdEds.HasValue)
-            entity.IdEds = request.IdEds.Value;
-        else if (request.Request.IdEds.HasValue)
-            entity.IdEds = request.Request.IdEds.Value;
-
+       
         var result = await ProductDomainProduct.CreateAsync(entity);
         await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.PRODUCT);
         return result.IsSuccess ? result.Value! : result.Error!;

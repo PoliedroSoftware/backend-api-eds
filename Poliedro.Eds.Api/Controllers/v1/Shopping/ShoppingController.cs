@@ -70,16 +70,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Shopping
         public async Task<IResult> Create(
             [FromBody] CreateShoppingCommand createShoppingCommand)
         {
-            int? idEds = null;
-            var claimVal = HttpContext.User?.FindFirst("id_eds")?.Value ?? HttpContext.User?.FindFirst("idEds")?.Value;
-            if (!string.IsNullOrEmpty(claimVal) && int.TryParse(claimVal, out var parsedClaim))
-                idEds = parsedClaim;
-            else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
-                idEds = parsedItem;
-
-            var req = createShoppingCommand.Request;
-            var commandWithEds = new CreateShoppingCommand(req, idEds);
-            var result = await mediator.Send(commandWithEds);
+            var result = await mediator.Send(new CreateShoppingCommand(createShoppingCommand.Request));
             return result.Match(onSuccess => TypedResults.Created());
         }
 

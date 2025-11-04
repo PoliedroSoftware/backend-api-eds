@@ -4,4 +4,4 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 
 namespace Poliedro.Eds.Application.Product.Commands.CreateProduct;
 
-public record CreateProductCommand(CreateProductRequestDto Request, int? IdEds = null) : IRequest<Result<VoidResult, Error>>;
+public record CreateProductCommand(CreateProductRequestDto Request) : IRequest<Result<VoidResult, Error>>;

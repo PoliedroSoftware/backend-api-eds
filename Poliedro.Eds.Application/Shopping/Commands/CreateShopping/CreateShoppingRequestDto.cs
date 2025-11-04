@@ -10,5 +10,5 @@ public record CreateShoppingRequestDto(
     decimal Amount,
     IEnumerable<ShoppingProductRequestDto> ShoppingProducts,
     InventoryCommand? ShoppingInventory,
-    int? IdEds = null
+    int? IdEds
     );

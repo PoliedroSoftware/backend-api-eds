@@ -27,14 +27,8 @@ public class AccountController(IMediator mediator) : ControllerBase
     {
         try
         {
-            int? idEds = null;
-            var claimVal = HttpContext.User?.FindFirst("id_eds")?.Value ?? HttpContext.User?.FindFirst("idEds")?.Value;
-            if (!string.IsNullOrEmpty(claimVal) && int.TryParse(claimVal, out var parsedClaim))
-                idEds = parsedClaim;
-            else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
-                idEds = parsedItem;
-
-            var command = new CreateAccountCommand(createAccountRequest, idEds);
+          
+            var command = new CreateAccountCommand(createAccountRequest);
             var result = await mediator.Send(command);
 
             return ApiResponse(result, StatusCodes.Status201Created, StatusCodes.Status400BadRequest);

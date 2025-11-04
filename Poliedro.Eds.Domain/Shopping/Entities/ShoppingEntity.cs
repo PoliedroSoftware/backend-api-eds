@@ -12,10 +12,7 @@ public class ShoppingEntity : AuditableEntity
     public int IdProvider { get; set; }
     public int IdCategory { get; set; }
     public decimal Amount { get; set; }
-
-    // Nueva columna para multi-tenant por EDS
     public int? IdEds { get; set; }
-
     public IEnumerable<ShoppingProductEntity> ShoppingProducts { get; set; }
     public InventoryEntity ShoppingInventory { get; set; }
 }

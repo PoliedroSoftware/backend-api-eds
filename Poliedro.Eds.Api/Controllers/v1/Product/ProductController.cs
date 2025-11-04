@@ -61,16 +61,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
 
         public async Task<IResult> Create([FromBody] CreateProductCommand createProductCommand)
         {            
-            int? idEds = null;
-            var claimVal = HttpContext.User?.FindFirst("id_eds")?.Value ?? HttpContext.User?.FindFirst("idEds")?.Value;
-            if (!string.IsNullOrEmpty(claimVal) && int.TryParse(claimVal, out var parsedClaim))
-                idEds = parsedClaim;
-            else if (HttpContext.Items["id_eds"] != null && int.TryParse(HttpContext.Items["id_eds"]?.ToString(), out var parsedItem))
-                idEds = parsedItem;
-
-            var req = createProductCommand.Request;
-            var commandWithEds = new CreateProductCommand(req, idEds);
-            var result = await mediator.Send(commandWithEds);
+            var result = await mediator.Send(new CreateProductCommand(createProductCommand.Request));
             return result.Match(onSuccess => TypedResults.Created());
         }
 
