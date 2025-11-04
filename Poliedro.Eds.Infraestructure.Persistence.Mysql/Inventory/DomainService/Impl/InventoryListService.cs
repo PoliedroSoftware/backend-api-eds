@@ -69,7 +69,15 @@ public class InventoryListService(IRedisService redisService,
             if (typeof(T) == typeof(float))
                 return (T)(object)Convert.ToSingle(val, System.Globalization.CultureInfo.InvariantCulture);
         }
-        catch (Exception ex) 
+        catch (InvalidCastException ex)
+        {
+            logger.LogError(ex, "Failed to convert column {Column} to type {Type} in GetValueOrDefault.", col, typeof(T));
+        }
+        catch (FormatException ex)
+        {
+            logger.LogError(ex, "Failed to convert column {Column} to type {Type} in GetValueOrDefault.", col, typeof(T));
+        }
+        catch (OverflowException ex)
         {
             logger.LogError(ex, "Failed to convert column {Column} to type {Type} in GetValueOrDefault.", col, typeof(T));
         }
