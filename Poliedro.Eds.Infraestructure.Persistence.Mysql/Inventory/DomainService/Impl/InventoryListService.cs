@@ -49,7 +49,7 @@ public class InventoryListService(IRedisService redisService,
     }
 
 
-    private static T GetValueOrDefault<T>(DbDataReader reader, string col, T defaultValue = default!)
+    private T GetValueOrDefault<T>(DbDataReader reader, string col, T defaultValue = default!)
     {
         var idx = reader.GetOrdinal(col);
         if (reader.IsDBNull(idx)) return defaultValue;
@@ -69,7 +69,10 @@ public class InventoryListService(IRedisService redisService,
             if (typeof(T) == typeof(float))
                 return (T)(object)Convert.ToSingle(val, System.Globalization.CultureInfo.InvariantCulture);
         }
-        catch { }
+        catch (Exception ex) 
+        {
+            logger.LogError(ex, "Failed to convert column {Column} to type {Type} in GetValueOrDefault.", col, typeof(T));
+        }
 
         return (T)val; 
     }
