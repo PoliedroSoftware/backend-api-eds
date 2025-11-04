@@ -13,7 +13,8 @@ public class ProductConfiguration
         builder.Property(x => x.IdProduct).HasColumnName("id_product");
         builder.Property(x => x.Name).HasColumnName("name");
         builder.Property(x => x.IdProductType).HasColumnName("id_product_type");
-        
+        builder.Property(x => x.IdEds).HasColumnName("id_eds");
+
         // Configure nullable properties with decimal precision
         builder.Property(x => x.PurchasePrice)
             .HasColumnName("purchase_price")
