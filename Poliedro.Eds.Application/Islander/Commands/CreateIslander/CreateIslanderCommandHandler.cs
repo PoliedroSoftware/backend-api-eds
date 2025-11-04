@@ -24,7 +24,7 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
         IValidator<CreateIslanderRequestDto> validator,
         IConnection rabbitConnection,
         IHttpContextAccessor httpContextAccessor,
-        IIslanderGetByUserIslander islanderGetByUser // injected checker
+        IIslanderGetByUserIslander islanderGetByUser 
         ) : IRequestHandler<CreateIslanderCommand, bool>
     {
         public async Task<bool> Handle(CreateIslanderCommand request, CancellationToken cancellationToken)
@@ -37,6 +37,8 @@ namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander
             }
 
             IslanderEntity islanderEntity = mapper.Map<IslanderEntity>(request.Request);
+
+           
 
             Console.WriteLine($"nombre del clain del token: {request.NameClaimToken}");
 

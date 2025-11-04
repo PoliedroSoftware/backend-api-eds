@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Poliedro.Eds.Domain.Inventory.Entities;
 using Poliedro.Eds.Domain.Shopping.Entities;
+using Poliedro.Eds.Domain.Eds.Entities;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 
@@ -19,6 +20,14 @@ public class ShoppingConfiguration
         builder.Property(x => x.Amount)
             .HasColumnName("amount")
             .HasColumnType("decimal(18,3)");
+
+        // mapeo id_eds
+        builder.Property(x => x.IdEds).HasColumnName("id_eds").IsRequired(false);
+        builder.HasIndex(x => x.IdEds).HasDatabaseName("idx_shopping_id_eds");
+        builder.HasOne<EdsEntity>()
+               .WithMany()
+               .HasForeignKey(x => x.IdEds)
+               .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(x => x.ShoppingProducts)
                    .WithOne()
