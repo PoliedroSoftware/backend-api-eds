@@ -1,19 +1,40 @@
 using FluentValidation;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
+using Poliedro.Eds.Domain.Provider.DomainProvider;
 
 namespace Poliedro.Eds.Application.Shopping.Commands.UpdateShopping;
 
 public class UpdateShoppingCommandValidator : AbstractValidator<UpdateShoppingCommand>
 {
-    public UpdateShoppingCommandValidator(IRedisService redisService)
+    private readonly IProviderGetByIdService _providerService;
+
+    public UpdateShoppingCommandValidator(IRedisService redisService, IProviderGetByIdService providerService)
     {
+        _providerService = providerService;
+
         RuleFor(x => x.IdShopping)
             .GreaterThan(0).WithMessage(redisService.GetValueFromCacheAsync("IdShoppingGreaterThan").GetAwaiter().GetResult());
 
         RuleFor(x => x.Invoice)
-            .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("InvoiceNotEmpty").GetAwaiter().GetResult())
-            .MaximumLength(45).WithMessage(redisService.GetValueFromCacheAsync("InvoiceMaximumLength").GetAwaiter().GetResult());
+            .MustAsync(async (command, invoice, cancellationToken) =>
+            {
+                // Get the provider to check if it's "Otros"
+                var providerResult = await _providerService.GetByIdAsync(command.IdProvider);
+                if (providerResult.IsSuccess && providerResult.Value != null)
+                {
+                    // If provider is "Otros" (case insensitive), invoice is optional
+                    if (string.Equals(providerResult.Value.Name, "otros", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true; // Invoice is optional for "Otros" provider
+                    }
+                }
+                // For other providers, invoice is required
+                return !string.IsNullOrWhiteSpace(invoice);
+            })
+            .WithMessage(redisService.GetValueFromCacheAsync("InvoiceNotEmpty").GetAwaiter().GetResult())
+            .MaximumLength(45).WithMessage(redisService.GetValueFromCacheAsync("InvoiceMaximumLength").GetAwaiter().GetResult())
+            .When(x => !string.IsNullOrWhiteSpace(x.Invoice)); // Only validate length when invoice is provided
 
         RuleFor(x => x.Date)
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("DateNotEmpty").GetAwaiter().GetResult())

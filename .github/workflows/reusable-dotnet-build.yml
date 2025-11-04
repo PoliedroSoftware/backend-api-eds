@@ -28,6 +28,16 @@ on:
         required: false
         type: string
         default: 'default'
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description: 'AWS Access Key ID for tests'
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS Secret Access Key for tests'
+        required: false
+      AWS_REGION:
+        description: 'AWS Region for tests'
+        required: false
     outputs:
       build-succeeded:
         description: 'Whether the build succeeded'
@@ -66,6 +76,10 @@ jobs:
         
       - name: Run Tests
         if: ${{ inputs.run-tests }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: dotnet test ${{ inputs.solution-path }} --configuration ${{ inputs.configuration }} --no-build --verbosity normal --logger trx --results-directory TestResults
         
       - name: Upload test results

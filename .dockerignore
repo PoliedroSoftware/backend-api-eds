@@ -28,3 +28,7 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
+
+# Temporarily allow worker service projects for building worker containers
+# WorkerKeycloackService/
+# WorkerS3UploaderService/

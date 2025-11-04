@@ -40,7 +40,7 @@ public class SendWhatsAppMessageCommandHandler(
     /// </summary>
     /// <param name="gallons">Valor de galones a formatear</param>
     /// <returns>String formateado con decimales dinámicos</returns>
-    private static string FormatGallons(double gallons)
+    private static string FormatGallons(decimal gallons)
     {
         // Si es un número entero, mostrar sin decimales
         if (gallons == Math.Floor(gallons))
@@ -192,8 +192,8 @@ public class SendWhatsAppMessageCommandHandler(
         var islero = isleros.FirstOrDefault(i => i.IdIslander == court.IdIslander);
         var isleroName = islero?.Name ?? "Desconocido";
 
-        // Obtener el nombre de la EDS
-        var edsResult = await edsGetByIdService.GetByIdAsync(court.IdEds);
+        // Obtener el nombre de la EDS asociada al islero
+        var edsResult = await edsGetByIdService.GetByIdAsync(islero?.IdEds ?? court.IdEds);
         var edsName = edsResult.IsSuccess && edsResult.Value != null 
             ? $"*{edsResult.Value.Name.ToUpper()}*"
             : "*EDS*";
@@ -211,9 +211,9 @@ public class SendWhatsAppMessageCommandHandler(
                 var productAndCompartiment = await getProductAndCompartiment.GetProductAndCompartimentAsync(d.IdHose);
                 var productResult = await getProductById.GetByIdAsync(productAndCompartiment.IdProduct);
                 
-                double utilityPerHose = 0;
-                double sellPrice = 0;
-                double stock = 0;
+                decimal utilityPerHose = 0;
+                decimal sellPrice = 0;
+                decimal stock = 0;
                 string productName = "Producto Desconocido";
                 int productId = productAndCompartiment.IdProduct;
                 
@@ -225,7 +225,7 @@ public class SendWhatsAppMessageCommandHandler(
                     stock = product.Stock ?? 0;
                     var purchasePrice = product.PurchasePrice ?? 0;
                     var utilityPerGallon = sellPrice - purchasePrice;
-                    utilityPerHose = utilityPerGallon * d.GallonsDifferenceResult;
+                    utilityPerHose = utilityPerGallon * (decimal)d.GallonsDifferenceResult;
                 }
                 
                 return new
@@ -263,7 +263,7 @@ public class SendWhatsAppMessageCommandHandler(
             🔧 Manguera: {h.Hose}
             🛢️ Producto: {h.ProductName}
             💵 Venta En Dinero: ${h.Amount.ToString("N0", SpanishCulture)}
-            📊 Venta En Galones: {FormatGallons(h.Gallons)} gl
+            📊 Venta En Galones: {FormatGallons((decimal)h.Gallons)} gl
             💰 Precio por Galón: ${h.SellPrice.ToString("N0", SpanishCulture)}
             📈 Utilidad: ${h.Utility.ToString("N0", SpanishCulture)}
             📦 Stock Actual: {FormatGallons(h.Stock)} gl{stockNote}
@@ -370,7 +370,7 @@ Fecha: {court.DateEndtime.ToString("d/M/yyyy", SpanishCulture)}
 📊 RESUMEN TOTAL
 ══════════════
 
-⛽ Total Galones Vendidos: {FormatGallons(totalGallons)} gl
+⛽ Total Galones Vendidos: {FormatGallons((decimal)totalGallons)} gl
 💰 Total Ventas: ${totalVentas.ToString("N0", SpanishCulture)}
 📈 Total Utilidad Del Día: ${totalUtility.ToString("N0", SpanishCulture)}
 

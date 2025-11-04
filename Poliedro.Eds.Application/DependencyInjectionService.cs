@@ -3,6 +3,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Poliedro.Eds.Application.Account.AutoMappers;
+using Poliedro.Eds.Application.Auth.AutoMappers;
 using Poliedro.Eds.Application.Bank.AutoMappers;
 using Poliedro.Eds.Application.Business.AutoMappers;
 using Poliedro.Eds.Application.Capacity.AutoMappers;
@@ -27,6 +28,7 @@ using Poliedro.Eds.Application.Phone.AutoMappers;
 using Poliedro.Eds.Application.Product.AutoMappers;
 using Poliedro.Eds.Application.ProductType.AutoMappers;
 using Poliedro.Eds.Application.Provider.AutoMappers;
+using Poliedro.Eds.Application.RegisterShift.AutoMappers;
 using Poliedro.Eds.Application.Shopping.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProduct.AutoMappers;
 using Poliedro.Eds.Application.ShoppingProductInventory.AutoMappers;
@@ -34,6 +36,7 @@ using Poliedro.Eds.Application.StrongBox.AutoMappers;
 using Poliedro.Eds.Application.Tank.AutoMappers;
 using Poliedro.Eds.Application.TransferValidation.AutoMappers;
 using Poliedro.Eds.Application.TypeOfCollection.AutoMappers;
+using Poliedro.Eds.Application.Wizard.AutoMappers;
 
 namespace Poliedro.Eds.Application;
 
@@ -97,6 +100,9 @@ public static class DependencyInjectionService
             config.AddProfile(new BankProfile());
             config.AddProfile(new AccountProfile());
             config.AddProfile(new TransferValidationProfile());
+            config.AddProfile(new RegisterShiftMapper());
+            config.AddProfile(new SetupMapper());
+            config.AddProfile(new AuthMapper());
         });
         services.AddSingleton(mapper.CreateMapper());
         #endregion

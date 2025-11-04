@@ -6,7 +6,6 @@ using AWS.Logger;
 using DotNetEnv;
 using FluentValidation;
 using HealthChecks.UI.Client;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
@@ -29,10 +28,13 @@ using Poliedro.Eds.Application.Common.EventHandlers.Cache;
 using Poliedro.Eds.Application.Common.Services.Background;
 using Poliedro.Eds.Application.Common.Services.Cache;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
+using Poliedro.Eds.Application.Court.Settings;
 using Poliedro.Eds.Application.FileUploadS3.Command;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
+using Poliedro.Eds.Application.TransferValidation.Commands.UpdateTransferValidation;
+using Poliedro.Eds.Application.TransferValidation.Validation;
 using Poliedro.Eds.Application.Translations.Dtos;
 using Poliedro.Eds.Application.Translations.Handle;
 using Poliedro.Eds.Domain.Account.Services;
@@ -46,8 +48,7 @@ using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.SendMessage;
-using Poliedro.Eds.Application.TransferValidation.Commands.UpdateTransferValidation;
-using Poliedro.Eds.Application.TransferValidation.Validation;
+using Poliedro.Eds.Infraestructure.External.Keycloak;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql;
@@ -62,7 +63,7 @@ using Poliedro.External.HealthCheck.WhatsApp;
 using Poliedro.External.WhatsApp.SendMessage;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
-using WorkerKeycloackService;
+using WorkerKeycloackService; // Re-enabled for background worker execution
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,8 +73,13 @@ builder.Configuration.AddEnvironmentVariables();
 // Configura el logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
-builder.Configuration
-    .AddSecretsManager("poliedro-conecctionstring-mysql-eds-backend", "us-east-2");
+
+// Only load AWS Secrets Manager in non-Test environments
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    builder.Configuration
+        .AddSecretsManager("poliedro-conecctionstring-mysql-eds-backend", "us-east-2");
+}
 builder.Services
     .AddWebApi()
     .AddApplication()
@@ -81,9 +87,12 @@ builder.Services
     .AddPersistence(builder.Configuration)
     .AddExternalAmazon()
     .AddExternalTolgee()
+    .AddKeycloakServices(builder.Configuration)
     .AddBusinessDomainEvents();
 
+// Re-enabled for background worker execution - Workers run in the same process as API
 builder.Services.AddHostedService<Worker>();
+builder.Services.AddHostedService<WorkerS3UploaderService.Worker>();
 builder.Services.AddScoped<IBusinessCreateDomianService, BusinessDomainService>();
 
 builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
@@ -145,16 +154,28 @@ builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 
-
 builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
 {
-    var factory = new RabbitMQ.Client.ConnectionFactory()
+    try
     {
-        HostName = builder.Configuration["RabbitMQ:HostName"],
-        UserName = builder.Configuration["RabbitMQ:UserName"],
-        Password = builder.Configuration["RabbitMQ:Password"]
-    };
-    return factory.CreateConnection();
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        var factory = new RabbitMQ.Client.ConnectionFactory()
+        {
+            HostName = builder.Configuration["RabbitMQ:HostName"],
+            UserName = builder.Configuration["RabbitMQ:UserName"],
+            Password = builder.Configuration["RabbitMQ:Password"]
+        };
+
+        var connection = factory.CreateConnection();
+        logger.LogInformation("Successfully connected to RabbitMQ at {HostName}", factory.HostName);
+        return connection;
+    }
+    catch (Exception ex)
+    {
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning(ex, "Failed to connect to RabbitMQ. The application will continue without RabbitMQ functionality.");
+        return null;
+    }
 });
 
 // Configura el JWT
@@ -220,20 +241,20 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(type => type.FullName);
 });
 
-
 // Configuración de MediatR con el nuevo behavior de invalidación de caché
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining<GetTranslationsHandler>();
     cfg.RegisterServicesFromAssemblyContaining<GetCourtsListQueryHandler>();
     cfg.RegisterServicesFromAssemblyContaining<Poliedro.Eds.Application.Islander.EventHandlers.IslanderKeycloakCreatedEventHandler>();
-    
+
     // Agregar el behavior de invalidación de caché usando el método genérico
     cfg.AddOpenBehavior(typeof(CacheInvalidationBehavior<,>));
 });
 
 builder.Services.AddMemoryCache();
 builder.Services.Configure<TolgeeSettings>(builder.Configuration.GetSection("Tolgee"));
+builder.Services.Configure<PaymentSettings>(builder.Configuration.GetSection("PaymentSettings"));
 builder.Services.AddHttpClient<TranslationCachingService>((serviceProvider, client) =>
 {
     var apiSettings = builder.Configuration.GetSection("Tolgee").Get<TolgeeSettings>();
@@ -312,21 +333,23 @@ builder.Services.AddScoped<TransferValidationCreateValidator>();
 builder.Services.AddScoped<UpdateTransferValidationValidator>();
 
 builder.Services.AddControllers();
-AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 
-
-var loggerConfig = new AWSLoggerConfig
+// Only configure AWS logging in non-Test environments
+if (!builder.Environment.IsEnvironment("Test"))
 {
-    Region = secret.Region,
-    Credentials = new BasicAWSCredentials(secret.AwsAccessKeyId, secret.AwsSecretAccessKey),
-    LogGroup = "poliedro-eds-group",
+    AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 
-};
+    var loggerConfig = new AWSLoggerConfig
+    {
+        Region = secret.Region,
+        Credentials = new BasicAWSCredentials(secret.AwsAccessKeyId, secret.AwsSecretAccessKey),
+        LogGroup = "poliedro-eds-group",
+    };
 
-builder.Logging.ClearProviders();
-builder.Logging.AddAWSProvider(loggerConfig);
-builder.Logging.SetMinimumLevel(LogLevel.Information);
-
+    builder.Logging.ClearProviders();
+    builder.Logging.AddAWSProvider(loggerConfig);
+    builder.Logging.SetMinimumLevel(LogLevel.Information);
+}
 
 builder.Services.AddCors(options =>
 {
@@ -369,3 +392,11 @@ app.UseMiddleware<NameIdentifierMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+// Make Program class accessible for integration tests
+
+/// <summary>
+/// Defines the <see cref="Program" />
+/// </summary>
+public partial class Program
+{
+}

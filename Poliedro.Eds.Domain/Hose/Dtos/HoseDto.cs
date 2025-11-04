@@ -34,9 +34,9 @@ public record CleanProductDto(
     int IdProduct,
     string Name,
     int IdProductType,
-    double? PurchasePrice,
-    double? SellPrice,
-    double? Stock,
+    decimal? PurchasePrice,
+    decimal? SellPrice,
+    decimal? Stock,
     DateTime date
 );
 
@@ -51,5 +51,7 @@ public record HoseDto(
     CleanDispensersDto? DispensersEntity,
     CleanProductTypeDto? ProductTypeEntity,
     CleanEdsDto? EdsEntity,
-    CleanProductDto? ProductEntity
+    CleanProductDto? ProductEntity,
+    string? CodeDispenser,
+    int? NumberCompartiment
 );

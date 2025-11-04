@@ -1,6 +1,7 @@
+name: Reusable SonarCloud Analysis
+
 permissions:
   contents: read
-name: Reusable SonarCloud Analysis
 
 on:
   workflow_call:

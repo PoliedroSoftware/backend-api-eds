@@ -14,6 +14,10 @@ public class DispensersEntity : AuditableEntity
     public int EdsId { get; set; }
     public int IdIsland { get; set; }
     public int HoseNumber { get; set; }
+    [NotMapped]
+    public int? NumberIsland { get; set; }
+    [NotMapped]
+    public string? NameEDS { get; set; }
 
     public virtual EdsEntity? Eds { get; set; }
 }

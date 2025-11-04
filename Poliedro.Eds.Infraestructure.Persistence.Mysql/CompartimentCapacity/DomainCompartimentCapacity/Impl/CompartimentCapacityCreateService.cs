@@ -4,10 +4,11 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.CompartimentCapacity.DomainCompartimentCapacity.Impl;
 
-public class CompartimentCapacityCreateService(ITenantDbContextFactory dbContextFactory) : ICompartimentCapacityCreateService
+public class CompartimentCapacityCreateService(ITenantDbContextFactory dbContextFactory, ILogger<CompartimentCapacityCreateService> logger) : ICompartimentCapacityCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(CompartimentCapacityEntity CompartimentCapacityEntity)
     {
@@ -16,6 +17,7 @@ public class CompartimentCapacityCreateService(ITenantDbContextFactory dbContext
         var result = await context.SaveChangesAsync() > 0;
         if (!result)
             return CompartimentCapacityErrorBuilder.CompartimentCapacityCreationException();
-        return VoidResult.Instance;
+        logger.LogInformation("Successfully created CompartimentCapacity");
+return VoidResult.Instance;
     }
 }

@@ -20,11 +20,14 @@ public class UpdateTransferValidationCommandHandler(
         UpdateTransferValidationCommand request, 
         CancellationToken cancellationToken)
     {
+        // Ajustar el monto: dividir entre 100 para quitar los dos ceros de más en los decimales
+        var adjustedAmount = request.Request.TransactionAmount / 100;
+    
         logger.LogInformation("=== INICIANDO ACTUALIZACIÓN DE VALIDACIÓN DE TRANSFERENCIA ===");
         logger.LogInformation("ID: {Id}, Cliente: {CustomerName}, Monto: ${Amount:F2}", 
             request.Id,
             request.Request.CustomerName, 
-            request.Request.TransactionAmount);
+            adjustedAmount);
 
         // Validar el ID por separado
         if (request.Id <= 0)
@@ -44,7 +47,7 @@ public class UpdateTransferValidationCommandHandler(
             var updated = await transferValidationService.UpdateAsync(
                 idTransferValidation: request.Id,
                 customerName: request.Request.CustomerName,
-                transactionAmount: request.Request.TransactionAmount,
+                transactionAmount: adjustedAmount,
                 transactionDate: request.Request.TransactionDate,
                 transactionTime: request.Request.TransactionTime,
                 status: request.Request.Status,

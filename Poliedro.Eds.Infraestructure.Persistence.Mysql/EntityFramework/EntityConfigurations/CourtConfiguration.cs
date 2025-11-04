@@ -26,22 +26,25 @@ public class CourtConfiguration
         builder.HasOne(x => x.CourtInventory)
                 .WithOne()
                 .HasForeignKey<InventoryEntity>(x => x.ReferenceId);
+
         builder.HasMany(x => x.CourtDispensers)
                 .WithOne()
-                .HasForeignKey(x => x.IdCourt);
+                .HasForeignKey(x => x.IdCourt)
+                .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(x => x.CourtDocuments)
                 .WithOne()
-               .HasForeignKey(x => x.IdCourt);
+                .HasForeignKey(x => x.IdCourt)
+                .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(x => x.CourtExpenditures)
                .WithOne()
-               .HasForeignKey(x => x.IdCourt);
+               .HasForeignKey(x => x.IdCourt)
+               .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(x => x.CourtTypeOfCollections)
                .WithOne()
-               .HasForeignKey(x => x.IdCourt);
-
-
+               .HasForeignKey(x => x.IdCourt)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

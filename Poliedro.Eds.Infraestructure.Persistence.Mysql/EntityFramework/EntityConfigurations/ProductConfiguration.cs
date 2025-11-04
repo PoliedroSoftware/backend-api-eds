@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Poliedro.Eds.Domain.Product.Entities;
-using Poliedro.Eds.Domain.Eds.Entities;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 
@@ -14,20 +13,26 @@ public class ProductConfiguration
         builder.Property(x => x.IdProduct).HasColumnName("id_product");
         builder.Property(x => x.Name).HasColumnName("name");
         builder.Property(x => x.IdProductType).HasColumnName("id_product_type");
-
-        builder.Property(x => x.PurchasePrice).HasColumnName("purchase_price").IsRequired(false);
-        builder.Property(x => x.SellPrice).HasColumnName("sell_price").IsRequired(false);
-        builder.Property(x => x.Stock).HasColumnName("stock").IsRequired(false);
+        
+        // Configure nullable properties with decimal precision
+        builder.Property(x => x.PurchasePrice)
+            .HasColumnName("purchase_price")
+            .HasColumnType("decimal(18,3)")
+            .IsRequired(false);
+            
+        builder.Property(x => x.SellPrice)
+            .HasColumnName("sell_price")
+            .HasColumnType("decimal(18,3)")
+            .IsRequired(false);
+            
+        builder.Property(x => x.Stock)
+            .HasColumnName("stock")
+            .HasColumnType("decimal(18,3)")
+            .IsRequired(false);
+            
         builder.Property(x => x.Date).HasColumnName("date");
 
-        // mapeo id_eds
-        builder.Property(x => x.IdEds).HasColumnName("id_eds").IsRequired(false);
-        builder.HasIndex(x => x.IdEds).HasDatabaseName("idx_product_id_eds");
-        builder.HasOne<EdsEntity>()
-               .WithMany()
-               .HasForeignKey(x => x.IdEds)
-               .OnDelete(DeleteBehavior.Restrict);
-
+        // Configure relationship with ProductType
         builder.HasOne(p => p.ProductType)
             .WithMany(pt => pt.Products)
             .HasForeignKey(p => p.IdProductType)

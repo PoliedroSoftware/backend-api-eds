@@ -6,14 +6,13 @@ using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.OpenAI.DomainOpenAI;
 using Poliedro.Eds.Domain.OpenAI.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.DomainOpenAI.Impl;
 
-public class OpenAIChatService(
-    OpenAIClient openAiClient,
+public class OpenAIChatService(OpenAIClient openAiClient,
     IOpenAIRequestRepository requestRepository,
-    IOpenAIResponseRepository responseRepository
-    ) : IOpenAIChatService
+    IOpenAIResponseRepository responseRepository, ILogger<OpenAIChatService> logger) : IOpenAIChatService
 {
     public async Task<Result<OpenAIResponseEntity, Error>> SendChatMessageAsync(OpenAIRequestEntity request)
     {

@@ -15,8 +15,6 @@ IHost host = Host.CreateDefaultBuilder(args)
 
         services.AddSingleton<IConnection>(sp =>
         {
-            ;
-
             var factory = new ConnectionFactory()
             {
                 HostName = configuration["RabbitMQ:HostName"],

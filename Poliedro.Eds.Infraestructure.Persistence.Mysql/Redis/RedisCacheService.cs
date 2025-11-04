@@ -9,12 +9,13 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Redis;
 
 public class RedisCacheService : IRedisService
 {
-    private readonly ConnectionMultiplexer _redis;
-    private readonly IDatabase _db;
-    private readonly ISubscriber _subscriber;
-    private readonly IServer _server;
+    private readonly ConnectionMultiplexer? _redis;
+    private readonly IDatabase? _db;
+    private readonly ISubscriber? _subscriber;
+    private readonly IServer? _server;
     private readonly ILogger<BusinessGetAllService> _logger;
-    
+    private readonly bool _isConnected;
+
     private const string CACHE_TAGS_PREFIX = "cache:tags:";
     private const string CACHE_INVALIDATION_CHANNEL = "cache:invalidation";
 
@@ -23,17 +24,32 @@ public class RedisCacheService : IRedisService
         ILogger<BusinessGetAllService> logger
        )
     {
-        _redis = ConnectionMultiplexer.Connect(config.Value.ConnectionString);
-        _db = _redis.GetDatabase();
-        _subscriber = _redis.GetSubscriber();
-        _server = _redis.GetServer(_redis.GetEndPoints()[0]);
         _logger = logger;
-    }
+        _isConnected = false;
 
-    #region Métodos existentes
+        try
+        {
+            _redis = ConnectionMultiplexer.Connect(config.Value.ConnectionString);
+            _db = _redis.GetDatabase();
+            _subscriber = _redis.GetSubscriber();
+            _server = _redis.GetServer(_redis.GetEndPoints()[0]);
+            _isConnected = true;
+            _logger.LogInformation("Successfully connected to Redis at {ConnectionString}", config.Value.ConnectionString);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to connect to Redis. The application will continue without Redis caching functionality.");
+        }
+    }
 
     public async Task SetCacheAsync<T>(string key, T value, TimeSpan expiration)
     {
+        if (!_isConnected || _db == null)
+        {
+            _logger.LogDebug("Redis not available. Skipping cache set for key '{Key}'", key);
+            return;
+        }
+
         try
         {
             var json = JsonSerializer.Serialize(value);
@@ -51,6 +67,12 @@ public class RedisCacheService : IRedisService
 
     public async Task<T?> GetCacheAsync<T>(string key)
     {
+        if (!_isConnected || _db == null)
+        {
+            _logger.LogDebug("Redis not available. Cache miss for key '{Key}'", key);
+            return default;
+        }
+
         try
         {
             var json = await _db.StringGetAsync(key);
@@ -78,6 +100,12 @@ public class RedisCacheService : IRedisService
 
     public async Task<bool> RemoveCacheAsync(string key)
     {
+        if (!_isConnected || _db == null)
+        {
+            _logger.LogDebug("Redis not available. Skipping cache remove for key '{Key}'", key);
+            return false;
+        }
+
         try
         {
             return await _db.KeyDeleteAsync(key);
@@ -91,6 +119,12 @@ public class RedisCacheService : IRedisService
 
     public async Task RemoveByPrefixAsync(string prefix)
     {
+        if (!_isConnected || _db == null || _server == null)
+        {
+            _logger.LogDebug("Redis not available. Skipping cache remove by prefix '{Prefix}'", prefix);
+            return;
+        }
+
         try
         {
             var keysToDelete = new List<RedisKey>();
@@ -113,12 +147,23 @@ public class RedisCacheService : IRedisService
 
     public async Task RemoveByPrefixAsync(IEnumerable<string> prefixes)
     {
+        if (!_isConnected)
+        {
+            return;
+        }
+
         var tasks = prefixes.Select(prefix => RemoveByPrefixAsync(prefix));
         await Task.WhenAll(tasks);
     }
 
     public async Task<List<string>> GetKeysByPatternAsync(string pattern)
     {
+        if (!_isConnected || _server == null)
+        {
+            _logger.LogDebug("Redis not available. Returning empty list for pattern '{Pattern}'", pattern);
+            return new List<string>();
+        }
+
         try
         {
             var keys = new List<string>();
@@ -139,6 +184,11 @@ public class RedisCacheService : IRedisService
 
     public async Task<string?> GetValueFromCacheAsync(string key)
     {
+        if (!_isConnected)
+        {
+            return null;
+        }
+
         var cacheKey = $"translations:en";
         var translations = await GetCacheAsync<Dictionary<string, string>>(cacheKey);
         if (translations != null && translations.ContainsKey(key))
@@ -148,12 +198,14 @@ public class RedisCacheService : IRedisService
         return null;
     }
 
-    #endregion
-
-    #region Nuevos métodos con tags y pub/sub
-
     public async Task SetCacheWithTagsAsync<T>(string key, T value, TimeSpan expiration, params string[] tags)
     {
+        if (!_isConnected || _db == null)
+        {
+            _logger.LogDebug("Redis not available. Skipping cache set with tags for key '{Key}'", key);
+            return;
+        }
+
         try
         {
             // Guardar el valor principal
@@ -178,6 +230,12 @@ public class RedisCacheService : IRedisService
 
     public async Task InvalidateCacheByTagsAsync(params string[] tags)
     {
+        if (!_isConnected || _db == null)
+        {
+            _logger.LogDebug("Redis not available. Skipping cache invalidation by tags");
+            return;
+        }
+
         try
         {
             var keysToDelete = new HashSet<RedisKey>();
@@ -186,12 +244,12 @@ public class RedisCacheService : IRedisService
             {
                 var tagKey = $"{CACHE_TAGS_PREFIX}{tag}";
                 var taggedKeys = await _db.SetMembersAsync(tagKey);
-                
+
                 foreach (var key in taggedKeys)
                 {
                     keysToDelete.Add(key.ToString()); // Convertir RedisValue a string y luego a RedisKey implícitamente
                 }
-                
+
                 // Eliminar el tag también
                 keysToDelete.Add(tagKey);
             }
@@ -199,8 +257,8 @@ public class RedisCacheService : IRedisService
             if (keysToDelete.Count > 0)
             {
                 var deletedCount = await _db.KeyDeleteAsync(keysToDelete.ToArray());
-                _logger.LogInformation("Cache invalidated by tags {Tags}: {DeletedCount} keys deleted", 
-                    string.Join(", ", tags), deletedCount);
+                _logger.LogInformation("Cache invalidated by tags {Tags}: {DeletedCount} keys deleted",
+                 string.Join(", ", tags), deletedCount);
             }
         }
         catch (Exception ex)
@@ -211,6 +269,11 @@ public class RedisCacheService : IRedisService
 
     public async Task InvalidateCacheByTagsAsync(string tenant, params string[] tags)
     {
+        if (!_isConnected)
+        {
+            return;
+        }
+
         try
         {
             var tenantScopedTags = tags.Select(tag => GetCacheTag(tenant, tag)).ToArray();
@@ -218,13 +281,19 @@ public class RedisCacheService : IRedisService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "[Error] invalidating cache by tenant '{Tenant}' and tags: {Tags}", 
-                tenant, string.Join(", ", tags));
+            _logger.LogError(ex, "[Error] invalidating cache by tenant '{Tenant}' and tags: {Tags}",
+         tenant, string.Join(", ", tags));
         }
     }
 
     public async Task PublishCacheInvalidationAsync(string tenant, string[] tags)
     {
+        if (!_isConnected || _subscriber == null)
+        {
+            _logger.LogDebug("Redis not available. Skipping cache invalidation publish");
+            return;
+        }
+
         try
         {
             var message = JsonSerializer.Serialize(new
@@ -235,8 +304,8 @@ public class RedisCacheService : IRedisService
             });
 
             await _subscriber.PublishAsync(CACHE_INVALIDATION_CHANNEL, message);
-            _logger.LogInformation("Published cache invalidation for tenant '{Tenant}' with tags: {Tags}", 
-                tenant, string.Join(", ", tags));
+            _logger.LogInformation("Published cache invalidation for tenant '{Tenant}' with tags: {Tags}",
+     tenant, string.Join(", ", tags));
         }
         catch (Exception ex)
         {
@@ -246,6 +315,12 @@ public class RedisCacheService : IRedisService
 
     public async Task SubscribeToCacheInvalidationAsync(Func<string, string[], Task> onMessage)
     {
+        if (!_isConnected || _subscriber == null)
+        {
+            _logger.LogDebug("Redis not available. Skipping cache invalidation subscription");
+            return;
+        }
+
         try
         {
             await _subscriber.SubscribeAsync(CACHE_INVALIDATION_CHANNEL, async (channel, message) =>
@@ -256,13 +331,13 @@ public class RedisCacheService : IRedisService
                     var messageString = message.ToString();
                     using var document = JsonDocument.Parse(messageString);
                     var root = document.RootElement;
-                    
+
                     var tenant = root.GetProperty("Tenant").GetString() ?? string.Empty;
                     var tags = root.GetProperty("Tags")
-                        .EnumerateArray()
-                        .Select(x => x.GetString())
-                        .Where(x => !string.IsNullOrEmpty(x))
-                        .ToArray()!;
+                         .EnumerateArray()
+                   .Select(x => x.GetString())
+                .Where(x => !string.IsNullOrEmpty(x))
+                    .ToArray()!;
 
                     await onMessage(tenant, tags);
                 }
@@ -280,13 +355,18 @@ public class RedisCacheService : IRedisService
 
     public async Task InvalidateDistributedCacheAsync(string tenant, string operation, string entityType, object? entityId = null)
     {
+        if (!_isConnected)
+        {
+            return;
+        }
+
         try
         {
             var tags = new List<string>
             {
-                GetCacheTag(tenant, entityType),
-                GetCacheTag(tenant, "all") // Tag global para invalidar todo
-            };
+        GetCacheTag(tenant, entityType),
+  GetCacheTag(tenant, "all") // Tag global para invalidar todo
+    };
 
             // Agregar tags específicos basados en la operación
             switch (operation.ToLower())
@@ -305,22 +385,18 @@ public class RedisCacheService : IRedisService
 
             // Invalidar localmente primero
             await InvalidateCacheByTagsAsync(tags.ToArray());
-            
+
             // Luego notificar a otros servicios
             await PublishCacheInvalidationAsync(tenant, tags.ToArray());
 
             _logger.LogInformation("Distributed cache invalidation completed for tenant '{Tenant}', operation '{Operation}', entity '{EntityType}'",
-                tenant, operation, entityType);
+     tenant, operation, entityType);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "[Error] invalidating distributed cache");
         }
     }
-
-    #endregion
-
-    #region Helper methods
 
     public string GetTenantScopedKey(string tenant, string key)
     {
@@ -332,5 +408,4 @@ public class RedisCacheService : IRedisService
         return $"{tenant}:{entityType}";
     }
 
-    #endregion
 }
