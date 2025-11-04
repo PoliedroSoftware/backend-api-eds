@@ -35,7 +35,6 @@ public class InventoryListService(IRedisService redisService,
                 .Take(paginationParams.PageSize)
                 .ToList();
 
-            // No caches vacíos: evita “enfriar” el sistema con [] por 24h
             if (pagedInventories.Count > 0)
                 await redisService.SetCacheAsync(cachekey, pagedInventories, TimeSpan.FromHours(24));
 
@@ -44,7 +43,7 @@ public class InventoryListService(IRedisService redisService,
         catch (Exception ex)
         {
             logger.LogError(ex, "Error getting inventory list for tenant {Tenant} with params {@Pagination}", tenant, paginationParams);
-            // Opcional: re-lanzar, o devolver 500 desde el handler
+            
             return [];
         }
     }
@@ -56,8 +55,7 @@ public class InventoryListService(IRedisService redisService,
         if (reader.IsDBNull(idx)) return defaultValue;
 
         object val = reader.GetValue(idx);
-
-        // Maneja DECIMAL → double/int
+        
         try
         {
             if (typeof(T) == typeof(double))
@@ -71,9 +69,9 @@ public class InventoryListService(IRedisService redisService,
             if (typeof(T) == typeof(float))
                 return (T)(object)Convert.ToSingle(val, System.Globalization.CultureInfo.InvariantCulture);
         }
-        catch { /* caeremos al default abajo */ }
+        catch { }
 
-        return (T)val; // último intento
+        return (T)val; 
     }
 
     private async Task<IEnumerable<InventoryListResponseDto>> GetInventoriesFromViewAsync()
@@ -115,16 +113,14 @@ public class InventoryListService(IRedisService redisService,
         if (rows.Count == 0)
         {
             logger.LogWarning("v_inventory returned 0 rows");
-            // Devuelve un DTO raíz vacío o lista vacía; tu API hoy devuelve lista
+          
             return [];
         }
 
         var inventoryList =
             rows.GroupBy(r => new { r.IdBusiness, r.Business })
                 .Select(b => new InventoryListResponseDto
-                {
-                    // (Mantengo tu forma actual, aunque es raro que cada item tenga
-                    // un arreglo Businesses con solo 1 elemento)
+                {                                  
                     Businesses = new[]
                     {
                     new BusinessDto
