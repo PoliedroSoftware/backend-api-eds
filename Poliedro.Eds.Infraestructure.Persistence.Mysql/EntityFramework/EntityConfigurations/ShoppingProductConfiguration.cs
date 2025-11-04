@@ -14,9 +14,15 @@ public class ShoppingProductConfiguration
         builder.Property(x => x.IdShoppingProduct).HasColumnName("id_shopping_product");
         builder.Property(x => x.IdShopping).HasColumnName("id_shopping");
         builder.Property(x => x.IdProduct).HasColumnName("id_product");
-        builder.Property(x => x.Quantity).HasColumnName("quantity");
-        builder.Property(x => x.PurchasePrice).HasColumnName("purchase_price");
-        builder.Property(x => x.SellPrice).HasColumnName("sell_price");
+        builder.Property(x => x.Quantity)
+            .HasColumnName("quantity")
+            .HasColumnType("decimal(18,3)");
+        builder.Property(x => x.PurchasePrice)
+            .HasColumnName("purchase_price")
+            .HasColumnType("decimal(18,3)");
+        builder.Property(x => x.SellPrice)
+            .HasColumnName("sell_price")
+            .HasColumnType("decimal(18,3)");
         builder.Property(x => x.IdCompartment).HasColumnName("id_compartiment");
 
         builder.HasOne<ShoppingEntity>()
