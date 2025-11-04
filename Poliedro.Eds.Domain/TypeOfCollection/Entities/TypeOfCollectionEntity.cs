@@ -8,5 +8,4 @@ public class TypeOfCollectionEntity : AuditableEntity
     [Key]
     public int IdTypeOfCollection { get; set; } = default!;
     public string Description { get; set; } = default!;
-    public int? IdEds { get; set; }
 }
