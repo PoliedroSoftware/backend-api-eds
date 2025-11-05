@@ -10,6 +10,7 @@ using Poliedro.Eds.Application.Compartiment.Errors;
 using Poliedro.Eds.Application.Compartiment.Queries.GellAllCompartiment;
 using Poliedro.Eds.Application.Compartiment.Queries.GetCompartimentById;
 using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain.Common.Results.Errors;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Poliedro.Eds.Api.Controllers.v1.Compartiment;
@@ -90,8 +91,9 @@ public class CompartimentController(IMediator mediator) : ControllerBase
 
         if (!result.IsSuccess)
         {
-            var statusCode = (int)result.Error!.HttpStatusCode;
-            return StatusCode(statusCode, ResponseApiService.Response(statusCode, result.Error));
+            var error = result.Error ?? Error.CreateInstance("UnknownError", "An unknown error occurred.", System.Net.HttpStatusCode.InternalServerError);
+            var statusCode = (int)error.HttpStatusCode;
+            return StatusCode(statusCode, ResponseApiService.Response(statusCode, error));
         }
         return NoContent();
     }
