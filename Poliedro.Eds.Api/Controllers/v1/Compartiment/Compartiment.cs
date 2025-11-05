@@ -90,12 +90,8 @@ public class CompartimentController(IMediator mediator) : ControllerBase
 
         if (!result.IsSuccess)
         {
-            if (result.Error is CompartimentErrorBuilder)
-            {
-                return NotFound(ResponseApiService.Response(StatusCodes.Status404NotFound));
-            }
-
-            return StatusCode(StatusCodes.Status500InternalServerError, ResponseApiService.Response(StatusCodes.Status500InternalServerError, result.Error));
+            var statusCode = (int)result.Error!.HttpStatusCode;
+            return StatusCode(statusCode, ResponseApiService.Response(statusCode, result.Error));
         }
         return NoContent();
     }

@@ -18,10 +18,13 @@ namespace Poliedro.Eds.Application.Compartiment.Commands.UpdateCompartiment
     {
         public async Task<Result<VoidResult, Error>> Handle(UpdateCompartimentCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await validator.ValidateAsync(request);
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
+            {
+                var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
                 return Result<VoidResult, Error>.Failure(
-                    Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+                    Error.CreateInstance("ValidationFailed", errors, HttpStatusCode.BadRequest));
+            }
 
             var compartimentEntity = mapper.Map<CompartimentEntity>(request);
             var result = await compartimentDomainCompartiment.UpdateAsync(compartimentEntity);
