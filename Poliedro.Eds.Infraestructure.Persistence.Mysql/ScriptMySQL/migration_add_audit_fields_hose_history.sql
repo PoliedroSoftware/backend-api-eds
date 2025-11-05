@@ -9,7 +9,7 @@ ADD COLUMN IF NOT EXISTS `createdAt` datetime DEFAULT NULL AFTER `createdBy`,
 ADD COLUMN IF NOT EXISTS `updatedBy` varchar(255) DEFAULT NULL AFTER `createdAt`,
 ADD COLUMN IF NOT EXISTS `updatedAt` datetime DEFAULT NULL AFTER `updatedBy`;
 
--- Update the trigger to populate audit fields
+-- Update the INSERT trigger to populate audit fields
 DROP TRIGGER IF EXISTS `trg_insert_hose_history`;
 
 DELIMITER $$
@@ -43,5 +43,56 @@ BEGIN
         'trigger',
         CONVERT_TZ(NOW(), 'UTC', 'America/Bogota')
     );
+END$$
+DELIMITER ;
+
+-- Create UPDATE trigger to track changes in hose_history
+DROP TRIGGER IF EXISTS `trg_update_hose_history`;
+
+DELIMITER $$
+CREATE TRIGGER `trg_update_hose_history` AFTER UPDATE ON `court_dispensers` FOR EACH ROW 
+BEGIN
+    DECLARE court_date DATE;
+    DECLARE v_id_dispensers INT;
+
+    SELECT date_starttime INTO court_date
+    FROM court
+    WHERE id_court = NEW.id_court;
+
+    SELECT id_dispensers INTO v_id_dispensers
+    FROM hose
+    WHERE id_hose = NEW.id_hose;
+
+    INSERT INTO hose_history (
+        id_hose,
+        id_dispensers,
+        accumulated_amount,
+        accumulated_gallons,
+        date,
+        createdBy,
+        createdAt
+    ) VALUES (
+        NEW.id_hose,
+        v_id_dispensers,
+        NEW.accumulated_amount,
+        NEW.accumulated_gallons,
+        court_date,
+        'trigger',
+        CONVERT_TZ(NOW(), 'UTC', 'America/Bogota')
+    );
+END$$
+DELIMITER ;
+
+-- Create UPDATE trigger to keep hose table in sync
+DROP TRIGGER IF EXISTS `trg_update_hose_accumulated_on_update`;
+
+DELIMITER $$
+CREATE TRIGGER `trg_update_hose_accumulated_on_update` AFTER UPDATE ON `court_dispensers` FOR EACH ROW 
+BEGIN
+    UPDATE hose
+    SET 
+        accumulated_amount = NEW.accumulated_amount,
+        accumulated_gallons = NEW.accumulated_gallons
+    WHERE id_hose = NEW.id_hose;
 END$$
 DELIMITER ;

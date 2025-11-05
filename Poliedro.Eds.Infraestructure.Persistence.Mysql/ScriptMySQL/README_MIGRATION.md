@@ -1,16 +1,22 @@
 # Migración: Campos de Auditoría en hose_history
 
 ## Descripción
-Esta migración agrega los campos de auditoría (`createdBy`, `createdAt`, `updatedBy`, `updatedAt`) a la tabla `hose_history` y actualiza el trigger `trg_insert_hose_history` para poblar correctamente el campo `createdAt` con la fecha y hora actual.
+Esta migración agrega los campos de auditoría (`createdBy`, `createdAt`, `updatedBy`, `updatedAt`) a la tabla `hose_history` y actualiza los triggers para poblar correctamente los campos de auditoría con la fecha y hora actual en zona horaria de Colombia.
 
 ## Problema Resuelto
 - El campo `createdAt` no registraba la fecha y hora actual en los registros creados por el trigger
 - Los campos de auditoría no estaban mapeados en la configuración de Entity Framework
+- No existía un trigger de UPDATE para crear registros históricos cuando se actualizaban los datos en `court_dispensers`
 
 ## Archivos Modificados
-1. `DatabaseDump.sql` - Actualizado con la nueva estructura de la tabla y el trigger modificado
+1. `DatabaseDump.sql` - Actualizado con la nueva estructura de la tabla y los triggers modificados/nuevos
 2. `HoseHistoryConfiguration.cs` - Agregado el mapeo de los campos de auditoría
 3. `migration_add_audit_fields_hose_history.sql` - Script de migración para bases de datos existentes
+
+## Triggers Creados/Modificados
+1. `trg_insert_hose_history` - Modificado para incluir campos de auditoría con zona horaria de Colombia
+2. `trg_update_hose_history` - **NUEVO** - Crea registros en `hose_history` cuando se actualizan datos en `court_dispensers`
+3. `trg_update_hose_accumulated_on_update` - **NUEVO** - Mantiene sincronizada la tabla `hose` cuando se actualizan datos en `court_dispensers`
 
 ## Instrucciones para Aplicar la Migración
 
@@ -34,9 +40,11 @@ Después de aplicar la migración, verificar que:
 DESCRIBE hose_history;
 ```
 
-2. El trigger se ha actualizado correctamente:
+2. Los triggers se han actualizado correctamente:
 ```sql
 SHOW CREATE TRIGGER trg_insert_hose_history;
+SHOW CREATE TRIGGER trg_update_hose_history;
+SHOW CREATE TRIGGER trg_update_hose_accumulated_on_update;
 ```
 
 3. Los nuevos registros incluyen el campo `createdAt` con la fecha/hora actual:
@@ -46,8 +54,10 @@ SELECT * FROM hose_history ORDER BY id_hose_hose_history DESC LIMIT 5;
 
 ## Impacto
 - **Positivo**: Los registros de auditoría ahora incluirán la fecha y hora de creación real
+- **Positivo**: Las actualizaciones de `court_dispensers` ahora crearán registros históricos en `hose_history`
 - **Compatibilidad**: Los registros existentes tendrán valores NULL en los campos de auditoría (esto es esperado)
 - **Sin Breaking Changes**: La aplicación continuará funcionando sin cambios adicionales
+- **Comportamiento Nuevo**: Cada actualización de `court_dispensers` creará un nuevo registro en `hose_history` para mantener el historial completo de cambios
 
 ## Notas
 - Los registros creados antes de esta migración tendrán valores NULL en los campos de auditoría
