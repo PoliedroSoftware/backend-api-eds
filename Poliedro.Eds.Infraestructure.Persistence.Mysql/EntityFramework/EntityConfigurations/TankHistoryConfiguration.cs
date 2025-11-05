@@ -12,11 +12,8 @@ public class TankHistoryConfiguration
         builder.HasKey(x => x.IdTankHistory);
         builder.Property(x => x.IdTankHistory).HasColumnName("id_tank_history");
         builder.Property(x => x.IdTank).HasColumnName("id_tank");
-        builder.Property(x => x.Number).HasColumnName("number");
-        builder.Property(x => x.Compartment).HasColumnName("compartment");
-        builder.Property(x => x.Ability).HasColumnName("ability");
-        builder.Property(x => x.Stock).HasColumnName("stock");
-        builder.Property(x => x.Date).HasColumnName("date");
+        builder.Property(x => x.OldAbility).HasColumnName("old_ability");
+        builder.Property(x => x.NewAbility).HasColumnName("new_ability");
         
         // Audit fields mapping
         builder.Property(x => x.CreatedBy).HasColumnName("createdBy");

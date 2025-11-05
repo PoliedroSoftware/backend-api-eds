@@ -12,11 +12,12 @@ public class ProductHistoryConfiguration
         builder.HasKey(x => x.IdProductHistory);
         builder.Property(x => x.IdProductHistory).HasColumnName("id_product_history");
         builder.Property(x => x.IdProduct).HasColumnName("id_product");
-        builder.Property(x => x.Name).HasColumnName("name");
-        builder.Property(x => x.IdProductType).HasColumnName("id_product_type");
-        builder.Property(x => x.PurchasePrice).HasColumnName("purchase_price");
-        builder.Property(x => x.SellPrice).HasColumnName("sell_price");
-        builder.Property(x => x.Stock).HasColumnName("stock");
+        builder.Property(x => x.OldSellPrice).HasColumnName("old_sell_price");
+        builder.Property(x => x.NewSellPrice).HasColumnName("new_sell_price");
+        builder.Property(x => x.OldStock).HasColumnName("old_stock");
+        builder.Property(x => x.NewStock).HasColumnName("new_stock");
+        builder.Property(x => x.OldPurchasePrice).HasColumnName("old_purchase_price");
+        builder.Property(x => x.NewPurchasePrice).HasColumnName("new_purchase_price");
         builder.Property(x => x.Date).HasColumnName("date");
         
         // Audit fields mapping
