@@ -26,8 +26,9 @@ public class CourtMapper : Profile
         CreateMap<CourtExpenditureEntity, CourtExpenditureCommand>().ReverseMap();
 
         // Fix the DocumentCommand to DocumentEntity mapping
+        // Ignorar Descripcion para evitar guardar imágenes base64 pesadas en DB
         CreateMap<DocumentCommand, DocumentEntity>()
-        .ForMember(dest => dest.Descripcion, opt => opt.MapFrom(src => src.Descripcion))
+        .ForMember(dest => dest.Descripcion, opt => opt.Ignore()) // Ignorar para no guardar en DB
         .ForMember(dest => dest.DocumentName, opt => opt.MapFrom(src => src.DocumentName))
         .ForMember(dest => dest.IdCourtDocument, opt => opt.Ignore()) // Auto-generated
         .ForMember(dest => dest.IdCourt, opt => opt.Ignore()); // Will be set by EF relationships
