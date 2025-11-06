@@ -30,7 +30,7 @@ public class CourtInventoryService(IConfiguration config,
             {
                 Console.WriteLine($"Actualizando producto {product.IdProduct}: Stock antes: {product.Stock}, Vendidos: {dispenser.GallonsDifferenceResult}");
 
-                var nuevoStock = product.Stock - (decimal)dispenser.GallonsDifferenceResult;
+                var nuevoStock = product.Stock - dispenser.GallonsDifferenceResult;
                 if (nuevoStock < 0)
                 {
                     throw new InvalidOperationException(

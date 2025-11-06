@@ -4,10 +4,10 @@ namespace Poliedro.Eds.Application.Compartiment.Dtos;
 public record CompartimentDto(
     int IdCompartiment,
     int Number,
-    decimal Nominal,
-    decimal Operative,
+    double Nominal,
+    double Operative,
     int IdProduct,
-    decimal Height,
+    double Height,
     int IdTank,
     string? NumberTank,
     string? NameProduct

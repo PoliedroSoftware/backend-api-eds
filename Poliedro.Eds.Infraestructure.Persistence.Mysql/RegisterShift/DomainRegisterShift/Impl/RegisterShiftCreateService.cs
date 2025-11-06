@@ -7,11 +7,10 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.RegisterShift.DomainService;
 using Poliedro.Eds.Domain.RegisterShift.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.RegisterShift.DomainRegisterShift.Impl;
 
-public class RegisterShiftCreateService(ITenantDbContextFactory dbContextFactory, ILogger<RegisterShiftCreateService> logger) : IRegisterShiftCreateService
+public class RegisterShiftCreateService(ITenantDbContextFactory dbContextFactory) : IRegisterShiftCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(RegisterShiftEntity entity)
     {
@@ -26,8 +25,7 @@ public class RegisterShiftCreateService(ITenantDbContextFactory dbContextFactory
             }
             else
             {
-                logger.LogInformation("Successfully created RegisterShift");
-return VoidResult.Instance;
+                return VoidResult.Instance;
             }
         }
         catch (Exception)

@@ -6,6 +6,6 @@ namespace Poliedro.Eds.Domain.Capacity.DomainCapacity;
 
 public interface ICapacityCreateService
 {
-    Task<Result<VoidResult, Error>> CreateAsync(CapacityEntity CapacityEntity);
+    Task<Result<CapacityEntity, Error>> CreateAsync(CapacityEntity CapacityEntity);
 
 }
