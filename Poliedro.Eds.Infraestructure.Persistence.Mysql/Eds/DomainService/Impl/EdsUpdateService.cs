@@ -7,10 +7,11 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Eds.DomainEds.Impl;
 
-public class EdsUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IEdsUpdateService
+public class EdsUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService, ILogger<EdsUpdateService> logger) : IEdsUpdateService
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(EdsEntity EdsEntity)
     {
@@ -23,7 +24,8 @@ public class EdsUpdateService(ITenantDbContextFactory dbContextFactory, IRedisSe
         if (await context.SaveChangesAsync() <= 0)
             return EdsErrorBuilder.EdsUpdateException();
         await redisService.RemoveByPrefixAsync("eds:");
-        return VoidResult.Instance;
+        logger.LogInformation("Successfully updated DomainEds");
+return VoidResult.Instance;
     }
 
     private async Task<bool> EntityExists(int id)

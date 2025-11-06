@@ -6,8 +6,8 @@ namespace Poliedro.Eds.Application.Shopping.Commands.UpdateShopping;
 
 public record UpdateShoppingCommand(
 int IdShopping,
-string Invoice,
+string? Invoice,
 DateTime Date,
 int IdProvider,
 int IdCategory,
-double Amount) : IRequest<Result<VoidResult, Error>>;
+decimal Amount) : IRequest<Result<VoidResult, Error>>;

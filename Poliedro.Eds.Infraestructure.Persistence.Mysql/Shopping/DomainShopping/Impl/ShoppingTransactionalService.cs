@@ -132,7 +132,7 @@ public class ShoppingTransactionalService(
                 $"No se encontraron los productos con Ids: {string.Join(", ", nonExistingIds)}");
         }
 
-        var priceUpdates = new List<(int ProductId, double? OldPurchasePrice, double? NewPurchasePrice, double? OldSellPrice, double? NewSellPrice, string ProductName)>();
+        var priceUpdates = new List<(int ProductId, decimal? OldPurchasePrice, decimal? NewPurchasePrice, decimal? OldSellPrice, decimal? NewSellPrice, string ProductName)>();
 
         foreach (var productToUpdate in productsToUpdate)
         {

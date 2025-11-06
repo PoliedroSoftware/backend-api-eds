@@ -13,18 +13,22 @@ public class ProductConfiguration
         builder.Property(x => x.IdProduct).HasColumnName("id_product");
         builder.Property(x => x.Name).HasColumnName("name");
         builder.Property(x => x.IdProductType).HasColumnName("id_product_type");
-        
-        // Configure nullable properties
+        builder.Property(x => x.IdEds).HasColumnName("id_eds");
+
+        // Configure nullable properties with decimal precision
         builder.Property(x => x.PurchasePrice)
             .HasColumnName("purchase_price")
+            .HasColumnType("decimal(18,3)")
             .IsRequired(false);
             
         builder.Property(x => x.SellPrice)
             .HasColumnName("sell_price")
+            .HasColumnType("decimal(18,3)")
             .IsRequired(false);
             
         builder.Property(x => x.Stock)
             .HasColumnName("stock")
+            .HasColumnType("decimal(18,3)")
             .IsRequired(false);
             
         builder.Property(x => x.Date).HasColumnName("date");

@@ -10,10 +10,11 @@ public class ProductEntity : AuditableEntity
     public int IdProduct { get; set; } = default!;
     public string Name { get; set; } = default!;
     public int IdProductType { get; set; }
-    public double? PurchasePrice { get; set; }
-    public double? SellPrice { get; set; }
-    public double? Stock { get; set; }
+    public decimal? PurchasePrice { get; set; }
+    public decimal? SellPrice { get; set; }
+    public decimal? Stock { get; set; }
     public DateTime Date { get; set; }
+    public int? IdEds { get; set; }
 
 
     public virtual ProductTypeEntity? ProductType { get; set; }
