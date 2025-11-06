@@ -2,15 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Hose.DomainHose.Impl
 {
-    public class HoseQueryService(ITenantDbContextFactory dbContextFactory, ILogger<HoseQueryService> logger) : IHoseQueryService
+    public class HoseQueryService(ITenantDbContextFactory dbContextFactory) : IHoseQueryService
     {
         public async Task<int?> GetHoseLimitAsync(int dispenserId)
         {
-        logger.LogInformation("Processing Hose");
             using var context = dbContextFactory.CreateDbContext();
 
             var dispenser = await context.Dispensers

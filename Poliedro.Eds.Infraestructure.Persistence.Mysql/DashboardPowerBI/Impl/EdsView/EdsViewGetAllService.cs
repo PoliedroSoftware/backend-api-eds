@@ -6,13 +6,14 @@ using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.DomainEds;
 using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.EdsView;
 
-public class EdsViewGetAllService(ITenantDbContextFactory dbContextFactory,
+public class EdsViewGetAllService(
+    ITenantDbContextFactory dbContextFactory,
     IRedisService redisService,
-    IHttpContextAccessor httpContextAccessor, ILogger<EdsViewGetAllService> logger) : IEdsViewGetAllService
+    IHttpContextAccessor httpContextAccessor
+    ) : IEdsViewGetAllService
 {
     public async Task<IEnumerable<EdsViewEntity>> GetAllAsync(PaginationParams paginationParams)
     {

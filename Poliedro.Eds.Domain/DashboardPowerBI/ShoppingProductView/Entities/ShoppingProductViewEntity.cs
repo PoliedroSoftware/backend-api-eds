@@ -10,12 +10,12 @@ public class ShoppingProductViewEntity
     public int IdProduct { get; set; }
     public DateOnly Date { get; set; }
     public string ProductName { get; set; }
-    public decimal Quantity { get; set; }
-    public decimal SellPrice { get; set; }
-    public decimal PurchasePrice { get; set; }
-    public decimal Stock { get; set; }
+    public double Quantity { get; set; }
+    public double SellPrice { get; set; }
+    public double PurchasePrice { get; set; }
+    public double Stock { get; set; }
     public int IdCompartment { get; set; }
-    public decimal TotalSellPrice { get; set; }
-    public decimal TotalPurchasePrice { get; set; }
+    public double TotalSellPrice { get; set; }
+    public double TotalPurchasePrice { get; set; }
     public int IdBusiness { get; set; }
 }

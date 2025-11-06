@@ -4,5 +4,5 @@ namespace Poliedro.Eds.Domain.FileUploadS3.Ports;
 
 public interface IFileUploadService
 {
-    Task<string> UploadFileAsync(IFormFile file, int courtId);
+    Task<string> UploadFileAsync(IFormFile file);
 }

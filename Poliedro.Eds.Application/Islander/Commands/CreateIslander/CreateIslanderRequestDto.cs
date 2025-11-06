@@ -1,7 +1,7 @@
 namespace Poliedro.Eds.Application.Islander.Commands.CreateIslander;
 
 public record CreateIslanderRequestDto(
-    int? IdEds,
+    int IdEds,
     string Name,
     string Password,
     string Email,

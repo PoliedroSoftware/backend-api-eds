@@ -7,8 +7,8 @@ namespace Poliedro.Eds.Application.Compartiment.Commands.UpdateCompartiment;
 public record UpdateCompartimentCommand(
 int IdCompartment,
 int Number,
-decimal Nominal,
-decimal Operative,
+double Nominal,
+double Operative,
 int IdProduct,
-decimal Height,
+double Height,
 int IdTank) : IRequest<Result<VoidResult, Error>>;

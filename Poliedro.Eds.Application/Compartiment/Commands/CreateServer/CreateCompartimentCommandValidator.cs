@@ -1,9 +1,10 @@
 using FluentValidation;
+using Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 
 
-namespace Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment;
+namespace Poliedro.Eds.Application.Compartiment.CreateCompartiment;
 
 public class CreateCompartimentCommandValidator : AbstractValidator<CreateCompartimentRequestDto>
 {
