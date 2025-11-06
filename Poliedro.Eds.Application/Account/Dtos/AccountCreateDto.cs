@@ -6,5 +6,4 @@ public class AccountCreateDto
     public string Bank { get; set; } = null!;
     public string Account { get; set; } = null!;
     public string Holder { get; set; } = null!;
-    public int? IdEds { get; set; }
 }

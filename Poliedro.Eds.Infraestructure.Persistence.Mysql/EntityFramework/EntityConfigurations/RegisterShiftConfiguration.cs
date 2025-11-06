@@ -18,8 +18,6 @@ public class RegisterShiftConfiguration
 
         builder.Property(x => x.IdRegisterShift).HasColumnName("id_registershift");
         builder.Property(x => x.IdEds).HasColumnName("id_eds");
-        builder.Property(x => x.IdIslander).HasColumnName("id_islander");
-        builder.Property(x => x.IdBussines).HasColumnName("id_business");
         builder.Property(x => x.DateStartTime).HasColumnName("date_starttime");
         builder.Property(x => x.StartTime).HasColumnName("starttime");
         builder.Property(x => x.DateEndTime).HasColumnName("date_endtime");

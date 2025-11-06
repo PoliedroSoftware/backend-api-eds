@@ -20,7 +20,7 @@ public class UpdateShoppingProductCommandHandler(
         var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)
             return Result<VoidResult, Error>.Failure(
-                Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+                Error.CreateInstance("ValidationFailed", string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)), HttpStatusCode.BadRequest));
 
         var shoppingProductEntity = mapper.Map<ShoppingProductEntity>(request);
         var result = await shoppingProductDomainShoppingProduct.UpdateAsync(shoppingProductEntity);

@@ -5,5 +5,4 @@ public record CreateProductRequestDto(
     int IdProductType,
     double? SellPrice,
     double? PurchasePrice,
-    double? Stock,
-    int? IdEds);
+    double? Stock);

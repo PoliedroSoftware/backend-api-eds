@@ -11,7 +11,4 @@ public class AccountEntity : AuditableEntity
     public string Bank { get; set; } = null!;
     public string Account { get; set; } = null!;
     public string Holder { get; set; } = null!;
-
-    // Nueva columna para multi-tenant por EDS
-    public int? IdEds { get; set; }
 }

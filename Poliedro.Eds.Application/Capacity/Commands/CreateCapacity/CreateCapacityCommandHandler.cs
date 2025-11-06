@@ -2,6 +2,7 @@ using System.Net;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Poliedro.Eds.Application.Capacity.Dtos;
 using Poliedro.Eds.Application.Common.Constants;
 using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Ports.Redis;
@@ -16,17 +17,17 @@ public class CreateCapacityCommandHandler(
     ICapacityCreateService CapacityCreateService,
     IMapper mapper,
     IValidator<CreateCapacityRequestDto> validator,
-    IRedisService redisService) : IRequestHandler<CreateCapacityCommand, Result<VoidResult, Error>>
+    IRedisService redisService) : IRequestHandler<CreateCapacityCommand, Result<CapacityDto, Error>>
 {
-    public async Task<Result<VoidResult, Error>> Handle(CreateCapacityCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CapacityDto, Error>> Handle(CreateCapacityCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request.Request);
         if (!validationResult.IsValid)
-            return Result<VoidResult, Error>.Failure(
+            return Result<CapacityDto, Error>.Failure(
                 Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
         var result = await CapacityCreateService.CreateAsync(mapper.Map<CapacityEntity>(request.Request));
         await RedisHelper.RemoveCacheIfSuccessAsync(result, redisService, KeyRedisConstants.CAPACITY);
-        return result.IsSuccess ? result.Value! : result.Error!;
+        return result.IsSuccess ? mapper.Map<CapacityDto>(result.Value!) : result.Error!;
     }
 }

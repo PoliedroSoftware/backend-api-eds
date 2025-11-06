@@ -300,7 +300,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
         {
             try
             {
-                var priceUpdates = new List<(int ProductId, decimal OldPrice, decimal NewPrice, string ProductName)>();
+                var priceUpdates = new List<(int ProductId, double OldPrice, double NewPrice, string ProductName)>();
 
                 foreach (var dispenser in courtDispensers)
                 {
@@ -314,7 +314,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     
                     // Calcular el precio y redondearlo al entero más cercano (sin decimales)
                     var calculatedPrice = roundedAmount / roundedGallons;
-                    var courtPrice = (decimal)Math.Round(calculatedPrice, 0); // Redondear a 0 decimales (entero) y convertir a decimal
+                    var courtPrice = Math.Round(calculatedPrice, 0); // Redondear a 0 decimales (entero)
 
                     // Obtener información del producto
                     var productAndCompartiment = await getProductAndCompartiment
@@ -332,7 +332,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                     var currentSellPrice = product.SellPrice ?? 0;
 
                     // Validar si el precio es diferente (usando tolerancia para comparación de decimales)
-                    if (Math.Abs(currentSellPrice - courtPrice) > 0.01m)
+                    if (Math.Abs(currentSellPrice - courtPrice) > 0.01)
                     {
                         // Actualizar el precio del producto usando domain service
                         var previousPrice = product.SellPrice;
@@ -392,7 +392,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories
                 var product = productResult.Value!;
 
                 // Validar que hay suficiente stock
-                var nuevoStock = product.Stock - (decimal)dispenser.GallonsDifferenceResult;
+                var nuevoStock = product.Stock - dispenser.GallonsDifferenceResult;
                 //if (nuevoStock < 0)
                 //{
                 //    return Error.BadRequest("InsufficientStock",

@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Poliedro.Eds.Domain.Account.Entities;
-using Poliedro.Eds.Domain.Eds.Entities;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 
@@ -20,16 +19,8 @@ public class AccountConfiguration
         builder.Property(x => x.CreatedAt).HasColumnName("createdAt");
         builder.Property(x => x.UpdatedBy).HasColumnName("updatedBy").HasMaxLength(255);
         builder.Property(x => x.UpdatedAt).HasColumnName("updatedAt");
-
-        // mapeo id_eds
-        builder.Property(x => x.IdEds).HasColumnName("id_eds").IsRequired(false);
-        builder.HasIndex(x => x.IdEds).HasDatabaseName("idx_account_id_eds");
-        builder.HasOne<EdsEntity>()
-               .WithMany()
-               .HasForeignKey(x => x.IdEds)
-               .OnDelete(DeleteBehavior.Restrict);
-
-        // índice único existente
+        
+        // Configurar índice único en account
         builder.HasIndex(x => x.Account).IsUnique().HasDatabaseName("account_unique");
     }
 }

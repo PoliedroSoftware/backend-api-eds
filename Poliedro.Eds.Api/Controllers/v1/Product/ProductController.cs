@@ -57,11 +57,11 @@ namespace Poliedro.Eds.Api.Controllers.v1.Islender
         [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
         [Authorize(Policy = "AdminOnly")]
-        [HttpPost] 
+        [HttpPost]
 
         public async Task<IResult> Create([FromBody] CreateProductCommand createProductCommand)
-        {            
-            var result = await mediator.Send(new CreateProductCommand(createProductCommand.Request));
+        {
+            var result = await mediator.Send(createProductCommand);
             return result.Match(onSuccess => TypedResults.Created());
         }
 
