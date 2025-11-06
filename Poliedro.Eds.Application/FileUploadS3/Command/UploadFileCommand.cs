@@ -3,4 +3,4 @@ using Microsoft.AspNetCore.Http;
 
 namespace Poliedro.Eds.Application.FileUploadS3.Command;
 
-public record UploadFileCommand(IFormFile File) : IRequest<string>;
+public record UploadFileCommand(IFormFile File, int CourtId) : IRequest<string>;
