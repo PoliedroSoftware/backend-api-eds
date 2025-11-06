@@ -13,5 +13,6 @@ namespace Poliedro.Eds.Domain.FileUploadS3
         public string TempPath { get; set; } = "";
         public string FileName { get; set; } = "";
         public string ContentType { get; set; } = "";
+        public int CourtId { get; set; }
     }
 }
