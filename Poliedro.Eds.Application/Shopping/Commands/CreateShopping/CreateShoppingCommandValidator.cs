@@ -35,7 +35,7 @@ public class CreateShoppingCommandValidator : AbstractValidator<CreateShoppingRe
             .WithName("IdProvider");
 
         RuleFor(x => x.IdCategory)
-             .GreaterThan(0).WithMessage("El ID de la categoría debe ser mayor a 0")
+             .GreaterThan(0).WithMessage("El ID de la categoría debe ser mayor a 0");
 
         RuleForEach(x => x.ShoppingProducts)
             .Must(product => product.SellPrice > product.PurchasePrice)
