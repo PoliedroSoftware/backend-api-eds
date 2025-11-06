@@ -35,11 +35,12 @@ public class CreateShoppingCommandValidator : AbstractValidator<CreateShoppingRe
             .WithName("IdProvider");
 
         RuleFor(x => x.IdCategory)
-             .GreaterThan(0).WithMessage("El ID de la categoría debe ser mayor a 0")
-             .WithName("IdCategory");
+             .GreaterThan(0).WithMessage("El ID de la categoría debe ser mayor a 0");
 
-        RuleFor(x => x.Amount)
-          .GreaterThan(0).WithMessage("El monto debe ser mayor a 0")
-          .WithName("Amount");
+        RuleForEach(x => x.ShoppingProducts)
+            .Must(product => product.SellPrice > product.PurchasePrice)
+            .WithMessage((_, product) => 
+                $"El precio de venta (${product.SellPrice:N2}) debe ser mayor al precio de compra (${product.PurchasePrice:N2}). " +
+                $"La operación ha sido rechazada para prevenir pérdidas.");
     }
 }

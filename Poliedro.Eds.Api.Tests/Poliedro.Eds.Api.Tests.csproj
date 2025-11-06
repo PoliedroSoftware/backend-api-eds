@@ -35,4 +35,8 @@
     <ProjectReference Include="..\Poliedro.Eds.Infraestructure.External.Keycloak\Poliedro.Eds.Infraestructure.External.Keycloak.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="IntegrationTests\Shopping\" />
+  </ItemGroup>
+
 </Project>
