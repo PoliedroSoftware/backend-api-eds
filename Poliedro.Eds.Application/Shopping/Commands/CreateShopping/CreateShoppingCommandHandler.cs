@@ -26,7 +26,7 @@ public class CreateShoppingCommandHandler(
         var validationResult = await validator.ValidateAsync(request.Request);
         if (!validationResult.IsValid)
             return Result<VoidResult, Error>.Failure(
-                Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
+                Error.CreateInstance("ValidationFailed", string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)), HttpStatusCode.BadRequest));
 
         var shoppingEntity = mapper.Map<ShoppingEntity>(request.Request);
 
