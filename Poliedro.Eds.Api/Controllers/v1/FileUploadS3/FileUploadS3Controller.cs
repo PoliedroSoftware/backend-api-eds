@@ -18,7 +18,7 @@ public class UploadController(IMediator mediator) : ControllerBase
         var results = new List<string>();
         foreach (var file in request.Files)
         {
-            var command = new UploadFileCommand(file, request.CourtId);
+            var command = new UploadFileCommand(file);
             var result = await mediator.Send(command);
             results.Add(result);
         }

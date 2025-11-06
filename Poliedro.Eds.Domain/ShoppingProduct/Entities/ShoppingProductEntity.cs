@@ -10,8 +10,8 @@ public class ShoppingProductEntity : AuditableEntity
     public int IdShoppingProduct { get; set; }
     public int IdShopping { get; set; }
     public int IdProduct { get; set; }
-    public decimal Quantity { get; set; }
-    public decimal PurchasePrice { get; set; }
-    public decimal SellPrice { get; set; }
+    public double Quantity { get; set; }
+    public double PurchasePrice { get; set; }
+    public double SellPrice { get; set; }
     public int IdCompartment { get; set; }
 }

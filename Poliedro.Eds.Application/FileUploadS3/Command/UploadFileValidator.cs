@@ -11,8 +11,5 @@ public class UploadFileValidator : AbstractValidator<UploadFileCommand>
         RuleFor(x => x.File)
             .NotNull().WithMessage(redisService.GetValueFromCacheAsync("FileNotNull").GetAwaiter().GetResult())
             .Must(f => f.Length > 0).WithMessage(redisService.GetValueFromCacheAsync("FileMust").GetAwaiter().GetResult());
-            
-        RuleFor(x => x.CourtId)
-            .GreaterThan(0).WithMessage("CourtId must be greater than 0");
     }
 }
