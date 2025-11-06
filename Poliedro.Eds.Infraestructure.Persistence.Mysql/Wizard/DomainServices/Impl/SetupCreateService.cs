@@ -11,10 +11,11 @@ using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Domain.Wizard.DomainSetup;
 using Poliedro.Eds.Domain.Wizard.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Wizard.DomainServices.Impl;
 
-public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISetupCreateService
+public class SetupCreateService(ITenantDbContextFactory dbContextFactory, ILogger<SetupCreateService> logger) : ISetupCreateService
 {
     public async Task<Result<VoidResult, Error>> CreateAsync(SetupEntity setupEntity)
     {
@@ -162,7 +163,8 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
             // Final commit
             await transaction.CommitAsync();
 
-            return VoidResult.Instance;
+            logger.LogInformation("Successfully created Wizard");
+return VoidResult.Instance;
         }
         catch (Exception ex)
         {

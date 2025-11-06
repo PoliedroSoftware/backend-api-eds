@@ -2,10 +2,10 @@ namespace Poliedro.Eds.Application.Compartiment.Commands.CreateCompartiment;
 
 public record CreateCompartimentRequestDto(
     int Number,
-    double Nominal,
-    double Operative,
+    decimal Nominal,
+    decimal Operative,
     int IdProduct,
-    double Height,
+    decimal Height,
     int IdTank);
 
 

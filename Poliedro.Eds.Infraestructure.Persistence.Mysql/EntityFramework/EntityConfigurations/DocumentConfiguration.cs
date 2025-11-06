@@ -13,9 +13,10 @@ public class DocumentConfiguration
         builder.Property(x => x.IdCourtDocument).HasColumnName("idcourt_document")
         .ValueGeneratedOnAdd();
 
+        // Hacer Descripcion opcional para evitar guardar imágenes base64 pesadas
         builder.Property(x => x.Descripcion).HasColumnName("descripcion")
           .HasColumnType("LONGTEXT")
-          .IsRequired();
+          .IsRequired(false); // Cambiado de IsRequired() a IsRequired(false)
      
         builder.Property(x => x.DocumentName).HasColumnName("document_name")
             .HasMaxLength(100);

@@ -34,9 +34,12 @@ namespace Amazon.S3.FileUploadService
             _queue = configuration["RabbitMQ:QueueDocuments"] ?? throw new ArgumentNullException("Queue configuration is missing");
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file)
+        public async Task<string> UploadFileAsync(IFormFile file, int courtId)
         {
-            var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}_{file.FileName}");
+            // Siempre agregar prefijo del courtId al nombre del archivo
+            var fileName = $"{courtId}_{file.FileName}";
+            var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}_{fileName}");
+            
             await using (var stream = new FileStream(tempPath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
@@ -47,8 +50,9 @@ namespace Amazon.S3.FileUploadService
                 BucketName = _bucketName,
                 FolderName = _folderName,
                 TempPath = tempPath,
-                FileName = file.FileName,
-                ContentType = file.ContentType
+                FileName = fileName,
+                ContentType = file.ContentType,
+                CourtId = courtId
             };
 
             // Publish RabbitMQ
@@ -62,7 +66,7 @@ namespace Amazon.S3.FileUploadService
 
             channel.BasicPublish(exchange: string.Empty, routingKey: _queue, basicProperties: null, body: body);
 
-            return $"{_folderName}/pending/{file.FileName}";
+            return $"{_folderName}/pending/{fileName}";
         }
     }
 }

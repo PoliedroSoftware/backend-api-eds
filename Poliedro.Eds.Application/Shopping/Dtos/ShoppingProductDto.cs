@@ -4,8 +4,8 @@ public record ShoppingProductDto(
     int IdShoppingProduct,
     int IdShopping,
     int IdProduct,
-    double Quantity,
-    double PurchasePrice,
-    double SellPrice,
+    decimal Quantity,
+    decimal PurchasePrice,
+    decimal SellPrice,
     int IdCompartment
 );

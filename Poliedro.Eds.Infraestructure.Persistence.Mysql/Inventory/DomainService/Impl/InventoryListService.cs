@@ -7,76 +7,133 @@ using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Inventory.Dto.View;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
+using System.Data.Common;
+using Poliedro.Eds.Application.Court.Commands.CreateCourt;
+using StackExchange.Redis;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 
-public class InventoryListService(
-    IRedisService redisService,
+public class InventoryListService(IRedisService redisService,
     IHttpContextAccessor httpContextAccessor,
-    ITenantDbContextFactory dbContextFactory
-    ) : IInventoryListDomainService
+    ITenantDbContextFactory dbContextFactory, ILogger<InventoryListService> logger) : IInventoryListDomainService
 {
     public async Task<IEnumerable<InventoryListResponseDto>> GetAllAsync(PaginationParams paginationParams)
     {
-        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-        string cachekey = $"inventoryListService:{paginationParams.PageNumber}:{paginationParams.PageSize}:{tenant}";
-        var cachedData = await redisService.GetCacheAsync<IEnumerable<InventoryListResponseDto>>(cachekey);
+        var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString() ?? "unknown";
+        string cachekey = $"inventoryListService:{tenant}:{paginationParams.PageNumber}:{paginationParams.PageSize}";
 
+        var cachedData = await redisService.GetCacheAsync<IEnumerable<InventoryListResponseDto>>(cachekey);
         if (cachedData != null) return cachedData;
+
         try
         {
             var inventories = await GetInventoriesFromViewAsync();
 
             var pagedInventories = inventories
-                .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                .Skip(Math.Max(0, (paginationParams.PageNumber <= 0 ? 0 : (paginationParams.PageNumber - 1)) * paginationParams.PageSize))
                 .Take(paginationParams.PageSize)
                 .ToList();
 
-            await redisService.SetCacheAsync(cachekey, pagedInventories, TimeSpan.FromMinutes(1440));
+            if (pagedInventories.Count > 0)
+                await redisService.SetCacheAsync(cachekey, pagedInventories, TimeSpan.FromHours(24));
+
             return pagedInventories;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            logger.LogError(ex, "Error getting inventory list for tenant {Tenant} with params {@Pagination}", tenant, paginationParams);
+            
             return [];
         }
+    }
+
+
+    private T GetValueOrDefault<T>(DbDataReader reader, string col, T defaultValue = default!)
+    {
+        var idx = reader.GetOrdinal(col);
+        if (reader.IsDBNull(idx)) return defaultValue;
+
+        object val = reader.GetValue(idx);
+        
+        try
+        {
+            if (typeof(T) == typeof(double))
+                return (T)(object)Convert.ToDouble(val, System.Globalization.CultureInfo.InvariantCulture);
+            if (typeof(T) == typeof(int))
+                return (T)(object)Convert.ToInt32(val, System.Globalization.CultureInfo.InvariantCulture);
+            if (typeof(T) == typeof(string))
+                return (T)((T)(object)Convert.ToString(val) ?? (object)defaultValue!);
+            if (typeof(T) == typeof(long))
+                return (T)(object)Convert.ToInt64(val, System.Globalization.CultureInfo.InvariantCulture);
+            if (typeof(T) == typeof(float))
+                return (T)(object)Convert.ToSingle(val, System.Globalization.CultureInfo.InvariantCulture);
+        }
+        catch (InvalidCastException ex)
+        {
+            logger.LogError(ex, "Failed to convert column {Column} to type {Type} in GetValueOrDefault.", col, typeof(T));
+        }
+        catch (FormatException ex)
+        {
+            logger.LogError(ex, "Failed to convert column {Column} to type {Type} in GetValueOrDefault.", col, typeof(T));
+        }
+        catch (OverflowException ex)
+        {
+            logger.LogError(ex, "Failed to convert column {Column} to type {Type} in GetValueOrDefault.", col, typeof(T));
+        }
+
+        return (T)val; 
     }
 
     private async Task<IEnumerable<InventoryListResponseDto>> GetInventoriesFromViewAsync()
     {
         using var context = dbContextFactory.CreateDbContext();
-        var rows = new List<dynamic>();
-        using var connection = context.Database.GetDbConnection();
+        await using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
-        string query = "SELECT * FROM v_inventory";
-        using var command = connection.CreateCommand();
-        command.CommandText = query;
-        using var reader = await command.ExecuteReaderAsync();
 
+        const string query = "SELECT * FROM v_inventory";
+        await using var command = connection.CreateCommand();
+        command.CommandText = query;
+
+        var rows = new List<(int IdBusiness, string Business, int IdEds, string Eds, int IdTank, string Tank, double TankCapacity, int IdCompartment, int Compartment, int IdProduct, string Product, double Stock)>();
+
+        await using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync())
         {
-            rows.Add(new
-            {
-                IdBusiness = reader.GetInt32(reader.GetOrdinal("id_business")),
-                Business = reader.GetString(reader.GetOrdinal("business")),
-                IdEds = reader.GetInt32(reader.GetOrdinal("id_eds")),
-                Eds = reader.GetString(reader.GetOrdinal("eds")),
-                IdTank = reader.GetInt32(reader.GetOrdinal("id_tank")),
-                Tank = reader.GetString(reader.GetOrdinal("tank")),
-                TankCapacity = reader.GetDouble(reader.GetOrdinal("tank_capacity")),
-                IdCompartment = reader.GetInt32(reader.GetOrdinal("id_compartment")),
-                Compartment = reader.GetInt32(reader.GetOrdinal("compartment")),
-                IdProduct = reader.GetInt32(reader.GetOrdinal("id_product")),
-                Product = reader.GetString(reader.GetOrdinal("product")),
-                Stock = reader.GetDouble(reader.GetOrdinal("stock"))
-            });
+            rows.Add((
+                IdBusiness: reader.GetInt32(reader.GetOrdinal("business_id")),
+                Business: reader.GetString(reader.GetOrdinal("business")),
+                IdEds: reader.GetInt32(reader.GetOrdinal("eds_id")),
+                Eds: reader.GetString(reader.GetOrdinal("eds")),
+                IdTank: reader.GetInt32(reader.GetOrdinal("tank_id")),
+                Tank: reader.GetString(reader.GetOrdinal("tank")),
+                TankCapacity: reader.GetDouble(reader.GetOrdinal("tank_capacity")),
+                IdCompartment: reader.GetInt32(reader.GetOrdinal("compartment_id")),
+                Compartment: reader.GetInt32(reader.GetOrdinal("compartment")),
+                IdProduct: reader.GetInt32(reader.GetOrdinal("product_id")),
+                Product: reader.GetString(reader.GetOrdinal("product")),
+                Stock: reader.IsDBNull(reader.GetOrdinal("stock"))
+                                ? 0
+                                : reader.GetDouble(reader.GetOrdinal("stock"))
+            ));
         }
 
-        var inventoryList = rows
-            .GroupBy(r => new { r.IdBusiness, r.Business })
-            .Select(b => new InventoryListResponseDto
-            {
-                Businesses = new[]
-                {
+
+
+
+        if (rows.Count == 0)
+        {
+            logger.LogWarning("v_inventory returned 0 rows");
+          
+            return [];
+        }
+
+        var inventoryList =
+            rows.GroupBy(r => new { r.IdBusiness, r.Business })
+                .Select(b => new InventoryListResponseDto
+                {                                  
+                    Businesses = new[]
+                    {
                     new BusinessDto
                     {
                         IdBusiness = b.Key.IdBusiness,
@@ -93,19 +150,19 @@ public class InventoryListService(
                                         Tank = t.Key.Tank,
                                         TankCapacity = t.Key.TankCapacity,
                                         Compartments = t.GroupBy(c => new { c.IdCompartment, c.Compartment, c.IdProduct })
-                                            .Select(c => new CompartmentDto
+                                            .Select(cg => new CompartmentDto
                                             {
-                                                IdCompartment = c.Key.IdCompartment,
-                                                Compartment = c.Key.Compartment,
-                                                IdProduct = c.Key.IdProduct,
-                                                Product = c.First().Product,
-                                                Stock = c.First().Stock
+                                                IdCompartment = cg.Key.IdCompartment,
+                                                Compartment = cg.Key.Compartment,
+                                                IdProduct = cg.Key.IdProduct,
+                                                Product = cg.First().Product,
+                                                Stock = cg.First().Stock
                                             }).ToList()
                                     }).ToList()
                             }).ToList()
                     }
-                }
-            }).ToList();
+                    }
+                }).ToList();
 
         return inventoryList;
     }

@@ -7,10 +7,11 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Eds.DomainEds.Impl;
 
-public class EdsGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : IEdsGetByIdService
+public class EdsGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService, ILogger<EdsGetByIdService> logger) : IEdsGetByIdService
 
 {
     public async Task<Result<EdsEntity, Error>> GetByIdAsync(int id)

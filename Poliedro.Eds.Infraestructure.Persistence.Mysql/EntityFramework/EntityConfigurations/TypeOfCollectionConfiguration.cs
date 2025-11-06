@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Poliedro.Eds.Domain.TypeOfCollection.Entities;
+using Poliedro.Eds.Domain.Eds.Entities;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 
@@ -12,6 +13,5 @@ public class TypeOfCollectionConfiguration
         builder.HasKey(x => x.IdTypeOfCollection);
         builder.Property(x => x.IdTypeOfCollection).HasColumnName("id_type_of_collection");
         builder.Property(x => x.Description).HasColumnName("description");
-
     }
 }

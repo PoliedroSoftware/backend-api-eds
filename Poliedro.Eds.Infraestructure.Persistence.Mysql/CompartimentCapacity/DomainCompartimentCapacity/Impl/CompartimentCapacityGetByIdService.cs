@@ -8,10 +8,11 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 using Poliedro.Eds.Domain.CompartimentCapacity.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.CompartimentCapacity.DomainCompartimentCapacity.Impl;
 
-public class CompartimentCapacityGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentCapacityGetByIdService
+public class CompartimentCapacityGetByIdService(ITenantDbContextFactory dbContextFactory, IRedisService redisService, ILogger<CompartimentCapacityGetByIdService> logger) : ICompartimentCapacityGetByIdService
 {
     public async Task<Result<CompartimentCapacityEntity, Error>> GetByIdAsync(int id)
     {

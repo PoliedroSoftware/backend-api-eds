@@ -7,10 +7,11 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Compartiment.DomainCompartiment;
 using Poliedro.Eds.Domain.Compartiment.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Compartiment.DomainCompartiment.Impl;
 
-public class CompartimentUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService) : ICompartimentUpdateService
+public class CompartimentUpdateService(ITenantDbContextFactory dbContextFactory, IRedisService redisService, ILogger<CompartimentUpdateService> logger) : ICompartimentUpdateService
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(CompartimentEntity compartimentEntity)
     {
@@ -24,7 +25,8 @@ public class CompartimentUpdateService(ITenantDbContextFactory dbContextFactory,
             return CompartimentErrorBuilder.CompartimentUpdateException();
         await redisService.RemoveByPrefixAsync("compartiment:");
 
-        return VoidResult.Instance;
+        logger.LogInformation("Successfully updated Compartiment");
+return VoidResult.Instance;
     }
 
     private async Task<bool> EntityExists(int id)
