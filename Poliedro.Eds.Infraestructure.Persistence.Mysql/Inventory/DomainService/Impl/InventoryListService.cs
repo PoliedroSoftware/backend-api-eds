@@ -1,20 +1,23 @@
+using System.Data.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MySqlConnector;
+using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.Inventory.DomainService;
 using Poliedro.Eds.Domain.Inventory.Dto.View;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using System.Data.Common;
-using Poliedro.Eds.Application.Court.Commands.CreateCourt;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.BusinessView;
 using StackExchange.Redis;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Inventory.Repositories;
 
 public class InventoryListService(
     IRedisService redisService,
+    ILogger<InventoryListService> logger,
     IHttpContextAccessor httpContextAccessor,
     ITenantDbContextFactory dbContextFactory
     ) : IInventoryListDomainService
