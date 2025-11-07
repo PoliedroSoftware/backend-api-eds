@@ -19,7 +19,7 @@ public class ShoppingConfiguration
         builder.Property(x => x.IdCategory).HasColumnName("id_category");
         builder.Property(x => x.Amount).HasColumnName("amount");
 
-        // mapeo id_eds
+        // map id_eds
         builder.Property(x => x.IdEds).HasColumnName("id_eds").IsRequired(false);
         builder.HasIndex(x => x.IdEds).HasDatabaseName("idx_shopping_id_eds");
         builder.HasOne<EdsEntity>()
