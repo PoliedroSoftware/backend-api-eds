@@ -14,6 +14,7 @@ public class ProductEntity : AuditableEntity
     public double? SellPrice { get; set; }
     public double? Stock { get; set; }
     public DateTime Date { get; set; }
+    public int? IdEds { get; set; }
 
 
     public virtual ProductTypeEntity? ProductType { get; set; }

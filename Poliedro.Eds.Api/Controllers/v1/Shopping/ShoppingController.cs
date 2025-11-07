@@ -70,7 +70,7 @@ namespace Poliedro.Eds.Api.Controllers.v1.Shopping
         public async Task<IResult> Create(
             [FromBody] CreateShoppingCommand createShoppingCommand)
         {
-            var result = await mediator.Send(createShoppingCommand);
+            var result = await mediator.Send(new CreateShoppingCommand(createShoppingCommand.Request));
             return result.Match(onSuccess => TypedResults.Created());
         }
 
