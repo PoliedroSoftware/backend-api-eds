@@ -52,17 +52,19 @@ public class CapacityController(IMediator mediator) : ControllerBase
 
     [SwaggerOperation(
         Summary = "Create new Capacity")]
-    [SwaggerResponse(StatusCodes.Status201Created, "The operation was successful.")]
+    [SwaggerResponse(StatusCodes.Status201Created, "The operation was successful.", typeof(CapacityDto))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect request parameters.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "The request lacks valid authentication credentials.", typeof(ProblemDetails))]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
-
     public async Task<IResult> Create([FromBody] CreateCapacityCommand createCapacityCommand)
     {
         var result = await mediator.Send(createCapacityCommand);
-        return result.Match(onSuccess => TypedResults.Created());
+        return result.Match(
+            onSuccess => TypedResults.Created($"/api/v1/capacity/{result.Value!.IdCapacity}", result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
+        );
     }
 
     [SwaggerOperation(Summary = "Update an existing Capacity")]

@@ -7,12 +7,12 @@ public record ShoppingProductViewDto(
     string IdProduct,
     DateOnly Date,
     string ProductName,
-    decimal Quantity,
-    decimal SellPrice,
-    decimal PurchasePrice,
-    decimal Stock,
+    double Quantity,
+    double SellPrice,
+    double PurchasePrice,
+    double Stock,
     string IdCompartment,
-    decimal TotalSellPrice,
-    decimal TotalPurchasePrice,
+    double TotalSellPrice,
+    double TotalPurchasePrice,
     string IdBusiness
     );

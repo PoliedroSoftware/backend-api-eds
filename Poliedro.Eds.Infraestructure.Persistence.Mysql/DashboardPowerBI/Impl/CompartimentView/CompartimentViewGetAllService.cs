@@ -6,13 +6,14 @@ using Poliedro.Eds.Domain.Common.Pagination;
 using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.DomainCompartimentView;
 using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
-using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CompartimentView;
 
-public class CompartimentViewGetAllService(ITenantDbContextFactory dbContextFactory,
+public class CompartimentViewGetAllService(
+    ITenantDbContextFactory dbContextFactory,
     IRedisService redisService,
-    IHttpContextAccessor httpContextAccessor, ILogger<CompartimentViewGetAllService> logger) : ICompartimenViewGetAllService
+    IHttpContextAccessor httpContextAccessor
+    ) : ICompartimenViewGetAllService
 {
     public async Task<IEnumerable<CompartimentViewEntity>> GetAllAsync(PaginationParams paginationParams)
     {
