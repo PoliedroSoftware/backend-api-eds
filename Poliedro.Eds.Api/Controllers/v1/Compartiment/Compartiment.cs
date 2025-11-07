@@ -46,18 +46,17 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<CompartimentDto>> GetById([FromRoute] int id)
+    public async Task<IResult> GetById([FromRoute] int id)
     {
         var getCompartimentQuery = new GetCompartimentByIdQuery(Id: id);
 
         var result = await mediator.Send(getCompartimentQuery);
 
-        if (!result.IsSuccess)
-        {
-            return BadRequest(result.Error);
-        }
+        return result.Match(
 
-        return Ok(result.Value);
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
+        );
     }
 
     [SwaggerOperation(
@@ -68,16 +67,13 @@ public class CompartimentController(IMediator mediator) : ControllerBase
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error processing the request.", typeof(ProblemDetails))]
     [Authorize(Policy = "AdminOnly")]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateCompartimentCommand createCompartimentCommand)
+    public async Task<IResult> Create([FromBody] CreateCompartimentCommand createCompartimentCommand)
     {
         var result = await mediator.Send(createCompartimentCommand);
-        
-        if (!result.IsSuccess)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Created();
+        return result.Match(
+            onSuccess => TypedResults.Created(),
+            onFailure => TypedResults.BadRequest(onFailure)
+        );
     }
 
     [SwaggerOperation(Summary = "Update an existing Compartiment")]

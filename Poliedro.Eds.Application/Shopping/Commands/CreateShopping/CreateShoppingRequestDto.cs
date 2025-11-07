@@ -3,11 +3,12 @@ using Poliedro.Eds.Application.Inventory.Commands;
 namespace Poliedro.Eds.Application.Shopping.Commands.CreateShopping;
 
 public record CreateShoppingRequestDto(
-    string? Invoice,
+    string Invoice,
     DateTime Date,
     int IdProvider,
     int IdCategory,
-    decimal Amount,
+    double Amount,
     IEnumerable<ShoppingProductRequestDto> ShoppingProducts,
-    InventoryCommand? ShoppingInventory
+    InventoryCommand? ShoppingInventory,
+    int? IdEds
     );

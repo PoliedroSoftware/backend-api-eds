@@ -7,11 +7,10 @@ using Poliedro.Eds.Domain.StrongBox.Entities;
 using Poliedro.Eds.Domain.StrongBox.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.StrongBox.DomainStrongBox;
 
-public class StrongBoxGetAllService(ITenantDbContextFactory dbContextFactory, ILogger<StrongBoxGetAllService> logger) : IStrongBoxRepositoryGetAll
+public class StrongBoxGetAllService(ITenantDbContextFactory dbContextFactory) : IStrongBoxRepositoryGetAll
 {
     public async Task<List<StrongBoxEntity>> GetListAsync(int skip, int take, long? IdCorte, string? type, DateTime? from, DateTime? to, CancellationToken cancellationToken)
     {

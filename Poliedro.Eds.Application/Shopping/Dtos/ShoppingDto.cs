@@ -7,7 +7,7 @@ public class ShoppingDto
 {
     public int IdShopping { get; set; }
 
-    public string? Invoice { get; set; }
+    public string Invoice { get; set; }
 
     public DateTime Date { get; set; }
 
@@ -15,7 +15,7 @@ public class ShoppingDto
 
     public int IdCategory { get; set; }
 
-    public decimal Amount { get; set; }
+    public double Amount { get; set; }
 
     public IEnumerable<ShoppingProductDto> ShoppingProducts { get; set; }
 

@@ -27,9 +27,10 @@ public class AccountController(IMediator mediator) : ControllerBase
     {
         try
         {
+          
             var command = new CreateAccountCommand(createAccountRequest);
             var result = await mediator.Send(command);
-            
+
             return ApiResponse(result, StatusCodes.Status201Created, StatusCodes.Status400BadRequest);
         }
         catch (ValidationException ex)
@@ -60,7 +61,7 @@ public class AccountController(IMediator mediator) : ControllerBase
         {
             var query = new GetAllAccountsQuery();
             var result = await mediator.Send(query);
-            
+
             return ApiResponse(result, StatusCodes.Status200OK, StatusCodes.Status404NotFound);
         }
         catch (Exception ex)
@@ -85,7 +86,7 @@ public class AccountController(IMediator mediator) : ControllerBase
         {
             var query = new GetAccountByIdQuery(id);
             var result = await mediator.Send(query);
-            
+
             return ApiResponse(result, StatusCodes.Status200OK, StatusCodes.Status404NotFound);
         }
         catch (Exception ex)

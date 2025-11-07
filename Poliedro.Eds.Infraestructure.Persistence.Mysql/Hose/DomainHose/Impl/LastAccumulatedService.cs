@@ -10,13 +10,14 @@ using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Hose.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using Microsoft.Extensions.Logging;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Hose.DomainHose.Impl;
 
-public class LastAccumulatedService(ITenantDbContextFactory dbContextFactory,
+public class LastAccumulatedService(
+    ITenantDbContextFactory dbContextFactory,
     IRedisService redisService,
-    IHttpContextAccessor httpContextAccessor, ILogger<LastAccumulatedService> logger) : ILastAccumulatedService
+    IHttpContextAccessor httpContextAccessor
+    ) : ILastAccumulatedService
 {
     public async Task<Result<LastAccumulatedEntity, Error>> GetLastAccumulatedAsync(int idDispenser, int idHose)
     {
