@@ -13,9 +13,11 @@ public class ShoppingEntity : AuditableEntity
     public int IdCategory { get; set; }
     public double Amount { get; set; }
     public int? IdEds { get; set; }
-    public IEnumerable<ShoppingProductEntity> ShoppingProducts { get; set; }
+    public ICollection<ShoppingProductEntity> ShoppingProducts { get; set; } = new List<ShoppingProductEntity>();
     public InventoryEntity ShoppingInventory { get; set; }
 }
+
+
 
 
 
