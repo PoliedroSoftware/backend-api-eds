@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Poliedro.Eds.Domain.Product.Entities;
 using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
@@ -22,5 +23,11 @@ public class ShoppingProductConfiguration
         builder.HasOne<ShoppingEntity>()
             .WithMany(x => x.ShoppingProducts)
             .HasForeignKey(x => x.IdShopping);
+
+        // Configure Product relationship
+        builder.HasOne(x => x.Product)
+            .WithMany()
+            .HasForeignKey(x => x.IdProduct)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

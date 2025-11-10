@@ -1,5 +1,6 @@
-
+using Poliedro.Eds.Application.Category.Dtos;
 using Poliedro.Eds.Application.Inventory.Dtos;
+using Poliedro.Eds.Application.Provider.Dtos;
 
 namespace Poliedro.Eds.Application.Shopping.Dtos;
 
@@ -16,6 +17,11 @@ public class ShoppingDto
     public int IdCategory { get; set; }
 
     public double Amount { get; set; }
+
+    // Related entities
+    public ProviderDto? Provider { get; set; }
+
+    public CategoryDto? Category { get; set; }
 
     public IEnumerable<ShoppingProductDto> ShoppingProducts { get; set; }
 

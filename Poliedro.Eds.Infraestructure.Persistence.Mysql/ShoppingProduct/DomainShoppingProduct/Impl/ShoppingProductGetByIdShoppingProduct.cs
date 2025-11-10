@@ -25,6 +25,7 @@ public class ShoppingProductGetByIdShoppingProduct(ITenantDbContextFactory dbCon
 
         using var context = dbContextFactory.CreateDbContext();
         var data = await context.ShoppingProduct
+            .Include(sp => sp.Product)
             .FirstAsync(c => c.IdShoppingProduct == id);
 
         await redisService.SetCacheAsync(cacheKey, data, TimeSpan.FromMinutes(1440));
