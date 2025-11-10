@@ -18,6 +18,10 @@ public class HoseConfiguration
         builder.Property(x => x.AccumulatedGallons).HasColumnName("accumulated_gallons");
         builder.Property(x => x.IdProductType).HasColumnName("id_product_type");
         builder.Property(x => x.IdCompartiment).HasColumnName("id_compartiment");
+        builder.Property(x => x.CreatedBy).HasColumnName("createdBy").HasMaxLength(255);
+        builder.Property(x => x.CreatedAt).HasColumnName("createdAt");
+        builder.Property(x => x.UpdatedBy).HasColumnName("updatedBy").HasMaxLength(255);
+        builder.Property(x => x.UpdatedAt).HasColumnName("updatedAt");
 
         // Configure relationships
         builder.HasOne(h => h.Dispenser)

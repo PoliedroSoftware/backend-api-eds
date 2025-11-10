@@ -170,116 +170,7 @@ CREATE TABLE `court_dispensers` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `trg_insert_hose_history` AFTER INSERT ON `court_dispensers` FOR EACH ROW BEGIN
-    DECLARE court_date DATE;
-    DECLARE v_id_dispensers INT;
-
-    SELECT date_starttime INTO court_date
-    FROM court
-    WHERE id_court = NEW.id_court;
-
-    SELECT id_dispensers INTO v_id_dispensers
-    FROM hose
-    WHERE id_hose = NEW.id_hose;
-
-    INSERT INTO hose_history (
-        id_hose,
-        id_dispensers,
-        accumulated_amount,
-        accumulated_gallons,
-        date,
-        createdBy,
-        createdAt
-    ) VALUES (
-        NEW.id_hose,
-        v_id_dispensers,
-        NEW.accumulated_amount,
-        NEW.accumulated_gallons,
-        court_date,
-        'trigger',
-        CONVERT_TZ(NOW(), 'UTC', 'America/Bogota')
-    );
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `trg_update_hose_accumulated` AFTER INSERT ON `court_dispensers` FOR EACH ROW BEGIN
-    UPDATE hose
-    SET 
-        accumulated_amount = NEW.accumulated_amount,
-        accumulated_gallons = NEW.accumulated_gallons
-    WHERE id_hose = NEW.id_hose;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `trg_update_hose_history` AFTER UPDATE ON `court_dispensers` FOR EACH ROW BEGIN
-    DECLARE court_date DATE;
-    DECLARE v_id_dispensers INT;
-
-    SELECT date_starttime INTO court_date
-    FROM court
-    WHERE id_court = NEW.id_court;
-
-    SELECT id_dispensers INTO v_id_dispensers
-    FROM hose
-    WHERE id_hose = NEW.id_hose;
-
-    INSERT INTO hose_history (
-        id_hose,
-        id_dispensers,
-        accumulated_amount,
-        accumulated_gallons,
-        date,
-        createdBy,
-        createdAt
-    ) VALUES (
-        NEW.id_hose,
-        v_id_dispensers,
-        NEW.accumulated_amount,
-        NEW.accumulated_gallons,
-        court_date,
-        'trigger',
-        CONVERT_TZ(NOW(), 'UTC', 'America/Bogota')
-    );
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `trg_update_hose_accumulated_on_update` AFTER UPDATE ON `court_dispensers` FOR EACH ROW BEGIN
     UPDATE hose
     SET 
         accumulated_amount = NEW.accumulated_amount,
@@ -477,6 +368,11 @@ CREATE TABLE `hose` (
   `accumulated_amount` double NOT NULL,
   `accumulated_gallons` double NOT NULL,
   `id_product_type` int NOT NULL,
+  `id_compartiment` int DEFAULT NULL,
+  `createdBy` varchar(255) DEFAULT NULL,
+  `createdAt` datetime DEFAULT NULL,
+  `updatedBy` varchar(255) DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id_hose`),
   KEY `fk_house_dispensers1_idx` (`id_dispensers`),
   KEY `fk_hose_product_type1_idx` (`id_product_type`),
@@ -484,6 +380,39 @@ CREATE TABLE `hose` (
   CONSTRAINT `fk_house_dispensers1` FOREIGN KEY (`id_dispensers`) REFERENCES `dispensers` (`id_dispensers`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `after_hose_update` AFTER UPDATE ON `hose` FOR EACH ROW BEGIN
+    IF (OLD.accumulated_amount <> NEW.accumulated_amount) THEN
+        INSERT INTO hose_history (
+            id_hose,
+            id_dispensers,
+            accumulated_amount,
+            accumulated_gallons,
+            createdBy,
+            createdAt
+        ) VALUES (
+            OLD.id_hose,
+            OLD.id_dispensers,
+            NEW.accumulated_amount,
+            NEW.accumulated_gallons,
+            CURRENT_USER(),
+            CONVERT_TZ(NOW(), 'UTC', 'America/Bogota')
+        );
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `hose_history`
@@ -498,7 +427,6 @@ CREATE TABLE `hose_history` (
   `id_dispensers` int NOT NULL,
   `accumulated_amount` double NOT NULL,
   `accumulated_gallons` double NOT NULL,
-  `date` date NOT NULL,
   `createdBy` varchar(255) DEFAULT NULL,
   `createdAt` datetime DEFAULT NULL,
   `updatedBy` varchar(255) DEFAULT NULL,
