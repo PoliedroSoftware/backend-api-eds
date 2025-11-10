@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Poliedro.Eds.Domain.Category.Entities;
 using Poliedro.Eds.Domain.Inventory.Entities;
+using Poliedro.Eds.Domain.Provider.Entities;
 using Poliedro.Eds.Domain.Shopping.Entities;
 using Poliedro.Eds.Domain.Eds.Entities;
 
@@ -25,6 +27,18 @@ public class ShoppingConfiguration
         builder.HasOne<EdsEntity>()
                .WithMany()
                .HasForeignKey(x => x.IdEds)
+               .OnDelete(DeleteBehavior.Restrict);
+
+        // Configure Provider relationship
+        builder.HasOne(x => x.Provider)
+               .WithMany()
+               .HasForeignKey(x => x.IdProvider)
+               .OnDelete(DeleteBehavior.Restrict);
+
+        // Configure Category relationship
+        builder.HasOne(x => x.Category)
+               .WithMany()
+               .HasForeignKey(x => x.IdCategory)
                .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(x => x.ShoppingProducts)

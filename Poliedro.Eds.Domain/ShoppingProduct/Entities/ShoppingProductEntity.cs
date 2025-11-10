@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Poliedro.Eds.Domain.Audit.Entities;
+using Poliedro.Eds.Domain.Product.Entities;
 
 namespace Poliedro.Eds.Domain.ShoppingProduct.Entities;
 
@@ -14,4 +15,7 @@ public class ShoppingProductEntity : AuditableEntity
     public double PurchasePrice { get; set; }
     public double SellPrice { get; set; }
     public int IdCompartment { get; set; }
+    
+    // Navigation property
+    public ProductEntity? Product { get; set; }
 }

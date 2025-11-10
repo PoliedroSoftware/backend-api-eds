@@ -14,7 +14,11 @@ public class ShoppingGetAllShopping(
     {
         using var context = dbContextFactory.CreateDbContext();
         var data = await context.Shopping
+            .Include(s => s.Provider)
+            .Include(s => s.Category)
             .Include(s => s.ShoppingProducts)
+                .ThenInclude(sp => sp.Product)
+            .OrderByDescending(s => s.IdShopping)
             .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
             .Take(paginationParams.PageSize)
             .ToListAsync();
