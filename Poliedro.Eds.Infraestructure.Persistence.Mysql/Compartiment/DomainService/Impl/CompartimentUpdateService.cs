@@ -14,26 +14,36 @@ public class CompartimentUpdateService(ITenantDbContextFactory dbContextFactory,
 {
     public async Task<Result<VoidResult, Error>> UpdateAsync(CompartimentEntity compartimentEntity)
     {
-        using var context = dbContextFactory.CreateDbContext();
-        
-        var existingEntity = await context.Compartiment
-            .FirstOrDefaultAsync(c => c.IdCompartiment == compartimentEntity.IdCompartiment);
+        try
+        {
+            using var context = dbContextFactory.CreateDbContext();
+            
+            var existingEntity = await context.Compartiment
+                .FirstOrDefaultAsync(c => c.IdCompartiment == compartimentEntity.IdCompartiment);
 
-        if (existingEntity is null)
-            return CompartimentErrorBuilder.CompartimentNotFoundException(compartimentEntity.IdCompartiment);
+            if (existingEntity is null)
+                return CompartimentErrorBuilder.CompartimentNotFoundException(compartimentEntity.IdCompartiment);
 
-        // Update only the fields provided in the command, preserving Date and audit fields
-        existingEntity.Number = compartimentEntity.Number;
-        existingEntity.Nominal = compartimentEntity.Nominal;
-        existingEntity.Operative = compartimentEntity.Operative;
-        existingEntity.IdProduct = compartimentEntity.IdProduct;
-        existingEntity.Height = compartimentEntity.Height;
-        existingEntity.IdTank = compartimentEntity.IdTank;
+            // Update only the fields provided in the command, preserving Date and audit fields
+            existingEntity.Number = compartimentEntity.Number;
+            existingEntity.Nominal = compartimentEntity.Nominal;
+            existingEntity.Operative = compartimentEntity.Operative;
+            existingEntity.IdProduct = compartimentEntity.IdProduct;
+            existingEntity.Height = compartimentEntity.Height;
+            existingEntity.IdTank = compartimentEntity.IdTank;
 
-        if (await context.SaveChangesAsync() <= 0)
-            return CompartimentErrorBuilder.CompartimentUpdateException();
-        await redisService.RemoveByPrefixAsync("compartiment:");
+            if (await context.SaveChangesAsync() <= 0)
+                return CompartimentErrorBuilder.CompartimentUpdateException();
+            await redisService.RemoveByPrefixAsync("compartiment:");
 
-        return VoidResult.Instance;
+            return VoidResult.Instance;
+        }
+        catch (Exception ex)
+        {
+            return Error.CreateInstance(
+                "CompartimentUpdateError",
+                $"Failed to update compartiment due to an error: {ex.Message}",
+                System.Net.HttpStatusCode.InternalServerError);
+        }
     }
 }

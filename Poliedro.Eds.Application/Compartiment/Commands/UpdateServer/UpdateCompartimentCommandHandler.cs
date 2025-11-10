@@ -18,20 +18,28 @@ namespace Poliedro.Eds.Application.Compartiment.Commands.UpdateCompartiment
     {
         public async Task<Result<VoidResult, Error>> Handle(UpdateCompartimentCommand request, CancellationToken cancellationToken)
         {
-            var validationResult = await validator.ValidateAsync(request, cancellationToken);
-            if (!validationResult.IsValid)
+            try
             {
-                var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-                return Result<VoidResult, Error>.Failure(
-                    Error.CreateInstance("ValidationFailed", errors, HttpStatusCode.BadRequest));
+                var validationResult = await validator.ValidateAsync(request, cancellationToken);
+                if (!validationResult.IsValid)
+                {
+                    var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
+                    return Result<VoidResult, Error>.Failure(
+                        Error.CreateInstance("ValidationFailed", errors, HttpStatusCode.BadRequest));
+                }
+
+                var compartimentEntity = mapper.Map<CompartimentEntity>(request);
+                var result = await compartimentDomainCompartiment.UpdateAsync(compartimentEntity);
+
+                if (!result.IsSuccess)
+                    return result.Error!;
+                return result.Value!;
             }
-
-            var compartimentEntity = mapper.Map<CompartimentEntity>(request);
-            var result = await compartimentDomainCompartiment.UpdateAsync(compartimentEntity);
-
-            if (!result.IsSuccess)
-                return result.Error!;
-            return result.Value!;
+            catch (Exception ex)
+            {
+                return Result<VoidResult, Error>.Failure(
+                    Error.CreateInstance("InternalError", $"An error occurred while updating the compartiment: {ex.Message}", HttpStatusCode.InternalServerError));
+            }
         }
     }
 }
