@@ -23,8 +23,6 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
     {
         using var context = dbContextFactory.CreateDbContext();
 
-        await using var transaction = await context.Database.BeginTransactionAsync();
-
         List<string> duplicateMessages = await GetDuplicateMessagesAsync(context, setupEntity);
 
         if (duplicateMessages.Any())
@@ -37,6 +35,8 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
               )
           );
         }
+
+        await using var transaction = await context.Database.BeginTransactionAsync();
 
         try
         {
