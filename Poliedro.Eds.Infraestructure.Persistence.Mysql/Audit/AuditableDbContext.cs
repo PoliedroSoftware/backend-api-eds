@@ -14,6 +14,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var currentUser = httpContextAccessor.HttpContext?.Items["identifiername"]?.ToString();
+            var currentTimestamp = DateTimeColombiaHelper.NowColombia();
 
             var entries = ChangeTracker.Entries()
                 .Where(e => e.Entity is AuditableEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
@@ -25,7 +26,7 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit
                 if (entry.State == EntityState.Added)
                 {
                     entity.CreatedBy = currentUser;
-                    entity.CreatedAt = DateTimeColombiaHelper.NowColombia(); // Cambiado a hora Colombia
+                    entity.CreatedAt = currentTimestamp;
                 }
 
                 if (entry.State == EntityState.Modified)
@@ -34,8 +35,19 @@ namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Audit
                     entry.Property(nameof(AuditableEntity.CreatedAt)).IsModified = false;
 
                     entity.UpdatedBy = currentUser;
-                    entity.UpdatedAt = DateTimeColombiaHelper.NowColombia(); // Cambiado a hora Colombia
+                    entity.UpdatedAt = currentTimestamp;
                 }
+            }
+
+            // Set MySQL session variables for triggers to use
+            // This ensures triggers that insert into history tables use the same user and timestamp
+            if (!string.IsNullOrEmpty(currentUser))
+            {
+                await Database.ExecuteSqlRawAsync(
+                    "SET @app_user = {0}, @app_timestamp = {1}",
+                    currentUser,
+                    currentTimestamp.ToString("yyyy-MM-dd HH:mm:ss")
+                );
             }
 
             return await base.SaveChangesAsync(cancellationToken);
