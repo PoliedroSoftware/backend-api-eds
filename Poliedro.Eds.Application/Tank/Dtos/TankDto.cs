@@ -4,4 +4,5 @@ public record TankDto(
    int IdTank,
    string Number,
    int Compartment,
-   double Ability);
+   double Ability,
+   string? NameEDS);
