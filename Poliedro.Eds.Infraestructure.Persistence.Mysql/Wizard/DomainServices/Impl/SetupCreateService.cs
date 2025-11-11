@@ -1,13 +1,16 @@
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.Eds.Errors;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Wizard.Errors;
+using Poliedro.Eds.Domain.Business.Entities;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Eds.Entities;
+using Poliedro.Eds.Domain.EdsTank.Entities;
 using Poliedro.Eds.Domain.Wizard.DomainSetup;
 using Poliedro.Eds.Domain.Wizard.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
@@ -19,6 +22,19 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
     public async Task<Result<VoidResult, Error>> CreateAsync(SetupEntity setupEntity)
     {
         using var context = dbContextFactory.CreateDbContext();
+
+        List<string> duplicateMessages = await GetDuplicateMessagesAsync(context, setupEntity);
+
+        if (duplicateMessages.Any())
+        {
+            return Result<VoidResult, Error>.Failure(
+              Error.CreateInstance(
+                  code: "SetupAlreadyExists",
+                  description: $"{string.Join($"{Environment.NewLine}{Environment.NewLine}", duplicateMessages)}",
+                  httpStatusCode: HttpStatusCode.Conflict
+              )
+          );
+        }
 
         await using var transaction = await context.Database.BeginTransactionAsync();
 
@@ -55,9 +71,34 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
 
             await context.SaveChangesAsync();
 
+            //Create Relation eds-tank
+            foreach (var tank in setupEntity.Tanks)
+            {
+                var eds = setupEntity.EDS.FirstOrDefault(t => t.Name == tank.NameEDS);
+
+                if (eds != null)
+                {
+                    var edsTank = new EdsTankEntity()
+                    {
+                        IdEds = eds.IdEds,
+                        IdTank = tank.IdTank,
+                    };
+                    await context.EdsTank.AddAsync(edsTank);
+                }
+            }
+
+            await context.SaveChangesAsync();
+
             // create products
             foreach (var product in setupEntity.Products)
             {
+                var eds = setupEntity.EDS.FirstOrDefault(t => t.Name == product.NameEDS);
+
+                if (eds != null)
+                {
+                    product.IdEds = eds.IdEds;
+                }
+
                 await context.Product.AddAsync(product);
             }
 
@@ -170,4 +211,76 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
             return SetupErrorBuilder.SetupCreationException(ex.Message);
         }
     }
+
+    private async Task<List<string>> GetDuplicateMessagesAsync(DataBaseContext context, SetupEntity setupEntity)
+    {
+        var errors = new List<string>();
+
+        // 1️ Business
+        var existsBusiness = await context.Business
+            .AnyAsync(b => b.Name.ToLower() == setupEntity.Bussiness.Name.ToLower());
+        if (existsBusiness)
+            errors.Add("El nombre del negocio ya existe. Ingrese uno diferente por favor.");
+
+        // 2️ EDS
+        var edsNames = setupEntity.EDS.Select(b => b.Name.ToLower()).ToList();
+        var duplicatedEds = await context.Eds
+            .Where(b => edsNames.Contains(b.Name.ToLower()))
+            .Select(b => b.Name)
+            .ToListAsync();
+        if (duplicatedEds.Any())
+            errors.Add($"Los siguientes EDS ya existen: {string.Join(", ", duplicatedEds)}");
+
+        // 3️ Islands
+        var islandDescriptions = setupEntity.Islands.Select(i => i.Description.ToLower()).ToList();
+        var duplicatedIslands = await context.Island
+            .Where(i => islandDescriptions.Contains(i.Description.ToLower()))
+            .Select(i => i.Description)
+            .ToListAsync();
+        if (duplicatedIslands.Any())
+            errors.Add($"Las siguientes Islas ya existen: {string.Join(", ", duplicatedIslands)}");
+
+        // 4️ Tanks
+        var tankNumbers = setupEntity.Tanks.Select(t => t.Number.ToLower()).ToList();
+        var duplicatedTanks = await context.Tank
+            .Where(t => tankNumbers.Contains(t.Number.ToLower()))
+            .Select(t => t.Number)
+            .ToListAsync();
+        if (duplicatedTanks.Any())
+            errors.Add($"Los siguientes Tanques ya existen: {string.Join(", ", duplicatedTanks)}");
+
+        // 5️ Dispensers
+        var duplicateDispensers = new List<string>();
+        foreach (var d in setupEntity.Dispensers)
+        {
+            var exists = await context.Dispensers
+                .AnyAsync(db => db.Code.ToLower() == d.Code.ToLower() && db.Number == d.Number);
+            if (exists)
+                duplicateDispensers.Add($"{d.Code}-{d.Number}");
+        }
+        if (duplicateDispensers.Any())
+            errors.Add($"Los siguientes Dispensadores ya existen: {string.Join(", ", duplicateDispensers)}");
+
+        // 6️ Islanders
+        var islanderEmails = setupEntity.Islanders.Select(i => i.Email.ToLower()).ToList();
+        var islanderNames = setupEntity.Islanders.Select(i => i.Name.ToLower()).ToList();
+        var duplicatedIslanders = await context.Islander
+            .Where(i => islanderEmails.Contains(i.Email.ToLower()) || islanderNames.Contains(i.Name.ToLower()))
+            .Select(i => i.Email)
+            .ToListAsync();
+        if (duplicatedIslanders.Any())
+            errors.Add($"Los siguientes Isleros ya existen(Nombre o Correo): {string.Join(", ", duplicatedIslanders)}");
+
+        // 7 Providers
+        var providerNames = setupEntity.Providers.Select(p => p.Name.ToLower()).ToList();
+        var duplicatedProviders = await context.Provider
+            .Where(p => providerNames.Contains(p.Name.ToLower()))
+            .Select(p => p.Name)
+            .ToListAsync();
+        if (duplicatedProviders.Any())
+            errors.Add($"Los siguientes Provedores ya existen: {string.Join(", ", duplicatedProviders)}");
+
+        return errors;
+    }
+
 }
