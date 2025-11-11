@@ -32,17 +32,51 @@ public class CompartimentUpdateService(ITenantDbContextFactory dbContextFactory,
             existingEntity.Height = compartimentEntity.Height;
             existingEntity.IdTank = compartimentEntity.IdTank;
 
-            if (await context.SaveChangesAsync() <= 0)
-                return CompartimentErrorBuilder.CompartimentUpdateException();
+            // Save changes - EF will only update if there are actual changes
+            await context.SaveChangesAsync();
+            
+            // Clear cache after successful update
             await redisService.RemoveByPrefixAsync("compartiment:");
 
             return VoidResult.Instance;
         }
+        catch (DbUpdateException dbEx)
+        {
+            // Log the full exception server-side for debugging
+            Console.WriteLine($"[ERROR] Database update failed for compartiment {compartimentEntity.IdCompartiment}: {dbEx}");
+            
+            // Check for common database issues
+            var innerException = dbEx.InnerException?.Message ?? dbEx.Message;
+            if (innerException.Contains("FOREIGN KEY", StringComparison.OrdinalIgnoreCase) ||
+                innerException.Contains("FK_", StringComparison.OrdinalIgnoreCase))
+            {
+                return Error.CreateInstance(
+                    "ForeignKeyConstraintViolation",
+                    "The update failed due to invalid references. Please verify that IdProduct and IdTank reference existing records.",
+                    System.Net.HttpStatusCode.BadRequest);
+            }
+            
+            if (innerException.Contains("UNIQUE", StringComparison.OrdinalIgnoreCase) ||
+                innerException.Contains("duplicate", StringComparison.OrdinalIgnoreCase))
+            {
+                return Error.CreateInstance(
+                    "UniqueConstraintViolation",
+                    "The update failed due to a duplicate value constraint. Please verify the data is unique.",
+                    System.Net.HttpStatusCode.Conflict);
+            }
+            
+            return Error.CreateInstance(
+                "DatabaseError",
+                "Failed to update the compartiment due to a database error. Please contact support if the problem persists.",
+                System.Net.HttpStatusCode.InternalServerError);
+        }
         catch (Exception ex)
         {
+            // Log the full exception server-side for debugging
+            Console.WriteLine($"[ERROR] Unexpected error updating compartiment {compartimentEntity.IdCompartiment}: {ex}");
             return Error.CreateInstance(
                 "CompartimentUpdateError",
-                $"Failed to update compartiment due to an error: {ex.Message}",
+                "An unexpected error occurred while updating the compartiment. Please contact support if the problem persists.",
                 System.Net.HttpStatusCode.InternalServerError);
         }
     }

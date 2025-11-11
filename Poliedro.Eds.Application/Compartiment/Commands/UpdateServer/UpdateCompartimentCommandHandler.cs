@@ -35,10 +35,24 @@ namespace Poliedro.Eds.Application.Compartiment.Commands.UpdateCompartiment
                     return result.Error!;
                 return result.Value!;
             }
-            catch (Exception ex)
+            catch (ValidationException valEx)
             {
                 return Result<VoidResult, Error>.Failure(
-                    Error.CreateInstance("InternalError", $"An error occurred while updating the compartiment: {ex.Message}", HttpStatusCode.InternalServerError));
+                    Error.CreateInstance("ValidationError", valEx.Message, HttpStatusCode.BadRequest));
+            }
+            catch (AutoMapperMappingException mapEx)
+            {
+                // Log the full exception server-side for debugging
+                Console.WriteLine($"[ERROR] AutoMapper mapping failed: {mapEx}");
+                return Result<VoidResult, Error>.Failure(
+                    Error.CreateInstance("MappingError", "Failed to map the compartiment data. Please verify all required fields are provided correctly.", HttpStatusCode.BadRequest));
+            }
+            catch (Exception ex)
+            {
+                // Log the full exception server-side for debugging
+                Console.WriteLine($"[ERROR] Unexpected error in UpdateCompartimentCommandHandler: {ex}");
+                return Result<VoidResult, Error>.Failure(
+                    Error.CreateInstance("InternalError", "An unexpected error occurred while processing the update request. Please contact support if the problem persists.", HttpStatusCode.InternalServerError));
             }
         }
     }
