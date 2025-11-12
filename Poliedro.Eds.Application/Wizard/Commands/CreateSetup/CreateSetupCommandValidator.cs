@@ -79,14 +79,5 @@ public class CreateSetupCommandValidator : AbstractValidator<CreateSetupRequestD
             .Must(list => list != null && list.Any())
             .WithMessage(redisService.GetValueFromCacheAsync("IslandersMustHaveElements").GetAwaiter().GetResult()
                 ?? "Debe existir al menos un elemento en 'Islanders'.");
-
-        RuleFor(x => x.Providers)
-            .NotNull()
-            .WithMessage(redisService.GetValueFromCacheAsync("ProvidersNotNull").GetAwaiter().GetResult()
-                ?? "El campo 'Providers' no puede ser nulo.")
-            .Must(list => list != null && list.Any())
-            .WithMessage(redisService.GetValueFromCacheAsync("ProvidersMustHaveElements").GetAwaiter().GetResult()
-                ?? "Debe existir al menos un elemento en 'Providers'.");
-
     }
 }
