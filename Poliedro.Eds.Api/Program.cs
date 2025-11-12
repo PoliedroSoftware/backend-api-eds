@@ -32,6 +32,7 @@ using Poliedro.Eds.Application.Common.Services.Cache;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.Court.Settings;
 using Poliedro.Eds.Application.FileUploadS3.Command;
+using Poliedro.Eds.Application.IoT.Commands.PublishMessage;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
@@ -102,6 +103,9 @@ builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
 
 builder.Services.AddScoped<IValidator<UpdateBusinessCommand>, UpdateBusinessCommandValidator>();
 
+// === IOT VALIDATORS ===
+builder.Services.AddScoped<IValidator<PublishIoTMessageRequest>, PublishIoTMessageRequestValidator>();
+
 // Servicios de caché con tags y invalidación distribuida
 builder.Services.AddScoped<ICacheService, CacheService>();
 
@@ -159,13 +163,40 @@ builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 
 builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
 {
-    var factory = new RabbitMQ.Client.ConnectionFactory()
+    try
     {
-        HostName = builder.Configuration["RabbitMQ:HostName"],
-        UserName = builder.Configuration["RabbitMQ:UserName"],
-        Password = builder.Configuration["RabbitMQ:Password"]
-    };
-    return factory.CreateConnection();
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        var hostName = builder.Configuration["RabbitMQ:HostName"];
+        var userName = builder.Configuration["RabbitMQ:UserName"];
+        var password = builder.Configuration["RabbitMQ:Password"];
+
+        if (string.IsNullOrWhiteSpace(hostName))
+        {
+            logger.LogWarning("RabbitMQ:HostName is not configured. RabbitMQ connection will be unavailable.");
+            return null;
+        }
+
+        var factory = new RabbitMQ.Client.ConnectionFactory()
+        {
+            HostName = hostName,
+            UserName = userName,
+            Password = password,
+            AutomaticRecoveryEnabled = true,
+            NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
+            RequestedConnectionTimeout = TimeSpan.FromSeconds(5),
+            RequestedHeartbeat = TimeSpan.FromSeconds(60)
+        };
+
+        var connection = factory.CreateConnection();
+        logger.LogInformation("RabbitMQ connection established successfully to {HostName}", hostName);
+        return connection;
+    }
+    catch (Exception ex)
+    {
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Failed to connect to RabbitMQ. The application will continue without RabbitMQ functionality.");
+        return null;
+    }
 });
 
 // Configura el JWT
