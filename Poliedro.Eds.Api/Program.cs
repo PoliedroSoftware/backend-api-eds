@@ -77,8 +77,8 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-// Only load AWS Secrets Manager in non-Test environments
-if (!builder.Environment.IsEnvironment("Test"))
+// Only load AWS Secrets Manager in Production environment
+if (builder.Environment.IsProduction())
 {
     builder.Configuration
         .AddSecretsManager("poliedro-conecctionstring-mysql-eds-backend", "us-east-2");
@@ -356,8 +356,8 @@ builder.Services.AddScoped<UpdateTransferValidationValidator>();
 
 builder.Services.AddControllers();
 
-// Only configure AWS logging in non-Test environments
-if (!builder.Environment.IsEnvironment("Test"))
+// Only configure AWS logging in Production environment
+if (builder.Environment.IsProduction())
 {
     AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 
