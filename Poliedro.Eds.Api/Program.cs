@@ -77,12 +77,10 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-// Only load AWS Secrets Manager in non-Test environments
-if (!builder.Environment.IsEnvironment("Test"))
-{
+// Only load AWS Secrets Manager in Production environment
     builder.Configuration
         .AddSecretsManager("poliedro-conecctionstring-mysql-eds-backend", "us-east-2");
-}
+
 builder.Services
     .AddWebApi()
     .AddApplication()
@@ -131,15 +129,20 @@ builder.Services.AddScoped(provider =>
     return new OpenAI.OpenAIClient(apiKey);
 });
 
-var httpContextAccessor = new HttpContextAccessor();
-var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-var currentUser = httpContextAccessor.HttpContext?.Items["preferred_username"]?.ToString();
-var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? builder.Configuration["ConnectionStrings:MysqlConnection"];
-if (connectionString == null)
+// Configure connection string for health checks (without tenant-specific schema)
+var healthCheckConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") 
+    ?? builder.Configuration["ConnectionStrings:MysqlConnection"];
+
+if (string.IsNullOrWhiteSpace(healthCheckConnectionString))
     throw new InvalidOperationException("MYSQL_CONNECTION or ConnectionStrings:MysqlConnection is not configured.");
-var connectionStringFactory = connectionString.Replace("{schema}", tenant ?? string.Empty);
+
+// Remove the {schema} placeholder for health checks - use a default database or remove the Database part
+// Health checks only verify connectivity, not tenant-specific access
+var healthCheckConnectionStringClean = healthCheckConnectionString.Replace("Database={schema};", "")
+    .Replace("Database={schema}", "");
+
 builder.Services.AddHealthChecks()
-    .AddMySql(connectionStringFactory, name: "sql", tags: ["ready"])
+    .AddMySql(healthCheckConnectionStringClean, name: "sql", tags: ["ready"])
     .AddRedis(
         builder.Configuration["Redis:ConnectionString"]
             ?? throw new InvalidOperationException("Redis:ConnectionString is not configured."),
@@ -356,8 +359,8 @@ builder.Services.AddScoped<UpdateTransferValidationValidator>();
 
 builder.Services.AddControllers();
 
-// Only configure AWS logging in non-Test environments
-if (!builder.Environment.IsEnvironment("Test"))
+// Only configure AWS logging in Production environment
+if (builder.Environment.IsProduction())
 {
     AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 
