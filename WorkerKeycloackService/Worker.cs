@@ -18,71 +18,90 @@ namespace WorkerKeycloackService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var channel = _rabbitConnection.CreateModel();
-
-            var queueName = _configuration["RabbitMQ:Queue"];
-
-            channel.QueueDeclare(queue: queueName,
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
-
-            _logger.LogInformation($"Escuchando la cola '{queueName}' cada 5 segundos...");
-
-            while (!stoppingToken.IsCancellationRequested)
+            if (_rabbitConnection == null)
             {
-                
-                var result = channel.BasicGet(queue: queueName, autoAck: false);
+                _logger.LogWarning("RabbitMQ connection is not available. Worker will not process messages.");
+                return;
+            }
 
-                if (result != null)
+            if (!_rabbitConnection.IsOpen)
+            {
+                _logger.LogWarning("RabbitMQ connection is not open. Worker will not process messages.");
+                return;
+            }
+
+            try
+            {
+                var channel = _rabbitConnection.CreateModel();
+
+                var queueName = _configuration["RabbitMQ:Queue"];
+
+                channel.QueueDeclare(queue: queueName,
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false,
+                    arguments: null);
+
+                _logger.LogInformation($"Escuchando la cola '{queueName}' cada 5 segundos...");
+
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    var message = Encoding.UTF8.GetString(result.Body.ToArray());
-                    _logger.LogInformation($"Mensaje recibido: {message}");
-
-                    var islanderDto = JsonSerializer.Deserialize<IslanderMessageDto>(message);
-                    var islanderEntity = new IslanderEntity
-                    {
-                        Name = islanderDto.User,
-                        Email = islanderDto.Email,
-                        FirstName = islanderDto.FirstName,
-                        LastName = islanderDto.LastName,
-                        IdEds = islanderDto.IdEds,
-                        Password = islanderDto.Password,
-                    };
-
-                    using var scope = _serviceProvider.CreateScope();
-                    var keycloakUserService = scope.ServiceProvider.GetRequiredService<IKeycloakUserService>();
-                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                     
-                    var resultService = await keycloakUserService.CreateUserAsync(islanderEntity, islanderDto.Password, islanderDto.NameClaimToken);
+                    var result = channel.BasicGet(queue: queueName, autoAck: false);
 
-                    if (resultService.IsSuccess)
+                    if (result != null)
                     {
-                        _logger.LogInformation($"Usuario creado en Keycloak: {islanderDto.Email}");
-                        var tenant = islanderDto.Tenant ?? string.Empty;
-                        var keycloakCreatedEvent = new IslanderKeycloakCreatedEvent(islanderEntity, tenant);
+                        var message = Encoding.UTF8.GetString(result.Body.ToArray());
+                        _logger.LogInformation($"Mensaje recibido: {message}");
+
+                        var islanderDto = JsonSerializer.Deserialize<IslanderMessageDto>(message);
+                        var islanderEntity = new IslanderEntity
+                        {
+                            Name = islanderDto.User,
+                            Email = islanderDto.Email,
+                            FirstName = islanderDto.FirstName,
+                            LastName = islanderDto.LastName,
+                            IdEds = islanderDto.IdEds,
+                            Password = islanderDto.Password,
+                        };
+
+                        using var scope = _serviceProvider.CreateScope();
+                        var keycloakUserService = scope.ServiceProvider.GetRequiredService<IKeycloakUserService>();
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                         
-                        await mediator.Publish(keycloakCreatedEvent, stoppingToken);
-                        _logger.LogInformation($"Evento IslanderKeycloakCreatedEvent publicado para: {islanderDto.Email} con tenant: {tenant}");
-                        
-                        channel.BasicAck(result.DeliveryTag, false);
+                        var resultService = await keycloakUserService.CreateUserAsync(islanderEntity, islanderDto.Password, islanderDto.NameClaimToken);
+
+                        if (resultService.IsSuccess)
+                        {
+                            _logger.LogInformation($"Usuario creado en Keycloak: {islanderDto.Email}");
+                            var tenant = islanderDto.Tenant ?? string.Empty;
+                            var keycloakCreatedEvent = new IslanderKeycloakCreatedEvent(islanderEntity, tenant);
+                            
+                            await mediator.Publish(keycloakCreatedEvent, stoppingToken);
+                            _logger.LogInformation($"Evento IslanderKeycloakCreatedEvent publicado para: {islanderDto.Email} con tenant: {tenant}");
+                            
+                            channel.BasicAck(result.DeliveryTag, false);
+                        }
+                        else
+                        {
+                            _logger.LogError($"Error creando usuario: {resultService.Error}");
+                            channel.BasicNack(result.DeliveryTag, false, requeue: true);
+                        }
                     }
                     else
                     {
-                        _logger.LogError($"Error creando usuario: {resultService.Error}");
-                        channel.BasicNack(result.DeliveryTag, false, requeue: true);
+                        _logger.LogInformation("No hay mensajes en la cola.");
                     }
+                    var delay = _configuration.GetValue<int>("worker:PollingInterval", 30000);
+                    await Task.Delay(30000, stoppingToken);
                 }
-                else
-                {
-                    _logger.LogInformation("No hay mensajes en la cola.");
-                }
-                var delay = _configuration.GetValue<int>("worker:PollingInterval", 30000);
-                await Task.Delay(30000, stoppingToken);
-            }
 
-            _logger.LogInformation("Worker detenido.");
+                _logger.LogInformation("Worker detenido.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Worker execution. RabbitMQ may be unavailable.");
+            }
         }
 
     }

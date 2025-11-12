@@ -6,6 +6,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Poliedro.Eds.Domain.FileUploadS3;
 using Poliedro.Eds.Domain.FileUploadS3.Ports;
 using RabbitMQ.Client;
@@ -19,9 +20,11 @@ namespace Amazon.S3.FileUploadService
         private readonly string _folderName;
         private readonly string _hostName;
         private readonly string _queue;
+        private readonly ILogger<FileUploadService> _logger;
 
-        public FileUploadService(IConfiguration configuration)
+        public FileUploadService(IConfiguration configuration, ILogger<FileUploadService> logger)
         {
+            _logger = logger;
             _bucketName = configuration["AWS:BucketName"] ?? throw new ArgumentNullException("BucketName configuration is missing");
             var region = configuration["AWS:Region"] ?? throw new ArgumentNullException("Region configuration is missing");
             _folderName = configuration["AWS:FolderName"] ?? "carpeta";
@@ -55,16 +58,32 @@ namespace Amazon.S3.FileUploadService
                 CourtId = courtId
             };
 
-            // Publish RabbitMQ
-            var factory = new ConnectionFactory() { HostName = _hostName };
-            using var connection = factory.CreateConnection();
-            using var channel = connection.CreateModel();
+            try
+            {
+                // Publish RabbitMQ
+                var factory = new ConnectionFactory() 
+                { 
+                    HostName = _hostName,
+                    RequestedConnectionTimeout = TimeSpan.FromSeconds(5),
+                    AutomaticRecoveryEnabled = false
+                };
+                
+                using var connection = factory.CreateConnection();
+                using var channel = connection.CreateModel();
 
-            channel.QueueDeclare(queue: _queue, durable: true, exclusive: false, autoDelete: false);
-            var json = JsonSerializer.Serialize(message);
-            var body = Encoding.UTF8.GetBytes(json);
+                channel.QueueDeclare(queue: _queue, durable: true, exclusive: false, autoDelete: false);
+                var json = JsonSerializer.Serialize(message);
+                var body = Encoding.UTF8.GetBytes(json);
 
-            channel.BasicPublish(exchange: string.Empty, routingKey: _queue, basicProperties: null, body: body);
+                channel.BasicPublish(exchange: string.Empty, routingKey: _queue, basicProperties: null, body: body);
+                
+                _logger.LogInformation("File upload message sent to RabbitMQ queue for file: {FileName}", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to send file upload message to RabbitMQ. File will remain in temp location: {TempPath}", tempPath);
+                // No lanzar excepción, permitir que el proceso continúe
+            }
 
             return $"{_folderName}/pending/{fileName}";
         }
