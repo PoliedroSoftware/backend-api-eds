@@ -61,7 +61,7 @@ public class RedisCacheService : IRedisService
                 return default;
             }
 
-            var deserialized = JsonSerializer.Deserialize<T>(json);
+            var deserialized = JsonSerializer.Deserialize<T>(json.ToString());
             return deserialized;
         }
         catch (RedisException ex)
