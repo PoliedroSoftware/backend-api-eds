@@ -7,7 +7,7 @@ on:
         description: '.NET version to use'
         required: false
         type: string
-        default: '9.x'
+        default: '8.x'
       configuration:
         description: 'Build configuration'
         required: false

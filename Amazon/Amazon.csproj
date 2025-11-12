@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -13,7 +13,7 @@
     <PackageReference Include="AWSSDK.S3" Version="4.0.4.2" />
     <PackageReference Include="AWSSDK.SecretsManager" Version="4.0.0.4" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
