@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Poliedro.Eds.Domain.Audit.Entities;
 using Poliedro.Eds.Domain.ProductType.Entities;
 
@@ -15,7 +16,8 @@ public class ProductEntity : AuditableEntity
     public double? Stock { get; set; }
     public DateTime Date { get; set; }
     public int? IdEds { get; set; }
-
+    [NotMapped]
+    public string? NameEDS { get; set; }
 
     public virtual ProductTypeEntity? ProductType { get; set; }
 }

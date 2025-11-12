@@ -5,4 +5,5 @@ public record ProductDto(int IdProduct,
     int IdProductType,
     double? SellPrice,
     double? PurchasePrice,
-    double? Stock);
+    double? Stock,
+    string? NameEDS);
