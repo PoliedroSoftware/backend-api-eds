@@ -1,5 +1,3 @@
-
-
 namespace Poliedro.Eds.Application.Court.Dtos.View
 {
     public class CourtDocumentViewDto
@@ -9,5 +7,7 @@ namespace Poliedro.Eds.Application.Court.Dtos.View
         public int Court { get; set; }
 
         public string Descripcion { get; set; }
+
+        public string? DocumentName { get; set; }
     }
 }
