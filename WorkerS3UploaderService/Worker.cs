@@ -82,7 +82,6 @@ namespace WorkerS3UploaderService
 
                         try
                         {
-                            // Usar la key de S3 pre-generada que incluye el CourtId
                             var key = !string.IsNullOrEmpty(doc.S3Key) 
                                 ? doc.S3Key 
                                 : $"{doc.FolderName}/court_{doc.CourtId}/{Guid.NewGuid()}_{doc.FileName}";

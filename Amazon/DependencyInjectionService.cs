@@ -12,6 +12,7 @@ public static class DependencyInjectionService
     {
         services.AddHttpClient();
         services.AddTransient<IFileUploadService, FileUploadService>();
+        services.AddTransient<IS3UrlGenerator, S3UrlGeneratorService>();
         services.AddTransient<IIoTPublishService, IoTPublishService>();
         return services;
     }
