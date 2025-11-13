@@ -48,6 +48,9 @@ namespace Amazon.S3.FileUploadService
                 await file.CopyToAsync(stream);
             }
             
+            // Generar la key de S3 que incluye el CourtId para organización
+            var s3Key = $"{_folderName}/court_{courtId}/{Guid.NewGuid()}_{fileName}";
+            
             var message = new DocumentEvent
             {
                 BucketName = _bucketName,
@@ -55,7 +58,8 @@ namespace Amazon.S3.FileUploadService
                 TempPath = tempPath,
                 FileName = fileName,
                 ContentType = file.ContentType,
-                CourtId = courtId
+                CourtId = courtId,
+                S3Key = s3Key
             };
 
             try
@@ -77,7 +81,7 @@ namespace Amazon.S3.FileUploadService
 
                 channel.BasicPublish(exchange: string.Empty, routingKey: _queue, basicProperties: null, body: body);
                 
-                _logger.LogInformation("File upload message sent to RabbitMQ queue for file: {FileName}", fileName);
+                _logger.LogInformation("File upload message sent to RabbitMQ queue for file: {FileName} with CourtId: {CourtId}", fileName, courtId);
             }
             catch (Exception ex)
             {
@@ -85,7 +89,8 @@ namespace Amazon.S3.FileUploadService
                 // No lanzar excepción, permitir que el proceso continúe
             }
 
-            return $"{_folderName}/pending/{fileName}";
+            // Retornar la ruta de S3 que incluye el CourtId para organización
+            return s3Key;
         }
     }
 }

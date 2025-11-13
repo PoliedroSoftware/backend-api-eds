@@ -233,7 +233,8 @@ public class CourtListService(
             {
                 Id = reader.IsDBNull("id") ? 0 : reader.GetInt32("id"),
                 Court = reader.IsDBNull("court") ? 0 : reader.GetInt32("court"),
-                Descripcion = reader.IsDBNull("descripcion") ? string.Empty : reader.GetString("descripcion")
+                Descripcion = reader.IsDBNull("descripcion") ? string.Empty : reader.GetString("descripcion"),
+                DocumentName = reader.IsDBNull("document_name") ? null : reader.GetString("document_name")
             });
         }
 
