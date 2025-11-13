@@ -19,9 +19,9 @@ IHost host = Host.CreateDefaultBuilder(args)
         {
             var factory = new ConnectionFactory()
             {
-                HostName = configuration["RabbitMQ:HostName"],
-                UserName = configuration["RabbitMQ:UserName"],
-                Password = configuration["RabbitMQ:Password"]
+                HostName = Environment.GetEnvironmentVariable("RABBITMQ_QUEUE") ?? configuration["RabbitMQ:HostName"],
+                UserName = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? configuration["RabbitMQ:UserName"],
+                Password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? configuration["RabbitMQ:Password"]
             };
             return factory.CreateConnection();
         });
