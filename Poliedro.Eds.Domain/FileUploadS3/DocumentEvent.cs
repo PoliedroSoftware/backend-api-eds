@@ -14,6 +14,5 @@ namespace Poliedro.Eds.Domain.FileUploadS3
         public string FileName { get; set; } = "";
         public string ContentType { get; set; } = "";
         public int CourtId { get; set; }
-        public string S3Key { get; set; } = "";
     }
 }
