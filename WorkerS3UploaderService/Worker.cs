@@ -34,12 +34,12 @@ namespace WorkerS3UploaderService
             _rabbitConnection = rabbitConnection;
             _logger = logger;
             //RabbitMQ config
-            _queue = configuration["RabbitMQ:QueueDocuments"] ?? throw new ArgumentNullException("Queue configuration is missing");
+            _queue = Environment.GetEnvironmentVariable("RABBITMQ_QUEUE_DOCUMENTS") ?? configuration["RabbitMQ:QueueDocuments"] ?? throw new ArgumentNullException("Queue configuration is missing");
 
             //S3 config
-            _bucketName = configuration["AWS:BucketName"] ?? throw new ArgumentNullException("BucketName configuration is missing");
-            var region = configuration["AWS:Region"] ?? throw new ArgumentNullException("Region configuration is missing");
-            _folderName = configuration["AWS:FolderName"] ?? "carpeta";
+            _bucketName = Environment.GetEnvironmentVariable("S3_BUCKET_NAME") ?? configuration["AWS:BucketName"] ?? throw new ArgumentNullException("BucketName configuration is missing");
+            var region = Environment.GetEnvironmentVariable("S3_REGION") ?? configuration["AWS:Region"] ?? throw new ArgumentNullException("Region configuration is missing");
+            _folderName = Environment.GetEnvironmentVariable("S3_FOLDER_NAME") ?? configuration["AWS:FolderName"] ?? "carpeta";
 
             var regionEndpoint = RegionEndpoint.GetBySystemName(region);
             _s3Client = new AmazonS3Client(regionEndpoint);
