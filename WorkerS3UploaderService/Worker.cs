@@ -82,10 +82,7 @@ namespace WorkerS3UploaderService
 
                         try
                         {
-                            var key = !string.IsNullOrEmpty(doc.S3Key) 
-                                ? doc.S3Key 
-                                : $"{doc.FolderName}/court_{doc.CourtId}/{Guid.NewGuid()}_{doc.FileName}";
-                            
+                            var key = $"{doc.FolderName}/{Guid.NewGuid()}_{doc.FileName}";
                             var uploadRequest = new TransferUtilityUploadRequest
                             {
                                 BucketName = doc.BucketName,
@@ -97,7 +94,7 @@ namespace WorkerS3UploaderService
                             var transferUtility = new TransferUtility(_s3Client);
                             await transferUtility.UploadAsync(uploadRequest, stoppingToken);
 
-                            _logger.LogInformation($"Subido a S3: {key} para Court ID: {doc.CourtId}");
+                            _logger.LogInformation($"Subido a S3: {key}");
 
                             if (File.Exists(doc.TempPath))
                             {
@@ -108,7 +105,7 @@ namespace WorkerS3UploaderService
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, $"Error subiendo {doc?.FileName} para Court ID: {doc?.CourtId}. Error: {ex.Message}");
+                            _logger.LogError(ex, $"Error subiendo {doc?.FileName} Error: {ex.Message}");
                             channel.BasicNack(result.DeliveryTag, false, true); // retry
                         }
                     }
