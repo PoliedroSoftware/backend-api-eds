@@ -34,7 +34,7 @@ namespace WorkerKeycloackService
             {
                 var channel = _rabbitConnection.CreateModel();
 
-                var queueName = _configuration["RabbitMQ:Queue"];
+                var queueName = Environment.GetEnvironmentVariable("RABBITMQ_QUEUE") ?? _configuration["RabbitMQ:Queue"];
 
                 channel.QueueDeclare(queue: queueName,
                     durable: true,
@@ -93,7 +93,7 @@ namespace WorkerKeycloackService
                         _logger.LogInformation("No hay mensajes en la cola.");
                     }
                     var delay = _configuration.GetValue<int>("worker:PollingInterval", 30000);
-                    await Task.Delay(30000, stoppingToken);
+                    await Task.Delay(delay, stoppingToken);
                 }
 
                 _logger.LogInformation("Worker detenido.");
