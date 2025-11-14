@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Poliedro.Eds.Application.Court.Commands.CreateCourt;
@@ -58,6 +59,13 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
             // create islands
             foreach (var island in setupEntity.Islands)
             {
+                var eds = setupEntity.EDS.FirstOrDefault(t => t.Name == island.NameEDS);
+
+                if (eds != null)
+                {
+                    island.IdEds = eds.IdEds;
+                }
+
                 await context.Island.AddAsync(island);
             }
 

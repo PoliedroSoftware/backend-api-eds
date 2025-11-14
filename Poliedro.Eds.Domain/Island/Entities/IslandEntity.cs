@@ -9,7 +9,7 @@ public class IslandEntity : AuditableEntity
     [Key]
     public int IdIsland { get; set; } = default!;
     public string Description { get; set; } = default!;
-    public int? IdEds { get; set; }
+    public int? IdEds { get; set; } = default;
 
     [NotMapped]
     public string? NameEDS { get; set; }
