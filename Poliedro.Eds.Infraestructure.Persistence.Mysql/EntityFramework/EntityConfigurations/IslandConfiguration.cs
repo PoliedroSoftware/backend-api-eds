@@ -12,5 +12,6 @@ public class IslandConfiguration
         builder.HasKey(x => x.IdIsland);
         builder.Property(x => x.IdIsland).HasColumnName("idisland");
         builder.Property(x => x.Description).HasColumnName("description");
+        builder.Property(x => x.IdEds).HasColumnName("id_eds").IsRequired(false);
     }
 }

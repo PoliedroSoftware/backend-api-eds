@@ -1,15 +1,8 @@
 using System.Net;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Poliedro.Eds.Application.Court.Commands.CreateCourt;
-using Poliedro.Eds.Application.Eds.Errors;
-using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Wizard.Errors;
-using Poliedro.Eds.Domain.Business.Entities;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
-using Poliedro.Eds.Domain.Eds.DomainEds;
-using Poliedro.Eds.Domain.Eds.Entities;
 using Poliedro.Eds.Domain.EdsTank.Entities;
 using Poliedro.Eds.Domain.Wizard.DomainSetup;
 using Poliedro.Eds.Domain.Wizard.Entities;
@@ -58,6 +51,13 @@ public class SetupCreateService(ITenantDbContextFactory dbContextFactory) : ISet
             // create islands
             foreach (var island in setupEntity.Islands)
             {
+                var eds = setupEntity.EDS.FirstOrDefault(t => t.Name == island.NameEDS);
+
+                if (eds != null)
+                {
+                    island.IdEds = eds.IdEds;
+                }
+
                 await context.Island.AddAsync(island);
             }
 
