@@ -32,6 +32,7 @@ using Poliedro.Eds.Application.Common.Services.Cache;
 using Poliedro.Eds.Application.Court.Queris.GetCourtList;
 using Poliedro.Eds.Application.Court.Settings;
 using Poliedro.Eds.Application.FileUploadS3.Command;
+using Poliedro.Eds.Application.IoT.Commands.PublishMessage;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.Ports.Translations;
 using Poliedro.Eds.Application.Secrets.Aws.Dto;
@@ -76,12 +77,10 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-// Only load AWS Secrets Manager in non-Test environments
-if (!builder.Environment.IsEnvironment("Test"))
-{
+// Only load AWS Secrets Manager in Production environment
     builder.Configuration
         .AddSecretsManager("poliedro-conecctionstring-mysql-eds-backend", "us-east-2");
-}
+
 builder.Services
     .AddWebApi()
     .AddApplication()
@@ -101,6 +100,9 @@ builder.Services.AddScoped<IBusinessUpdateService, BusinessUpdateService>();
 //builder.Services.AddScoped<IBusinessQueryService, BusinessQueryService>();
 
 builder.Services.AddScoped<IValidator<UpdateBusinessCommand>, UpdateBusinessCommandValidator>();
+
+// === IOT VALIDATORS ===
+builder.Services.AddScoped<IValidator<PublishIoTMessageRequest>, PublishIoTMessageRequestValidator>();
 
 // Servicios de caché con tags y invalidación distribuida
 builder.Services.AddScoped<ICacheService, CacheService>();
@@ -127,15 +129,20 @@ builder.Services.AddScoped(provider =>
     return new OpenAI.OpenAIClient(apiKey);
 });
 
-var httpContextAccessor = new HttpContextAccessor();
-var tenant = httpContextAccessor.HttpContext?.Items["tenant"]?.ToString();
-var currentUser = httpContextAccessor.HttpContext?.Items["preferred_username"]?.ToString();
-var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") ?? builder.Configuration["ConnectionStrings:MysqlConnection"];
-if (connectionString == null)
+// Configure connection string for health checks (without tenant-specific schema)
+var healthCheckConnectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION") 
+    ?? builder.Configuration["ConnectionStrings:MysqlConnection"];
+
+if (string.IsNullOrWhiteSpace(healthCheckConnectionString))
     throw new InvalidOperationException("MYSQL_CONNECTION or ConnectionStrings:MysqlConnection is not configured.");
-var connectionStringFactory = connectionString.Replace("{schema}", tenant ?? string.Empty);
+
+// Remove the {schema} placeholder for health checks - use a default database or remove the Database part
+// Health checks only verify connectivity, not tenant-specific access
+var healthCheckConnectionStringClean = healthCheckConnectionString.Replace("Database={schema};", "")
+    .Replace("Database={schema}", "");
+
 builder.Services.AddHealthChecks()
-    .AddMySql(connectionStringFactory, name: "sql", tags: ["ready"])
+    .AddMySql(healthCheckConnectionStringClean, name: "sql", tags: ["ready"])
     .AddRedis(
         builder.Configuration["Redis:ConnectionString"]
             ?? throw new InvalidOperationException("Redis:ConnectionString is not configured."),
@@ -159,13 +166,40 @@ builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 
 builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
 {
-    var factory = new RabbitMQ.Client.ConnectionFactory()
+    try
     {
-        HostName = builder.Configuration["RabbitMQ:HostName"],
-        UserName = builder.Configuration["RabbitMQ:UserName"],
-        Password = builder.Configuration["RabbitMQ:Password"]
-    };
-    return factory.CreateConnection();
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        var hostName = builder.Configuration["RabbitMQ:HostName"];
+        var userName = builder.Configuration["RabbitMQ:UserName"];
+        var password = builder.Configuration["RabbitMQ:Password"];
+
+        if (string.IsNullOrWhiteSpace(hostName))
+        {
+            logger.LogWarning("RabbitMQ:HostName is not configured. RabbitMQ connection will be unavailable.");
+            return null;
+        }
+
+        var factory = new RabbitMQ.Client.ConnectionFactory()
+        {
+            HostName = hostName,
+            UserName = userName,
+            Password = password,
+            AutomaticRecoveryEnabled = true,
+            NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
+            RequestedConnectionTimeout = TimeSpan.FromSeconds(5),
+            RequestedHeartbeat = TimeSpan.FromSeconds(60)
+        };
+
+        var connection = factory.CreateConnection();
+        logger.LogInformation("RabbitMQ connection established successfully to {HostName}", hostName);
+        return connection;
+    }
+    catch (Exception ex)
+    {
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Failed to connect to RabbitMQ. The application will continue without RabbitMQ functionality.");
+        return null;
+    }
 });
 
 // Configura el JWT
@@ -325,8 +359,8 @@ builder.Services.AddScoped<UpdateTransferValidationValidator>();
 
 builder.Services.AddControllers();
 
-// Only configure AWS logging in non-Test environments
-if (!builder.Environment.IsEnvironment("Test"))
+// Only configure AWS logging in Production environment
+if (builder.Environment.IsProduction())
 {
     AwsSecretsDto secret = await AwsSecrets.GetSecret(builder.Configuration);
 

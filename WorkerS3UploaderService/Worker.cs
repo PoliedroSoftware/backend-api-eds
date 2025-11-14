@@ -34,12 +34,12 @@ namespace WorkerS3UploaderService
             _rabbitConnection = rabbitConnection;
             _logger = logger;
             //RabbitMQ config
-            _queue = configuration["RabbitMQ:QueueDocuments"] ?? throw new ArgumentNullException("Queue configuration is missing");
+            _queue = Environment.GetEnvironmentVariable("RABBITMQ_QUEUE_DOCUMENTS") ?? configuration["RabbitMQ:QueueDocuments"] ?? throw new ArgumentNullException("Queue configuration is missing");
 
             //S3 config
-            _bucketName = configuration["AWS:BucketName"] ?? throw new ArgumentNullException("BucketName configuration is missing");
-            var region = configuration["AWS:Region"] ?? throw new ArgumentNullException("Region configuration is missing");
-            _folderName = configuration["AWS:FolderName"] ?? "carpeta";
+            _bucketName = Environment.GetEnvironmentVariable("S3_BUCKET_NAME") ?? configuration["AWS:BucketName"] ?? throw new ArgumentNullException("BucketName configuration is missing");
+            var region = Environment.GetEnvironmentVariable("S3_REGION") ?? configuration["AWS:Region"] ?? throw new ArgumentNullException("Region configuration is missing");
+            _folderName = Environment.GetEnvironmentVariable("S3_FOLDER_NAME") ?? configuration["AWS:FolderName"] ?? "carpeta";
 
             var regionEndpoint = RegionEndpoint.GetBySystemName(region);
             _s3Client = new AmazonS3Client(regionEndpoint);
@@ -47,60 +47,79 @@ namespace WorkerS3UploaderService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var channel = _rabbitConnection.CreateModel();
-
-            channel.QueueDeclare(queue: _queue,
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
-
-            _logger.LogInformation($"Escuchando la cola '{_queue}' cada 5 segundos...");
-            while (!stoppingToken.IsCancellationRequested)
+            if (_rabbitConnection == null)
             {
-                var result = channel.BasicGet(queue: _queue, autoAck: false);
+                _logger.LogWarning("RabbitMQ connection is not available. Worker will not process documents.");
+                return;
+            }
 
-                if (result != null)
+            if (!_rabbitConnection.IsOpen)
+            {
+                _logger.LogWarning("RabbitMQ connection is not open. Worker will not process documents.");
+                return;
+            }
+
+            try
+            {
+                var channel = _rabbitConnection.CreateModel();
+
+                channel.QueueDeclare(queue: _queue,
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false,
+                    arguments: null);
+
+                _logger.LogInformation($"Escuchando la cola '{_queue}' cada 5 segundos...");
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    var json = Encoding.UTF8.GetString(result.Body.ToArray());
-                    var doc = JsonSerializer.Deserialize<DocumentEvent>(json);
-                    _logger.LogInformation($"Documento recibido: {json}");
+                    var result = channel.BasicGet(queue: _queue, autoAck: false);
 
-                    try
+                    if (result != null)
                     {
-                        var key = $"{doc.FolderName}/{Guid.NewGuid()}_{doc.FileName}";
-                        var uploadRequest = new TransferUtilityUploadRequest
+                        var json = Encoding.UTF8.GetString(result.Body.ToArray());
+                        var doc = JsonSerializer.Deserialize<DocumentEvent>(json);
+                        _logger.LogInformation($"Documento recibido: {json}");
+
+                        try
                         {
-                            BucketName = doc.BucketName,
-                            FilePath = doc.TempPath,
-                            Key = key,
-                            ContentType = doc.ContentType
-                        };
+                            var key = $"{doc.FolderName}/{Guid.NewGuid()}_{doc.FileName}";
+                            var uploadRequest = new TransferUtilityUploadRequest
+                            {
+                                BucketName = doc.BucketName,
+                                FilePath = doc.TempPath,
+                                Key = key,
+                                ContentType = doc.ContentType
+                            };
 
-                        var transferUtility = new TransferUtility(_s3Client);
-                        await transferUtility.UploadAsync(uploadRequest, stoppingToken);
+                            var transferUtility = new TransferUtility(_s3Client);
+                            await transferUtility.UploadAsync(uploadRequest, stoppingToken);
 
-                        _logger.LogInformation($"Subido a S3: {key}");
+                            _logger.LogInformation($"Subido a S3: {key}");
 
-                        if (File.Exists(doc.TempPath))
-                        {
-                            File.Delete(doc.TempPath);
+                            if (File.Exists(doc.TempPath))
+                            {
+                                File.Delete(doc.TempPath);
+                            }
+
+                            channel.BasicAck(result.DeliveryTag, false);
                         }
-
-                        channel.BasicAck(result.DeliveryTag, false);
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"Error subiendo {doc?.FileName} Error: {ex.Message}");
+                            channel.BasicNack(result.DeliveryTag, false, true); // retry
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        _logger.LogError(ex, $"Error subiendo {doc?.FileName} Error: {ex.Message}");
-                        channel.BasicNack(result.DeliveryTag, false, true); // retry
+                        _logger.LogInformation("No hay documentos en la cola.");
                     }
+                    var delay = _configuration.GetValue<int>("worker:PollingInterval", 30000);
+                    await Task.Delay(delay, stoppingToken);
                 }
-                else
-                {
-                    _logger.LogInformation("No hay documentos en la cola.");
-                }
-                var delay = _configuration.GetValue<int>("worker:PollingInterval", 30000);
-                await Task.Delay(delay, stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in S3 Uploader Worker execution. RabbitMQ may be unavailable.");
             }
         }
     }

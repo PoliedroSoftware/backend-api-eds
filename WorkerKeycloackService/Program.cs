@@ -17,9 +17,9 @@ IHost host = Host.CreateDefaultBuilder(args)
         {
             var factory = new ConnectionFactory()
             {
-                HostName = configuration["RabbitMQ:HostName"],
-                UserName = configuration["RabbitMQ:UserName"],
-                Password = configuration["RabbitMQ:Password"]
+                HostName = Environment.GetEnvironmentVariable("RABBITMQ_HOSTAME") ?? configuration["RabbitMQ:HostName"],
+                UserName = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? configuration["RabbitMQ:UserName"],
+                Password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? configuration["RabbitMQ:Password"]
             };
             return factory.CreateConnection();
         });
@@ -29,7 +29,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
         {
 
-            client.BaseAddress = new Uri(configuration["Keycloak:KeycloakUri"]);
+            client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("KEYCLOAK_URL") ?? configuration["Keycloak:KeycloakUri"]!);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
