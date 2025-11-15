@@ -24,7 +24,7 @@ jobs:
   dotnet:
     uses: ./.github/workflows/reusable-dotnet-build.yml
     with:
-      dotnet-version: '9.x'
+      dotnet-version: '10.x'
       configuration: 'Release'
       solution-path: 'Poliedro.EDS.sln'
       run-tests: true
