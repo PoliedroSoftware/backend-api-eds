@@ -11,8 +11,37 @@ public static class EndpointExtensions
         app.MapAccountEndpoints();
         app.MapBankEndpoints();
         app.MapBusinessEndpoints();
-        
-        // TODO: Add remaining endpoint mappers as they are created
+        app.MapCapacityEndpoints();
+        app.MapCompartimentCapacityEndpoints();
+        app.MapCourtEndpoints();
+        app.MapCourtDispensersInventoryEndpoints();
+        app.MapDispensersEndpoints();
+        app.MapEdsEndpoints();
+        app.MapEdsTankEndpoints();
+        app.MapExpendituresEndpoints();
+        app.MapFileUploadS3Endpoints();
+        app.MapHoseEndpoints();
+        app.MapHoseHistoryEndpoints();
+        app.MapInventoryEndpoints();
+        app.MapIoTEndpoints();
+        app.MapIslandEndpoints();
+        app.MapIslanderEndpoints();
+        app.MapOpenAIEndpoints();
+        app.MapPhoneEndpoints();
+        app.MapProductEndpoints();
+        app.MapProductTypeEndpoints();
+        app.MapProviderEndpoints();
+        app.MapRegisterShiftEndpoints();
+        app.MapSetupWizardEndpoints();
+        app.MapShoppingEndpoints();
+        app.MapShoppingProductEndpoints();
+        app.MapShoppingProductInventoryEndpoints();
+        app.MapStrongBoxEndpoints();
+        app.MapTankEndpoints();
+        app.MapTransferValidationEndpoints();
+        app.MapTranslationsEndpoints();
+        app.MapTypeOfCollectionEndpoints();
+        app.MapWhatsAppEndpoints();
         
         return app;
     }
