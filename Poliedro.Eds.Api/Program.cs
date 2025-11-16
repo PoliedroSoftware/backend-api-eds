@@ -51,6 +51,7 @@ using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.SendMessage;
 using Poliedro.Eds.Application.TransferValidation.Commands.UpdateTransferValidation;
 using Poliedro.Eds.Application.TransferValidation.Validation;
+using Poliedro.Eds.Api.Endpoints;
 using Poliedro.Eds.Infraestructure.External.Keycloak;
 using Poliedro.Eds.Infraestructure.External.Keycloak.Services;
 using Poliedro.Eds.Infraestructure.External.Plemsi;
@@ -416,7 +417,13 @@ app.UseMiddleware<TenantMiddleware>();
 app.UseMiddleware<NameIdentifierMiddleware>();
 
 app.UseAuthorization();
+
+// Map minimal API endpoints
+app.MapApiEndpoints();
+
+// Keep controllers for now during migration
 app.MapControllers();
+
 app.Run();
 
 // Make Program class accessible for integration tests
