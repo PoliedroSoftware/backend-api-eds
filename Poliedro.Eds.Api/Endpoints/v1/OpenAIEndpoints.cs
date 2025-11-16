@@ -21,17 +21,27 @@ public static class OpenAIEndpoints
         return app;
     }
 
-    private static async Task<IResult> SendMessage([FromBody] OpenAIRequestDto request, IMediator mediator)
+    private static async Task<IResult> SendMessage([FromBody] OpenAIRequestDto request, HttpContext httpContext, IMediator mediator)
     {
-        var result = await mediator.Send(new SendOpenAIMessageCommand(request));
+        var userId = httpContext.User.FindFirst("sub")?.Value ?? 
+                    httpContext.User.FindFirst("name")?.Value ?? 
+                    "anonymous";
+
+        var command = new SendOpenAIMessageCommand(request, userId);
+        var result = await mediator.Send(command);
+
         return result.Match(
             onSuccess => TypedResults.Ok(result.Value),
             onFailure => TypedResults.BadRequest(onFailure));
     }
 
-    private static async Task<IResult> GetChatHistory([FromQuery] int pageNumber, [FromQuery] int pageSize, IMediator mediator)
+    private static async Task<IResult> GetChatHistory([FromQuery] int pageNumber, [FromQuery] int pageSize, HttpContext httpContext, IMediator mediator)
     {
-        var result = await mediator.Send(new GetChatHistoryQuery(pageNumber, pageSize));
+        var userId = httpContext.User.FindFirst("sub")?.Value ?? 
+                    httpContext.User.FindFirst("name")?.Value ??
+                    "anonymous";
+
+        var result = await mediator.Send(new GetChatHistoryQuery(userId, pageNumber, pageSize));
         return TypedResults.Ok(result);
     }
 }

@@ -92,8 +92,7 @@ public static class IslandEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/island/{result.Value!.IdIsland}", result.Value),
-            onFailure => TypedResults.BadRequest(onFailure)
+            onSuccess => TypedResults.Created()
         );
     }
 

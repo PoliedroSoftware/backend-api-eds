@@ -90,11 +90,7 @@ public static class IslanderEndpoints
         [FromBody] CreateIslanderCommand command,
         IMediator mediator)
     {
-        var result = await mediator.Send(command);
-        return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/islander/{result.Value!.IdIslander}", result.Value),
-            onFailure => TypedResults.BadRequest(onFailure)
-        );
+        return TypedResults.Ok(await mediator.Send(command));
     }
 
     private static async Task<IResult> Update(

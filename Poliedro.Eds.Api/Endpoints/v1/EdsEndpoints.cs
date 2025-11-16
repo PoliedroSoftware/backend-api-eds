@@ -92,7 +92,7 @@ public static class EdsEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/eds/{result.Value!.IdEds}", result.Value),
+            onSuccess => TypedResults.Created(),
             onFailure => TypedResults.BadRequest(onFailure)
         );
     }

@@ -92,7 +92,7 @@ public static class CompartimentCapacityEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/compartiment-capacity/{result.Value!.IdCompartimentCapacity}", result.Value),
+            onSuccess => TypedResults.Created(),
             onFailure => TypedResults.BadRequest(onFailure)
         );
     }

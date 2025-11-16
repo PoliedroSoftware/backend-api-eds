@@ -92,7 +92,7 @@ public static class ExpendituresEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/expenditures/{result.Value!.IdExpenditures}", result.Value),
+            onSuccess => TypedResults.Created(),
             onFailure => TypedResults.BadRequest(onFailure)
         );
     }

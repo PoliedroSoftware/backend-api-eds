@@ -92,7 +92,7 @@ public static class DispensersEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/dispensers/{result.Value!.IdDispensers}", result.Value),
+            onSuccess => TypedResults.Created(),
             onFailure => TypedResults.BadRequest(onFailure)
         );
     }

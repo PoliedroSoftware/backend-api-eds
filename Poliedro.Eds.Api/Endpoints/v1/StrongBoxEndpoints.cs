@@ -29,8 +29,7 @@ public static class StrongBoxEndpoints
 
     private static async Task<IResult> GetAll([AsParameters] PaginationParams paginationParams, IMediator mediator)
     {
-        var data = await mediator.Send(new StrongBoxGetListQuery(new PaginationParams 
-        { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+        var data = await mediator.Send(new StrongBoxGetList(paginationParams.PageNumber, paginationParams.PageSize));
         return data is null
             ? TypedResults.Json(ResponseApiService.Response(StatusCodes.Status404NotFound), statusCode: StatusCodes.Status404NotFound)
             : TypedResults.Json(ResponseApiService.Response(StatusCodes.Status200OK, data), statusCode: StatusCodes.Status200OK);
@@ -38,7 +37,7 @@ public static class StrongBoxEndpoints
 
     private static async Task<IResult> GetById([FromRoute] long id, IMediator mediator)
     {
-        var result = await mediator.Send(new StrongBoxGetByIdQuery(id));
+        var result = await mediator.Send(new StrongBoxGetId(id));
         return result == null
             ? TypedResults.NotFound(ResponseApiService.Response(StatusCodes.Status404NotFound, "StrongBox not found"))
             : TypedResults.Ok(ResponseApiService.Response(StatusCodes.Status200OK, result));
@@ -46,7 +45,7 @@ public static class StrongBoxEndpoints
 
     private static async Task<IResult> GetByEds([FromRoute] int idEds, IMediator mediator)
     {
-        var result = await mediator.Send(new StrongBoxGetByEdsQuery(idEds));
+        var result = await mediator.Send(new StrongBoxGetByEds(idEds));
         return result == null
             ? TypedResults.NotFound(ResponseApiService.Response(StatusCodes.Status404NotFound, "StrongBox not found for EDS"))
             : TypedResults.Ok(ResponseApiService.Response(StatusCodes.Status200OK, result));
@@ -54,8 +53,8 @@ public static class StrongBoxEndpoints
 
     private static async Task<IResult> GetCurrentBalance(IMediator mediator)
     {
-        var result = await mediator.Send(new StrongBoxGetTotalBalanceQuery());
-        return TypedResults.Ok(ResponseApiService.Response(StatusCodes.Status200OK, new { Balance = result }));
+        var result = await mediator.Send(new StrongBoxGetTotalBalance());
+        return TypedResults.Ok(ResponseApiService.Response(StatusCodes.Status200OK, result));
     }
 
     private static async Task<IResult> Create([FromBody] StrongBoxCreateCommand command, IMediator mediator)
@@ -63,6 +62,6 @@ public static class StrongBoxEndpoints
         var result = await mediator.Send(command);
         return result == null
             ? TypedResults.BadRequest(ResponseApiService.Response(StatusCodes.Status400BadRequest, "Failed to create StrongBox"))
-            : TypedResults.Created($"/api/v1/strong-box/{result.IdStrongBox}", ResponseApiService.Response(StatusCodes.Status201Created, result));
+            : TypedResults.Created($"/api/v1/strong-box", ResponseApiService.Response(StatusCodes.Status201Created, result));
     }
 }

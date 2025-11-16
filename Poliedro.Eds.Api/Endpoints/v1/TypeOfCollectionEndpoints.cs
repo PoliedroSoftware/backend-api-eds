@@ -92,7 +92,7 @@ public static class TypeOfCollectionEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/type-of-collection/{result.Value!.IdTypeOfCollection}", result.Value),
+            onSuccess => TypedResults.Created(),
             onFailure => TypedResults.BadRequest(onFailure)
         );
     }

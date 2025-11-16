@@ -91,10 +91,7 @@ public static class ProductEndpoints
         IMediator mediator)
     {
         var result = await mediator.Send(command);
-        return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/product/{result.Value!.IdProduct}", result.Value),
-            onFailure => TypedResults.BadRequest(onFailure)
-        );
+        return result.Match(onSuccess => TypedResults.Created());
     }
 
     private static async Task<IResult> Update(

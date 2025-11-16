@@ -29,7 +29,7 @@ public static class HoseEndpoints
         group.MapGet("{id:int}", GetById)
             .WithName("GetHoseById")
             .WithSummary("Get Hose by ID")
-            .Produces<HoseDto>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
 
@@ -112,9 +112,7 @@ public static class HoseEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/hose/{result.Value!.IdHose}", result.Value),
-            onFailure => TypedResults.BadRequest(onFailure)
-        );
+            onSuccess => TypedResults.Created());
     }
 
     private static async Task<IResult> Update(

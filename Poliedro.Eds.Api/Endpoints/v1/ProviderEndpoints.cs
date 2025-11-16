@@ -91,10 +91,7 @@ public static class ProviderEndpoints
         IMediator mediator)
     {
         var result = await mediator.Send(command);
-        return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/provider/{result.Value!.IdProvider}", result.Value),
-            onFailure => TypedResults.BadRequest(onFailure)
-        );
+        return result.Match(onSuccess => TypedResults.Created());
     }
 
     private static async Task<IResult> Update(

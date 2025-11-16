@@ -65,8 +65,7 @@ public static class HoseHistoryEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/hose-history/{result.Value!.IdHoseHistory}", result.Value),
-            onFailure => TypedResults.BadRequest(onFailure));
+            onSuccess => TypedResults.Created());
     }
 
     private static async Task<IResult> Update([FromBody] UpdateHoseHistoryCommand command, IMediator mediator)

@@ -92,7 +92,7 @@ public static class ShoppingProductEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/shopping-product/{result.Value!.IdShoppingProduct}", result.Value),
+            onSuccess => TypedResults.Created(),
             onFailure => TypedResults.BadRequest(onFailure)
         );
     }
