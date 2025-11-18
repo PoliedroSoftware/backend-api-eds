@@ -1,11 +1,12 @@
-
 using AutoMapper;
 using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos.Court;
+using Poliedro.Eds.Application.DashboardPowerBI.Dtos.BusinessDashboardView;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.BusinessDashboardView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.Entities;
@@ -26,6 +27,17 @@ public class DashboardPowerBIMapper : Profile
 {
     public DashboardPowerBIMapper()
     {
+        // Mapping for v_d_business (new independent view)
+        CreateMap<BusinessDashboardViewEntity, BusinessDashboardViewDto>()
+             .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
+             .ForMember(dest => dest.BusinessName, opt => opt.MapFrom(src => src.BusinessName))
+             .ForMember(dest => dest.EdsName, opt => opt.MapFrom(src => src.EdsName))
+             .ForMember(dest => dest.TankNumber, opt => opt.MapFrom(src => src.TankNumber))
+             .ForMember(dest => dest.CompartimentNumber, opt => opt.MapFrom(src => src.CompartimentNumber.ToString()))
+             .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
+             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
+             .ForMember(dest => dest.ProductDate, opt => opt.MapFrom(src => src.ProductDate.ToString("yyyy-MM-dd")));
+
         CreateMap<BusinessViewEntity, Business2Dto>()
              .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
              .ForMember(dest => dest.BusinessName, opt => opt.MapFrom(src => src.BusinessName))

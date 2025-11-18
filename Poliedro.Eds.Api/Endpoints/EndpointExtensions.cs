@@ -1,4 +1,5 @@
 using Poliedro.Eds.Api.Endpoints.v1;
+using Poliedro.Eds.Api.Endpoints.v1.PowerBI;
 
 namespace Poliedro.Eds.Api.Endpoints;
 
@@ -42,6 +43,9 @@ public static class EndpointExtensions
         app.MapTranslationsEndpoints();
         app.MapTypeOfCollectionEndpoints();
         app.MapWhatsAppEndpoints();
+        
+        // Map PowerBI Dashboard endpoints
+        app.MapBusinessDashboardViewEndpoints();
         
         return app;
     }

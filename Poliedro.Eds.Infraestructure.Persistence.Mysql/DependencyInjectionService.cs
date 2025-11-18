@@ -12,6 +12,7 @@ using Poliedro.Eds.Domain.CompartimentCapacity.DomainCompartimentCapacity;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.CourtDispensersInventory.DomainCourtDispensersInventory;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.DomainBusinessView;
+using Poliedro.Eds.Domain.DashboardPowerBI.BusinessDashboardView.DomainBusinessDashboardView;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.DomainCapacityView;
 using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.DomainCompartimentView;
 using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.DomainEds;
@@ -57,6 +58,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.CompartimentCapacity.Domain
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Court.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.CourtDispensersInventory.DomainCourtDispensersInventory.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.BusinessView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.BusinessDashboardView;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CapacityView;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CompartimentView;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.EdsView;
@@ -209,6 +211,7 @@ public static class DependencyInjectionService
         services.AddScoped<IHoseQueryService, HoseQueryService>();
 
         services.AddScoped<IBusinessViewGetAllService, BusinessViewGetAllService>();
+        services.AddScoped<IBusinessDashboardViewGetAllService, BusinessDashboardViewGetAllService>();
         services.AddScoped<ICompartimenViewGetAllService, CompartimentViewGetAllService>();
         services.AddScoped<IProductViewGetAllProduct, ProductViewGetAllProduct>();
         services.AddScoped<ICapacityViewGetAllService, CapacityViewGetAllService>();
