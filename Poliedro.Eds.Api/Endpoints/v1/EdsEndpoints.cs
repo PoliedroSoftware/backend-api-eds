@@ -1,0 +1,115 @@
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Poliedro.Eds.Api.Common.Extensions;
+using Poliedro.Eds.Application.Eds.Commands.CreateEds;
+using Poliedro.Eds.Application.Eds.Commands.UpdateEds;
+using Poliedro.Eds.Application.Eds.Dtos;
+using Poliedro.Eds.Application.Eds.Queries.GellAllEds;
+using Poliedro.Eds.Application.Eds.Queries.GetEdsById;
+using Poliedro.Eds.Application.Common.Features;
+using Poliedro.Eds.Domain.Common.Pagination;
+
+namespace Poliedro.Eds.Api.Endpoints.v1;
+
+public static class EdsEndpoints
+{
+    public static IEndpointRouteBuilder MapEdsEndpoints(this IEndpointRouteBuilder app)
+    {
+        var group = app.MapGroup("api/v1/eds")
+            .WithTags("Eds");
+
+        group.MapGet("", GetAll)
+            .WithName("GetAllEdss")
+            .WithSummary("Get all Eds entries")
+            .RequireAuthorization("AdminOrIslander")
+            .Produces(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+
+        group.MapGet("{id:int}", GetById)
+            .WithName("GetEdsById")
+            .WithSummary("Get Eds by ID")
+            .RequireAuthorization("AdminOrIslander")
+            .Produces<EdsDto>(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+
+        group.MapPost("", Create)
+            .WithName("CreateEds")
+            .WithSummary("Create new Eds")
+            .RequireAuthorization("AdminOnly")
+            .Produces(StatusCodes.Status201Created)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+
+        group.MapPut("", Update)
+            .WithName("UpdateEds")
+            .WithSummary("Update an existing Eds")
+            .RequireAuthorization("AdminOnly")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+
+        return app;
+    }
+
+    private static async Task<IResult> GetAll(
+        [AsParameters] PaginationParams paginationParams,
+        IMediator mediator)
+    {
+        var data = await mediator.Send(new GellAllEdsQuery(new PaginationParams 
+        { 
+            PageNumber = paginationParams.PageNumber, 
+            PageSize = paginationParams.PageSize 
+        }));
+        
+        if (data is null)
+        {
+            return TypedResults.Json(
+                ResponseApiService.Response(StatusCodes.Status404NotFound),
+                statusCode: StatusCodes.Status404NotFound);
+        }
+        
+        return TypedResults.Json(
+            ResponseApiService.Response(StatusCodes.Status200OK, data),
+            statusCode: StatusCodes.Status200OK);
+    }
+
+    private static async Task<IResult> GetById(
+        [FromRoute] int id,
+        IMediator mediator)
+    {
+        var query = new GetEdsByIdQuery(Id: id);
+        var result = await mediator.Send(query);
+
+        return result.Match(
+            onSuccess => TypedResults.Ok(result.Value),
+            onFailure => TypedResults.BadRequest(onFailure)
+        );
+    }
+
+    private static async Task<IResult> Create(
+        [FromBody] CreateEdsCommand command,
+        IMediator mediator)
+    {
+        var result = await mediator.Send(command);
+        return result.Match(
+            onSuccess => TypedResults.Created(),
+            onFailure => TypedResults.BadRequest(onFailure)
+        );
+    }
+
+    private static async Task<IResult> Update(
+        [FromBody] UpdateEdsCommand command,
+        IMediator mediator)
+    {
+        var result = await mediator.Send(command);
+
+        if (!result.IsSuccess)
+        {
+            return TypedResults.Json(
+                ResponseApiService.Response(StatusCodes.Status500InternalServerError, result.Error),
+                statusCode: StatusCodes.Status500InternalServerError);
+        }
+
+        return TypedResults.NoContent();
+    }
+}
