@@ -59,21 +59,19 @@ public static class HoseEndpoints
         [FromQuery] int pageSize = 10,
         IMediator mediator = null!)
     {
-        var data = await mediator.Send(new GellAllHoseQuery(new PaginationParams 
+        var result = await mediator.Send(new GellAllHoseQuery(new PaginationParams 
         { 
             PageNumber = pageNumber, PageSize = pageSize 
         }));
         
-        if (data is null)
-        {
-            return TypedResults.Json(
-                ResponseApiService.Response(StatusCodes.Status404NotFound),
-                statusCode: StatusCodes.Status404NotFound);
-        }
-        
-        return TypedResults.Json(
-            ResponseApiService.Response(StatusCodes.Status200OK, data),
-            statusCode: StatusCodes.Status200OK);
+        return result.Match(
+            onSuccess => TypedResults.Json(
+                ResponseApiService.Response(StatusCodes.Status200OK, result.Value),
+                statusCode: StatusCodes.Status200OK),
+            onFailure => TypedResults.Json(
+                ResponseApiService.Response((int)result.Error!.HttpStatusCode, result.Error),
+                statusCode: (int)result.Error!.HttpStatusCode)
+        );
     }
 
     private static async Task<IResult> GetById(
