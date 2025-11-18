@@ -19,10 +19,13 @@ public static class InventoryEndpoints
         return app;
     }
 
-    private static async Task<IResult> GetInventoryAll([AsParameters] PaginationParams paginationParams, IMediator mediator)
+    private static async Task<IResult> GetInventoryAll(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        IMediator mediator = null!)
     {
         var data = await mediator.Send(new GetInventoryListQuery(new PaginationParams 
-        { PageNumber = paginationParams.PageNumber, PageSize = paginationParams.PageSize }));
+        { PageNumber = pageNumber, PageSize = pageSize }));
         return data is null
             ? TypedResults.Json(ResponseApiService.Response(StatusCodes.Status404NotFound), statusCode: StatusCodes.Status404NotFound)
             : TypedResults.Json(ResponseApiService.Response(StatusCodes.Status200OK, data), statusCode: StatusCodes.Status200OK);

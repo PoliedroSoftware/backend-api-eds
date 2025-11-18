@@ -52,13 +52,13 @@ public static class ProviderEndpoints
     }
 
     private static async Task<IResult> GetAll(
-        [AsParameters] PaginationParams paginationParams,
-        IMediator mediator)
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        IMediator mediator = null!)
     {
         var data = await mediator.Send(new GellAllProviderQuery(new PaginationParams 
         { 
-            PageNumber = paginationParams.PageNumber, 
-            PageSize = paginationParams.PageSize 
+            PageNumber = pageNumber, PageSize = pageSize 
         }));
         
         if (data is null)
