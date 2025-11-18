@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices.JavaScript;
+
 
 namespace Poliedro.Eds.Domain.Common.Results;
 
@@ -28,16 +28,6 @@ public class Result<TValue, TError>
 
     public static Result<TValue, TError> Success(TValue value) => new Result<TValue, TError>(value);
     public static Result<TValue, TError> Failure(TError error) => new Result<TValue, TError>(error);
-
-    public static Result<VoidResult, JSType.Error> Ok(VoidResult instance)
-    {
-        throw new NotImplementedException();
-    }
-
-    public static Result<VoidResult, JSType.Error> Failure(object value)
-    {
-        throw new NotImplementedException();
-    }
 }
 
 public class VoidResult
@@ -46,7 +36,7 @@ public class VoidResult
     /// Creates an instance of the VoidResult.
     /// </summary>
     /// <remarks>
-    /// This method should be used exclusively for return a VoidResult on specif.
+    /// This method should be used exclusively for return a VoidResult on specific cases.
     /// </remarks>
     public static VoidResult Instance { get; } = new VoidResult();
 }
