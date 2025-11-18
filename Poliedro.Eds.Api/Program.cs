@@ -422,7 +422,9 @@ app.UseAuthorization();
 app.MapApiEndpoints();
 
 // Keep controllers for now during migration
-app.MapControllers();
+// COMMENTED OUT: This was causing AmbiguousMatchException due to duplicate routes
+// with the minimal APIs. Uncomment if you need to rollback to controllers.
+// app.MapControllers();
 
 app.Run();
 
