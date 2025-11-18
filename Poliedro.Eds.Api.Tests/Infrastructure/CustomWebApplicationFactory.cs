@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Poliedro.Eds.Application.Ports.Translations;
 
 namespace Poliedro.Eds.Api.Tests.Infrastructure;
 
@@ -62,6 +63,31 @@ services.Remove(rabbitConnection);
   mockConnection.Setup(x => x.IsOpen).Returns(false);
  mockConnection.Setup(x => x.Dispose()).Verifiable();
     services.AddSingleton<RabbitMQ.Client.IConnection>(mockConnection.Object);
+
+   // Remove and mock ITolgeeService to prevent external HTTP calls
+   var tolgeeService = services.FirstOrDefault(d => d.ServiceType == typeof(ITolgeeService));
+   if (tolgeeService != null)
+   {
+       services.Remove(tolgeeService);
+   }
+
+   // Add mock ITolgeeService with test data
+   var mockTolgeeService = new Mock<ITolgeeService>();
+   mockTolgeeService.Setup(x => x.GetAllTranslationsFromTolgee())
+       .ReturnsAsync(new Dictionary<string, Dictionary<string, string>>
+       {
+           ["en"] = new Dictionary<string, string>
+           {
+               ["test.key"] = "Test Value",
+               ["app.title"] = "Test Application"
+           },
+           ["es-CO"] = new Dictionary<string, string>
+           {
+               ["test.key"] = "Valor de Prueba",
+               ["app.title"] = "Aplicación de Prueba"
+           }
+       });
+   services.AddSingleton<ITolgeeService>(mockTolgeeService.Object);
 
    // Remove all hosted services (Workers) that depend on RabbitMQ or external services
       var hostedServices = services.Where(d =>
