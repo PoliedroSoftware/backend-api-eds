@@ -260,11 +260,6 @@ builder.Services.AddHostedService<TranslationCachingService>();
 builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("Redis"));
 builder.Services.AddTransient<IFileUploadService, FileUploadService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(UploadFileCommand).Assembly));
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<GlobalExceptionConfiguration>();
-});
-
 builder.Services.AddRouting(routing => routing.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 
@@ -324,8 +319,6 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Ge
 // === TRANSFER VALIDATION SERVICES ===
 builder.Services.AddScoped<TransferValidationCreateValidator>();
 builder.Services.AddScoped<UpdateTransferValidationValidator>();
-
-builder.Services.AddControllers();
 
 // Only configure AWS logging in Production environment
 if (builder.Environment.IsProduction())
@@ -392,11 +385,6 @@ app.UseAuthorization();
 
 // Map minimal API endpoints
 app.MapApiEndpoints();
-
-// Keep controllers for now during migration
-// COMMENTED OUT: This was causing AmbiguousMatchException due to duplicate routes
-// with the minimal APIs. Uncomment if you need to rollback to controllers.
-// app.MapControllers();
 
 app.Run();
 

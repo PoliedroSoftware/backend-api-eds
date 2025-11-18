@@ -27,9 +27,9 @@ public static class StrongBoxEndpoints
         return app;
     }
 
-    private static async Task<IResult> GetAll([AsParameters] PaginationParams paginationParams, IMediator mediator)
+    private static async Task<IResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, IMediator mediator = null!)
     {
-        var data = await mediator.Send(new StrongBoxGetList(paginationParams.PageNumber, paginationParams.PageSize));
+        var data = await mediator.Send(new StrongBoxGetList(pageNumber, pageSize));
         return data is null
             ? TypedResults.Json(ResponseApiService.Response(StatusCodes.Status404NotFound), statusCode: StatusCodes.Status404NotFound)
             : TypedResults.Json(ResponseApiService.Response(StatusCodes.Status200OK, data), statusCode: StatusCodes.Status200OK);
