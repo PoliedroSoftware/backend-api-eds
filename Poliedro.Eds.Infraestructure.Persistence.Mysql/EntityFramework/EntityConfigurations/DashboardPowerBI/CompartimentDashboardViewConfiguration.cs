@@ -10,7 +10,7 @@ public class CompartimentDashboardViewConfiguration
     {
         builder.ToTable("v_d_compartiment");
         builder.HasKey(x => x.IdCompartment);
-        builder.Property(x => x.IdCompartment).HasColumnName("id_compartment");
+        builder.Property(x => x.IdCompartment).HasColumnName("id_compartiment");
         builder.Property(x => x.Number).HasColumnName("number");
         builder.Property(x => x.Nominal).HasColumnName("nominal");
         builder.Property(x => x.Operative).HasColumnName("operative");

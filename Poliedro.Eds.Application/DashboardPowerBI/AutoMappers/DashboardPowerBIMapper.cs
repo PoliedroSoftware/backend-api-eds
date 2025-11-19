@@ -53,6 +53,24 @@ public class DashboardPowerBIMapper : Profile
              .ForMember(dest => dest.Liters, opt => opt.MapFrom(src => src.Liters.ToString()))
              .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString("yyyy-MM-dd")));
 
+        // Mapping for v_d_compartiment (new independent view)
+        CreateMap<CompartimentDashboardViewEntity, CompartimentDashboardViewDto>()
+             .ForMember(dest => dest.IdCompartment, opt => opt.MapFrom(src => src.IdCompartment.ToString()))
+             .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Number.ToString()))
+             .ForMember(dest => dest.Nominal, opt => opt.MapFrom(src => src.Nominal.ToString()))
+             .ForMember(dest => dest.Operative, opt => opt.MapFrom(src => src.Operative.ToString()))
+             .ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Height.ToString()))
+             .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
+             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
+             .ForMember(dest => dest.IdTank, opt => opt.MapFrom(src => src.IdTank.ToString()))
+             .ForMember(dest => dest.IdEds, opt => opt.MapFrom(src => src.IdEds.ToString()))
+             .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
+             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString("yyyy-MM-dd")));
+
+
+
+
+
         CreateMap<BusinessViewEntity, Business2Dto>()
              .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
              .ForMember(dest => dest.BusinessName, opt => opt.MapFrom(src => src.BusinessName))
