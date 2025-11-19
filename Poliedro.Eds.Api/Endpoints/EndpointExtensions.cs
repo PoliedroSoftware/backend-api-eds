@@ -47,6 +47,7 @@ public static class EndpointExtensions
         // Map PowerBI Dashboard endpoints
         app.MapBusinessDashboardViewEndpoints();
         app.MapCapacityDashboardViewEndpoints();
+        app.MapCompartimentDashboardViewEndpoints();
         
         return app;
     }

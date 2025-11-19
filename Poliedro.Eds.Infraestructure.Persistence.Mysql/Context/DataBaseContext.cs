@@ -44,6 +44,7 @@ using Poliedro.Eds.Domain.TypeOfCollection.Entities;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations.DashboardPowerBI;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.OpenAI.Configuration;
+using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentDashboardView.Entities;
 
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.Context;
@@ -109,6 +110,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<BusinessDashboardViewEntity> BusinessDashboardView { get; set; }
 
     public DbSet<CapacityDashboardViewEntity> CapacityDashboardView { get; set; }
+
+    public DbSet<CompartimentDashboardViewEntity> CompartimentDashboardView { get; set; }
 
     public DbSet<CapacityViewEntity> CapacityView { get; set; }
 
@@ -181,6 +184,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new BusinessViewConfiguration(modelBuilder.Entity<BusinessViewEntity>());
         new BusinessDashboardViewConfiguration(modelBuilder.Entity<BusinessDashboardViewEntity>());
         new CapacityDashboardViewConfiguration(modelBuilder.Entity<CapacityDashboardViewEntity>());
+        new CompartimentDashboardViewConfiguration(modelBuilder.Entity<CompartimentDashboardViewEntity>());
         new CapacityViewConfiguration(modelBuilder.Entity<CapacityViewEntity>());
         new ProductViewConfiguration(modelBuilder.Entity<ProductViewEntity>());
         new ProviderViewConfiguration(modelBuilder.Entity<ProviderViewEntity>());

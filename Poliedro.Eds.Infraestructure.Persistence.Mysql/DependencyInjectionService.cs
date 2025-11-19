@@ -61,6 +61,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.CourtDispensersInventory.Do
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.BusinessView;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.BusinessDashboardView;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CapacityDashboardView;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CompartimentDashboardView;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CapacityView;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.CompartimentView;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.DashboardPowerBI.Impl.EdsView;
@@ -95,6 +96,7 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Tank.DomainTank.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.TransferValidation.Repositories;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.TypeOfCollection.DomainTypeOfCollection.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Wizard.DomainServices.Impl;
+using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentDashboardView.DomainCompartimentDashboardView;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql;
 
@@ -215,6 +217,7 @@ public static class DependencyInjectionService
         services.AddScoped<IBusinessViewGetAllService, BusinessViewGetAllService>();
         services.AddScoped<IBusinessDashboardViewGetAllService, BusinessDashboardViewGetAllService>();
         services.AddScoped<ICapacityDashboardViewGetAllService, CapacityDashboardViewGetAllService>();
+        services.AddScoped<ICompartimentDashboardViewGetAllService, CompartimentDashboardViewGetAllService>();
         services.AddScoped<ICompartimenViewGetAllService, CompartimentViewGetAllService>();
         services.AddScoped<IProductViewGetAllProduct, ProductViewGetAllProduct>();
         services.AddScoped<ICapacityViewGetAllService, CapacityViewGetAllService>();
