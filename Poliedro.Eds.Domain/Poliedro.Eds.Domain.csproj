@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DashboardPowerBI\VDCapacity\Entities\" />
     <Folder Include="Inventory\DomainService\" />
     <Folder Include="Uplou\" />
   </ItemGroup>

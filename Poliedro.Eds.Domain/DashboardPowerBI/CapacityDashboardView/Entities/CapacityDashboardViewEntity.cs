@@ -1,0 +1,16 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace Poliedro.Eds.Domain.DashboardPowerBI.CapacityDashboardView.Entities;
+
+public class CapacityDashboardViewEntity
+{
+    [Key]
+    public int IdCapacity { get; set; }
+    public int IdBusiness { get; set; }
+    public int IdProduct { get; set; }
+    public string Code { get; set; } = default!;
+    public double Height { get; set; }
+    public double Gallon { get; set; }
+    public int Liters { get; set; }
+    public DateOnly Date { get; set; }
+}

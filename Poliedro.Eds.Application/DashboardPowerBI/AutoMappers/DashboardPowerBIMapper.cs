@@ -3,11 +3,13 @@ using Poliedro.Eds.Application.Court.Commands.CreateCourt;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos.Court;
 using Poliedro.Eds.Application.DashboardPowerBI.Dtos.BusinessDashboardView;
+using Poliedro.Eds.Application.DashboardPowerBI.Dtos.CapacityDashboardView;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessDashboardView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.CapacityDashboardView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.ProductView.Entities;
@@ -37,6 +39,17 @@ public class DashboardPowerBIMapper : Profile
              .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
              .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName))
              .ForMember(dest => dest.ProductDate, opt => opt.MapFrom(src => src.ProductDate.ToString("yyyy-MM-dd")));
+
+        // Mapping for v_d_capacity (new independent view)
+        CreateMap<CapacityDashboardViewEntity, CapacityDashboardViewDto>()
+             .ForMember(dest => dest.IdCapacity, opt => opt.MapFrom(src => src.IdCapacity.ToString()))
+             .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))
+             .ForMember(dest => dest.IdProduct, opt => opt.MapFrom(src => src.IdProduct.ToString()))
+             .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
+             .ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Height.ToString()))
+             .ForMember(dest => dest.Gallon, opt => opt.MapFrom(src => src.Gallon.ToString()))
+             .ForMember(dest => dest.Liters, opt => opt.MapFrom(src => src.Liters.ToString()))
+             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString("yyyy-MM-dd")));
 
         CreateMap<BusinessViewEntity, Business2Dto>()
              .ForMember(dest => dest.IdBusiness, opt => opt.MapFrom(src => src.IdBusiness.ToString()))

@@ -10,6 +10,7 @@ using Poliedro.Eds.Domain.Court.Entities;
 using Poliedro.Eds.Domain.CourtDispensersInventory.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.BusinessDashboardView.Entities;
+using Poliedro.Eds.Domain.DashboardPowerBI.CapacityDashboardView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.CapacityView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.CompartimentView.Entities;
 using Poliedro.Eds.Domain.DashboardPowerBI.EdsView.Entities;
@@ -107,6 +108,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<BusinessDashboardViewEntity> BusinessDashboardView { get; set; }
 
+    public DbSet<CapacityDashboardViewEntity> CapacityDashboardView { get; set; }
+
     public DbSet<CapacityViewEntity> CapacityView { get; set; }
 
     public DbSet<EdsViewEntity> EdsView { get; set; }
@@ -177,6 +180,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new EdsViewConfiguration(modelBuilder.Entity<EdsViewEntity>());
         new BusinessViewConfiguration(modelBuilder.Entity<BusinessViewEntity>());
         new BusinessDashboardViewConfiguration(modelBuilder.Entity<BusinessDashboardViewEntity>());
+        new CapacityDashboardViewConfiguration(modelBuilder.Entity<CapacityDashboardViewEntity>());
         new CapacityViewConfiguration(modelBuilder.Entity<CapacityViewEntity>());
         new ProductViewConfiguration(modelBuilder.Entity<ProductViewEntity>());
         new ProviderViewConfiguration(modelBuilder.Entity<ProviderViewEntity>());

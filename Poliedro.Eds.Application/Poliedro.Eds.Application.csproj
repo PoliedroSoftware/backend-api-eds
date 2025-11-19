@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DashboardPowerBI\VDCapacity\Dtos\" />
     <Folder Include="Inventory\AutoMappers\" />
     <Folder Include="Inventory\Commands\" />
     <Folder Include="Inventory\Dtos\" />
