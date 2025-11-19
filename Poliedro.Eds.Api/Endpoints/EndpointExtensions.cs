@@ -12,10 +12,14 @@ public static class EndpointExtensions
         app.MapBankEndpoints();
         app.MapBusinessEndpoints();
         app.MapCapacityEndpoints();
+        app.MapCategoryEndpoints();
+        app.MapCompartimentEndpoints();
         app.MapCompartimentCapacityEndpoints();
         app.MapCourtEndpoints();
         app.MapCourtDispensersInventoryEndpoints();
+        app.MapDashboardPowerBIEndpoints();
         app.MapDispensersEndpoints();
+        app.MapDispenserTypeEndpoints();
         app.MapEdsEndpoints();
         app.MapEdsTankEndpoints();
         app.MapExpendituresEndpoints();
