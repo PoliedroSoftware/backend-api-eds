@@ -1,12 +1,17 @@
+using System.Globalization;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Poliedro.Eds.Application.Bank.Commands;
 using Poliedro.Eds.Application.Bank.Dtos;
 using Poliedro.Eds.Application.Bank.Querys.BankGetCurrentBalance;
+using Poliedro.Eds.Application.Common.Constants;
+using Poliedro.Eds.Application.Common.Helper.removekey;
 using Poliedro.Eds.Application.Court.Dtos;
+using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.StrongBox.Querys.StrongBoxGetTotalBalance;
 using Poliedro.Eds.Domain.Account.Services;
 using Poliedro.Eds.Domain.Common.Pagination;
+using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Court.DomainService;
 using Poliedro.Eds.Domain.Eds.DomainEds;
 using Poliedro.Eds.Domain.Hose.DomainHose;
@@ -14,7 +19,6 @@ using Poliedro.Eds.Domain.Islander.DomainIslander;
 using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
 using Poliedro.Eds.Domain.Product.DomainProduct;
 using Poliedro.Eds.Domain.SendMessage;
-using System.Globalization;
 
 public class SendWhatsAppMessageCommandHandler(
     ISendMessage sendMessage,
@@ -191,7 +195,7 @@ public class SendWhatsAppMessageCommandHandler(
         // Buscar el islero con el idIslander
         var islero = isleros.FirstOrDefault(i => i.IdIslander == court.IdIslander);
         var isleroName = islero?.Name ?? "Desconocido";
-
+        
         // Obtener el nombre de la EDS asociada al islero
         var edsResult = await edsGetByIdService.GetByIdAsync(islero?.IdEds ?? court.IdEds);
         var edsName = edsResult.IsSuccess && edsResult.Value != null 
