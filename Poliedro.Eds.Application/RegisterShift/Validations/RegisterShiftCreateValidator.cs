@@ -16,6 +16,14 @@ public class RegisterShiftCreateValidator : AbstractValidator<RegisterShiftDto>
             .NotEmpty().WithMessage("El campo IdEds es obligatorio.")
             .NotNull().WithMessage("El campo IdEds no puede ser nulo.");
 
+        RuleFor(x => x.IdBusiness)
+            .NotEmpty().WithMessage("El campo IdBusiness es obligatorio")
+            .NotNull().WithMessage("El campo IdBsiness no puede ser null.");
+
+        RuleFor(x => x.IdIslander)
+            .NotEmpty().WithMessage("El campo IdIslander es obligatorio.")
+            .NotNull().WithMessage("El campo IdIslander no puede estar null.");
+
         RuleFor(x => x.DateStartTime)
             .NotEmpty().WithMessage("El campo DateStartTime es obligatorio.")
             .NotNull().WithMessage("El campo DateStartTime no puede ser nulo.");
