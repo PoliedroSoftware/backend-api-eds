@@ -14,7 +14,7 @@ public static class StrongBoxEndpoints
 {
     public static IEndpointRouteBuilder MapStrongBoxEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/v1/strong-box")
+        var group = app.MapGroup("api/v1/strongbox")
             .WithTags("StrongBox")
             .RequireAuthorization("AdminOrIslander");
 

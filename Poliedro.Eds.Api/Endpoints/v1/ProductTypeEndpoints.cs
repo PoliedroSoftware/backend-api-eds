@@ -15,7 +15,7 @@ public static class ProductTypeEndpoints
 {
     public static IEndpointRouteBuilder MapProductTypeEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/v1/product-type")
+        var group = app.MapGroup("api/v1/producType")
             .WithTags("ProductType");
 
         group.MapGet("", GetAll)
