@@ -36,7 +36,7 @@ public static class CourtEndpoints
         group.MapPost("", Create)
             .WithName("CreateCourt")
             .WithSummary("Create new Court")
-            .RequireAuthorization("AdminOnly")
+            .RequireAuthorization("AdminOrIslander")
             .Produces(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 
