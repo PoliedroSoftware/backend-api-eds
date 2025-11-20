@@ -281,23 +281,23 @@ CREATE TABLE `court_expenditures` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `court_type_of_collection`
+-- Table structure for table `court_payment_method`
 --
 
-DROP TABLE IF EXISTS `court_type_of_collection`;
+DROP TABLE IF EXISTS `court_payment_method`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `court_type_of_collection` (
-  `id_court_type_of_collection` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `court_payment_method` (
+  `id_court_payment_method` int NOT NULL AUTO_INCREMENT,
   `id_court` int NOT NULL,
-  `id_type_of_collection` int NOT NULL,
+  `id_payment_method` int NOT NULL,
   `amount` double NOT NULL,
   `description` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id_court_type_of_collection`),
-  KEY `fk_court_has_type_of_collection_type_of_collection1_idx` (`id_type_of_collection`),
-  KEY `fk_court_has_type_of_collection_court1_idx` (`id_court`),
-  CONSTRAINT `fk_court_has_type_of_collection_court1` FOREIGN KEY (`id_court`) REFERENCES `court` (`id_court`),
-  CONSTRAINT `fk_court_has_type_of_collection_type_of_collection1` FOREIGN KEY (`id_type_of_collection`) REFERENCES `type_of_collection` (`id_type_of_collection`)
+  PRIMARY KEY (`id_court_payment_method`),
+  KEY `fk_court_has_payment_method_payment_method1_idx` (`id_payment_method`),
+  KEY `fk_court_has_payment_method_court1_idx` (`id_court`),
+  CONSTRAINT `fk_court_has_payment_method_court1` FOREIGN KEY (`id_court`) REFERENCES `court` (`id_court`),
+  CONSTRAINT `fk_court_has_payment_method_payment_method1` FOREIGN KEY (`id_payment_method`) REFERENCES `payment_method` (`id_payment_method`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -791,17 +791,17 @@ CREATE TABLE `tank` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `type_of_collection`
+-- Table structure for table `payment_method`
 --
 
-DROP TABLE IF EXISTS `type_of_collection`;
+DROP TABLE IF EXISTS `payment_method`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `type_of_collection` (
-  `id_type_of_collection` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `payment_method` (
+  `id_payment_method` int NOT NULL AUTO_INCREMENT,
   `description` varchar(45) NOT NULL,
   `date` date NOT NULL DEFAULT (curdate()),
-  PRIMARY KEY (`id_type_of_collection`)
+  PRIMARY KEY (`id_payment_method`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1101,15 +1101,15 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `v_type_of_collection`
+-- Temporary view structure for view `v_payment_method`
 --
 
-DROP TABLE IF EXISTS `v_type_of_collection`;
-/*!50001 DROP VIEW IF EXISTS `v_type_of_collection`*/;
+DROP TABLE IF EXISTS `v_payment_method`;
+/*!50001 DROP VIEW IF EXISTS `v_payment_method`*/;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `v_type_of_collection` AS SELECT 
- 1 AS `id_type_of_collection`,
+/*!50001 CREATE VIEW `v_payment_method` AS SELECT 
+ 1 AS `id_payment_method`,
  1 AS `description`,
  1 AS `id_product`,
  1 AS `id_business`,
@@ -1205,7 +1205,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `v_court_collection` AS select `cc`.`id_court_type_of_collection` AS `id`,`c`.`id_court` AS `court`,`c`.`date_starttime` AS `date`,`tc`.`description` AS `collection`,`cc`.`amount` AS `amount`,`cc`.`description` AS `description` from ((`court_type_of_collection` `cc` left join `court` `c` on((`c`.`id_court` = `cc`.`id_court`))) left join `type_of_collection` `tc` on((`tc`.`id_type_of_collection` = `cc`.`id_type_of_collection`))) order by `c`.`id_court` desc */;
+/*!50001 VIEW `v_court_collection` AS select `cc`.`id_court_payment_method` AS `id`,`c`.`id_court` AS `court`,`c`.`date_starttime` AS `date`,`pm`.`description` AS `collection`,`cc`.`amount` AS `amount`,`cc`.`description` AS `description` from ((`court_payment_method` `cc` left join `court` `c` on((`c`.`id_court` = `cc`.`id_court`))) left join `payment_method` `pm` on((`pm`.`id_payment_method` = `cc`.`id_payment_method`))) order by `c`.`id_court` desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -1391,10 +1391,10 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
--- Final view structure for view `v_type_of_collection`
+-- Final view structure for view `v_payment_method`
 --
 
-/*!50001 DROP VIEW IF EXISTS `v_type_of_collection`*/;
+/*!50001 DROP VIEW IF EXISTS `v_payment_method`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -1403,7 +1403,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `v_type_of_collection` AS select `toc`.`id_type_of_collection` AS `id_type_of_collection`,`toc`.`description` AS `description`,`p`.`id_product` AS `id_product`,`b`.`id_business` AS `id_business`,`p`.`date` AS `date` from ((`type_of_collection` `toc` left join `business` `b` on((`b`.`id_business` = `toc`.`id_type_of_collection`))) left join `product` `p` on((`p`.`id_product` = `toc`.`id_type_of_collection`))) */;
+/*!50001 VIEW `v_payment_method` AS select `pm`.`id_payment_method` AS `id_payment_method`,`pm`.`description` AS `description`,`p`.`id_product` AS `id_product`,`b`.`id_business` AS `id_business`,`p`.`date` AS `date` from ((`payment_method` `pm` left join `business` `b` on((`b`.`id_business` = `pm`.`id_payment_method`))) left join `product` `p` on((`p`.`id_product` = `pm`.`id_payment_method`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
