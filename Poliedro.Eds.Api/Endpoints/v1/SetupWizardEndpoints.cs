@@ -9,7 +9,7 @@ public static class SetupWizardEndpoints
 {
     public static IEndpointRouteBuilder MapSetupWizardEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/v1/setup-wizard")
+        var group = app.MapGroup("api/v1/bootstrap/setup")
             .WithTags("SetupWizard")
             .RequireAuthorization("AdminOnly");
 
@@ -22,7 +22,7 @@ public static class SetupWizardEndpoints
     {
         var result = await mediator.Send(command);
         return result.Match(
-            onSuccess => TypedResults.Created($"/api/v1/setup-wizard", result.Value),
+            onSuccess => TypedResults.Created($"/api/v1/bootstrap/setup", result.Value),
             onFailure => TypedResults.BadRequest(onFailure));
     }
 }
