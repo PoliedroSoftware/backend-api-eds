@@ -25,6 +25,7 @@ using Poliedro.Eds.Application.HoseHistory.AutoMappers;
 using Poliedro.Eds.Application.Island.AutoMappers;
 using Poliedro.Eds.Application.Islander.AutoMappers;
 using Poliedro.Eds.Application.Phone.AutoMappers;
+using Poliedro.Eds.Application.PosOfSale.AutoMappers;
 using Poliedro.Eds.Application.Product.AutoMappers;
 using Poliedro.Eds.Application.ProductType.AutoMappers;
 using Poliedro.Eds.Application.Provider.AutoMappers;
@@ -103,6 +104,8 @@ public static class DependencyInjectionService
             config.AddProfile(new RegisterShiftMapper());
             config.AddProfile(new SetupMapper());
             config.AddProfile(new AuthMapper());
+            config.AddProfile(new PosOfSaleMapper());
+            config.AddProfile(new PaginationPosOfSaleMapper());
         });
         services.AddSingleton(mapper.CreateMapper());
         #endregion
