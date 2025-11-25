@@ -5,8 +5,8 @@ using System.Text;
 namespace Poliedro.Eds.Application.PosOfSale.Commands.CreatePosOfSale;
 
 public record CreatePosOfSaleRequestDto(
-    string InvoiceNumber,
-    string? ExternalUuid,
+     string InvoiceNumber,
+     string? ExternalUuid,
      string? Cufe,
      string? Status,
      DateTime? IssueDatetime,

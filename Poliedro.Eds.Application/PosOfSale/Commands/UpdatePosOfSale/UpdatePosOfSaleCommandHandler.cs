@@ -11,11 +11,12 @@ using Poliedro.Eds.Domain.Common.Results.Errors;
 using Poliedro.Eds.Domain.Hose.DomainHose;
 using Poliedro.Eds.Domain.Hose.Entities;
 using Poliedro.Eds.Domain.PointOfSale.Entities;
+using Poliedro.Eds.Domain.PosOfSale.DomainPosOfSale;
 
 namespace Poliedro.Eds.Application.PosOfSale.Commands.UpdatePosOfSale
 {
     public class UpdatePosOfSaleCommandHandler(
-        IPosOfSaleUpdateHose PosOFSaleDomain,
+        IPosOfSaleUpdateService PosOFSaleDomain,
         IMapper mapper,
         IValidator<UpdatePosOfSaleCommand> validator
     ) : IRequestHandler<UpdatePosOfSaleCommand, Result<VoidResult, Error>>

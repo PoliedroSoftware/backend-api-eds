@@ -1,24 +1,19 @@
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Poliedro.Eds.Application.Hose.Queries.GetHoseById;
 using Poliedro.Eds.Domain.Common.Results;
 using Poliedro.Eds.Domain.Common.Results.Errors;
-using Poliedro.Eds.Domain.Hose.DomainHose;
-using Poliedro.Eds.Domain.Hose.Dtos;
+using Poliedro.Eds.Domain.PosOfSale.DomainPosOfSale;
 using Poliedro.Eds.Domain.PosOfSale.Dtos;
 
 namespace Poliedro.Eds.Application.PosOfSale.Queries.GetPostOfSaleById
 {
     public class GetPosOfSaleByIdQueryHandler(
-       IPosOfSaleGetById posOfSaleDomain,
+       IPosOfSaleGetByIdService posOfSaleDomain,
        IMapper mapper,
        IValidator<GetPosOfSaleByIdQuery> validator)
-       : IRequestHandler<GetPosOfSaleByIdQuery, Result<HoseDto, Error>>
+       : IRequestHandler<GetPosOfSaleByIdQuery, Result<PosOfSaleDto, Error>>
     {
         public async Task<Result<PosOfSaleDto, Error>> Handle(GetPosOfSaleByIdQuery request, CancellationToken cancellationToken)
         {
