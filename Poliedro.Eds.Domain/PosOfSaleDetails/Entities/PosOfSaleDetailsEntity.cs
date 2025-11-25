@@ -5,14 +5,14 @@ using System.Text;
 using Poliedro.Eds.Domain.Audit.Entities;
 using Poliedro.Eds.Domain.PointOfSale.Entities;
 
-namespace Poliedro.Eds.Domain.PosOfSaleDetail.Entities
+namespace Poliedro.Eds.Domain.PosOfSaleDetails.Entities
 {
-    public class PosOfSaleDetailEntity: AuditableEntity
+    public class PosOfSaleDetailsEntity: AuditableEntity
     {
         [Key]
-        public ulong IdDetail { get; set; }
+        public int IdDetail { get; set; }
 
-        public ulong PosId { get; set; }
+        public int PosId { get; set; }
 
         public string ProductCode { get; set; }
         public string ProductName { get; set; }

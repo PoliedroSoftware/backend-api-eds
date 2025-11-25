@@ -29,7 +29,7 @@ using Poliedro.Eds.Domain.Islander.Entities;
 using Poliedro.Eds.Domain.OpenAI.Entities;
 using Poliedro.Eds.Domain.Phone.Entities;
 using Poliedro.Eds.Domain.PointOfSale.Entities;
-using Poliedro.Eds.Domain.PosOfSaleDetail.Entities;
+using Poliedro.Eds.Domain.PosOfSaleDetails.Entities;
 using Poliedro.Eds.Domain.Product.Entities;
 using Poliedro.Eds.Domain.ProductType.Entities;
 using Poliedro.Eds.Domain.Provider.Entities;
@@ -135,7 +135,7 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<RegisterShiftEntity> RegisterShift { get; set; }
 
     public DbSet<PosOfSaleEntity> PosOfSales { get; set; }
-    public DbSet<PosOfSaleDetailEntity> PosOfSaleDetails { get; set; }
+    public DbSet<PosOfSaleDetailsEntity> PosOfSaleDetails { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -192,6 +192,6 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new TransferValidationConfiguration(modelBuilder.Entity<TransferValidationEntity>());
         new RegisterShiftConfiguration(modelBuilder.Entity<RegisterShiftEntity>());
         new PosOfSaleConfiguration(modelBuilder.Entity<PosOfSaleEntity>());
-        new PosOfSaleDetailConfiguration(modelBuilder.Entity<PosOfSaleDetailEntity>());
+        new PosOfSaleDetailConfiguration(modelBuilder.Entity<PosOfSaleDetailsEntity>());
     }
 }

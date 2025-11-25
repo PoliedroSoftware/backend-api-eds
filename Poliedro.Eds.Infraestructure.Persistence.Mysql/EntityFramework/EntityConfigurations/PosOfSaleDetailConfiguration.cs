@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Poliedro.Eds.Domain.PosOfSaleDetail.Entities;
+using Poliedro.Eds.Domain.PosOfSaleDetails.Entities;
 
 namespace Poliedro.Eds.Infraestructure.Persistence.Mysql.EntityFramework.EntityConfigurations;
 
 public class PosOfSaleDetailConfiguration
 {
-    public PosOfSaleDetailConfiguration(EntityTypeBuilder<PosOfSaleDetailEntity> builder)
+    public PosOfSaleDetailConfiguration(EntityTypeBuilder<PosOfSaleDetailsEntity> builder)
     {
         builder.ToTable("pos_of_sale_details");
         builder.HasKey(x => x.IdDetail);

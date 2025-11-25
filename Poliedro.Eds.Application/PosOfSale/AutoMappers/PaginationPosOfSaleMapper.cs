@@ -7,6 +7,7 @@ using Poliedro.Eds.Domain.Hose.Dtos;
 using Poliedro.Eds.Domain.Hose.Entities;
 using Poliedro.Eds.Domain.PosOfSale.Dtos;
 using Poliedro.Eds.Application.PosOfSale.Dtos;
+using Poliedro.Eds.Domain.PointOfSale.Entities;
 
 namespace Poliedro.Eds.Application.PosOfSale.AutoMappers
 {
@@ -14,7 +15,7 @@ namespace Poliedro.Eds.Application.PosOfSale.AutoMappers
     {
         public PaginationPosOfSaleMapper()
         {
-            CreateMap<PaginationResponse<HoseEntity>, PaginationResponseDto<PosOfSaleDto>>().ReverseMap();
+            CreateMap<PaginationResponse<PosOfSaleEntity>, PaginationResponseDto<PosOfSaleDto>>().ReverseMap();
         }
     }
 }
