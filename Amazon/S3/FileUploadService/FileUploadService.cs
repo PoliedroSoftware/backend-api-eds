@@ -87,5 +87,43 @@ namespace Amazon.S3.FileUploadService
 
             return $"{_folderName}/pending/{fileName}";
         }
+
+        public async Task<List<string>> GetCourtImagesAsync(int courtId)
+        {
+            var images = new List<string>();
+            var prefix = $"{_folderName}/{courtId}_";
+
+            try
+            {
+                var request = new ListObjectsV2Request
+                {
+                    BucketName = _bucketName,
+                    Prefix = prefix
+                };
+
+                ListObjectsV2Response response;
+                do
+                {
+                    response = await _s3Client.ListObjectsV2Async(request);
+
+                    foreach (var s3Object in response.S3Objects)
+                    {
+                        var url = $"https://{_bucketName}.s3.amazonaws.com/{s3Object.Key}";
+                        images.Add(url);
+                    }
+
+                    request.ContinuationToken = response.NextContinuationToken;
+                } while (response.IsTruncated == true);
+
+                _logger.LogInformation("Retrieved {Count} images for court {CourtId}", images.Count, courtId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving images for court {CourtId}", courtId);
+                throw;
+            }
+
+            return images;
+        }
     }
 }
