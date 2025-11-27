@@ -20,16 +20,17 @@ namespace Amazon.S3.FileUploadService
         private readonly string _folderName;
         private readonly string _hostName;
         private readonly string _queue;
+        private readonly string _region;
         private readonly ILogger<FileUploadService> _logger;
 
         public FileUploadService(IConfiguration configuration, ILogger<FileUploadService> logger)
         {
             _logger = logger;
             _bucketName = configuration["AWS:BucketName"] ?? throw new ArgumentNullException("BucketName configuration is missing");
-            var region = configuration["AWS:Region"] ?? throw new ArgumentNullException("Region configuration is missing");
+            _region = configuration["AWS:Region"] ?? throw new ArgumentNullException("Region configuration is missing");
             _folderName = configuration["AWS:FolderName"] ?? "carpeta";
 
-            var regionEndpoint = RegionEndpoint.GetBySystemName(region);
+            var regionEndpoint = RegionEndpoint.GetBySystemName(_region);
             _s3Client = new AmazonS3Client(regionEndpoint);
 
             //RabbitMQ config
@@ -108,7 +109,7 @@ namespace Amazon.S3.FileUploadService
 
                     foreach (var s3Object in response.S3Objects)
                     {
-                        var url = $"https://{_bucketName}.s3.amazonaws.com/{s3Object.Key}";
+                        var url = $"https://{_bucketName}.s3.{_region}.amazonaws.com/{s3Object.Key}";
                         images.Add(url);
                     }
 
