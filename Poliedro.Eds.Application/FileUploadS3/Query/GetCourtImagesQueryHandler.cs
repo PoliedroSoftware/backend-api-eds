@@ -17,7 +17,6 @@ public class GetCourtImagesQueryHandler(IFileUploadService fileUploadService)
                 Error.CreateInstance("InvalidCourtId", "Court ID must be greater than 0", HttpStatusCode.BadRequest));
         }
 
-        var images = await fileUploadService.GetCourtImagesAsync(request.CourtId);
-        return images;
+        return await fileUploadService.GetCourtImagesAsync(request.CourtId);
     }
 }

@@ -92,7 +92,7 @@ namespace Amazon.S3.FileUploadService
         public async Task<List<string>> GetCourtImagesAsync(int courtId)
         {
             var images = new List<string>();
-            var prefix = $"{_folderName}/{courtId}_";
+            var prefix = $"{_folderName}/";
 
             try
             {
@@ -107,10 +107,17 @@ namespace Amazon.S3.FileUploadService
                 {
                     response = await _s3Client.ListObjectsV2Async(request);
 
-                    foreach (var s3Object in response.S3Objects)
+                    if (response.S3Objects != null)
                     {
-                        var url = $"https://{_bucketName}.s3.{_region}.amazonaws.com/{s3Object.Key}";
-                        images.Add(url);
+                        foreach (var s3Object in response.S3Objects)
+                        {
+                            var fileName = Path.GetFileName(s3Object.Key);
+                            if (fileName.Contains($"_{courtId}_"))
+                            {
+                                var url = $"https://{_bucketName}.s3.{_region}.amazonaws.com/{s3Object.Key}";
+                                images.Add(url);
+                            }
+                        }
                     }
 
                     request.ContinuationToken = response.NextContinuationToken;

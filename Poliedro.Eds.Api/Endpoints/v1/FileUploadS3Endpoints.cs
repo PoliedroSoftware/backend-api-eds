@@ -56,6 +56,6 @@ public static class FileUploadS3Endpoints
             return TypedResults.BadRequest(result.Error);
         }
 
-        return TypedResults.Ok(new { Images = result.Value });
+        return TypedResults.Ok(new { Documents = result.Value });
     }
 }
