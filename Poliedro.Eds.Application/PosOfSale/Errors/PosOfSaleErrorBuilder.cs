@@ -20,7 +20,7 @@ public class PosOfSaleErrorBuilder : IError
         HttpStatusCode.InternalServerError);
 
     public static Error PosOfSaleLimitErrorException() => Error.CreateInstance(
-      POS_OF_SALE_CREATION_ERROR,
+      POS_OF_SALE_LIMIT_REACHED_ERROR,
        "Maximum number of pos of sales reached.",
        HttpStatusCode.BadRequest);
 
