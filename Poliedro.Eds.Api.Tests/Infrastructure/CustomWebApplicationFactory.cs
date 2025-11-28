@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Poliedro.Eds.Application.Ports.Translations;
+using Poliedro.Eds.Domain.FileUploadS3.Ports;
 
 namespace Poliedro.Eds.Api.Tests.Infrastructure;
 
@@ -34,9 +35,13 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
    { "RabbitMQ:UserName", "guest" },
      { "RabbitMQ:Password", "guest" },
      { "RabbitMQ:Queue", "test-queue" },
+     { "RabbitMQ:QueueDocuments", "test-queue-documents" },
   { "OpenAI:ApiKey", "test-api-key" },
 { "Tolgee:BaseUrl", "http://localhost:8080" },
-   { "Tolgee:ApiKey", "test-api-key" }
+   { "Tolgee:ApiKey", "test-api-key" },
+   { "AWS:BucketName", "test-bucket" },
+   { "AWS:Region", "us-east-1" },
+   { "AWS:FolderName", "test-folder" }
       };
 
    config.AddInMemoryCollection(configValues!);
@@ -88,6 +93,21 @@ services.Remove(rabbitConnection);
            }
        });
    services.AddSingleton<ITolgeeService>(mockTolgeeService.Object);
+
+   // Remove and mock IFileUploadService to prevent external AWS calls
+   var fileUploadService = services.FirstOrDefault(d => d.ServiceType == typeof(IFileUploadService));
+   if (fileUploadService != null)
+   {
+       services.Remove(fileUploadService);
+   }
+
+   // Add mock IFileUploadService with test data
+   var mockFileUploadService = new Mock<IFileUploadService>();
+   mockFileUploadService.Setup(x => x.UploadFileAsync(It.IsAny<Microsoft.AspNetCore.Http.IFormFile>(), It.IsAny<int>()))
+       .ReturnsAsync("test-folder/test-file.jpg");
+   mockFileUploadService.Setup(x => x.GetCourtImagesAsync(It.IsAny<int>()))
+       .ReturnsAsync(new List<string> { "https://test-bucket.s3.amazonaws.com/folder/1_image1.jpg", "https://test-bucket.s3.amazonaws.com/folder/1_image2.jpg" });
+   services.AddSingleton<IFileUploadService>(mockFileUploadService.Object);
 
    // Remove all hosted services (Workers) that depend on RabbitMQ or external services
       var hostedServices = services.Where(d =>
