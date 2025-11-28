@@ -30,6 +30,11 @@ public class PosOfSaleDetailConfiguration
         builder.Property(x => x.RetentionType).HasColumnName("retention_type");
         builder.Property(x => x.RetentionAmount).HasColumnName("retention_amount");
 
+        builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasMaxLength(255);
+        builder.Property(x => x.CreatedAt).HasColumnName("created_at");
+        builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasMaxLength(255);
+        builder.Property(x => x.UpdatedAt).HasColumnName("updated_at");
+
         builder
             .HasOne(x => x.PosOfSale)
             .WithMany()

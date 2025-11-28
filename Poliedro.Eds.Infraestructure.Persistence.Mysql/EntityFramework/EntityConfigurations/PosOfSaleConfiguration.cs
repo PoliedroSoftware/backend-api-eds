@@ -52,5 +52,10 @@ public class PosOfSaleConfiguration
         builder.Property(x => x.EdsId).HasColumnName("eds_id");
         builder.Property(x => x.IsleroId).HasColumnName("islero_id");
         builder.Property(x => x.ProviderTag).HasColumnName("provider_tag");
+
+        builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasMaxLength(255);
+        builder.Property(x => x.CreatedAt).HasColumnName("created_at");
+        builder.Property(x => x.UpdatedBy).HasColumnName("updated_by").HasMaxLength(255);
+        builder.Property(x => x.UpdatedAt).HasColumnName("updated_at");
     }
 }

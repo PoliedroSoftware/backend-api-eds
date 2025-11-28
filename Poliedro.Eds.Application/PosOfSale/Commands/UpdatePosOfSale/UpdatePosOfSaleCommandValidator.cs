@@ -16,7 +16,7 @@ namespace Poliedro.Eds.Application.PosOfSale.Commands.UpdatePosOfSale
             .NotEmpty().WithMessage(redisService.GetValueFromCacheAsync("IdNotEmpty").GetAwaiter().GetResult());
 
             RuleFor(x => x.InvoiceNumber)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("NumberNotNull").GetAwaiter().GetResult());
+            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("NumberNotNull").GetAwaiter().GetResult() ?? "El número no puede ser nulo");
         }
     }
 }
