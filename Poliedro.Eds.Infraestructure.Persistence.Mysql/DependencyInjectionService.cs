@@ -34,6 +34,8 @@ using Poliedro.Eds.Domain.Phone.DomainServices.GetAll;
 using Poliedro.Eds.Domain.Phone.DomainServices.GetByNumber;
 using Poliedro.Eds.Domain.Phone.DomainServices.Update;
 using Poliedro.Eds.Domain.Ports;
+using Poliedro.Eds.Domain.PosOfSale.DomainPosOfSale;
+using Poliedro.Eds.Domain.PosOfSaleDetails.DomainPosOfSaleDetails;
 using Poliedro.Eds.Domain.Product.DomainProduct;
 using Poliedro.Eds.Domain.ProductType.DomainProductType;
 using Poliedro.Eds.Domain.Provider.DomainProvider;
@@ -76,6 +78,8 @@ using Poliedro.Eds.Infraestructure.Persistence.Mysql.Island.DomainIsland.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.Domainislander.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Islander.DomainIslander.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Phone.DomainService.Impl;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.PosOfSale.DomainPosOfSale.Impl;
+using Poliedro.Eds.Infraestructure.Persistence.Mysql.PosOfSaleDetails.DomainPosOfSaleDetails.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Product.DomainProduct.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.ProductType.DomainProductType.Impl;
 using Poliedro.Eds.Infraestructure.Persistence.Mysql.Provider.DomainProvider.Impl;
@@ -205,6 +209,15 @@ public static class DependencyInjectionService
         services.AddScoped<ICategoryGetAllService, CategoryGetAllService>();
         services.AddScoped<ICourtUpdateInventoryService, CourtInventoryService>();
         services.AddSingleton<IRedisService, RedisCacheService>();
+        services.AddScoped<IPosOfSaleCreateService, PosOfSaleCreateService>();
+        services.AddScoped<IPosOfSaleGetAllService, PosOfSaleGetAllService>();
+        services.AddScoped<IPosOfSaleGetByIdService, PosOfSaleGetByIdService>();
+        services.AddScoped<IPosOfSaleUpdateService, PosOfSaleUpdateService>();
+        services.AddScoped<IPosOfSaleDetailsCreateService, PosOfSaleDetailsCreateService>();
+        services.AddScoped<IPosOfSaleDetailsGetAllService, PosOfSaleDetailsGetAllService>();
+        services.AddScoped<IPosOfSaleDetailsGetByIdService, PosOfSaleDetailsGetByIdService>();
+        services.AddScoped<IPosOfSaleDetailsUpdateService, PosOfSaleDetailsUpdateService>();
+
 
         services.AddScoped<IHoseQueryService, HoseQueryService>();
 

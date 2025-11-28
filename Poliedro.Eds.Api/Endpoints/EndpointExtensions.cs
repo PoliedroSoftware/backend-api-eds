@@ -46,7 +46,9 @@ public static class EndpointExtensions
         app.MapTranslationsEndpoints();
         app.MapTypeOfCollectionEndpoints();
         app.MapWhatsAppEndpoints();
-        
+        app.MapPosOfSaleEndpoints();
+        app.MapPosOfSaleDetailsEndpoints();
+
         return app;
     }
 }
