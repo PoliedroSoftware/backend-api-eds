@@ -32,5 +32,7 @@ public static class KeyRedisConstants
     public const string REGISTER_SHIFT = "registerShift:";
     public const string COURT_LIST_SERVICE = "courtListService:";
     public const string SETUP = "setup:";
+    public const string POS_OF_SALE = "posOfSale:";
+    public const string POS_OF_SALE_DETAILS = "posOfSaleDetails:"; 
 }
 
