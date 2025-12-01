@@ -374,7 +374,7 @@ app.MapScalarApiReference(options =>
 {
     options
         .WithTitle("Poliedro Eds API")
-        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+        .WithDefaultHttpClient(ScalarTarget.Shell, ScalarClient.Curl);
 });
 
 app.UseMiddleware<LoggingMiddleware>();
