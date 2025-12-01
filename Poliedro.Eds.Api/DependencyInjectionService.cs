@@ -38,7 +38,7 @@ public static class DependencyInjectionService
                 {
                     Name = "Authorization",
                     Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer",
+                    Scheme = "bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
                     Description = "Ingrese el token JWT en el siguiente formato: Bearer {token}"
@@ -50,13 +50,17 @@ public static class DependencyInjectionService
             // Add security requirement to all operations
             options.AddOperationTransformer((operation, context, cancellationToken) =>
             {
-                operation.Security ??= new List<OpenApiSecurityRequirement>();
+                if (operation.Security == null)
+                {
+                    operation.Security = new List<OpenApiSecurityRequirement>();
+                }
 
                 var securityRequirement = new OpenApiSecurityRequirement();
-                var securitySchemeReference = new OpenApiSecuritySchemeReference("Bearer", null);
-                securityRequirement.Add(securitySchemeReference, new List<string>());
-
+                var schemeReference = new OpenApiSecuritySchemeReference("Bearer", null);
+                
+                securityRequirement.Add(schemeReference, new List<string>());
                 operation.Security.Add(securityRequirement);
+                
                 return Task.CompletedTask;
             });
         });
