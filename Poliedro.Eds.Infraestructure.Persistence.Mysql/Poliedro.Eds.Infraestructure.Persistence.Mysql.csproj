@@ -45,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="BilligEds\DomainBilligEds\Impl\" />
     <Folder Include="Inventory\DomainService\Impl\" />
     <Folder Include="ScriptMySQL\" />
   </ItemGroup>
