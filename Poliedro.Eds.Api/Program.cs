@@ -355,10 +355,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions()
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
-app.MapHealthChecksUI(options =>
-{
-    options.UIPath = "/health-ui";
-});
+
 
 app.UseCors("PoliedroEDS");
 
