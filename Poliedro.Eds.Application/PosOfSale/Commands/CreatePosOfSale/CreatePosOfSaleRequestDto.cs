@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Poliedro.Eds.Application.PosOfSaleDetails.Commands.CreatePosOfSale;
 
 namespace Poliedro.Eds.Application.PosOfSale.Commands.CreatePosOfSale;
 
 public record CreatePosOfSaleRequestDto(
-     string InvoiceNumber,
+     List<CreatePosOfSaleDetailsRequestDto> Details,
+     string? InvoiceNumber,
      string? ExternalUuid,
      string? Cufe,
      string? Status,
@@ -33,6 +35,6 @@ public record CreatePosOfSaleRequestDto(
      string? PdfUrl,
      string? XmlUrl,
      string? WhatsappPhone,
-     long? EdsId,
-     long? IsleroId,
+     int? EdsId,
+     int? IsleroId,
      string? ProviderTag);
