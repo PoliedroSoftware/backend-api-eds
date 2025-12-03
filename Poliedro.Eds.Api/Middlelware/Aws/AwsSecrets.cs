@@ -33,7 +33,7 @@ public class AwsSecrets
         {
             response = await client.GetSecretValueAsync(request);
         }
-        catch (Exception e)
+        catch
         {
 
             throw;
@@ -51,6 +51,8 @@ public class AwsSecrets
 
     }
 }
+
+
 
 
 
