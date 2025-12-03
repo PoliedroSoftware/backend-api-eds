@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Poliedro.Eds.Domain.BilligEds.Entities.AllowanceChargeEntities;
 
@@ -7,6 +8,7 @@ namespace Poliedro.Eds.Domain.BilligEds.Entities;
 
 public class BillidEdsRequestEntity
 {
+    [Key]
     public DateTime Date { get; set;  }
     public DateTime Time { get; set; }
     public string SendToEmail { get; set; }
