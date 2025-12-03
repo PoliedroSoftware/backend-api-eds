@@ -18,6 +18,7 @@ using Poliedro.Eds.Api.Middlelware.NameIdentifier;
 using Poliedro.Eds.Api.Middlelware.Tenant;
 using Poliedro.Eds.Application;
 using Poliedro.Eds.Application.Account.Commands.CreateAccount;
+using Scalar.AspNetCore;
 using Poliedro.Eds.Application.Account.Queries.GetAllAccounts;
 using Poliedro.Eds.Application.Auth.Commands.Authenticate;
 using Poliedro.Eds.Application.Bank.Commands;
@@ -71,8 +72,10 @@ using WorkerKeycloackService; // Re-enabled for background worker execution
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
+
 Env.Load();
 builder.Configuration.AddEnvironmentVariables();
+
 // Configura el logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -164,7 +167,7 @@ builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 });
 
 
-builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
+builder.Services.AddSingleton<RabbitMQ.Client.IConnection?>(sp =>
 {
     try
     {
@@ -354,25 +357,23 @@ app.MapHealthChecks("/health", new HealthCheckOptions()
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
-app.MapHealthChecksUI(options =>
-{
-    options.UIPath = "/health-ui";
-});
+
 
 app.UseCors("PoliedroEDS");
 
-// Configure Swagger for development
+// Configure error handling for development
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
 
-// Enable Swagger in all environments
-app.UseSwagger();
-app.UseSwaggerUI(options =>
+// Enable OpenAPI and Scalar in all environments
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Poliedro Eds API v1");
-    options.RoutePrefix = string.Empty;
+    options
+        .WithTitle("Poliedro Eds API")
+        .WithDefaultHttpClient(ScalarTarget.Shell, ScalarClient.Curl);
 });
 
 app.UseMiddleware<LoggingMiddleware>();
