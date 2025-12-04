@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using Poliedro.Eds.Domain.Audit.Entities;
+using Poliedro.Eds.Domain.PosOfSaleDetails.Entities;
 
 namespace Poliedro.Eds.Domain.PointOfSale.Entities
 {
@@ -10,7 +12,7 @@ namespace Poliedro.Eds.Domain.PointOfSale.Entities
     {
         [Key]
         public int IdPos { get; set; }
-        public string InvoiceNumber { get; set; }
+        public string? InvoiceNumber { get; set; }
         public string? ExternalUuid { get; set; }
         public string? Cufe { get; set; }
         public string Status { get; set; } = "SIN_EMITIR";
@@ -49,5 +51,7 @@ namespace Poliedro.Eds.Domain.PointOfSale.Entities
         public int? EdsId { get; set; }
         public int? IsleroId { get; set; }
         public string ProviderTag { get; set; } = "PLEMSI";
+        [NotMapped]
+        public List<PosOfSaleDetailsEntity>? Details { get; set; } = new List<PosOfSaleDetailsEntity>();
     }
 }

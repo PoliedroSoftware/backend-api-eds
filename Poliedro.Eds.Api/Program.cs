@@ -72,8 +72,10 @@ using WorkerKeycloackService; // Re-enabled for background worker execution
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
+
 Env.Load();
 builder.Configuration.AddEnvironmentVariables();
+
 // Configura el logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -165,7 +167,7 @@ builder.Services.AddHttpClient<IKeycloakUserService, KeycloakService>(client =>
 });
 
 
-builder.Services.AddSingleton<RabbitMQ.Client.IConnection>(sp =>
+builder.Services.AddSingleton<RabbitMQ.Client.IConnection?>(sp =>
 {
     try
     {
@@ -355,10 +357,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions()
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
-app.MapHealthChecksUI(options =>
-{
-    options.UIPath = "/health-ui";
-});
+
 
 app.UseCors("PoliedroEDS");
 
