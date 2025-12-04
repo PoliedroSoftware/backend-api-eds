@@ -105,9 +105,10 @@ public static class CompartimentEndpoints
 
         if (!result.IsSuccess)
         {
+            var status = (int)(result.Error?.HttpStatusCode ?? System.Net.HttpStatusCode.InternalServerError);
             return TypedResults.Json(
-                ResponseApiService.Response(StatusCodes.Status500InternalServerError, result.Error),
-                statusCode: StatusCodes.Status500InternalServerError);
+                ResponseApiService.Response(status, result.Error),
+                statusCode: status);
         }
 
         return TypedResults.NoContent();

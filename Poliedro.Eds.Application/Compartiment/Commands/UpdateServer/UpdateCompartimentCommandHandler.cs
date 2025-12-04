@@ -24,11 +24,23 @@ namespace Poliedro.Eds.Application.Compartiment.UpdateCompartiment
                     Error.CreateInstance("ValidationFailed", validationResult.Errors.ToString(), HttpStatusCode.BadRequest));
 
             var compartimentEntity = mapper.Map<CompartimentEntity>(request);
+
+            // Ensure the entity's DB key property is set from the request
+            compartimentEntity.IdCompartiment = request.IdCompartment; // assign to the EF-mapped property
+
             var result = await compartimentDomainCompartiment.UpdateAsync(compartimentEntity);
+
+            // Defensive null-check: avoid NullReferenceException if implementation returns null
+            if (result is null)
+            {
+                return Result<VoidResult, Error>.Failure(
+                    Error.CreateInstance("NullResult", "Update service returned null.", HttpStatusCode.InternalServerError));
+            }
 
             if (!result.IsSuccess)
                 return result.Error!;
             return result.Value!;
         }
+
     }
 }
