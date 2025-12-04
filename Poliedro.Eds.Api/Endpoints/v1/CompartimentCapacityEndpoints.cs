@@ -40,7 +40,8 @@ public static class CompartimentCapacityEndpoints
             .Produces(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 
-        group.MapPut("", Update)
+        // Include id in route so updates target a specific resource
+        group.MapPut("{id:int}", Update)
             .WithName("UpdateCompartimentCapacity")
             .WithSummary("Update an existing CompartimentCapacity")
             .RequireAuthorization("AdminOnly")
@@ -98,16 +99,20 @@ public static class CompartimentCapacityEndpoints
     }
 
     private static async Task<IResult> Update(
+        [FromRoute] int id,
         [FromBody] UpdateCompartimentCapacityCommand command,
         IMediator mediator)
     {
-        var result = await mediator.Send(command);
+        // Ensure the route id is applied to the command to avoid Id=0 updates
+        var fixedCommand = command with { IdCompartimentCapacity = id };
+        var result = await mediator.Send(fixedCommand);
 
         if (!result.IsSuccess)
         {
+            var status = (int)(result.Error?.HttpStatusCode ?? System.Net.HttpStatusCode.InternalServerError);
             return TypedResults.Json(
-                ResponseApiService.Response(StatusCodes.Status500InternalServerError, result.Error),
-                statusCode: StatusCodes.Status500InternalServerError);
+                ResponseApiService.Response(status, result.Error),
+                statusCode: status);
         }
 
         return TypedResults.NoContent();
