@@ -5,7 +5,7 @@ namespace Poliedro.Eds.Domain.PosOfSale.Dtos;
 public record PosOfSaleDto
 {
     public int IdPos { get; set; }
-    public string InvoiceNumber { get; set; }
+    public string? InvoiceNumber { get; set; }
     public string? ExternalUuid { get; set; }
     public string? Cufe { get; set; }
     public string Status { get; set; } = "SIN_EMITIR";

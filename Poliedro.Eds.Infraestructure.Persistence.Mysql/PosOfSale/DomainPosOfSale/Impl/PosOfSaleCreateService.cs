@@ -14,12 +14,17 @@ public class PosOfSaleCreateService(ITenantDbContextFactory dbContextFactory) : 
     {
         using var context = dbContextFactory.CreateDbContext();
 
-        int next = await context.PosOfSales
-            .Where(x => x.InvoiceNumber != null &&
-                x.InvoiceNumber.All(char.IsDigit))
-            .Select(x => Convert.ToInt32(x.InvoiceNumber))
+        var invoices = await context.PosOfSales
+            .Where(x => x.InvoiceNumber != null)
+            .Select(x => x.InvoiceNumber)
+            .ToListAsync();
+
+        int next = invoices
+            .Where(inv => inv.All(char.IsDigit))
+            .Select(inv => int.Parse(inv))
             .DefaultIfEmpty(0)
-            .MaxAsync() + 1;
+            .Max() + 1;
+
         posOfSaleEntity.InvoiceNumber = next.ToString();
 
         await using var transaction = await context.Database.BeginTransactionAsync();
