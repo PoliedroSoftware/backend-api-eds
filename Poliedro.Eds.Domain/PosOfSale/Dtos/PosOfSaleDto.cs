@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Poliedro.Eds.Domain.PosOfSaleDetails.Dtos;
 
 namespace Poliedro.Eds.Domain.PosOfSale.Dtos;
 
 public record PosOfSaleDto
 {
-    public ulong IdPos { get; set; }
-    public string InvoiceNumber { get; set; }
+    public int IdPos { get; set; }
+    public string? InvoiceNumber { get; set; }
     public string? ExternalUuid { get; set; }
     public string? Cufe { get; set; }
     public string Status { get; set; } = "SIN_EMITIR";
@@ -43,7 +41,8 @@ public record PosOfSaleDto
 
     public string? WhatsappPhone { get; set; }
 
-    public long? EdsId { get; set; }
-    public long? IsleroId { get; set; }
+    public int? EdsId { get; set; }
+    public int? IsleroId { get; set; }
     public string ProviderTag { get; set; } = "PLEMSI";
+    public List<PosOfSaleDetailsDto>? Details { get; set; } = new List<PosOfSaleDetailsDto>();
 }
