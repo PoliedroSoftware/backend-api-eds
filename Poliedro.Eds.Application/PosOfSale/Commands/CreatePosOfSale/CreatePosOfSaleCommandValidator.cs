@@ -11,7 +11,13 @@ public class CreatePosOfSaleCommandValidator : AbstractValidator<CreatePosOfSale
 {
     public CreatePosOfSaleCommandValidator(IRedisService redisService)
     {
-        RuleFor(x => x.InvoiceNumber)
-            .NotNull().WithMessage(redisService.GetValueFromCacheAsync("NumberNotNull").GetAwaiter().GetResult() ?? "El número no puede ser nulo");
+        RuleFor(x
+            => x.Details)
+            .NotNull()
+            .WithMessage(redisService.GetValueFromCacheAsync("DetailsNotNull").GetAwaiter().GetResult()
+                      ?? "La lista de detalles no puede ser nula")
+            .Must(d => d.Any())
+            .WithMessage(redisService.GetValueFromCacheAsync("DetailsNotEmpty").GetAwaiter().GetResult()
+                      ?? "Debe existir al menos un detalle");
     }
 }

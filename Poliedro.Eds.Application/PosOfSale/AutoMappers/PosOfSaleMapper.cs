@@ -15,7 +15,13 @@ public class PosOfSaleMapper : Profile
     {
         CreateMap<PosOfSaleEntity, PosOfSaleDto>().ReverseMap();
         CreateMap<PosOfSaleEntity, CreatePosOfSaleCommand>().ReverseMap();
-        CreateMap<PosOfSaleEntity, CreatePosOfSaleRequestDto>().ReverseMap();
+        CreateMap<PosOfSaleEntity, CreatePosOfSaleRequestDto>().ReverseMap()
+            .ForMember(dest => dest.ProviderTag,
+            opt => opt.Condition((src, dest, srcMember) => srcMember != null))
+            .ForMember(dest => dest.Status,
+            opt => opt.Condition((src, dest, srcMember) => srcMember != null))
+            .ForMember(dest => dest.CurrencyCode,
+            opt => opt.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<PosOfSaleEntity, UpdatePosOfSaleCommand>().ReverseMap();
     }
 }
