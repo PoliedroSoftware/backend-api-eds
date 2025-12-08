@@ -31,11 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BilligEds\AutoMappers\" />
-    <Folder Include="BilligEds\Commands\" />
-    <Folder Include="BilligEds\Dtos\" />
     <Folder Include="BilligEds\Errors\" />
-    <Folder Include="BilligEds\Queries\" />
     <Folder Include="Inventory\AutoMappers\" />
     <Folder Include="Inventory\Commands\" />
     <Folder Include="Inventory\Dtos\" />

@@ -11,6 +11,6 @@ public class BilligEdsCreateService : IBilligEdsCreateDomainService
 {
     public Task<Result<VoidResult, Error>> CreateBilligAsync(BillidEdsRequestEntity billigEdsRequest)
     {
-        
+        throw new NotImplementedException();
     }
 }

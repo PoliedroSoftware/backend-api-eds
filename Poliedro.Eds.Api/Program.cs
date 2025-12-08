@@ -68,6 +68,9 @@ using Poliedro.External.WhatsApp.SendMessage;
 using Poliedro.Tolgee;
 using Poliedro.Tolgee.Translations;
 using WorkerKeycloackService; // Re-enabled for background worker execution
+using Poliedro.Eds.Domain.BilligEds.DomainService;
+using Poliedro.Eds.Application.BilligEds.Commands.CreateBilligEds;
+using Poliedro.Eds.Application.BilligEds.AutoMappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -352,6 +355,26 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();
+
+// Register BilligEds domain service HttpClient and related services
+builder.Services.AddHttpClient<IBilligEdsCreateDomainService, BilligEdsCreateService>(client =>
+{
+    var baseUrl = builder.Configuration["BilligEds:BaseUrl"] ?? "http://localhost:5001/";
+    client.BaseAddress = new Uri(baseUrl);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
+// AutoMapper profiles for BilligEds
+builder.Services.AddAutoMapper(typeof(BilligEdsProfile).Assembly);
+
+// Register MediatR handlers for BilligEds
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Poliedro.Eds.Application.BilligEds.Commands.CreateBilligEds.CreateBilligEdsCommandHandler>());
+
+
+// Register FluentValidation validator for BillidEdsRequestEntity
+builder.Services.AddScoped<FluentValidation.IValidator<Poliedro.Eds.Domain.BilligEds.Entities.BillidEdsRequestEntity>, Poliedro.Eds.Application.BilligEds.Commands.CreateBilligEds.CreateBilligEdsCommandValidator>();
+
+
 var app = builder.Build();
 app.MapHealthChecks("/health", new HealthCheckOptions()
 {

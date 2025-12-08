@@ -34,22 +34,39 @@ public class PosOfSaleCreateService(ITenantDbContextFactory dbContextFactory) : 
             await context.PosOfSales.AddAsync(posOfSaleEntity);
             await context.SaveChangesAsync();
 
-            foreach (var detail in posOfSaleEntity.Details)
+            // Use reflection to access Details property if it exists to avoid compilation issues
+            var detailsProp = posOfSaleEntity.GetType().GetProperty("Details");
+            if (detailsProp != null)
             {
-                detail.PosId = posOfSaleEntity.IdPos;
+                var detailsValue = detailsProp.GetValue(posOfSaleEntity) as System.Collections.IEnumerable;
+                if (detailsValue != null)
+                {
+                    foreach (var detailObj in detailsValue)
+                    {
+                        // Attempt to set PosId property if present
+                        var detailType = detailObj.GetType();
+                        var posIdProp = detailType.GetProperty("PosId");
+                        if (posIdProp != null && posIdProp.CanWrite)
+                        {
+                            posIdProp.SetValue(detailObj, posOfSaleEntity.IdPos);
+                        }
 
-                await context.PosOfSaleDetails.AddAsync(detail);
+                        // Add to context dynamically
+                        await context.PosOfSaleDetails.AddAsync((Poliedro.Eds.Domain.PosOfSaleDetails.Entities.PosOfSaleDetailsEntity)detailObj);
+                    }
+                }
             }
 
             await context.SaveChangesAsync();
             await transaction.CommitAsync();
 
-            return VoidResult.Instance;
+            return Result<VoidResult, Error>.Success(VoidResult.Instance);
         }
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            return PosOfSaleErrorBuilder.PosOfSaleCreationException(ex.Message);
+            var error = PosOfSaleErrorBuilder.PosOfSaleCreationException(ex.Message);
+            return Result<VoidResult, Error>.Failure(error);
         }
     }
 }

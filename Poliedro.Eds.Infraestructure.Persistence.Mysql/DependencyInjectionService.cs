@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Poliedro.Eds.Application.Business.Commands.UpdateBusiness;
 using Poliedro.Eds.Application.Ports.Redis;
 using Poliedro.Eds.Application.RegisterShift.Validations;
+using Poliedro.Eds.Domain.BilligEds.DomainService;
 using Poliedro.Eds.Domain.Business.DomainBusiness;
 using Poliedro.Eds.Domain.Capacity.DomainCapacity;
 using Poliedro.Eds.Domain.Category.DomainCategory;
@@ -257,6 +258,7 @@ public static class DependencyInjectionService
 
         services.AddScoped<RegisterShiftCreateValidator>();
         services.AddScoped<IRegisterShiftCreateService, RegisterShiftCreateService>();
+        services.AddScoped<IBilligEdsCreateDomainService, BilligEdsCreateService>();
 
         return services;
     }
