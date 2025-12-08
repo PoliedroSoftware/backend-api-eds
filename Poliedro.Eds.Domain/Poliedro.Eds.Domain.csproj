@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BilligEds\DomainService\" />
     <Folder Include="BilligEds\Exceptions\" />
     <Folder Include="Inventory\DomainService\" />
     <Folder Include="Uplou\" />
