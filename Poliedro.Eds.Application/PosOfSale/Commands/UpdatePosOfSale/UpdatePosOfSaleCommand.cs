@@ -37,6 +37,6 @@ public record UpdatePosOfSaleCommand(
      string? PdfUrl,
      string? XmlUrl,
      string? WhatsappPhone,
-     long? EdsId,
-     long? IsleroId,
+     int? EdsId,
+     int? IsleroId,
      string? ProviderTag) : IRequest<Result<VoidResult, Error>>;

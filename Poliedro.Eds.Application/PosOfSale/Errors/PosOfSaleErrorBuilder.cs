@@ -14,9 +14,9 @@ public class PosOfSaleErrorBuilder : IError
     public const string POS_OF_SALE_LIST_EMPTY_ERROR = "PosOfSaleListEmptyException";
     public const string POS_OF_SALE_UPDATE_ERROR = "PosOfSaleUpdateErrorException";
 
-    public static Error PosOfSaleCreationException() => Error.CreateInstance(
+    public static Error PosOfSaleCreationException(string? error) => Error.CreateInstance(
        POS_OF_SALE_CREATION_ERROR,
-        "Failed to create Pos of sale due to an internal error.",
+        $"Failed to create Pos of sale due to an internal error. Details: {error}",
         HttpStatusCode.InternalServerError);
 
     public static Error PosOfSaleLimitErrorException() => Error.CreateInstance(
