@@ -396,6 +396,8 @@ Fecha: {court.DateEndtime.ToString("d/M/yyyy", SpanishCulture)}
         {
             await sendMessage.SendMessageAsync(phoneNumber, message);
         }
+        // Enviar mensaje al número de teléfono
+        await sendMessage.SendMessageAsync(request.PhoneNumber, message);
 
         return Unit.Value;
     }
