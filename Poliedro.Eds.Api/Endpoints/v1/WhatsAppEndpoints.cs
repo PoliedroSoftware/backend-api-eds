@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Poliedro.Eds.Api.Endpoints.v1;
 
@@ -15,9 +16,12 @@ public static class WhatsAppEndpoints
         return app;
     }
 
-    private static async Task<IResult> SendMessage(IMediator mediator)
+    private static async Task<IResult> SendMessage(
+        [FromBody] SendWhatsAppMessageCommand command,
+        IMediator mediator
+        )
     {
-        await mediator.Send(new SendWhatsAppMessageCommand());
+        await mediator.Send(command);
         return TypedResults.Ok(new { Message = "WhatsApp message sent successfully" });
     }
 }
